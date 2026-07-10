@@ -1,0 +1,897 @@
+{
+ "app": "Noise Audio",
+ "generated_from": "registry.yaml",
+ "generated": "2026-07-10",
+ "source": {
+  "figma_file_key": "QjVyM5bRXgIOZn8PO1e0eK",
+  "figma_page": "Test pilot run",
+  "figma_page_node_id": "2025:148",
+  "figma_url": "https://www.figma.com/design/QjVyM5bRXgIOZn8PO1e0eK/?node-id=2025-148"
+ },
+ "traversal": {
+  "top_down": "Start at nodes with tier=organisms. A component C's parts are the sources of structural edges whose target == C. Recurse into molecules, then atoms.",
+  "lateral": "Behavioral edges are directional as declared in the authored metadata (source declares the relation toward target).",
+  "upward": "A component C's consumers ('used by') are the targets of structural edges whose source == C.",
+  "identity": "Every node exposes id (repo file components/<tier>/<id>.yaml), node_id (Figma in-file locator) and figma_fingerprint (stable component key).",
+  "dangling": "Edges with type=dangling are broken references flagged by the registry: the component's Figma instance points outside the ingested library page. They are rendered as broken, never repaired."
+ },
+ "legend": {
+  "node_color": "component type",
+  "node_size": "usage count",
+  "solid_edge": "structural \u2014 is built from (drawn part \u2192 whole)",
+  "dashed_edge": "behavioral relationship",
+  "red_edge": "dangling reference flagged in the registry"
+ },
+ "counts": {
+  "atoms": 16,
+  "molecules": 2,
+  "organisms": 8,
+  "token_sources": 1
+ },
+ "nodes": [
+  {
+   "id": "primary-cta-button",
+   "name": "Primary cta",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "248:4940",
+   "figma_fingerprint": "13d9bcf56d34b8f5859397f76b4787da65b4f6f8",
+   "usage_count": 4,
+   "file": "components/atoms/primary-cta-button.yaml",
+   "dashboard": "components/primary-cta-button.html"
+  },
+  {
+   "id": "secondary-cta-button",
+   "name": "Secondary cta",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "250:4953",
+   "figma_fingerprint": "496c1152f7812e427b173dfadf82190e3ca7c3c0",
+   "usage_count": 3,
+   "file": "components/atoms/secondary-cta-button.yaml",
+   "dashboard": "components/secondary-cta-button.html"
+  },
+  {
+   "id": "link-cta",
+   "name": "Link cta",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "463:1380",
+   "figma_fingerprint": "c8690c419dcc5e5873b064217a90ab827caf16e9",
+   "usage_count": 2,
+   "file": "components/atoms/link-cta.yaml",
+   "dashboard": "components/link-cta.html"
+  },
+  {
+   "id": "actionables",
+   "name": "Actionables",
+   "type": "molecule",
+   "tier": "molecules",
+   "node_id": "2031:1132",
+   "figma_fingerprint": "319c48cae4ec45084ee2296b6d0e0460d0d27a40",
+   "usage_count": 3,
+   "file": "components/molecules/actionables.yaml",
+   "dashboard": "components/actionables.html"
+  },
+  {
+   "id": "chevron",
+   "name": "Chevron",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "2031:1154",
+   "figma_fingerprint": "01dc1aeeb4cb8263bbcdf477e7be617bb160ed27",
+   "usage_count": 4,
+   "file": "components/atoms/chevron.yaml",
+   "dashboard": "components/chevron.html"
+  },
+  {
+   "id": "checkbox",
+   "name": "Checkbox",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "2031:1168",
+   "figma_fingerprint": "5d813fa76c98d5e979b8e58f3097ee481b6974bc",
+   "usage_count": 1,
+   "file": "components/atoms/checkbox.yaml",
+   "dashboard": "components/checkbox.html"
+  },
+  {
+   "id": "radio-button",
+   "name": "Radio Button",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "2031:1178",
+   "figma_fingerprint": "5aaf9ca2a4ce74111f0f3c1f26e495c980cec34e",
+   "usage_count": 1,
+   "file": "components/atoms/radio-button.yaml",
+   "dashboard": "components/radio-button.html"
+  },
+  {
+   "id": "toggle",
+   "name": "Toggle",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "2031:1190",
+   "figma_fingerprint": "5671f20fe570cab72796a90ebac8b77ca42e0621",
+   "usage_count": 1,
+   "file": "components/atoms/toggle.yaml",
+   "dashboard": "components/toggle.html"
+  },
+  {
+   "id": "cross",
+   "name": "Cross",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "2031:1201",
+   "figma_fingerprint": "4630976d22073248745eb76ebe8a4c2e55d2c1ef",
+   "usage_count": 4,
+   "file": "components/atoms/cross.yaml",
+   "dashboard": "components/cross.html"
+  },
+  {
+   "id": "heading-content-component",
+   "name": "Heading-content component",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "301:20202",
+   "figma_fingerprint": "18df4dd5982a7e913f345ea9459801fb472a255b",
+   "usage_count": 4,
+   "file": "components/atoms/heading-content-component.yaml",
+   "dashboard": "components/heading-content-component.html"
+  },
+  {
+   "id": "l2-inner-pages-heading",
+   "name": "L2/Inner pages Heading",
+   "type": "molecule",
+   "tier": "molecules",
+   "node_id": "244:133",
+   "figma_fingerprint": "b315ce3a53f3c7c83388272cb7b77659f4e07c50",
+   "usage_count": 1,
+   "file": "components/molecules/l2-inner-pages-heading.yaml",
+   "dashboard": "components/l2-inner-pages-heading.html"
+  },
+  {
+   "id": "status-bar",
+   "name": "Status bar",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "2007:775",
+   "figma_fingerprint": "0642c8e04f3d5b41411530a951699e5567e63f29",
+   "usage_count": 3,
+   "file": "components/atoms/status-bar.yaml",
+   "dashboard": "components/status-bar.html"
+  },
+  {
+   "id": "l1-home-page-navigation",
+   "name": "L1/Home page",
+   "type": "organism",
+   "tier": "organisms",
+   "node_id": "243:6378",
+   "figma_fingerprint": "948135f671d61083862a0d646e005015301c3beb",
+   "usage_count": 0,
+   "file": "components/organisms/l1-home-page-navigation.yaml",
+   "dashboard": "components/l1-home-page-navigation.html"
+  },
+  {
+   "id": "modal-card",
+   "name": "Modal card",
+   "type": "organism",
+   "tier": "organisms",
+   "node_id": "2097:1930",
+   "figma_fingerprint": "21d9c86623d946fdffe7c9489dcf24ef5699f576",
+   "usage_count": 3,
+   "file": "components/organisms/modal-card.yaml",
+   "dashboard": "components/modal-card.html"
+  },
+  {
+   "id": "action-sheet",
+   "name": "Action sheet",
+   "type": "complex-organism",
+   "tier": "organisms",
+   "node_id": "418:965",
+   "figma_fingerprint": "32faaefa1091152dce02bc7f3330092f25545cf5",
+   "usage_count": 2,
+   "file": "components/organisms/action-sheet.yaml",
+   "dashboard": "components/action-sheet.html"
+  },
+  {
+   "id": "image-asset-placeholder",
+   "name": "Image, asset placeholder",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "458:8952",
+   "figma_fingerprint": "aeb5091d768aa1acd45c5220bcddd658abbcf259",
+   "usage_count": 2,
+   "file": "components/atoms/image-asset-placeholder.yaml",
+   "dashboard": "components/image-asset-placeholder.html"
+  },
+  {
+   "id": "modal-sheet",
+   "name": "Modal Sheet",
+   "type": "complex-organism",
+   "tier": "organisms",
+   "node_id": "611:1378",
+   "figma_fingerprint": "1ff5504fa0229284b6ae328723679fb94b0ab477",
+   "usage_count": 2,
+   "file": "components/organisms/modal-sheet.yaml",
+   "dashboard": "components/modal-sheet.html"
+  },
+  {
+   "id": "card-heading",
+   "name": "Card heading",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "340:11254",
+   "figma_fingerprint": "1cf5d7102660483fa53fe58ba6462229a449e45c",
+   "usage_count": 2,
+   "file": "components/atoms/card-heading.yaml",
+   "dashboard": "components/card-heading.html"
+  },
+  {
+   "id": "description",
+   "name": "Description",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "445:8616",
+   "figma_fingerprint": "e429f00b447a3f8e74485cff0ebb08049999600a",
+   "usage_count": 0,
+   "file": "components/atoms/description.yaml",
+   "dashboard": "components/description.html"
+  },
+  {
+   "id": "text-field",
+   "name": "Text field",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "445:8434",
+   "figma_fingerprint": "c32a11ab5b2fcac3c6c92f4a3723f63c390027fc",
+   "usage_count": 0,
+   "file": "components/atoms/text-field.yaml",
+   "dashboard": "components/text-field.html"
+  },
+  {
+   "id": "privacy-policy-tab",
+   "name": "Privacy policy tab",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "450:8770",
+   "figma_fingerprint": "b9945fc2df7c786e4dddeba14021e7f232c580af",
+   "usage_count": 0,
+   "file": "components/atoms/privacy-policy-tab.yaml",
+   "dashboard": "components/privacy-policy-tab.html"
+  },
+  {
+   "id": "progress-bar",
+   "name": "Progress bar",
+   "type": "atom",
+   "tier": "atoms",
+   "node_id": "489:2133",
+   "figma_fingerprint": "f92b7ef136d4b0b6c9618e26f856f0d6537d346e",
+   "usage_count": 0,
+   "file": "components/atoms/progress-bar.yaml",
+   "dashboard": "components/progress-bar.html"
+  },
+  {
+   "id": "master-card",
+   "name": "Master card",
+   "type": "organism",
+   "tier": "organisms",
+   "node_id": "396:728",
+   "figma_fingerprint": "2a70e23d69359d2c963b4663448e7b7de1f923bb",
+   "usage_count": 0,
+   "file": "components/organisms/master-card.yaml",
+   "dashboard": "components/master-card.html"
+  },
+  {
+   "id": "checkbox-card",
+   "name": "Checkbox card",
+   "type": "organism",
+   "tier": "organisms",
+   "node_id": "2032:1265",
+   "figma_fingerprint": "63123afdabcda90456472d6efa03baaae5bfae51",
+   "usage_count": 0,
+   "file": "components/organisms/checkbox-card.yaml",
+   "dashboard": "components/checkbox-card.html"
+  },
+  {
+   "id": "l1-inner-page-navigation",
+   "name": "L1 Inner page navigation",
+   "type": "organism",
+   "tier": "organisms",
+   "node_id": "2007:1007",
+   "figma_fingerprint": "bbd24c7b7a648836ba325942f634a414386375d6",
+   "usage_count": 3,
+   "file": "components/organisms/l1-inner-page-navigation.yaml",
+   "dashboard": "components/l1-inner-page-navigation.html"
+  },
+  {
+   "id": "action-card",
+   "name": "Action card",
+   "type": "organism",
+   "tier": "organisms",
+   "node_id": "2096:1434",
+   "figma_fingerprint": "f21a114bbd31c9be808ce2265358902b7aeefbc4",
+   "usage_count": 3,
+   "file": "components/organisms/action-card.yaml",
+   "dashboard": "components/action-card.html"
+  }
+ ],
+ "edges": [
+  {
+   "type": "behavioral",
+   "source": "secondary-cta-button",
+   "target": "primary-cta-button",
+   "relation": "emphasis-counterpart"
+  },
+  {
+   "type": "behavioral",
+   "source": "link-cta",
+   "target": "primary-cta-button",
+   "relation": "emphasis-family"
+  },
+  {
+   "type": "behavioral",
+   "source": "link-cta",
+   "target": "secondary-cta-button",
+   "relation": "emphasis-family"
+  },
+  {
+   "type": "structural",
+   "source": "chevron",
+   "target": "actionables",
+   "meaning": "actionables is built from chevron"
+  },
+  {
+   "type": "structural",
+   "source": "toggle",
+   "target": "actionables",
+   "meaning": "actionables is built from toggle"
+  },
+  {
+   "type": "structural",
+   "source": "checkbox",
+   "target": "actionables",
+   "meaning": "actionables is built from checkbox"
+  },
+  {
+   "type": "structural",
+   "source": "cross",
+   "target": "actionables",
+   "meaning": "actionables is built from cross"
+  },
+  {
+   "type": "structural",
+   "source": "radio-button",
+   "target": "actionables",
+   "meaning": "actionables is built from radio-button"
+  },
+  {
+   "type": "dangling",
+   "source": "actionables",
+   "ref_name": "Chevron",
+   "ref_node_id": "2031:379",
+   "external_location": "orphaned (detached from any page)",
+   "same_named_library_component": "chevron",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "actionables",
+   "ref_name": "Toggle",
+   "ref_node_id": "2031:392",
+   "external_location": "orphaned (detached from any page)",
+   "same_named_library_component": "toggle",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "actionables",
+   "ref_name": "Checkbox",
+   "ref_node_id": "2031:406",
+   "external_location": "orphaned (detached from any page)",
+   "same_named_library_component": "checkbox",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "actionables",
+   "ref_name": "Cross",
+   "ref_node_id": "2031:416",
+   "external_location": "orphaned (detached from any page)",
+   "same_named_library_component": "cross",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "actionables",
+   "ref_name": "Radio Button",
+   "ref_node_id": "2031:426",
+   "external_location": "orphaned (detached from any page)",
+   "same_named_library_component": "radio-button",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "behavioral",
+   "source": "l2-inner-pages-heading",
+   "target": "l1-inner-page-navigation",
+   "relation": "heading-destination"
+  },
+  {
+   "type": "behavioral",
+   "source": "status-bar",
+   "target": "l1-inner-page-navigation",
+   "relation": "shares-scroll-state"
+  },
+  {
+   "type": "behavioral",
+   "source": "l1-home-page-navigation",
+   "target": "l1-inner-page-navigation",
+   "relation": "sibling"
+  },
+  {
+   "type": "dangling",
+   "source": "l1-home-page-navigation",
+   "ref_name": "system/Selected device",
+   "ref_node_id": "231:26268",
+   "external_location": "page: 04 Icons",
+   "same_named_library_component": null,
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "l1-home-page-navigation",
+   "ref_name": "system/Device option 1",
+   "ref_node_id": "231:26277",
+   "external_location": "page: 04 Icons",
+   "same_named_library_component": null,
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "l1-home-page-navigation",
+   "ref_name": "system/Device adder",
+   "ref_node_id": "231:26218",
+   "external_location": "page: 04 Icons",
+   "same_named_library_component": null,
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "l1-home-page-navigation",
+   "ref_name": "system/Downloading Success",
+   "ref_node_id": "231:26254",
+   "external_location": "page: 04 Icons",
+   "same_named_library_component": null,
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "l1-home-page-navigation",
+   "ref_name": "system/Store",
+   "ref_node_id": "231:26234",
+   "external_location": "page: 04 Icons",
+   "same_named_library_component": null,
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "structural",
+   "source": "primary-cta-button",
+   "target": "modal-card",
+   "meaning": "modal-card is built from primary-cta-button"
+  },
+  {
+   "type": "structural",
+   "source": "secondary-cta-button",
+   "target": "modal-card",
+   "meaning": "modal-card is built from secondary-cta-button"
+  },
+  {
+   "type": "structural",
+   "source": "link-cta",
+   "target": "modal-card",
+   "meaning": "modal-card is built from link-cta"
+  },
+  {
+   "type": "behavioral",
+   "source": "modal-card",
+   "target": "modal-sheet",
+   "relation": "content-of"
+  },
+  {
+   "type": "behavioral",
+   "source": "modal-card",
+   "target": "action-card",
+   "relation": "counterpart"
+  },
+  {
+   "type": "dangling",
+   "source": "modal-card",
+   "ref_name": "Actionables",
+   "ref_node_id": "329:2095",
+   "external_location": "page: AI Metdata",
+   "same_named_library_component": "actionables",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "structural",
+   "source": "action-card",
+   "target": "action-sheet",
+   "meaning": "action-sheet is built from action-card"
+  },
+  {
+   "type": "behavioral",
+   "source": "action-sheet",
+   "target": "action-card",
+   "relation": "contains"
+  },
+  {
+   "type": "behavioral",
+   "source": "action-sheet",
+   "target": "modal-sheet",
+   "relation": "counterpart"
+  },
+  {
+   "type": "behavioral",
+   "source": "action-sheet",
+   "target": "status-bar",
+   "relation": "renders-on-top"
+  },
+  {
+   "type": "dangling",
+   "source": "action-sheet",
+   "ref_name": "Status bar",
+   "ref_node_id": "374:7867",
+   "external_location": "page: AI Metdata",
+   "same_named_library_component": "status-bar",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "action-sheet",
+   "ref_name": "Action Sheet",
+   "ref_node_id": "420:1299",
+   "external_location": "page: 06 Building Blocks",
+   "same_named_library_component": "action-sheet",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "action-sheet",
+   "ref_name": "Home Indicator",
+   "ref_node_id": "386:1835",
+   "external_location": "page: 06 Building Blocks",
+   "same_named_library_component": null,
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "image-asset-placeholder",
+   "ref_name": "Profile icon",
+   "ref_node_id": "460:985",
+   "external_location": "page: 06 Building Blocks",
+   "same_named_library_component": null,
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "structural",
+   "source": "modal-card",
+   "target": "modal-sheet",
+   "meaning": "modal-sheet is built from modal-card"
+  },
+  {
+   "type": "structural",
+   "source": "image-asset-placeholder",
+   "target": "modal-sheet",
+   "meaning": "modal-sheet is built from image-asset-placeholder"
+  },
+  {
+   "type": "behavioral",
+   "source": "modal-sheet",
+   "target": "modal-card",
+   "relation": "contains"
+  },
+  {
+   "type": "behavioral",
+   "source": "modal-sheet",
+   "target": "image-asset-placeholder",
+   "relation": "contains"
+  },
+  {
+   "type": "behavioral",
+   "source": "modal-sheet",
+   "target": "action-sheet",
+   "relation": "counterpart"
+  },
+  {
+   "type": "behavioral",
+   "source": "modal-sheet",
+   "target": "status-bar",
+   "relation": "renders-on-top"
+  },
+  {
+   "type": "dangling",
+   "source": "modal-sheet",
+   "ref_name": "Status bar",
+   "ref_node_id": "374:7867",
+   "external_location": "page: AI Metdata",
+   "same_named_library_component": "status-bar",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "modal-sheet",
+   "ref_name": "Modal",
+   "ref_node_id": "786:4487",
+   "external_location": "page: 06 Building Blocks",
+   "same_named_library_component": null,
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "modal-sheet",
+   "ref_name": "Home Indicator",
+   "ref_node_id": "386:1835",
+   "external_location": "page: 06 Building Blocks",
+   "same_named_library_component": null,
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "behavioral",
+   "source": "card-heading",
+   "target": "heading-content-component",
+   "relation": "distinct-sibling"
+  },
+  {
+   "type": "behavioral",
+   "source": "description",
+   "target": "heading-content-component",
+   "relation": "distinct"
+  },
+  {
+   "type": "behavioral",
+   "source": "description",
+   "target": "card-heading",
+   "relation": "distinct"
+  },
+  {
+   "type": "structural",
+   "source": "chevron",
+   "target": "text-field",
+   "meaning": "text-field is built from chevron"
+  },
+  {
+   "type": "behavioral",
+   "source": "text-field",
+   "target": "card-heading",
+   "relation": "paired-with"
+  },
+  {
+   "type": "behavioral",
+   "source": "text-field",
+   "target": "chevron",
+   "relation": "uses"
+  },
+  {
+   "type": "dangling",
+   "source": "text-field",
+   "ref_name": "Actionables",
+   "ref_node_id": "329:2095",
+   "external_location": "page: AI Metdata",
+   "same_named_library_component": "actionables",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "structural",
+   "source": "actionables",
+   "target": "master-card",
+   "meaning": "master-card is built from actionables"
+  },
+  {
+   "type": "structural",
+   "source": "heading-content-component",
+   "target": "master-card",
+   "meaning": "master-card is built from heading-content-component"
+  },
+  {
+   "type": "dangling",
+   "source": "master-card",
+   "ref_name": "Circled icon",
+   "ref_node_id": "301:20193",
+   "external_location": "page: 06 Building Blocks",
+   "same_named_library_component": null,
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "master-card",
+   "ref_name": "Actionables",
+   "ref_node_id": "329:2095",
+   "external_location": "page: AI Metdata",
+   "same_named_library_component": "actionables",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "structural",
+   "source": "actionables",
+   "target": "checkbox-card",
+   "meaning": "checkbox-card is built from actionables"
+  },
+  {
+   "type": "structural",
+   "source": "cross",
+   "target": "checkbox-card",
+   "meaning": "checkbox-card is built from cross"
+  },
+  {
+   "type": "structural",
+   "source": "heading-content-component",
+   "target": "checkbox-card",
+   "meaning": "checkbox-card is built from heading-content-component"
+  },
+  {
+   "type": "dangling",
+   "source": "checkbox-card",
+   "ref_name": "Actionables",
+   "ref_node_id": "2031:437",
+   "external_location": "orphaned (detached from any page)",
+   "same_named_library_component": "actionables",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "checkbox-card",
+   "ref_name": "Heading-content component ",
+   "ref_node_id": "2031:372",
+   "external_location": "orphaned (detached from any page)",
+   "same_named_library_component": "heading-content-component",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "checkbox-card",
+   "ref_name": "Cross",
+   "ref_node_id": "2031:416",
+   "external_location": "orphaned (detached from any page)",
+   "same_named_library_component": "cross",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "structural",
+   "source": "chevron",
+   "target": "l1-inner-page-navigation",
+   "meaning": "l1-inner-page-navigation is built from chevron"
+  },
+  {
+   "type": "structural",
+   "source": "cross",
+   "target": "l1-inner-page-navigation",
+   "meaning": "l1-inner-page-navigation is built from cross"
+  },
+  {
+   "type": "behavioral",
+   "source": "l1-inner-page-navigation",
+   "target": "l2-inner-pages-heading",
+   "relation": "heading-source"
+  },
+  {
+   "type": "behavioral",
+   "source": "l1-inner-page-navigation",
+   "target": "status-bar",
+   "relation": "shares-scroll-state"
+  },
+  {
+   "type": "dangling",
+   "source": "l1-inner-page-navigation",
+   "ref_name": "system/Chevron",
+   "ref_node_id": "2007:379",
+   "external_location": "orphaned (detached from any page)",
+   "same_named_library_component": "chevron",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "l1-inner-page-navigation",
+   "ref_name": "system/Restart",
+   "ref_node_id": "2007:405",
+   "external_location": "orphaned (detached from any page)",
+   "same_named_library_component": null,
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "l1-inner-page-navigation",
+   "ref_name": "system/Downloading Success",
+   "ref_node_id": "2007:399",
+   "external_location": "orphaned (detached from any page)",
+   "same_named_library_component": null,
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "l1-inner-page-navigation",
+   "ref_name": "Transcribe time chips ",
+   "ref_node_id": "2007:416",
+   "external_location": "orphaned (detached from any page)",
+   "same_named_library_component": null,
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "l1-inner-page-navigation",
+   "ref_name": "system/cross",
+   "ref_node_id": "2007:411",
+   "external_location": "orphaned (detached from any page)",
+   "same_named_library_component": "cross",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "structural",
+   "source": "cross",
+   "target": "action-card",
+   "meaning": "action-card is built from cross"
+  },
+  {
+   "type": "structural",
+   "source": "actionables",
+   "target": "action-card",
+   "meaning": "action-card is built from actionables"
+  },
+  {
+   "type": "structural",
+   "source": "primary-cta-button",
+   "target": "action-card",
+   "meaning": "action-card is built from primary-cta-button"
+  },
+  {
+   "type": "structural",
+   "source": "secondary-cta-button",
+   "target": "action-card",
+   "meaning": "action-card is built from secondary-cta-button"
+  },
+  {
+   "type": "structural",
+   "source": "link-cta",
+   "target": "action-card",
+   "meaning": "action-card is built from link-cta"
+  },
+  {
+   "type": "behavioral",
+   "source": "action-card",
+   "target": "action-sheet",
+   "relation": "content-of"
+  },
+  {
+   "type": "behavioral",
+   "source": "action-card",
+   "target": "modal-card",
+   "relation": "counterpart"
+  },
+  {
+   "type": "dangling",
+   "source": "action-card",
+   "ref_name": "Bottomsheet heading",
+   "ref_node_id": "414:3175",
+   "external_location": "page: 06 Building Blocks",
+   "same_named_library_component": null,
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "action-card",
+   "ref_name": "Radio Button",
+   "ref_node_id": "395:636",
+   "external_location": "page: AI Metdata",
+   "same_named_library_component": "radio-button",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  },
+  {
+   "type": "dangling",
+   "source": "action-card",
+   "ref_name": "Actionables",
+   "ref_node_id": "329:2095",
+   "external_location": "page: AI Metdata",
+   "same_named_library_component": "actionables",
+   "status": "dangling \u2014 instance points outside the ingested page"
+  }
+ ]
+}

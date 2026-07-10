@@ -538,41 +538,9 @@ def overview_page():
     """
     return page("Overview", "overview", body)
 
-def graph_page():
-    cols = [("Atoms", group_defs[0][1]), ("Molecules", group_defs[1][1]), ("Organisms", group_defs[2][1])]
-    xcol = {0: 140, 1: 470, 2: 800}
-    pos, colh = {}, []
-    for ci, (_, ids) in enumerate(cols):
-        for ri, cid in enumerate(ids):
-            pos[cid] = (xcol[ci], 70 + ri * 52)
-        colh.append(70 + len(ids) * 52)
-    H = max(colh) + 30
-    svg = [f'<svg viewBox="0 0 940 {H}" class="graph" xmlns="http://www.w3.org/2000/svg">']
-    for ci, (label, _) in enumerate(cols):
-        svg.append(f'<text x="{xcol[ci]}" y="34" class="g-col">{label}</text>')
-    def path(a, b, cls):
-        (x1, y1), (x2, y2) = pos[a], pos[b]
-        x1 += 120 if x2 > x1 else 0; x2 -= 4 if x2 > x1 else -124
-        mx = (x1 + x2) / 2
-        return f'<path class="{cls}" d="M{x1},{y1+14} C{mx},{y1+14} {mx},{y2+14} {x2},{y2+14}"/>'
-    for c in registry["components"]:
-        for t in (c.get("structural_edges", {}) or {}).get("uses", []) or []:
-            if t in pos: svg.append(path(t, c["id"], "g-edge"))  # arrow: part -> whole
-    for c in registry["components"]:
-        for e in c.get("behavioral_edges", []) or []:
-            if e["target"] in pos: svg.append(path(c["id"], e["target"], "g-edge g-beh"))
-    for cid, (x, y) in pos.items():
-        nm = components[cid]["name"].strip()
-        svg.append(f'<a href="components/{cid}.html"><rect x="{x}" y="{y}" rx="8" width="120" height="30" class="g-node t-{E(reg_by_id[cid]["type"])}"/>'
-                   f'<text x="{x+60}" y="{y+19}" class="g-label">{E(nm[:18])}</text></a>')
-    svg.append("</svg>")
-    body = f"""
-    <header class="pagehead"><h1>Component graph</h1></header>
-    <p class="dim">Rendered from <code>registry.yaml</code> only. Solid lines: structural “is built from” edges (atom/molecule → the component that uses it). Dashed lines: behavioral relationships. Click a node to open its page.</p>
-    <div class="graphwrap">{''.join(svg)}</div>
-    <p class="dim">Dangling Figma instance references ({validation.get("dangling_figma_instance_edges", 0)}) are not drawn here — they point outside the library and are listed on each component page and in INGESTION_REPORT.md.</p>
-    """
-    return page("Component graph", "graph", body)
+# The Component graph page (dashboard/graph.html) and graph/graph.json are generated
+# by scripts/build_graph.py (Phase 3), invoked from main() so a dashboard rebuild
+# always regenerates the graph from the same registry state.
 
 # ----------------------------------------------------------------- assets
 STYLE = """
@@ -706,7 +674,6 @@ def main():
         f.write(APPJS)
     pages = {
         "index.html": overview_page(),
-        "graph.html": graph_page(),
         "foundations-colors.html": colors_page(),
         "foundations-typography.html": typography_page(),
         "foundations-spacing.html": spacing_page(),
@@ -718,6 +685,8 @@ def main():
         with open(os.path.join(OUT, "components", f"{cid}.html"), "w") as f:
             f.write(component_page(cid))
     print(f"dashboard generated: {len(pages)} shell pages + {len(order)} component pages -> dashboard/")
+    import build_graph  # Phase 3 — regenerates dashboard/graph.html + graph/graph.json
+    build_graph.main()
 
 if __name__ == "__main__":
     main()
