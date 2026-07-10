@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Image, asset placeholder — Noise Audio DLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600&family=Geist:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head><body>
+<div class="layout">
+
+    <aside class="sidebar">
+      <div class="appswitcher">
+        <span class="applogo">N</span>
+        <select onchange="void 0" title="App switcher">
+          <option selected>Noise Audio</option>
+        </select>
+      </div>
+      <nav>
+        <div class="navgroup">Overview</div>
+        <a class="navitem " href="../index.html">Overview</a>
+        <a class="navitem " href="../graph.html">Component graph</a>
+        <div class="navgroup">Foundations <span class="count">3</span></div>
+        <a class="navitem " href="../foundations-colors.html">Colors &amp; tokens</a>
+        <a class="navitem " href="../foundations-typography.html">Typography</a>
+        <a class="navitem " href="../foundations-spacing.html">Spacing &amp; radius</a>
+    <div class="navgroup">Atoms <span class="count">16</span></div><a class="navitem " href="../components/primary-cta-button.html">Primary cta</a><a class="navitem " href="../components/secondary-cta-button.html">Secondary cta</a><a class="navitem " href="../components/link-cta.html">Link cta</a><a class="navitem " href="../components/chevron.html">Chevron</a><a class="navitem " href="../components/checkbox.html">Checkbox</a><a class="navitem " href="../components/radio-button.html">Radio Button</a><a class="navitem " href="../components/toggle.html">Toggle</a><a class="navitem " href="../components/cross.html">Cross</a><a class="navitem " href="../components/heading-content-component.html">Heading-content component</a><a class="navitem " href="../components/status-bar.html">Status bar</a><a class="navitem active" href="../components/image-asset-placeholder.html">Image, asset placeholder<span class="warnbadge" title="dangling Figma references">1</span></a><a class="navitem " href="../components/card-heading.html">Card heading</a><a class="navitem " href="../components/description.html">Description</a><a class="navitem " href="../components/text-field.html">Text field<span class="warnbadge" title="dangling Figma references">1</span></a><a class="navitem " href="../components/privacy-policy-tab.html">Privacy policy tab</a><a class="navitem " href="../components/progress-bar.html">Progress bar</a><div class="navgroup">Molecules <span class="count">2</span></div><a class="navitem " href="../components/actionables.html">Actionables<span class="warnbadge" title="dangling Figma references">5</span></a><a class="navitem " href="../components/l2-inner-pages-heading.html">L2/Inner pages Heading</a><div class="navgroup">Organisms <span class="count">8</span></div><a class="navitem " href="../components/l1-home-page-navigation.html">L1/Home page<span class="warnbadge" title="dangling Figma references">5</span></a><a class="navitem " href="../components/modal-card.html">Modal card<span class="warnbadge" title="dangling Figma references">1</span></a><a class="navitem " href="../components/master-card.html">Master card<span class="warnbadge" title="dangling Figma references">2</span></a><a class="navitem " href="../components/checkbox-card.html">Checkbox card<span class="warnbadge" title="dangling Figma references">3</span></a><a class="navitem " href="../components/l1-inner-page-navigation.html">L1 Inner page navigation<span class="warnbadge" title="dangling Figma references">5</span></a><a class="navitem " href="../components/action-card.html">Action card<span class="warnbadge" title="dangling Figma references">3</span></a><a class="navitem " href="../components/action-sheet.html">Action sheet<span class="warnbadge" title="dangling Figma references">3</span></a><a class="navitem " href="../components/modal-sheet.html">Modal Sheet<span class="warnbadge" title="dangling Figma references">3</span></a></nav></aside>
+<main class="main">
+
+    <header class="pagehead">
+      <div><h1>Image, asset placeholder</h1>
+      <span class="typebadge t-atom">Atom</span>
+      <span class="dim">usage count: 2</span></div>
+      <div class="dim">source file: <code>components/atoms/image-asset-placeholder.yaml</code></div>
+    </header>
+    <div class="warning">⚠ 1 Figma instance reference(s) inside this component point outside the ingested library page (see INGESTION_REPORT.md):<ul><li><b>Profile icon</b> (node <code>460:985</code>) — page: 06 Building Blocks</li></ul></div>
+    <section class="metasection"><h3>Preview</h3><p class="pv-caption">Preview rendered from the extracted visual values in this file (schematic: positions inside non-auto-layout groups are approximate; hidden layers omitted; nested component instances render as linked chips — each child governs itself).</p><div class="pv-block"><div class="pv-variantname">size usage=S <span class="dim">node 458:8951</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:390px"><div class="pv-frame" title="size usage=S · 458:8951" style="width:390px;height:326px;position:relative;background:#ededed" data-stack="1"></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">size usage=M <span class="dim">node 494:2876</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:390px"><div class="pv-frame" title="size usage=M · 494:2876" style="width:390px;height:400px;position:relative;background:#ededed" data-stack="1"></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">size usage=L <span class="dim">node 480:10902</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:390px"><div class="pv-frame" title="size usage=L · 480:10902" style="width:390px;height:510px;position:relative;background:#ededed" data-stack="1"><div class="pv-frame" title="Mask group · 480:11131" style="width:390px;height:390px;position:relative" data-stack="1"><div class="pv-frame" title="Rectangle 34628946 · 480:11132" style="width:390px;height:390px;position:relative;border-radius:260px;background:#d9d9d9" data-stack="1"></div><div class="pv-frame" title="image 59 · 480:11133" style="width:951.4px;height:634.1px;position:relative;border-radius:260px" data-stack="1"></div><div class="pv-frame" title="Group 2147227390 · 480:11134" style="width:390px;height:349px;position:relative" data-stack="1"><div class="pv-frame" title="Frame 2147227708 · 480:11135" style="width:129px;height:349px;display:flex;flex-direction:row;padding:0px 0px 0px 0px;gap:129px;justify-content:flex-start;align-items:center;box-sizing:border-box"><span class="pv-shape" title="Vector 12309 · 480:11136" style="width:0px;height:387px;position:relative;border:2px solid #ffffff"></span><span class="pv-shape" title="Vector 12310 · 480:11137" style="width:0px;height:387px;position:relative;border:2px solid #ffffff"></span></div><div class="pv-frame" title="Frame 2147227709 · 480:11138" style="width:126.5px;height:390px;display:flex;flex-direction:row;padding:0px 0px 0px 0px;gap:129px;justify-content:flex-start;align-items:center;box-sizing:border-box"><span class="pv-shape" title="Vector 12309 · 480:11139" style="width:0px;height:390px;position:relative;border:2px solid #ffffff"></span><span class="pv-shape" title="Vector 12310 · 480:11140" style="width:0px;height:390px;position:relative;border:2px solid #ffffff"></span></div></div></div></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">size usage=XS <span class="dim">node 458:8953</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:390px"><div class="pv-frame" title="size usage=XS · 458:8953" style="width:390px;height:180px;position:relative;background:#ededed" data-stack="1"><span class="pv-instance" title="Profile icon · 460:1034" style="width:124px;height:124px;position:relative"><span class="pv-instance-label"><span class="pv-unresolved" title="main component is outside the ingested page">Profile icon ⚠</span></span></span></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">size usage=Native popup placeholder <span class="dim">node 611:1266</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:270px"><div class="pv-frame" title="size usage=Native popup placeholder · 611:1266" style="width:270px;height:206px;position:relative;background:#ededed" data-stack="1"><span class="pv-text" title="Device native pop up · 611:1267" style="width:150px;height:52px;position:relative;color:#454545;font-family:'Saira', sans-serif;font-weight:600;font-size:24px;line-height:110%;text-align:center;white-space:pre-line">Device native pop up</span></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">size usage=transcribe loading <span class="dim">node 684:1205</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:390px"><div class="pv-frame" title="size usage=transcribe loading · 684:1205" style="width:390px;height:72px;position:relative;background:#ffffff" data-stack="1"><div class="pv-frame" title="Group 2147227415 · 686:1209" style="width:358px;height:56px;position:relative" data-stack="1"><div class="pv-frame" title="Rectangle 161125011 · 684:1206" style="width:358px;height:24px;position:relative;border-radius:4px;background:#ededed" data-stack="1"></div><div class="pv-frame" title="Rectangle 161125013 · 684:1207" style="width:247px;height:24px;position:relative;border-radius:4px;background:#ededed" data-stack="1"></div></div></div></div></div>
+        </div></section>
+    <div class="idsblock"><h3>Identifiers</h3><div class="idrow"><span class="idlabel">Name</span><code class="idvalue" id="copy-name">Image, asset placeholder</code><button class="copybtn" data-copy="Image, asset placeholder" title="Copy Name">⧉ copy</button></div><div class="idrow"><span class="idlabel">Node id</span><code class="idvalue" id="copy-node-id">458:8952</code><button class="copybtn" data-copy="458:8952" title="Copy Node id">⧉ copy</button></div><div class="idrow"><span class="idlabel">Figma fingerprint</span><code class="idvalue" id="copy-figma-fingerprint">aeb5091d768aa1acd45c5220bcddd658abbcf259</code><button class="copybtn" data-copy="aeb5091d768aa1acd45c5220bcddd658abbcf259" title="Copy Figma fingerprint">⧉ copy</button></div></div>
+    <section class="metasection"><h3>Figma variants</h3><div class="pills"><span class="pill">size usage: S, M, L, XS, Native popup placeholder, transcribe loading</span></div><table class="table"><thead><tr><th>Figma variant</th><th>Node id</th><th>Fingerprint</th><th>Size</th></tr></thead><tbody><tr><td>size usage=S</td><td><code>458:8951</code></td><td class="fpcell"><code>8636e0d10b8ff60561e4f3286ea799e97c0af21a</code><button class="copybtn small" data-copy="8636e0d10b8ff60561e4f3286ea799e97c0af21a">⧉</button></td><td>390×326</td></tr><tr><td>size usage=M</td><td><code>494:2876</code></td><td class="fpcell"><code>148484ce58c14d37d6676904ac32f2571a82c65b</code><button class="copybtn small" data-copy="148484ce58c14d37d6676904ac32f2571a82c65b">⧉</button></td><td>390×400</td></tr><tr><td>size usage=L</td><td><code>480:10902</code></td><td class="fpcell"><code>1c06a64f32cb273490624d70aff45de9410a358f</code><button class="copybtn small" data-copy="1c06a64f32cb273490624d70aff45de9410a358f">⧉</button></td><td>390×510</td></tr><tr><td>size usage=XS</td><td><code>458:8953</code></td><td class="fpcell"><code>97c90ff1e4d4ee197423730a47a9a19da3db7c88</code><button class="copybtn small" data-copy="97c90ff1e4d4ee197423730a47a9a19da3db7c88">⧉</button></td><td>390×180</td></tr><tr><td>size usage=Native popup placeholder</td><td><code>611:1266</code></td><td class="fpcell"><code>11311250cd0986ca7941d0c7fd9b03a25fb35327</code><button class="copybtn small" data-copy="11311250cd0986ca7941d0c7fd9b03a25fb35327">⧉</button></td><td>270×206</td></tr><tr><td>size usage=transcribe loading</td><td><code>684:1205</code></td><td class="fpcell"><code>c75659b1f1f8bcae64995e4847a8907c72ac784f</code><button class="copybtn small" data-copy="c75659b1f1f8bcae64995e4847a8907c72ac784f">⧉</button></td><td>390×72</td></tr></tbody></table></section>
+    <section class="metasection"><h3>Composition & relationships</h3><h4>Used by</h4><ul class="linklist"><li><a href="modal-sheet.html">modal-sheet</a> <span class="rel">built from</span></li><li><a href="modal-sheet.html">modal-sheet</a> <span class="rel">contains</span></li></ul></section>
+    <h2 class="metaheader">Metadata <span class="dim">(rendered from the stored authored YAML)</span></h2>
+    <section class="metasection"><h3>Purpose</h3>A placeholder standing in for an image or asset, in a fixed set of sizes, plus mock stand-ins for a device-native pop-up and a transcribing/loading state.
+</section><section class="metasection"><h3>Usage</h3>Used wherever a design needs a placeholder for an image, avatar, device mock, native pop-up, or loading state. Because these are raw primitives, the specific use case for any variant is defined by the organism or molecule that uses it — not here.
+</section><section class="metasection"><h3>Design intent</h3>Provide a consistent, fixed library of placeholders so any design can represent images, assets, device mocks, native pop-ups, and loading states uniformly, without bespoke placeholder sizes.
+</section><section class="metasection"><h3>Anti-patterns</h3><ul class="rules"><li><code class=ruleid>no-resize</code> Do not change the placeholder sizes; the size set is fixed and locked.</li><li><code class=ruleid>native-popup-is-mock-only</code> Do not use the device-native-pop-up variant to build real OS pop-ups; it is only a mock stand-in (the library does not reproduce native pop-ups).
+</li></ul></section><section class="metasection"><h3>Variants</h3><div class="kvs"><div class="kv"><div class="k">locked</div><div class="v">True</div></div><div class="kv"><div class="k">note</div><div class="v">Sizes cannot be changed.</div></div><div class="kv"><div class="k">values</div><div class="v"><ul><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">xs</div></div><div class="kv"><div class="k">shape</div><div class="v">circle</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Circular avatar placeholder. Carries an optional profile icon.</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">s</div></div><div class="kv"><div class="k">shape</div><div class="v">rectangle</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Small rectangular placeholder.</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">n</div></div><div class="kv"><div class="k">shape</div><div class="v">rectangle</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Placeholder with a rule-of-thirds grid overlay.</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">m</div></div><div class="kv"><div class="k">shape</div><div class="v">rectangle</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Large rectangular placeholder.</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">device-native-pop-up</div></div><div class="kv"><div class="k">mock</div><div class="v">True</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">A mock stand-in for a native OS pop-up (e.g. a system prompt to turn on Bluetooth). Not a real pop-up; a placeholder representing one.
+</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">transcribing-loading-pop-up</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Placeholder for a transcribing/loading state.</div></div></div></li></ul></div></div></div></section><section class="metasection"><h3>Toggles</h3><div class="kvs"><div class="kv"><div class="k">xs_profile_icon</div><div class="v"><div class="kvs"><div class="kv"><div class="k">applies_to</div><div class="v">xs</div></div><div class="kv"><div class="k">states</div><div class="v"><ul><li>True</li><li>False</li></ul></div></div><div class="kv"><div class="k">note</div><div class="v">On the Size XS (circular avatar) variant, the profile icon can be shown or hidden per the requirement.
+</div></div></div></div></div></div></section><section class="metasection"><h3>Rules</h3><ul class="rules"><li><code class=ruleid>sizes-locked</code> The six sizes/variants are fixed and locked; the agent selects among them but never resizes or creates new ones.
+</li><li><code class=ruleid>shape-lock</code> Size XS is circular (avatar); the rule-of-thirds grid belongs to the N variant.
+</li><li><code class=ruleid>use-cases-owned-elsewhere</code> Use cases are not documented on this component; they are owned by whatever organism or molecule uses the placeholder.
+</li><li><code class=ruleid>native-popup-mock</code> The device-native-pop-up variant is a mock representation only.</li></ul></section><section class="metasection"><h3>AI metadata</h3><ul><li>The designer may ask the agent to display the different placeholder variants within a design, so options can be compared visually.
+</li></ul></section><section class="metasection"><h3>Visual properties</h3><div class="kvs"><div class="kv"><div class="k">source</div><div class="v">figma_mcp</div></div><div class="kv"><div class="k">note</div><div class="v">Exact values (dimensions, corner radius, colors) are not stored here. They are read live from Figma via MCP at consumption time.
+</div></div></div></section><details class="rawyaml"><summary>View authored YAML (verbatim from Figma description)</summary><pre>component:
+  id: image-asset-placeholder
+  name: Image / asset placeholder
+  type: atom
+
+
+  purpose: &gt;
+    A placeholder standing in for an image or asset, in a fixed set of sizes,
+    plus mock stand-ins for a device-native pop-up and a transcribing/loading
+    state.
+
+
+  usage: &gt;
+    Used wherever a design needs a placeholder for an image, avatar, device
+    mock, native pop-up, or loading state. Because these are raw primitives,
+    the specific use case for any variant is defined by the organism or
+    molecule that uses it — not here.
+
+
+  design_intent: &gt;
+    Provide a consistent, fixed library of placeholders so any design can
+    represent images, assets, device mocks, native pop-ups, and loading states
+    uniformly, without bespoke placeholder sizes.
+
+
+  anti_patterns:
+    - id: no-resize
+      rule: Do not change the placeholder sizes; the size set is fixed and locked.
+    - id: native-popup-is-mock-only
+      rule: &gt;
+        Do not use the device-native-pop-up variant to build real OS pop-ups;
+        it is only a mock stand-in (the library does not reproduce native
+        pop-ups).
+
+
+  variants:
+    locked: true
+    note: Sizes cannot be changed.
+    values:
+      - name: xs
+        shape: circle
+        description: Circular avatar placeholder. Carries an optional profile icon.
+      - name: s
+        shape: rectangle
+        description: Small rectangular placeholder.
+      - name: n
+        shape: rectangle
+        description: Placeholder with a rule-of-thirds grid overlay.
+      - name: m
+        shape: rectangle
+        description: Large rectangular placeholder.
+      - name: device-native-pop-up
+        mock: true
+        description: &gt;
+          A mock stand-in for a native OS pop-up (e.g. a system prompt to turn
+          on Bluetooth). Not a real pop-up; a placeholder representing one.
+      - name: transcribing-loading-pop-up
+        description: Placeholder for a transcribing/loading state.
+
+
+  toggles:
+    xs_profile_icon:
+      applies_to: xs
+      states: [on, off]
+      note: &gt;
+        On the Size XS (circular avatar) variant, the profile icon can be shown
+        or hidden per the requirement.
+
+
+  rules:
+    - id: sizes-locked
+      rule: &gt;
+        The six sizes/variants are fixed and locked; the agent selects among
+        them but never resizes or creates new ones.
+    - id: shape-lock
+      rule: &gt;
+        Size XS is circular (avatar); the rule-of-thirds grid belongs to the N
+        variant.
+    - id: use-cases-owned-elsewhere
+      rule: &gt;
+        Use cases are not documented on this component; they are owned by
+        whatever organism or molecule uses the placeholder.
+    - id: native-popup-mock
+      rule: The device-native-pop-up variant is a mock representation only.
+
+
+  ai_metadata:
+    - &gt;
+      The designer may ask the agent to display the different placeholder
+      variants within a design, so options can be compared visually.
+
+
+  visual_properties:
+    source: figma_mcp
+    note: &gt;
+      Exact values (dimensions, corner radius, colors) are not stored here.
+      They are read live from Figma via MCP at consumption time.
+</pre></details>
+    
+<footer class="footer">Generated from the repository — single source of truth. Regenerate with <code>python3 scripts/build_dashboard.py</code>. Source: Figma file <code>QjVyM5bRXgIOZn8PO1e0eK</code>, page “Test pilot run”, ingested 2026-07-10.</footer>
+</main>
+</div>
+<script src="../assets/app.js"></script>
+</body></html>

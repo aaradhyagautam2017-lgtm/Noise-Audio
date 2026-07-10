@@ -32,8 +32,28 @@ tokens/
   spacing.yaml            Designer-authored spacing YAML (mirrored verbatim) + `numeral` variables
 css/
   tokens.css              Concrete token values synced from Figma (light + dark custom properties)
+dashboard/                Designer dashboard — a static, browsable site generated FROM this repo (Phase 2).
+scripts/
+  build_dashboard.py      Regenerates dashboard/ in one pass from the current repo state.
 screens/                  Empty in Phase 1 — no screens are composed during ingestion.
 ```
+
+## Designer dashboard
+
+`dashboard/index.html` is a Material-style component-library site: foundations pages (colors,
+typography, spacing/radius), a component graph, and a detail page per component with a schematic
+live preview rendered from the extracted visual values, a copyable Figma fingerprint, the full
+authored metadata rendered from the stored YAML, and clickable composition / relationships /
+used-by links. It is a **rendered view of the repo only** — it contains nothing that is not in
+the repo, flags repo gaps (missing CONTROL_PANEL.md, dangling Figma references, unparseable
+metadata) with warning badges, and regenerates with:
+
+```
+python3 scripts/build_dashboard.py
+```
+
+Serve it locally with `python3 -m http.server --directory dashboard` or open
+`dashboard/index.html` directly.
 
 ## Component files
 

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modal Sheet — Noise Audio DLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600&family=Geist:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head><body>
+<div class="layout">
+
+    <aside class="sidebar">
+      <div class="appswitcher">
+        <span class="applogo">N</span>
+        <select onchange="void 0" title="App switcher">
+          <option selected>Noise Audio</option>
+        </select>
+      </div>
+      <nav>
+        <div class="navgroup">Overview</div>
+        <a class="navitem " href="../index.html">Overview</a>
+        <a class="navitem " href="../graph.html">Component graph</a>
+        <div class="navgroup">Foundations <span class="count">3</span></div>
+        <a class="navitem " href="../foundations-colors.html">Colors &amp; tokens</a>
+        <a class="navitem " href="../foundations-typography.html">Typography</a>
+        <a class="navitem " href="../foundations-spacing.html">Spacing &amp; radius</a>
+    <div class="navgroup">Atoms <span class="count">16</span></div><a class="navitem " href="../components/primary-cta-button.html">Primary cta</a><a class="navitem " href="../components/secondary-cta-button.html">Secondary cta</a><a class="navitem " href="../components/link-cta.html">Link cta</a><a class="navitem " href="../components/chevron.html">Chevron</a><a class="navitem " href="../components/checkbox.html">Checkbox</a><a class="navitem " href="../components/radio-button.html">Radio Button</a><a class="navitem " href="../components/toggle.html">Toggle</a><a class="navitem " href="../components/cross.html">Cross</a><a class="navitem " href="../components/heading-content-component.html">Heading-content component</a><a class="navitem " href="../components/status-bar.html">Status bar</a><a class="navitem " href="../components/image-asset-placeholder.html">Image, asset placeholder<span class="warnbadge" title="dangling Figma references">1</span></a><a class="navitem " href="../components/card-heading.html">Card heading</a><a class="navitem " href="../components/description.html">Description</a><a class="navitem " href="../components/text-field.html">Text field<span class="warnbadge" title="dangling Figma references">1</span></a><a class="navitem " href="../components/privacy-policy-tab.html">Privacy policy tab</a><a class="navitem " href="../components/progress-bar.html">Progress bar</a><div class="navgroup">Molecules <span class="count">2</span></div><a class="navitem " href="../components/actionables.html">Actionables<span class="warnbadge" title="dangling Figma references">5</span></a><a class="navitem " href="../components/l2-inner-pages-heading.html">L2/Inner pages Heading</a><div class="navgroup">Organisms <span class="count">8</span></div><a class="navitem " href="../components/l1-home-page-navigation.html">L1/Home page<span class="warnbadge" title="dangling Figma references">5</span></a><a class="navitem " href="../components/modal-card.html">Modal card<span class="warnbadge" title="dangling Figma references">1</span></a><a class="navitem " href="../components/master-card.html">Master card<span class="warnbadge" title="dangling Figma references">2</span></a><a class="navitem " href="../components/checkbox-card.html">Checkbox card<span class="warnbadge" title="dangling Figma references">3</span></a><a class="navitem " href="../components/l1-inner-page-navigation.html">L1 Inner page navigation<span class="warnbadge" title="dangling Figma references">5</span></a><a class="navitem " href="../components/action-card.html">Action card<span class="warnbadge" title="dangling Figma references">3</span></a><a class="navitem " href="../components/action-sheet.html">Action sheet<span class="warnbadge" title="dangling Figma references">3</span></a><a class="navitem active" href="../components/modal-sheet.html">Modal Sheet<span class="warnbadge" title="dangling Figma references">3</span></a></nav></aside>
+<main class="main">
+
+    <header class="pagehead">
+      <div><h1>Modal Sheet</h1>
+      <span class="typebadge t-complex-organism">Complex organism</span>
+      <span class="dim">usage count: 2</span></div>
+      <div class="dim">source file: <code>components/organisms/modal-sheet.yaml</code></div>
+    </header>
+    <div class="warning">⚠ 3 Figma instance reference(s) inside this component point outside the ingested library page (see INGESTION_REPORT.md):<ul><li><b>Status bar</b> (node <code>374:7867</code>) — page: AI Metdata; same-named library component: <a href="status-bar.html">status-bar</a></li><li><b>Modal</b> (node <code>786:4487</code>) — page: 06 Building Blocks</li><li><b>Home Indicator</b> (node <code>386:1835</code>) — page: 06 Building Blocks</li></ul></div>
+    <section class="metasection"><h3>Preview</h3><div class="warning">⚠ No extracted visual tree stored for this component — preview unavailable.</div></section>
+    <div class="idsblock"><h3>Identifiers</h3><div class="idrow"><span class="idlabel">Name</span><code class="idvalue" id="copy-name">Modal Sheet</code><button class="copybtn" data-copy="Modal Sheet" title="Copy Name">⧉ copy</button></div><div class="idrow"><span class="idlabel">Node id</span><code class="idvalue" id="copy-node-id">611:1378</code><button class="copybtn" data-copy="611:1378" title="Copy Node id">⧉ copy</button></div><div class="idrow"><span class="idlabel">Figma fingerprint</span><code class="idvalue" id="copy-figma-fingerprint">1ff5504fa0229284b6ae328723679fb94b0ab477</code><button class="copybtn" data-copy="1ff5504fa0229284b6ae328723679fb94b0ab477" title="Copy Figma fingerprint">⧉ copy</button></div></div>
+    <section class="metasection"><h3>Figma variants</h3><div class="pills"><span class="pill">Type: App Modal, Device native popup modal</span></div><table class="table"><thead><tr><th>Figma variant</th><th>Node id</th><th>Fingerprint</th><th>Size</th></tr></thead><tbody><tr><td>Type=App Modal</td><td><code>466:3210</code></td><td class="fpcell"><code>f746c65e2e6ac4d1e51d311f5647586168ee1c98</code><button class="copybtn small" data-copy="f746c65e2e6ac4d1e51d311f5647586168ee1c98">⧉</button></td><td>390×844</td></tr><tr><td>Type=Device native popup modal</td><td><code>611:1379</code></td><td class="fpcell"><code>64f64c4c316444f632a8d3112b8fb789344565b3</code><button class="copybtn small" data-copy="64f64c4c316444f632a8d3112b8fb789344565b3">⧉</button></td><td>390×844</td></tr></tbody></table></section>
+    <section class="metasection"><h3>Composition & relationships</h3><h4>Is built from</h4><ul class="linklist"><li><a href="modal-card.html">modal-card</a> <span class="dim">(Organism)</span></li><li><a href="image-asset-placeholder.html">image-asset-placeholder</a> <span class="dim">(Atom)</span></li></ul><h4>Relationships</h4><ul class="linklist"><li><a href="modal-card.html">modal-card</a> <span class="rel">contains</span></li><li><a href="image-asset-placeholder.html">image-asset-placeholder</a> <span class="rel">contains</span></li><li><a href="action-sheet.html">action-sheet</a> <span class="rel">counterpart</span></li><li><a href="status-bar.html">status-bar</a> <span class="rel">renders-on-top</span></li></ul><h4>Used by</h4><ul class="linklist"><li><a href="modal-card.html">modal-card</a> <span class="rel">content-of</span></li><li><a href="action-sheet.html">action-sheet</a> <span class="rel">counterpart</span></li></ul></section>
+    <h2 class="metaheader">Metadata <span class="dim">(rendered from the stored authored YAML)</span></h2>
+    <div class="pills"><span class="pill">type_note: An organism containing an organism or atom (the content variant).</span></div><section class="metasection"><h3>Purpose</h3>The full modal surface — a grey dimming overlay with content anchored to the bottom — used to present an unavoidable action the user must take.
+</section><section class="metasection"><h3>Usage</h3>Used when the user must complete an action they cannot skip. Follows the same container behavior as the Action sheet, except it is not freely dismissible.
+</section><section class="metasection"><h3>Design intent</h3>Force an unavoidable decision at a break in the flow, presenting the required action on a surface the user cannot casually dismiss.
+</section><section class="metasection"><h3>Anti-patterns</h3><ul class="rules"><li><code class=ruleid>not-for-optional-actions</code> Do not use for optional, skippable actions; use the Action sheet instead.</li><li><code class=ruleid>no-internal-scroll</code> Do not allow the content to scroll internally; the sheet grows to fit its content.
+</li><li><code class=ruleid>never-cover-status-bar</code> Do not obscure or recolor the status bar with the overlay; the status bar stays on top in its dedicated contrasting token.
+</li><li><code class=ruleid>no-extra-dismissal</code> Do not add a <a href="cross.html">cross</a> or any dismissal affordance beyond the ones each variant explicitly permits.
+</li></ul></section><section class="metasection"><h3>Variants</h3><div class="kvs"><div class="kv"><div class="k">locked</div><div class="v">True</div></div><div class="kv"><div class="k">values</div><div class="v"><ul><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">modal-card-variant</div></div><div class="kv"><div class="k">contains</div><div class="v"><div class="kvs"><div class="kv"><div class="k">component_id</div><div class="v"><a href="modal-card.html">modal-card</a></div></div></div></div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">The Modal sheet contains the Modal card.</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">device-native-pop-up-variant</div></div><div class="kv"><div class="k">contains</div><div class="v"><div class="kvs"><div class="kv"><div class="k">component_id</div><div class="v"><a href="image-asset-placeholder.html">image-asset-placeholder</a></div></div><div class="kv"><div class="k">pinned_variant</div><div class="v">device-native-pop-up</div></div></div></div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">The Modal sheet contains the <a href="image-asset-placeholder.html">image-asset-placeholder</a> atom, specifically its device-native-pop-up variant. Pinned: no other variant of the atom is used here.
+</div></div></div></li></ul></div></div></div></section><section class="metasection"><h3>Rules</h3><div class="kvs"><div class="kv"><div class="k">placement</div><div class="v"><ul><li>The sheet is anchored (stuck) to the bottom of the screen and grows upward to fit its content.
+</li></ul></div></div><div class="kv"><div class="k">scroll</div><div class="v"><ul><li>The content must never scroll; height is content-driven and expands upward instead.
+</li></ul></div></div><div class="kv"><div class="k">motion</div><div class="v"><ul><li>Enters from the bottom (slides up) and exits to the bottom (slides down), with the overlay fading accordingly. Smooth animation.
+</li></ul></div></div><div class="kv"><div class="k">status_bar</div><div class="v"><ul><li>Stays on top of the overlay in a contrasting color drawn from its dedicated token; the overlay never covers or recolors it.
+</li></ul></div></div><div class="kv"><div class="k">dismissal</div><div class="v"><ul class="rules"><li>Dismissible only via the actions (the Modal card&#x27;s CTAs). No overlay-tap, no swipe-down, no <a href="cross.html">cross</a>.
+<div class="kvs"><div class="kv"><div class="k">variant</div><div class="v">modal-card-variant</div></div></div></li><li>Dismissible only by tapping outside the placeholder, or by choosing one of the options inside the native pop-up. These are the only two ways. This follows the device&#x27;s own native pop-up conventions, not ours.
+<div class="kvs"><div class="kv"><div class="k">variant</div><div class="v">device-native-pop-up-variant</div></div></div></li></ul></div></div><div class="kv"><div class="k">usage_boundary</div><div class="v"><ul><li>Use the Modal sheet when the action is unavoidable and cannot be skipped. For optional, skippable actions, use the Action sheet. (Mirror of the shared action-vs-modal rule.)
+</li></ul></div></div></div></section><section class="metasection"><h3>Composition</h3><div class="kvs"><div class="kv"><div class="k">owned</div><div class="v"><ul><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">Grey dimming overlay</div></div><div class="kv"><div class="k">note</div><div class="v">Exact color/opacity read from Figma.</div></div></div></li></ul></div></div><div class="kv"><div class="k">content_variants</div><div class="v"><ul><li><a href="modal-card.html">modal-card</a></li><li><div class="kvs"><div class="kv"><div class="k"><a href="image-asset-placeholder.html">image-asset-placeholder</a> (variant</div><div class="v">device-native-pop-up)</div></div></div></li></ul></div></div><div class="kv"><div class="k">on_top</div><div class="v"><ul><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">Status bar</div></div><div class="kv"><div class="k">note</div><div class="v">Remains rendered on top of the overlay (see relationships).</div></div></div></li></ul></div></div></div></section><section class="metasection"><h3>Relationships</h3><ul><li><div class="kvs"><div class="kv"><div class="k">component_id</div><div class="v"><a href="modal-card.html">modal-card</a></div></div><div class="kv"><div class="k">relation</div><div class="v">contains</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Content of the Modal card variant.</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">component_id</div><div class="v"><a href="image-asset-placeholder.html">image-asset-placeholder</a></div></div><div class="kv"><div class="k">relation</div><div class="v">contains</div></div><div class="kv"><div class="k">pinned_variant</div><div class="v">device-native-pop-up</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Content of the Device native pop up variant; pinned to that specific atom variant.
+</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">component_id</div><div class="v"><a href="action-sheet.html">action-sheet</a></div></div><div class="kv"><div class="k">relation</div><div class="v">counterpart</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Parallel counterpart for optional, skippable actions (see usage_boundary).</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">component_id</div><div class="v"><a href="status-bar.html">status-bar</a></div></div><div class="kv"><div class="k">relation</div><div class="v">renders-on-top</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Stays rendered on top of the overlay in its dedicated contrasting token.
+</div></div></div></li></ul></section><section class="metasection"><h3>Visual properties</h3><div class="kvs"><div class="kv"><div class="k">source</div><div class="v">figma_mcp</div></div><div class="kv"><div class="k">note</div><div class="v">Exact values (overlay color/opacity, corner radius, spacing, dimensions) are not stored here. They are read live from Figma via MCP at consumption time.
+</div></div></div></section><details class="rawyaml"><summary>View authored YAML (verbatim from Figma description)</summary><pre>component:
+  id: modal-sheet
+  name: Modal sheet
+  type: complex-organism
+  type_note: An organism containing an organism or atom (the content variant).
+
+
+  purpose: &gt;
+    The full modal surface — a grey dimming overlay with content anchored to
+    the bottom — used to present an unavoidable action the user must take.
+
+
+  usage: &gt;
+    Used when the user must complete an action they cannot skip. Follows the
+    same container behavior as the Action sheet, except it is not freely
+    dismissible.
+
+
+  design_intent: &gt;
+    Force an unavoidable decision at a break in the flow, presenting the
+    required action on a surface the user cannot casually dismiss.
+
+
+  anti_patterns:
+    - id: not-for-optional-actions
+      rule: Do not use for optional, skippable actions; use the Action sheet instead.
+    - id: no-internal-scroll
+      rule: &gt;
+        Do not allow the content to scroll internally; the sheet grows to fit
+        its content.
+    - id: never-cover-status-bar
+      rule: &gt;
+        Do not obscure or recolor the status bar with the overlay; the status
+        bar stays on top in its dedicated contrasting token.
+    - id: no-extra-dismissal
+      rule: &gt;
+        Do not add a cross or any dismissal affordance beyond the ones each
+        variant explicitly permits.
+
+
+  composition:
+    owned:
+      - name: Grey dimming overlay
+        note: Exact color/opacity read from Figma.
+    content_variants:
+      - modal-card
+      - image-asset-placeholder (variant: device-native-pop-up)
+    on_top:
+      - name: Status bar
+        note: Remains rendered on top of the overlay (see relationships).
+
+
+  variants:
+    locked: true
+    values:
+      - name: modal-card-variant
+        contains:
+          component_id: modal-card
+        description: The Modal sheet contains the Modal card.
+      - name: device-native-pop-up-variant
+        contains:
+          component_id: image-asset-placeholder
+          pinned_variant: device-native-pop-up
+        description: &gt;
+          The Modal sheet contains the image-asset-placeholder atom,
+          specifically its device-native-pop-up variant. Pinned: no other
+          variant of the atom is used here.
+
+
+  rules:
+    placement:
+      - &gt;
+        The sheet is anchored (stuck) to the bottom of the screen and grows
+        upward to fit its content.
+    scroll:
+      - &gt;
+        The content must never scroll; height is content-driven and expands
+        upward instead.
+    motion:
+      - &gt;
+        Enters from the bottom (slides up) and exits to the bottom (slides
+        down), with the overlay fading accordingly. Smooth animation.
+    status_bar:
+      - &gt;
+        Stays on top of the overlay in a contrasting color drawn from its
+        dedicated token; the overlay never covers or recolors it.
+    dismissal:
+      - variant: modal-card-variant
+        rule: &gt;
+          Dismissible only via the actions (the Modal card&#x27;s CTAs). No
+          overlay-tap, no swipe-down, no cross.
+      - variant: device-native-pop-up-variant
+        rule: &gt;
+          Dismissible only by tapping outside the placeholder, or by choosing
+          one of the options inside the native pop-up. These are the only two
+          ways. This follows the device&#x27;s own native pop-up conventions, not
+          ours.
+    usage_boundary:
+      - &gt;
+        Use the Modal sheet when the action is unavoidable and cannot be
+        skipped. For optional, skippable actions, use the Action sheet.
+        (Mirror of the shared action-vs-modal rule.)
+
+
+  relationships:
+    - component_id: modal-card
+      relation: contains
+      description: Content of the Modal card variant.
+    - component_id: image-asset-placeholder
+      relation: contains
+      pinned_variant: device-native-pop-up
+      description: &gt;
+        Content of the Device native pop up variant; pinned to that specific
+        atom variant.
+    - component_id: action-sheet
+      relation: counterpart
+      description: Parallel counterpart for optional, skippable actions (see usage_boundary).
+    - component_id: status-bar
+      relation: renders-on-top
+      description: &gt;
+        Stays rendered on top of the overlay in its dedicated contrasting token.
+
+
+  visual_properties:
+    source: figma_mcp
+    note: &gt;
+      Exact values (overlay color/opacity, corner radius, spacing, dimensions)
+      are not stored here. They are read live from Figma via MCP at consumption
+      time.
+</pre></details>
+    
+<footer class="footer">Generated from the repository — single source of truth. Regenerate with <code>python3 scripts/build_dashboard.py</code>. Source: Figma file <code>QjVyM5bRXgIOZn8PO1e0eK</code>, page “Test pilot run”, ingested 2026-07-10.</footer>
+</main>
+</div>
+<script src="../assets/app.js"></script>
+</body></html>

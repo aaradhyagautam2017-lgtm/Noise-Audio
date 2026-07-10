@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Action card — Noise Audio DLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600&family=Geist:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head><body>
+<div class="layout">
+
+    <aside class="sidebar">
+      <div class="appswitcher">
+        <span class="applogo">N</span>
+        <select onchange="void 0" title="App switcher">
+          <option selected>Noise Audio</option>
+        </select>
+      </div>
+      <nav>
+        <div class="navgroup">Overview</div>
+        <a class="navitem " href="../index.html">Overview</a>
+        <a class="navitem " href="../graph.html">Component graph</a>
+        <div class="navgroup">Foundations <span class="count">3</span></div>
+        <a class="navitem " href="../foundations-colors.html">Colors &amp; tokens</a>
+        <a class="navitem " href="../foundations-typography.html">Typography</a>
+        <a class="navitem " href="../foundations-spacing.html">Spacing &amp; radius</a>
+    <div class="navgroup">Atoms <span class="count">16</span></div><a class="navitem " href="../components/primary-cta-button.html">Primary cta</a><a class="navitem " href="../components/secondary-cta-button.html">Secondary cta</a><a class="navitem " href="../components/link-cta.html">Link cta</a><a class="navitem " href="../components/chevron.html">Chevron</a><a class="navitem " href="../components/checkbox.html">Checkbox</a><a class="navitem " href="../components/radio-button.html">Radio Button</a><a class="navitem " href="../components/toggle.html">Toggle</a><a class="navitem " href="../components/cross.html">Cross</a><a class="navitem " href="../components/heading-content-component.html">Heading-content component</a><a class="navitem " href="../components/status-bar.html">Status bar</a><a class="navitem " href="../components/image-asset-placeholder.html">Image, asset placeholder<span class="warnbadge" title="dangling Figma references">1</span></a><a class="navitem " href="../components/card-heading.html">Card heading</a><a class="navitem " href="../components/description.html">Description</a><a class="navitem " href="../components/text-field.html">Text field<span class="warnbadge" title="dangling Figma references">1</span></a><a class="navitem " href="../components/privacy-policy-tab.html">Privacy policy tab</a><a class="navitem " href="../components/progress-bar.html">Progress bar</a><div class="navgroup">Molecules <span class="count">2</span></div><a class="navitem " href="../components/actionables.html">Actionables<span class="warnbadge" title="dangling Figma references">5</span></a><a class="navitem " href="../components/l2-inner-pages-heading.html">L2/Inner pages Heading</a><div class="navgroup">Organisms <span class="count">8</span></div><a class="navitem " href="../components/l1-home-page-navigation.html">L1/Home page<span class="warnbadge" title="dangling Figma references">5</span></a><a class="navitem " href="../components/modal-card.html">Modal card<span class="warnbadge" title="dangling Figma references">1</span></a><a class="navitem " href="../components/master-card.html">Master card<span class="warnbadge" title="dangling Figma references">2</span></a><a class="navitem " href="../components/checkbox-card.html">Checkbox card<span class="warnbadge" title="dangling Figma references">3</span></a><a class="navitem " href="../components/l1-inner-page-navigation.html">L1 Inner page navigation<span class="warnbadge" title="dangling Figma references">5</span></a><a class="navitem active" href="../components/action-card.html">Action card<span class="warnbadge" title="dangling Figma references">3</span></a><a class="navitem " href="../components/action-sheet.html">Action sheet<span class="warnbadge" title="dangling Figma references">3</span></a><a class="navitem " href="../components/modal-sheet.html">Modal Sheet<span class="warnbadge" title="dangling Figma references">3</span></a></nav></aside>
+<main class="main">
+
+    <header class="pagehead">
+      <div><h1>Action card</h1>
+      <span class="typebadge t-organism">Organism</span>
+      <span class="dim">usage count: 3</span></div>
+      <div class="dim">source file: <code>components/organisms/action-card.yaml</code></div>
+    </header>
+    <div class="warning">⚠ 3 Figma instance reference(s) inside this component point outside the ingested library page (see INGESTION_REPORT.md):<ul><li><b>Bottomsheet heading</b> (node <code>414:3175</code>) — page: 06 Building Blocks</li><li><b>Radio Button</b> (node <code>395:636</code>) — page: AI Metdata; same-named library component: <a href="radio-button.html">radio-button</a></li><li><b>Actionables</b> (node <code>329:2095</code>) — page: AI Metdata; same-named library component: <a href="actionables.html">actionables</a></li></ul></div>
+    <section class="metasection"><h3>Preview</h3><p class="pv-caption">Preview rendered from the extracted visual values in this file (schematic: positions inside non-auto-layout groups are approximate; hidden layers omitted; nested component instances render as linked chips — each child governs itself).</p><div class="pv-block"><div class="pv-variantname">State=Categorised <span class="dim">node 2096:1435</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:366px"><div class="pv-frame" title="State=Categorised · 2096:1435 · token: {&quot;itemSpacing&quot;: &quot;Gaps/bottom sheet&quot;, &quot;paddingTop&quot;: &quot;XL&quot;, &quot;paddingBottom&quot;: &quot;Padding/Card Top, bottom Padding&quot;, &quot;topLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;topRightRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomRightRadius&quot;: &quot;Radius/Bottomsheet&quot;}" style="width:366px;height:526px;display:flex;flex-direction:column;padding:24px 0px 16px 0px;gap:24px;justify-content:center;align-items:center;box-sizing:border-box;border-radius:32px;background:#ffffff"><span class="pv-instance" title="Bottomsheet heading · 2096:1436 · token: {&quot;itemSpacing&quot;: &quot;Gaps/small gap&quot;, &quot;paddingLeft&quot;: &quot;Padding/Card Side Padding&quot;, &quot;paddingRight&quot;: &quot;Padding/Card Side Padding&quot;}" style="width:366px;height:46px;display:flex;flex-direction:row;padding:0px 16px 0px 16px;gap:12px;justify-content:center;align-items:center;box-sizing:border-box"><span class="pv-instance-label"><span class="pv-unresolved" title="main component is outside the ingested page">Bottomsheet heading ⚠</span></span></span><div class="pv-frame" title="Frame 2147240579 · 2096:1437 · token: {&quot;itemSpacing&quot;: &quot;Gaps/smaller gap&quot;}" style="width:334px;height:248px;display:flex;flex-direction:column;padding:0px 0px 0px 0px;gap:8px;justify-content:flex-start;align-items:flex-start;box-sizing:border-box"><div class="pv-frame" title="large card heading  · 2096:1438 · token: {&quot;paddingLeft&quot;: &quot;Padding/Card Side Padding&quot;, &quot;paddingRight&quot;: &quot;Padding/Card Side Padding&quot;}" style="width:334px;height:16px;display:flex;flex-direction:row;padding:0px 16px 0px 16px;gap:16px;justify-content:flex-start;align-items:center;box-sizing:border-box"><span class="pv-note">1 children — category label: Content/Small text, text/secondary</span></div><div class="pv-frame" title="Frame 2147240571 · 2096:1440 · token: {&quot;paddingTop&quot;: &quot;M&quot;, &quot;paddingBottom&quot;: &quot;M&quot;, &quot;topLeftRadius&quot;: &quot;Radius/Card&quot;, &quot;topRightRadius&quot;: &quot;Radius/Card&quot;, &quot;bottomLeftRadius&quot;: &quot;Radius/Card&quot;, &quot;bottomRightRadius&quot;: &quot;Radius/Card&quot;}" style="width:334px;height:224px;display:flex;flex-direction:row;padding:12px 0px 12px 0px;gap:10px;justify-content:flex-start;align-items:flex-start;box-sizing:border-box;border-radius:18px;background:#f7f7f7"><span class="pv-note">1 children — 4 option rows, each: padding 12/16 (M / Card Side Padding), gap 12 (Gaps/small gap), row = label (Sub Headings/card headings, text/primary) + trailing Actionables instance</span></div></div><div class="pv-frame" title="Frame 2147240580 · 2096:1454 · token: {&quot;itemSpacing&quot;: &quot;Gaps/smaller gap&quot;}" style="width:334px;height:144px;display:flex;flex-direction:column;padding:0px 0px 0px 0px;gap:8px;justify-content:flex-start;align-items:flex-start;box-sizing:border-box"><div class="pv-frame" title="large card heading  · 2096:1455 · token: {&quot;paddingLeft&quot;: &quot;Padding/Card Side Padding&quot;, &quot;paddingRight&quot;: &quot;Padding/Card Side Padding&quot;}" style="width:334px;height:16px;display:flex;flex-direction:row;padding:0px 16px 0px 16px;gap:16px;justify-content:flex-start;align-items:center;box-sizing:border-box"><span class="pv-note">1 children — summarized in visual_values</span></div><div class="pv-frame" title="Frame 2147240571 · 2096:1457 · token: {&quot;paddingTop&quot;: &quot;M&quot;, &quot;paddingBottom&quot;: &quot;M&quot;, &quot;topLeftRadius&quot;: &quot;Radius/Card&quot;, &quot;topRightRadius&quot;: &quot;Radius/Card&quot;, &quot;bottomLeftRadius&quot;: &quot;Radius/Card&quot;, &quot;bottomRightRadius&quot;: &quot;Radius/Card&quot;}" style="width:334px;height:120px;display:flex;flex-direction:row;padding:12px 0px 12px 0px;gap:0px;justify-content:flex-start;align-items:flex-start;box-sizing:border-box;border-radius:18px;background:#f7f7f7"><span class="pv-note">1 children — 2 option rows, same row anatomy</span></div></div></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">State=list <span class="dim">node 2096:1465</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:366px"><div class="pv-frame" title="State=list · 2096:1465 · token: {&quot;itemSpacing&quot;: &quot;Gaps/bottom sheet&quot;, &quot;paddingTop&quot;: &quot;XL&quot;, &quot;paddingBottom&quot;: &quot;Padding/Card Top, bottom Padding&quot;, &quot;topLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;topRightRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomRightRadius&quot;: &quot;Radius/Bottomsheet&quot;}" style="width:366px;height:490px;display:flex;flex-direction:column;padding:24px 0px 16px 0px;gap:24px;justify-content:center;align-items:center;box-sizing:border-box;border-radius:32px;background:#ffffff"><span class="pv-instance" title="Bottomsheet heading · 2096:1466" style="width:366px;height:46px;position:relative"><span class="pv-instance-label"><span class="pv-unresolved" title="main component is outside the ingested page">Bottomsheet heading ⚠</span></span></span><div class="pv-frame" title="Frame 2147240571 · 2096:1467 · token: {&quot;paddingTop&quot;: &quot;Gaps/small gap&quot;, &quot;paddingBottom&quot;: &quot;Gaps/small gap&quot;, &quot;topLeftRadius&quot;: &quot;Radius/Card&quot;, &quot;topRightRadius&quot;: &quot;Radius/Card&quot;, &quot;bottomLeftRadius&quot;: &quot;Radius/Card&quot;, &quot;bottomRightRadius&quot;: &quot;Radius/Card&quot;}" style="width:334px;height:380px;display:flex;flex-direction:row;padding:12px 0px 12px 0px;gap:10px;justify-content:flex-start;align-items:flex-start;box-sizing:border-box;border-radius:18px;background:#f7f7f7"></div></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">State=Date selector <span class="dim">node 2096:1490</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:366px"><div class="pv-frame" title="State=Date selector · 2096:1490 · token: {&quot;itemSpacing&quot;: &quot;XXL&quot;, &quot;paddingTop&quot;: &quot;XL&quot;, &quot;paddingBottom&quot;: &quot;Padding/Card Top, bottom Padding&quot;, &quot;topLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;topRightRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomRightRadius&quot;: &quot;Radius/Bottomsheet&quot;}" style="width:366px;height:610px;display:flex;flex-direction:column;padding:24px 0px 16px 0px;gap:32px;justify-content:center;align-items:center;box-sizing:border-box;border-radius:32px;background:#ffffff"><span class="pv-instance" title="Bottomsheet heading · 2096:1491" style="width:366px;height:46px;position:relative"><span class="pv-instance-label"><span class="pv-unresolved" title="main component is outside the ingested page">Bottomsheet heading ⚠</span></span></span><div class="pv-frame" title="Date Picker · 2096:1492" style="width:366px;height:340px;display:flex;flex-direction:column;padding:8px 16px 8px 16px;gap:8px;justify-content:center;align-items:center;box-sizing:border-box"></div><div class="pv-frame" title="Frame 2147240585 · 2096:1629 · token: {&quot;itemSpacing&quot;: &quot;S&quot;}" style="width:334px;height:120px;display:flex;flex-direction:column;padding:0px 0px 0px 0px;gap:8px;justify-content:center;align-items:center;box-sizing:border-box"><span class="pv-instance" title="Primary cta · 2096:1630" style="position:relative"><span class="pv-instance-label"><a href="primary-cta-button.html">Primary cta</a></span></span><span class="pv-instance" title="Secondary cta · 2096:1631" style="position:relative"><span class="pv-instance-label"><a href="secondary-cta-button.html">Secondary cta</a></span></span></div></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">State=year selector <span class="dim">node 2096:1632</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:366px"><div class="pv-frame" title="State=year selector · 2096:1632 · token: {&quot;itemSpacing&quot;: &quot;XXL&quot;, &quot;paddingTop&quot;: &quot;XL&quot;, &quot;paddingBottom&quot;: &quot;Padding/Card Top, bottom Padding&quot;, &quot;topLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;topRightRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomRightRadius&quot;: &quot;Radius/Bottomsheet&quot;}" style="width:366px;height:559px;display:flex;flex-direction:column;padding:24px 0px 16px 0px;gap:32px;justify-content:center;align-items:center;box-sizing:border-box;border-radius:32px;background:#ffffff"><span class="pv-instance" title="Bottomsheet heading · 2096:1633" style="position:relative"><span class="pv-instance-label"><span class="pv-unresolved" title="main component is outside the ingested page">Bottomsheet heading ⚠</span></span></span><div class="pv-frame" title="Date Picker · 2096:1634" style="width:366px;height:289px;display:flex;flex-direction:column;padding:8px 16px 8px 16px;gap:8px;justify-content:center;align-items:center;box-sizing:border-box"></div><div class="pv-frame" title="Frame 2147240585 · 2096:1672 · token: {&quot;itemSpacing&quot;: &quot;S&quot;}" style="width:334px;height:120px;display:flex;flex-direction:column;padding:0px 0px 0px 0px;gap:8px;justify-content:center;align-items:center;box-sizing:border-box"></div></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">State=Month selector <span class="dim">node 2096:1675</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:366px"><div class="pv-frame" title="State=Month selector · 2096:1675 · token: {&quot;itemSpacing&quot;: &quot;XXL&quot;, &quot;paddingTop&quot;: &quot;XL&quot;, &quot;paddingBottom&quot;: &quot;Padding/Card Top, bottom Padding&quot;, &quot;topLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;topRightRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomRightRadius&quot;: &quot;Radius/Bottomsheet&quot;}" style="width:366px;height:559px;display:flex;flex-direction:column;padding:24px 0px 16px 0px;gap:32px;justify-content:center;align-items:center;box-sizing:border-box;border-radius:32px;background:#ffffff"><span class="pv-instance" title="Bottomsheet heading · 2096:1676" style="position:relative"><span class="pv-instance-label"><span class="pv-unresolved" title="main component is outside the ingested page">Bottomsheet heading ⚠</span></span></span><div class="pv-frame" title="Date Picker · 2096:1677" style="width:366px;height:289px;display:flex;flex-direction:column;padding:8px 16px 8px 16px;gap:8px;justify-content:center;align-items:center;box-sizing:border-box"></div><div class="pv-frame" title="Frame 2147240585 · 2096:1716 · token: {&quot;itemSpacing&quot;: &quot;S&quot;}" style="width:334px;height:120px;display:flex;flex-direction:column;padding:0px 0px 0px 0px;gap:8px;justify-content:center;align-items:center;box-sizing:border-box"></div></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">State=Single option <span class="dim">node 2096:1719</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:366px"><div class="pv-frame" title="State=Single option · 2096:1719 · token: {&quot;itemSpacing&quot;: &quot;Gaps/bottom sheet&quot;, &quot;paddingTop&quot;: &quot;XL&quot;, &quot;paddingBottom&quot;: &quot;Padding/Card Top, bottom Padding&quot;, &quot;topLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;topRightRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomRightRadius&quot;: &quot;Radius/Bottomsheet&quot;}" style="width:366px;height:256px;display:flex;flex-direction:column;padding:24px 0px 16px 0px;gap:24px;justify-content:center;align-items:center;box-sizing:border-box;border-radius:32px;background:#ffffff"><span class="pv-instance" title="Bottomsheet heading · 2096:1720" style="width:366px;height:36px;position:relative"><span class="pv-instance-label"><span class="pv-unresolved" title="main component is outside the ingested page">Bottomsheet heading ⚠</span></span></span><div class="pv-frame" title="Frame 2147240581 · 2096:1721 · token: {&quot;itemSpacing&quot;: &quot;Gaps/small gap&quot;}" style="width:334px;height:156px;display:flex;flex-direction:column;padding:0px 0px 0px 0px;gap:12px;justify-content:flex-start;align-items:flex-start;box-sizing:border-box"></div></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">State=upload profile picture <span class="dim">node 2096:1748</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:366px"><div class="pv-frame" title="State=upload profile picture · 2096:1748 · token: {&quot;itemSpacing&quot;: &quot;Gaps/bottom sheet&quot;, &quot;paddingTop&quot;: &quot;XL&quot;, &quot;paddingBottom&quot;: &quot;Padding/Card Top, bottom Padding&quot;, &quot;topLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;topRightRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomRightRadius&quot;: &quot;Radius/Bottomsheet&quot;}" style="width:366px;height:246px;display:flex;flex-direction:column;padding:24px 0px 16px 0px;gap:24px;justify-content:center;align-items:center;box-sizing:border-box;border-radius:32px;background:#ffffff"><span class="pv-instance" title="Bottomsheet heading · 2096:1749" style="width:366px;height:26px;position:relative"><span class="pv-instance-label"><span class="pv-unresolved" title="main component is outside the ingested page">Bottomsheet heading ⚠</span></span></span><div class="pv-frame" title="Frame 2147240581 · 2096:1750 · token: {&quot;itemSpacing&quot;: &quot;Gaps/small gap&quot;}" style="width:334px;height:156px;display:flex;flex-direction:column;padding:0px 0px 0px 0px;gap:12px;justify-content:flex-start;align-items:flex-start;box-sizing:border-box"></div></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">State=Find my earbuds <span class="dim">node 2096:1775</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:366px"><div class="pv-frame" title="State=Find my earbuds · 2096:1775 · token: {&quot;itemSpacing&quot;: &quot;Gaps/bottom sheet&quot;, &quot;paddingTop&quot;: &quot;XL&quot;, &quot;paddingBottom&quot;: &quot;Padding/Card Top, bottom Padding&quot;, &quot;topLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;topRightRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomLeftRadius&quot;: &quot;Radius/Bottomsheet&quot;, &quot;bottomRightRadius&quot;: &quot;Radius/Bottomsheet&quot;}" style="width:366px;height:594px;display:flex;flex-direction:column;padding:24px 0px 16px 0px;gap:24px;justify-content:center;align-items:center;box-sizing:border-box;border-radius:32px;background:#ffffff"><div class="pv-frame" title="Frame 2147240598 · 2096:1776" style="width:366px;height:554px;display:flex;flex-direction:column;padding:0px 0px 0px 0px;gap:16px;justify-content:flex-start;align-items:center;box-sizing:border-box"><div class="pv-frame" title="Frame 2147240597 · 2096:1777 · token: {&quot;itemSpacing&quot;: &quot;Gaps/smaller gap&quot;}" style="width:366px;height:418px;display:flex;flex-direction:column;padding:0px 0px 0px 0px;gap:8px;justify-content:flex-start;align-items:center;box-sizing:border-box"><span class="pv-note">2 children — summarized in visual_values</span></div><div class="pv-frame" title="Frame 2147240585 · 2096:1797 · token: {&quot;itemSpacing&quot;: &quot;S&quot;}" style="width:334px;height:120px;display:flex;flex-direction:column;padding:0px 0px 0px 0px;gap:8px;justify-content:center;align-items:center;box-sizing:border-box"><span class="pv-note">2 children — Primary cta (Bottomsheet) + Secondary cta (Bottomsheet) instances</span></div></div></div></div></div>
+        </div></section>
+    <div class="idsblock"><h3>Identifiers</h3><div class="idrow"><span class="idlabel">Name</span><code class="idvalue" id="copy-name">Action card</code><button class="copybtn" data-copy="Action card" title="Copy Name">⧉ copy</button></div><div class="idrow"><span class="idlabel">Node id</span><code class="idvalue" id="copy-node-id">2096:1434</code><button class="copybtn" data-copy="2096:1434" title="Copy Node id">⧉ copy</button></div><div class="idrow"><span class="idlabel">Figma fingerprint</span><code class="idvalue" id="copy-figma-fingerprint">f21a114bbd31c9be808ce2265358902b7aeefbc4</code><button class="copybtn" data-copy="f21a114bbd31c9be808ce2265358902b7aeefbc4" title="Copy Figma fingerprint">⧉ copy</button></div></div>
+    <section class="metasection"><h3>Figma variants</h3><div class="pills"><span class="pill">State: Categorised, list, Date selector, year selector, Month selector, Single option, upload profile picture, Find my earbuds</span></div><table class="table"><thead><tr><th>Figma variant</th><th>Node id</th><th>Fingerprint</th><th>Size</th></tr></thead><tbody><tr><td>State=Categorised</td><td><code>2096:1435</code></td><td class="fpcell"><code>11886b1b1687b1559ae5d7faa023bd3c731cfd0e</code><button class="copybtn small" data-copy="11886b1b1687b1559ae5d7faa023bd3c731cfd0e">⧉</button></td><td>366×526</td></tr><tr><td>State=list</td><td><code>2096:1465</code></td><td class="fpcell"><code>2448d0fa4a5de1fbb1aaa33373210be752443848</code><button class="copybtn small" data-copy="2448d0fa4a5de1fbb1aaa33373210be752443848">⧉</button></td><td>366×490</td></tr><tr><td>State=Date selector</td><td><code>2096:1490</code></td><td class="fpcell"><code>3a6b22f913c2456ab451293f0b204e832db9d9ba</code><button class="copybtn small" data-copy="3a6b22f913c2456ab451293f0b204e832db9d9ba">⧉</button></td><td>366×610</td></tr><tr><td>State=year selector</td><td><code>2096:1632</code></td><td class="fpcell"><code>8890ff6e3d81d04f229e67b04527ddcc5e1cbc51</code><button class="copybtn small" data-copy="8890ff6e3d81d04f229e67b04527ddcc5e1cbc51">⧉</button></td><td>366×559</td></tr><tr><td>State=Month selector</td><td><code>2096:1675</code></td><td class="fpcell"><code>f790cfadca0328d337a9f700e510f4a0cee7fc53</code><button class="copybtn small" data-copy="f790cfadca0328d337a9f700e510f4a0cee7fc53">⧉</button></td><td>366×559</td></tr><tr><td>State=Single option</td><td><code>2096:1719</code></td><td class="fpcell"><code>827463d687297ca077586d9a477de66058379c66</code><button class="copybtn small" data-copy="827463d687297ca077586d9a477de66058379c66">⧉</button></td><td>366×256</td></tr><tr><td>State=upload profile picture</td><td><code>2096:1748</code></td><td class="fpcell"><code>0ce92e9c6009c137b468d3558e06f059cda82eaa</code><button class="copybtn small" data-copy="0ce92e9c6009c137b468d3558e06f059cda82eaa">⧉</button></td><td>366×246</td></tr><tr><td>State=Find my earbuds</td><td><code>2096:1775</code></td><td class="fpcell"><code>a76837ce453b1f9b1eb16fac39c4d00acbe821db</code><button class="copybtn small" data-copy="a76837ce453b1f9b1eb16fac39c4d00acbe821db">⧉</button></td><td>366×594</td></tr></tbody></table></section>
+    <section class="metasection"><h3>Composition & relationships</h3><h4>Is built from</h4><ul class="linklist"><li><a href="cross.html">cross</a> <span class="dim">(Atom)</span></li><li><a href="actionables.html">actionables</a> <span class="dim">(Molecule)</span></li><li><a href="primary-cta-button.html">primary-cta-button</a> <span class="dim">(Atom)</span></li><li><a href="secondary-cta-button.html">secondary-cta-button</a> <span class="dim">(Atom)</span></li><li><a href="link-cta.html">link-cta</a> <span class="dim">(Atom)</span></li></ul><h4>Relationships</h4><ul class="linklist"><li><a href="action-sheet.html">action-sheet</a> <span class="rel">content-of</span></li><li><a href="modal-card.html">modal-card</a> <span class="rel">counterpart</span></li></ul><h4>Used by</h4><ul class="linklist"><li><a href="modal-card.html">modal-card</a> <span class="rel">counterpart</span></li><li><a href="action-sheet.html">action-sheet</a> <span class="rel">built from</span></li><li><a href="action-sheet.html">action-sheet</a> <span class="rel">contains</span></li></ul></section>
+    <h2 class="metaheader">Metadata <span class="dim">(rendered from the stored authored YAML)</span></h2>
+    <section class="metasection"><h3>Purpose</h3>The white content block of an action sheet — presents a set of options or an input the user can act on, with a locked set of content structures.
+</section><section class="metasection"><h3>Usage</h3>Used as the content block inside an Action sheet (Action card + grey overlay). The agent first selects the variant structure that fits the content, then sets the header and button toggles.
+</section><section class="metasection"><h3>Design intent</h3>Provide a single, consistent surface for optional, skippable actions and selections, with a fixed library of content structures so option-presentation stays uniform across the app.
+</section><section class="metasection"><h3>Anti-patterns</h3><ul class="rules"><li><code class=ruleid>not-standalone</code> Do not use the Action card on its own; it only exists inside an Action sheet (paired with the grey overlay).
+</li><li><code class=ruleid>no-invented-variants</code> Do not invent new variant structures; the set is locked.</li><li><code class=ruleid>find-my-earbuds-scope</code> Do not use the find-my-earbuds variant outside the Find My Earbuds case.
+</li></ul></section><section class="metasection"><h3>Variants</h3><div class="kvs"><div class="kv"><div class="k">locked</div><div class="v">True</div></div><div class="kv"><div class="k">values</div><div class="v"><ul><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">categorized-list</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Heading/subheading + options grouped under category labels.</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">list</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Options listed flat, without categorization.</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">single-option-card</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Two distinct option chunks (one chunk + another), e.g. providing given options or contact numbers.
+</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">calendar-card</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Date selection via a calendar.</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">year-card</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Year selection.</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">month-card</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Month selection.</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">profile-picture-card</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Two-option structure (e.g. take a photo / upload from gallery).</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">find-my-earbuds-card</div></div><div class="kv"><div class="k">standalone</div><div class="v">True</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Standalone card; used only in the Find My Earbuds case.</div></div></div></li></ul></div></div></div></section><section class="metasection"><h3>Toggles</h3><div class="kvs"><div class="kv"><div class="k">shared_by_all_variants</div><div class="v">True</div></div><div class="kv"><div class="k">heading</div><div class="v"><div class="kvs"><div class="kv"><div class="k">states</div><div class="v"><ul><li>True</li><li>False</li></ul></div></div><div class="kv"><div class="k">content</div><div class="v"><div class="kvs"><div class="kv"><div class="k">states</div><div class="v"><ul><li>True</li><li>False</li></ul></div></div><div class="kv"><div class="k">note</div><div class="v">Content (subheading) is only meaningful when the heading is on.
+</div></div></div></div></div></div></div></div><div class="kv"><div class="k">bottom_buttons</div><div class="v"><div class="kvs"><div class="kv"><div class="k">count</div><div class="v"><ul><li>0</li><li>1</li><li>2</li><li>3</li></ul></div></div><div class="kv"><div class="k">source</div><div class="v">cta-family</div></div><div class="kv"><div class="k">note</div><div class="v">Chosen from Primary / Secondary / Link CTA.</div></div></div></div></div></div></section><section class="metasection"><h3>Rules</h3><div class="kvs"><div class="kv"><div class="k">structure</div><div class="v"><ul><li>The Cross (X) is always present and never toggles off.</li><li>The variant structures are locked; the agent selects among them but never creates new ones.
+</li><li>Body content varies by variant and case; sample content is not final.</li></ul></div></div><div class="kv"><div class="k">composition_workflow</div><div class="v"><ul><li>Agent order: first choose the variant structure that fits the content, then set the heading/content <a href="toggle.html">toggle</a>, then set the number and type of bottom buttons.
+</li></ul></div></div><div class="kv"><div class="k">usage_boundary</div><div class="v"><ul><li>Use the Action card (within an Action sheet) when the action is optional and skippable (e.g. upload a profile image, set a birthday). For unavoidable actions the user cannot skip, use the Modal card / Modal sheet instead. (Mirror of the shared action-vs-modal rule.)
+</li></ul></div></div></div></section><section class="metasection"><h3>Composition</h3><div class="kvs"><div class="kv"><div class="k">embedded</div><div class="v"><ul><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">Header title</div></div><div class="kv"><div class="k">note</div><div class="v">Owned by this component; not a child.</div></div></div></li></ul></div></div><div class="kv"><div class="k">used_atoms</div><div class="v"><ul><li><a href="cross.html">cross</a></li></ul></div></div><div class="kv"><div class="k">used_molecules</div><div class="v"><ul><li><a href="actionables.html">actionables</a></li></ul></div></div><div class="kv"><div class="k">used_cta</div><div class="v"><ul><li><a href="primary-cta-button.html">primary-cta-button</a></li><li><a href="secondary-cta-button.html">secondary-cta-button</a></li><li><a href="link-cta.html">link-cta</a></li></ul></div></div></div></section><section class="metasection"><h3>Parts</h3><ul><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">Header title</div></div><div class="kv"><div class="k">source</div><div class="v">self-contained</div></div><div class="kv"><div class="k">note</div><div class="v">Embedded in this component; owned here.</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">Close</div></div><div class="kv"><div class="k">source</div><div class="v">atom</div></div><div class="kv"><div class="k">atom</div><div class="v"><a href="cross.html">cross</a></div></div><div class="kv"><div class="k">note</div><div class="v">Always present; never toggles off.</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">Selection rows</div></div><div class="kv"><div class="k">source</div><div class="v">molecule</div></div><div class="kv"><div class="k">molecule</div><div class="v"><a href="actionables.html">actionables</a></div></div><div class="kv"><div class="k">note</div><div class="v">Linked to Actionables so the trailing control can be radio, <a href="checkbox.html">checkbox</a>, <a href="toggle.html">toggle</a>, <a href="chevron.html">chevron</a>, etc. as the case requires.
+</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">name</div><div class="v">Bottom buttons</div></div><div class="kv"><div class="k">source</div><div class="v">cta-family</div></div><div class="kv"><div class="k">note</div><div class="v">Primary / Secondary / Link CTA, per the button <a href="toggle.html">toggle</a>.</div></div></div></li></ul></section><section class="metasection"><h3>Relationships</h3><ul><li><div class="kvs"><div class="kv"><div class="k">component_id</div><div class="v"><a href="action-sheet.html">action-sheet</a></div></div><div class="kv"><div class="k">relation</div><div class="v">content-of</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">The Action card is the content block placed inside the Action sheet (Action card + grey overlay).
+</div></div></div></li><li><div class="kvs"><div class="kv"><div class="k">component_id</div><div class="v"><a href="modal-card.html">modal-card</a></div></div><div class="kv"><div class="k">relation</div><div class="v">counterpart</div></div><div class="kv"><div class="k"><a href="description.html">description</a></div><div class="v">Parallel counterpart for unavoidable actions (see usage_boundary).
+</div></div></div></li></ul></section><section class="metasection"><h3>Visual properties</h3><div class="kvs"><div class="kv"><div class="k">source</div><div class="v">figma_mcp</div></div><div class="kv"><div class="k">note</div><div class="v">Exact values (corner radius, padding, width, colors) are not stored here. They are read live from Figma via MCP at consumption time.
+</div></div></div></section><details class="rawyaml"><summary>View authored YAML (verbatim from Figma description)</summary><pre>component:
+  id: action-card
+  name: Action card
+  type: organism
+
+
+  purpose: &gt;
+    The white content block of an action sheet — presents a set of options or
+    an input the user can act on, with a locked set of content structures.
+
+
+  usage: &gt;
+    Used as the content block inside an Action sheet (Action card + grey
+    overlay). The agent first selects the variant structure that fits the
+    content, then sets the header and button toggles.
+
+
+  design_intent: &gt;
+    Provide a single, consistent surface for optional, skippable actions and
+    selections, with a fixed library of content structures so
+    option-presentation stays uniform across the app.
+
+
+  anti_patterns:
+    - id: not-standalone
+      rule: &gt;
+        Do not use the Action card on its own; it only exists inside an Action
+        sheet (paired with the grey overlay).
+    - id: no-invented-variants
+      rule: Do not invent new variant structures; the set is locked.
+    - id: find-my-earbuds-scope
+      rule: &gt;
+        Do not use the find-my-earbuds variant outside the Find My Earbuds case.
+
+
+  composition:
+    embedded:
+      - name: Header title
+        note: Owned by this component; not a child.
+    used_atoms:
+      - cross
+    used_molecules:
+      - actionables
+    used_cta:
+      - primary-cta-button
+      - secondary-cta-button
+      - link-cta
+
+
+  parts:
+    - name: Header title
+      source: self-contained
+      note: Embedded in this component; owned here.
+    - name: Close
+      source: atom
+      atom: cross
+      note: Always present; never toggles off.
+    - name: Selection rows
+      source: molecule
+      molecule: actionables
+      note: &gt;
+        Linked to Actionables so the trailing control can be radio, checkbox,
+        toggle, chevron, etc. as the case requires.
+    - name: Bottom buttons
+      source: cta-family
+      note: Primary / Secondary / Link CTA, per the button toggle.
+
+
+  variants:
+    locked: true
+    values:
+      - name: categorized-list
+        description: Heading/subheading + options grouped under category labels.
+      - name: list
+        description: Options listed flat, without categorization.
+      - name: single-option-card
+        description: &gt;
+          Two distinct option chunks (one chunk + another), e.g. providing
+          given options or contact numbers.
+      - name: calendar-card
+        description: Date selection via a calendar.
+      - name: year-card
+        description: Year selection.
+      - name: month-card
+        description: Month selection.
+      - name: profile-picture-card
+        description: Two-option structure (e.g. take a photo / upload from gallery).
+      - name: find-my-earbuds-card
+        standalone: true
+        description: Standalone card; used only in the Find My Earbuds case.
+
+
+  toggles:
+    shared_by_all_variants: true
+    heading:
+      states: [on, off]
+      content:
+        states: [on, off]
+        note: &gt;
+          Content (subheading) is only meaningful when the heading is on.
+    bottom_buttons:
+      count: [0, 1, 2, 3]
+      source: cta-family
+      note: Chosen from Primary / Secondary / Link CTA.
+
+
+  rules:
+    structure:
+      - The Cross (X) is always present and never toggles off.
+      - &gt;
+        The variant structures are locked; the agent selects among them but
+        never creates new ones.
+      - Body content varies by variant and case; sample content is not final.
+    composition_workflow:
+      - &gt;
+        Agent order: first choose the variant structure that fits the content,
+        then set the heading/content toggle, then set the number and type of
+        bottom buttons.
+    usage_boundary:
+      - &gt;
+        Use the Action card (within an Action sheet) when the action is
+        optional and skippable (e.g. upload a profile image, set a birthday).
+        For unavoidable actions the user cannot skip, use the Modal card /
+        Modal sheet instead. (Mirror of the shared action-vs-modal rule.)
+
+
+  relationships:
+    - component_id: action-sheet
+      relation: content-of
+      description: &gt;
+        The Action card is the content block placed inside the Action sheet
+        (Action card + grey overlay).
+    - component_id: modal-card
+      relation: counterpart
+      description: &gt;
+        Parallel counterpart for unavoidable actions (see usage_boundary).
+
+
+  visual_properties:
+    source: figma_mcp
+    note: &gt;
+      Exact values (corner radius, padding, width, colors) are not stored here.
+      They are read live from Figma via MCP at consumption time.
+</pre></details>
+    
+<footer class="footer">Generated from the repository — single source of truth. Regenerate with <code>python3 scripts/build_dashboard.py</code>. Source: Figma file <code>QjVyM5bRXgIOZn8PO1e0eK</code>, page “Test pilot run”, ingested 2026-07-10.</footer>
+</main>
+</div>
+<script src="../assets/app.js"></script>
+</body></html>
