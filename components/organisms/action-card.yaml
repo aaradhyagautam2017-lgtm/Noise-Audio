@@ -1,0 +1,942 @@
+# Action card — ingested from Figma (2096:1434)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: action-card
+name: Action card
+type: organism
+node_id: 2096:1434
+figma_fingerprint: f21a114bbd31c9be808ce2265358902b7aeefbc4
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  State:
+  - Categorised
+  - list
+  - Date selector
+  - year selector
+  - Month selector
+  - Single option
+  - upload profile picture
+  - Find my earbuds
+variants:
+- name: State=Categorised
+  node_id: 2096:1435
+  figma_fingerprint: 11886b1b1687b1559ae5d7faa023bd3c731cfd0e
+  width: 366
+  height: 526
+- name: State=list
+  node_id: 2096:1465
+  figma_fingerprint: 2448d0fa4a5de1fbb1aaa33373210be752443848
+  width: 366
+  height: 490
+- name: State=Date selector
+  node_id: 2096:1490
+  figma_fingerprint: 3a6b22f913c2456ab451293f0b204e832db9d9ba
+  width: 366
+  height: 610
+- name: State=year selector
+  node_id: 2096:1632
+  figma_fingerprint: 8890ff6e3d81d04f229e67b04527ddcc5e1cbc51
+  width: 366
+  height: 559
+- name: State=Month selector
+  node_id: 2096:1675
+  figma_fingerprint: f790cfadca0328d337a9f700e510f4a0cee7fc53
+  width: 366
+  height: 559
+- name: State=Single option
+  node_id: 2096:1719
+  figma_fingerprint: 827463d687297ca077586d9a477de66058379c66
+  width: 366
+  height: 256
+- name: State=upload profile picture
+  node_id: 2096:1748
+  figma_fingerprint: 0ce92e9c6009c137b468d3558e06f059cda82eaa
+  width: 366
+  height: 246
+- name: State=Find my earbuds
+  node_id: 2096:1775
+  figma_fingerprint: a76837ce453b1f9b1eb16fac39c4d00acbe821db
+  width: 366
+  height: 594
+structural_references:
+- references: Bottomsheet heading
+  ref_node_id: 414:3175
+  ref_fingerprint: 7fcdcb9e16ef23be1b2a746dc3b58e77282112c9
+  variant_used: Bottomsheet heading
+  instance_count: 8
+  resolved: false
+  external_location: 'page: 06 Building Blocks'
+- references: Radio Button
+  ref_node_id: 395:636
+  ref_fingerprint: 35cba483d708e4278d0461bddc10d639aa7dc04b
+  variant_used: State=Selected
+  instance_count: 13
+  resolved: false
+  external_location: 'page: AI Metdata'
+  same_named_library_component: radio-button
+- references: Actionables
+  ref_node_id: 329:2095
+  ref_fingerprint: 4b6a4ae9a8d5c00c90119bb74803d60125416864
+  variant_used: Action=Chevron
+  instance_count: 7
+  resolved: false
+  external_location: 'page: AI Metdata'
+  same_named_library_component: actionables
+- references: Primary cta
+  ref_node_id: 248:4940
+  ref_fingerprint: 13d9bcf56d34b8f5859397f76b4787da65b4f6f8
+  variant_used: State=Enabled, Usage=Bottomsheet
+  instance_count: 4
+  resolved: true
+  target_id: primary-cta-button
+- references: Secondary cta
+  ref_node_id: 250:4953
+  ref_fingerprint: 496c1152f7812e427b173dfadf82190e3ca7c3c0
+  variant_used: State=Enabled, Usecase=Bottomsheet
+  instance_count: 4
+  resolved: true
+  target_id: secondary-cta-button
+authored_metadata: |
+  component:
+    id: action-card
+    name: Action card
+    type: organism
+
+
+    purpose: >
+      The white content block of an action sheet — presents a set of options or
+      an input the user can act on, with a locked set of content structures.
+
+
+    usage: >
+      Used as the content block inside an Action sheet (Action card + grey
+      overlay). The agent first selects the variant structure that fits the
+      content, then sets the header and button toggles.
+
+
+    design_intent: >
+      Provide a single, consistent surface for optional, skippable actions and
+      selections, with a fixed library of content structures so
+      option-presentation stays uniform across the app.
+
+
+    anti_patterns:
+      - id: not-standalone
+        rule: >
+          Do not use the Action card on its own; it only exists inside an Action
+          sheet (paired with the grey overlay).
+      - id: no-invented-variants
+        rule: Do not invent new variant structures; the set is locked.
+      - id: find-my-earbuds-scope
+        rule: >
+          Do not use the find-my-earbuds variant outside the Find My Earbuds case.
+
+
+    composition:
+      embedded:
+        - name: Header title
+          note: Owned by this component; not a child.
+      used_atoms:
+        - cross
+      used_molecules:
+        - actionables
+      used_cta:
+        - primary-cta-button
+        - secondary-cta-button
+        - link-cta
+
+
+    parts:
+      - name: Header title
+        source: self-contained
+        note: Embedded in this component; owned here.
+      - name: Close
+        source: atom
+        atom: cross
+        note: Always present; never toggles off.
+      - name: Selection rows
+        source: molecule
+        molecule: actionables
+        note: >
+          Linked to Actionables so the trailing control can be radio, checkbox,
+          toggle, chevron, etc. as the case requires.
+      - name: Bottom buttons
+        source: cta-family
+        note: Primary / Secondary / Link CTA, per the button toggle.
+
+
+    variants:
+      locked: true
+      values:
+        - name: categorized-list
+          description: Heading/subheading + options grouped under category labels.
+        - name: list
+          description: Options listed flat, without categorization.
+        - name: single-option-card
+          description: >
+            Two distinct option chunks (one chunk + another), e.g. providing
+            given options or contact numbers.
+        - name: calendar-card
+          description: Date selection via a calendar.
+        - name: year-card
+          description: Year selection.
+        - name: month-card
+          description: Month selection.
+        - name: profile-picture-card
+          description: Two-option structure (e.g. take a photo / upload from gallery).
+        - name: find-my-earbuds-card
+          standalone: true
+          description: Standalone card; used only in the Find My Earbuds case.
+
+
+    toggles:
+      shared_by_all_variants: true
+      heading:
+        states: [on, off]
+        content:
+          states: [on, off]
+          note: >
+            Content (subheading) is only meaningful when the heading is on.
+      bottom_buttons:
+        count: [0, 1, 2, 3]
+        source: cta-family
+        note: Chosen from Primary / Secondary / Link CTA.
+
+
+    rules:
+      structure:
+        - The Cross (X) is always present and never toggles off.
+        - >
+          The variant structures are locked; the agent selects among them but
+          never creates new ones.
+        - Body content varies by variant and case; sample content is not final.
+      composition_workflow:
+        - >
+          Agent order: first choose the variant structure that fits the content,
+          then set the heading/content toggle, then set the number and type of
+          bottom buttons.
+      usage_boundary:
+        - >
+          Use the Action card (within an Action sheet) when the action is
+          optional and skippable (e.g. upload a profile image, set a birthday).
+          For unavoidable actions the user cannot skip, use the Modal card /
+          Modal sheet instead. (Mirror of the shared action-vs-modal rule.)
+
+
+    relationships:
+      - component_id: action-sheet
+        relation: content-of
+        description: >
+          The Action card is the content block placed inside the Action sheet
+          (Action card + grey overlay).
+      - component_id: modal-card
+        relation: counterpart
+        description: >
+          Parallel counterpart for unavoidable actions (see usage_boundary).
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 2096:1434
+    name: Action card
+    type: COMPONENT_SET
+    note: Variants serialized to depth 3; deeper mock/sample content summarized via childCount. Structural
+      instance references are complete in edges.json.
+    children:
+      2096:1435:
+        id: 2096:1435
+        name: State=Categorised
+        type: COMPONENT
+        w: 366
+        h: 526
+        layout:
+          mode: VERTICAL
+          padding:
+          - 24
+          - 0
+          - 16
+          - 0
+          gap: 24
+          align: CENTER/CENTER
+        radius: 32
+        fills:
+        - type: SOLID
+          color: '#ffffff'
+          token: background/canvas
+        tokens:
+          itemSpacing: Gaps/bottom sheet
+          paddingTop: XL
+          paddingBottom: Padding/Card Top, bottom Padding
+          topLeftRadius: Radius/Bottomsheet
+          topRightRadius: Radius/Bottomsheet
+          bottomLeftRadius: Radius/Bottomsheet
+          bottomRightRadius: Radius/Bottomsheet
+        children:
+        - id: 2096:1436
+          name: Bottomsheet heading
+          type: INSTANCE
+          w: 366
+          h: 46
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 16
+            - 0
+            - 16
+            gap: 12
+            align: CENTER/CENTER
+          tokens:
+            itemSpacing: Gaps/small gap
+            paddingLeft: Padding/Card Side Padding
+            paddingRight: Padding/Card Side Padding
+          instance_of:
+            id: 414:3175
+            name: Bottomsheet heading
+            key: 7fcdcb9e16ef23be1b2a746dc3b58e77282112c9
+          props:
+            Caption#432:0: true
+            Cross#414:0: true
+        - id: 2096:1437
+          name: Frame 2147240579
+          type: FRAME
+          w: 334
+          h: 248
+          layout:
+            mode: VERTICAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 8
+            align: MIN/MIN
+          tokens:
+            itemSpacing: Gaps/smaller gap
+          children:
+          - id: 2096:1438
+            name: 'large card heading '
+            type: FRAME
+            w: 334
+            h: 16
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 16
+              - 0
+              - 16
+              gap: 16
+              align: MIN/CENTER
+            tokens:
+              paddingLeft: Padding/Card Side Padding
+              paddingRight: Padding/Card Side Padding
+            childCount: 1
+            note: 'category label: Content/Small text, text/secondary'
+          - id: 2096:1440
+            name: Frame 2147240571
+            type: FRAME
+            w: 334
+            h: 224
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 12
+              - 0
+              - 12
+              - 0
+              gap: 10
+              align: MIN/MIN
+            radius: 18
+            fills:
+            - type: SOLID
+              color: '#f7f7f7'
+              token: background/surface
+            tokens:
+              paddingTop: M
+              paddingBottom: M
+              topLeftRadius: Radius/Card
+              topRightRadius: Radius/Card
+              bottomLeftRadius: Radius/Card
+              bottomRightRadius: Radius/Card
+            childCount: 1
+            note: '4 option rows, each: padding 12/16 (M / Card Side Padding), gap 12 (Gaps/small gap),
+              row = label (Sub Headings/card headings, text/primary) + trailing Actionables instance'
+        - id: 2096:1454
+          name: Frame 2147240580
+          type: FRAME
+          w: 334
+          h: 144
+          layout:
+            mode: VERTICAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 8
+            align: MIN/MIN
+          tokens:
+            itemSpacing: Gaps/smaller gap
+          children:
+          - id: 2096:1455
+            name: 'large card heading '
+            type: FRAME
+            w: 334
+            h: 16
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 16
+              - 0
+              - 16
+              gap: 16
+              align: MIN/CENTER
+            tokens:
+              paddingLeft: Padding/Card Side Padding
+              paddingRight: Padding/Card Side Padding
+            childCount: 1
+          - id: 2096:1457
+            name: Frame 2147240571
+            type: FRAME
+            w: 334
+            h: 120
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 12
+              - 0
+              - 12
+              - 0
+              gap: 0
+              align: MIN/MIN
+            radius: 18
+            fills:
+            - type: SOLID
+              color: '#f7f7f7'
+              token: background/surface
+            tokens:
+              paddingTop: M
+              paddingBottom: M
+              topLeftRadius: Radius/Card
+              topRightRadius: Radius/Card
+              bottomLeftRadius: Radius/Card
+              bottomRightRadius: Radius/Card
+            childCount: 1
+            note: 2 option rows, same row anatomy
+      2096:1465:
+        id: 2096:1465
+        name: State=list
+        type: COMPONENT
+        w: 366
+        h: 490
+        layout:
+          mode: VERTICAL
+          padding:
+          - 24
+          - 0
+          - 16
+          - 0
+          gap: 24
+          align: CENTER/CENTER
+        radius: 32
+        fills:
+        - type: SOLID
+          color: '#ffffff'
+          token: background/canvas
+        tokens:
+          itemSpacing: Gaps/bottom sheet
+          paddingTop: XL
+          paddingBottom: Padding/Card Top, bottom Padding
+          topLeftRadius: Radius/Bottomsheet
+          topRightRadius: Radius/Bottomsheet
+          bottomLeftRadius: Radius/Bottomsheet
+          bottomRightRadius: Radius/Bottomsheet
+        children:
+        - id: 2096:1466
+          name: Bottomsheet heading
+          type: INSTANCE
+          w: 366
+          h: 46
+          instance_of:
+            id: 414:3175
+            name: Bottomsheet heading
+            key: 7fcdcb9e16ef23be1b2a746dc3b58e77282112c9
+          props:
+            Caption#432:0: true
+            Cross#414:0: true
+        - id: 2096:1467
+          name: Frame 2147240571
+          type: FRAME
+          w: 334
+          h: 380
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 12
+            - 0
+            - 12
+            - 0
+            gap: 10
+            align: MIN/MIN
+          radius: 18
+          fills:
+          - type: SOLID
+            color: '#f7f7f7'
+            token: background/surface
+          tokens:
+            paddingTop: Gaps/small gap
+            paddingBottom: Gaps/small gap
+            topLeftRadius: Radius/Card
+            topRightRadius: Radius/Card
+            bottomLeftRadius: Radius/Card
+            bottomRightRadius: Radius/Card
+          note: '7 flat option rows: padding 12/16, gap 12 (Gaps/small gap), label (Sub Headings/card
+            headings, text/primary) + Radio Button instance (set 395:636, page AI Metdata)'
+      2096:1490:
+        id: 2096:1490
+        name: State=Date selector
+        type: COMPONENT
+        w: 366
+        h: 610
+        layout:
+          mode: VERTICAL
+          padding:
+          - 24
+          - 0
+          - 16
+          - 0
+          gap: 32
+          align: CENTER/CENTER
+        radius: 32
+        fills:
+        - type: SOLID
+          color: '#ffffff'
+          token: background/canvas
+        tokens:
+          itemSpacing: XXL
+          paddingTop: XL
+          paddingBottom: Padding/Card Top, bottom Padding
+          topLeftRadius: Radius/Bottomsheet
+          topRightRadius: Radius/Bottomsheet
+          bottomLeftRadius: Radius/Bottomsheet
+          bottomRightRadius: Radius/Bottomsheet
+        children:
+        - id: 2096:1491
+          name: Bottomsheet heading
+          type: INSTANCE
+          w: 366
+          h: 46
+          instance_of:
+            id: 414:3175
+            name: Bottomsheet heading
+            key: 7fcdcb9e16ef23be1b2a746dc3b58e77282112c9
+          props:
+            Caption#432:0: true
+            Cross#414:0: false
+        - id: 2096:1492
+          name: Date Picker
+          type: FRAME
+          w: 366
+          h: 340
+          layout:
+            mode: VERTICAL
+            padding:
+            - 8
+            - 16
+            - 8
+            - 16
+            gap: 8
+            align: CENTER/CENTER
+          note: Date Bar (month/year controls, 52h) + 5-row calendar grid, cells 47-48x44
+        - id: 2096:1629
+          name: Frame 2147240585
+          type: FRAME
+          w: 334
+          h: 120
+          layout:
+            mode: VERTICAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 8
+            align: CENTER/CENTER
+          tokens:
+            itemSpacing: S
+          children:
+          - id: 2096:1630
+            name: Primary cta
+            type: INSTANCE
+            instance_of:
+              id: 463:1376
+              name: State=Enabled, Usage=Bottomsheet
+              key: 7f46de06a43cb1df29fc66863e982acc41df593a
+              set:
+                id: 248:4940
+                name: Primary cta
+          - id: 2096:1631
+            name: Secondary cta
+            type: INSTANCE
+            instance_of:
+              id: 463:1383
+              name: State=Enabled, Usecase=Bottomsheet
+              key: 2355a0855783be2889dd6b0a9b61add15fffd908
+              set:
+                id: 250:4953
+                name: Secondary cta
+      2096:1632:
+        id: 2096:1632
+        name: State=year selector
+        type: COMPONENT
+        w: 366
+        h: 559
+        layout:
+          mode: VERTICAL
+          padding:
+          - 24
+          - 0
+          - 16
+          - 0
+          gap: 32
+          align: CENTER/CENTER
+        radius: 32
+        fills:
+        - type: SOLID
+          color: '#ffffff'
+          token: background/canvas
+        tokens:
+          itemSpacing: XXL
+          paddingTop: XL
+          paddingBottom: Padding/Card Top, bottom Padding
+          topLeftRadius: Radius/Bottomsheet
+          topRightRadius: Radius/Bottomsheet
+          bottomLeftRadius: Radius/Bottomsheet
+          bottomRightRadius: Radius/Bottomsheet
+        children:
+        - id: 2096:1633
+          name: Bottomsheet heading
+          type: INSTANCE
+          instance_of:
+            id: 414:3175
+            name: Bottomsheet heading
+            key: 7fcdcb9e16ef23be1b2a746dc3b58e77282112c9
+          props:
+            Caption#432:0: true
+            Cross#414:0: false
+        - id: 2096:1634
+          name: Date Picker
+          type: FRAME
+          w: 366
+          h: 289
+          layout:
+            mode: VERTICAL
+            padding:
+            - 8
+            - 16
+            - 8
+            - 16
+            gap: 8
+            align: CENTER/CENTER
+          note: Date Bar + 4-row year grid (gap 24)
+        - id: 2096:1672
+          name: Frame 2147240585
+          type: FRAME
+          w: 334
+          h: 120
+          layout:
+            mode: VERTICAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 8
+            align: CENTER/CENTER
+          tokens:
+            itemSpacing: S
+          note: Primary cta (Bottomsheet, 463:1376) + Secondary cta (Bottomsheet, 463:1383) instances
+      2096:1675:
+        id: 2096:1675
+        name: State=Month selector
+        type: COMPONENT
+        w: 366
+        h: 559
+        layout:
+          mode: VERTICAL
+          padding:
+          - 24
+          - 0
+          - 16
+          - 0
+          gap: 32
+          align: CENTER/CENTER
+        radius: 32
+        fills:
+        - type: SOLID
+          color: '#ffffff'
+          token: background/canvas
+        tokens:
+          itemSpacing: XXL
+          paddingTop: XL
+          paddingBottom: Padding/Card Top, bottom Padding
+          topLeftRadius: Radius/Bottomsheet
+          topRightRadius: Radius/Bottomsheet
+          bottomLeftRadius: Radius/Bottomsheet
+          bottomRightRadius: Radius/Bottomsheet
+        children:
+        - id: 2096:1676
+          name: Bottomsheet heading
+          type: INSTANCE
+          instance_of:
+            id: 414:3175
+            name: Bottomsheet heading
+            key: 7fcdcb9e16ef23be1b2a746dc3b58e77282112c9
+          props:
+            Caption#432:0: true
+            Cross#414:0: false
+        - id: 2096:1677
+          name: Date Picker
+          type: FRAME
+          w: 366
+          h: 289
+          layout:
+            mode: VERTICAL
+            padding:
+            - 8
+            - 16
+            - 8
+            - 16
+            gap: 8
+            align: CENTER/CENTER
+          note: Date Bar + 4-row month grid (gap 24)
+        - id: 2096:1716
+          name: Frame 2147240585
+          type: FRAME
+          w: 334
+          h: 120
+          layout:
+            mode: VERTICAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 8
+            align: CENTER/CENTER
+          tokens:
+            itemSpacing: S
+          note: Primary cta (Bottomsheet) + Secondary cta (Bottomsheet) instances
+      2096:1719:
+        id: 2096:1719
+        name: State=Single option
+        type: COMPONENT
+        w: 366
+        h: 256
+        layout:
+          mode: VERTICAL
+          padding:
+          - 24
+          - 0
+          - 16
+          - 0
+          gap: 24
+          align: CENTER/CENTER
+        radius: 32
+        fills:
+        - type: SOLID
+          color: '#ffffff'
+          token: background/canvas
+        tokens:
+          itemSpacing: Gaps/bottom sheet
+          paddingTop: XL
+          paddingBottom: Padding/Card Top, bottom Padding
+          topLeftRadius: Radius/Bottomsheet
+          topRightRadius: Radius/Bottomsheet
+          bottomLeftRadius: Radius/Bottomsheet
+          bottomRightRadius: Radius/Bottomsheet
+        children:
+        - id: 2096:1720
+          name: Bottomsheet heading
+          type: INSTANCE
+          w: 366
+          h: 36
+          instance_of:
+            id: 414:3175
+            name: Bottomsheet heading
+            key: 7fcdcb9e16ef23be1b2a746dc3b58e77282112c9
+          props:
+            Caption#432:0: false
+            Cross#414:0: true
+        - id: 2096:1721
+          name: Frame 2147240581
+          type: FRAME
+          w: 334
+          h: 156
+          layout:
+            mode: VERTICAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 12
+            align: MIN/MIN
+          tokens:
+            itemSpacing: Gaps/small gap
+          note: 'two option chunks: ''Home page cards'' frames 334x72, padding 16 all sides (Card Side/Top-bottom
+            Padding), radius 18 (Radius/Card), fill background/surface'
+      2096:1748:
+        id: 2096:1748
+        name: State=upload profile picture
+        type: COMPONENT
+        w: 366
+        h: 246
+        layout:
+          mode: VERTICAL
+          padding:
+          - 24
+          - 0
+          - 16
+          - 0
+          gap: 24
+          align: CENTER/CENTER
+        radius: 32
+        fills:
+        - type: SOLID
+          color: '#ffffff'
+          token: background/canvas
+        tokens:
+          itemSpacing: Gaps/bottom sheet
+          paddingTop: XL
+          paddingBottom: Padding/Card Top, bottom Padding
+          topLeftRadius: Radius/Bottomsheet
+          topRightRadius: Radius/Bottomsheet
+          bottomLeftRadius: Radius/Bottomsheet
+          bottomRightRadius: Radius/Bottomsheet
+        children:
+        - id: 2096:1749
+          name: Bottomsheet heading
+          type: INSTANCE
+          w: 366
+          h: 26
+          instance_of:
+            id: 414:3175
+            name: Bottomsheet heading
+            key: 7fcdcb9e16ef23be1b2a746dc3b58e77282112c9
+          props:
+            Caption#432:0: false
+            Cross#414:0: false
+        - id: 2096:1750
+          name: Frame 2147240581
+          type: FRAME
+          w: 334
+          h: 156
+          layout:
+            mode: VERTICAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 12
+            align: MIN/MIN
+          tokens:
+            itemSpacing: Gaps/small gap
+          note: two option cards 334x72 (take a photo / upload from gallery), padding 16, radius 18 (Radius/Card),
+            fill background/surface
+      2096:1775:
+        id: 2096:1775
+        name: State=Find my earbuds
+        type: COMPONENT
+        w: 366
+        h: 594
+        layout:
+          mode: VERTICAL
+          padding:
+          - 24
+          - 0
+          - 16
+          - 0
+          gap: 24
+          align: CENTER/CENTER
+        radius: 32
+        fills:
+        - type: SOLID
+          color: '#ffffff'
+          token: background/canvas
+        tokens:
+          itemSpacing: Gaps/bottom sheet
+          paddingTop: XL
+          paddingBottom: Padding/Card Top, bottom Padding
+          topLeftRadius: Radius/Bottomsheet
+          topRightRadius: Radius/Bottomsheet
+          bottomLeftRadius: Radius/Bottomsheet
+          bottomRightRadius: Radius/Bottomsheet
+        children:
+        - id: 2096:1776
+          name: Frame 2147240598
+          type: FRAME
+          w: 366
+          h: 554
+          layout:
+            mode: VERTICAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 16
+            align: MIN/CENTER
+          children:
+          - id: 2096:1777
+            name: Frame 2147240597
+            type: FRAME
+            w: 366
+            h: 418
+            layout:
+              mode: VERTICAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 8
+              align: MIN/CENTER
+            tokens:
+              itemSpacing: Gaps/smaller gap
+            childCount: 2
+          - id: 2096:1797
+            name: Frame 2147240585
+            type: FRAME
+            w: 334
+            h: 120
+            layout:
+              mode: VERTICAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 8
+              align: CENTER/CENTER
+            tokens:
+              itemSpacing: S
+            childCount: 2
+            note: Primary cta (Bottomsheet) + Secondary cta (Bottomsheet) instances

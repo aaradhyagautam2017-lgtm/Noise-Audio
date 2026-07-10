@@ -1,0 +1,147 @@
+# Action sheet — ingested from Figma (418:965)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: action-sheet
+name: Action sheet
+type: complex-organism
+node_id: 418:965
+figma_fingerprint: 32faaefa1091152dce02bc7f3330092f25545cf5
+figma_type: COMPONENT
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+structural_references:
+- references: Status bar
+  ref_node_id: 374:7867
+  ref_fingerprint: be68a17515e3c6a025f9a9bb53be752af6d9362f
+  variant_used: Status bar
+  instance_count: 1
+  resolved: false
+  external_location: 'page: AI Metdata'
+  same_named_library_component: status-bar
+- references: Action Sheet
+  ref_node_id: 420:1299
+  ref_fingerprint: 175c082ef321a9d4f2771d7a8b42c3b76d507393
+  variant_used: State=Categorised
+  instance_count: 1
+  resolved: false
+  external_location: 'page: 06 Building Blocks'
+  same_named_library_component: action-sheet
+- references: Home Indicator
+  ref_node_id: 386:1835
+  ref_fingerprint: 738983691dede508931f06f03be9edb515cd19e0
+  variant_used: Home Indicator
+  instance_count: 1
+  resolved: false
+  external_location: 'page: 06 Building Blocks'
+authored_metadata: |
+  component:
+    id: action-sheet
+    name: Action sheet
+    type: complex-organism
+    type_note: An organism containing an organism (the Action card).
+
+
+    purpose: >
+      The full action-sheet surface — a grey dimming overlay with an Action card
+      anchored to the bottom — used to present an optional, skippable action.
+
+
+    usage: >
+      Used when the user should be offered an action they can take or skip
+      (e.g. upload a profile image, set a birthday). The Action card inside
+      carries the content; this component owns the overlay, placement, and
+      dismissal.
+
+
+    design_intent: >
+      Give optional actions a lightweight, dismissible surface that interrupts
+      the flow only as much as needed and lets the user return to the page
+      freely.
+
+
+    anti_patterns:
+      - id: not-for-unavoidable-actions
+        rule: >
+          Do not use for unavoidable actions the user must complete; use the
+          Modal sheet instead.
+      - id: no-internal-scroll
+        rule: >
+          Do not allow the Action card inside to scroll; the sheet grows to fit
+          its content rather than scrolling internally.
+      - id: never-cover-status-bar
+        rule: >
+          Do not obscure or recolor the status bar with the overlay; the status
+          bar stays on top in its dedicated contrasting token.
+
+
+    composition:
+      owned:
+        - name: Grey dimming overlay
+          note: Exact color/opacity read from Figma.
+      used_organisms:
+        - action-card
+      on_top:
+        - name: Status bar
+          note: Remains rendered on top of the overlay (see relationships).
+
+
+    rules:
+      placement:
+        - >
+          The sheet is anchored (stuck) to the bottom of the screen and grows
+          upward to fit the Action card's content.
+      scroll:
+        - >
+          The Action card must never scroll; the sheet's height is content-driven
+          and expands upward instead.
+      dismissal:
+        - >
+          Optional action — all dismissal paths permitted: tapping the grey
+          overlay, swiping the sheet down, or the Action card's cross (X). Any of
+          these dismisses it. This permissiveness is the defining contrast with
+          the Modal sheet, which allows none.
+      motion:
+        - >
+          Enters from the bottom (slides up) and exits to the bottom (slides
+          down), with the overlay fading accordingly. Smooth animation.
+      status_bar:
+        - >
+          The status bar stays on top of the overlay in a contrasting color drawn
+          from its dedicated token; the overlay never covers or recolors it.
+      usage_boundary:
+        - >
+          Use the Action sheet when the action is optional and skippable. For
+          unavoidable actions, use the Modal sheet. (Mirror of the shared
+          action-vs-modal rule.)
+
+
+    relationships:
+      - component_id: action-card
+        relation: contains
+        description: >
+          The content block placed inside this sheet; it owns its own content,
+          variants, toggles, and rules.
+      - component_id: modal-sheet
+        relation: counterpart
+        description: Parallel counterpart for unavoidable actions (see usage_boundary).
+      - component_id: status-bar
+        relation: renders-on-top
+        description: >
+          Stays rendered on top of the overlay in its dedicated contrasting token.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (overlay color/opacity, corner radius, spacing, dimensions)
+        are not stored here. They are read live from Figma via MCP at consumption
+        time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree: see variants in visuals data

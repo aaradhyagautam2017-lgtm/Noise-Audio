@@ -1,0 +1,176 @@
+# Toggle — ingested from Figma (2031:1190)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: toggle
+name: Toggle
+type: atom
+node_id: 2031:1190
+figma_fingerprint: 5671f20fe570cab72796a90ebac8b77ca42e0621
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  State:
+  - On state
+  - Off State
+  - Disable state
+variants:
+- name: State=On state
+  node_id: 2031:1191
+  figma_fingerprint: 89b571b493ee7da295d64d81f485fd6dc589f437
+  width: 36
+  height: 19
+- name: State=Off State
+  node_id: 2031:1194
+  figma_fingerprint: 7d068a3739857b39ba774bb0aa6c936bc5b755c6
+  width: 36
+  height: 19
+- name: State=Disable state
+  node_id: 2031:1197
+  figma_fingerprint: 20747482e3a5fdfef9861411f03c9a3b594c33b2
+  width: 36
+  height: 19
+authored_metadata: |
+  component:
+    id: toggle
+    name: Toggle
+    type: atom
+
+
+    usage: >
+      Used for immediate on/off settings that can be changed without leaving
+      the current screen.
+
+
+    design_intent: >
+      Allow users to modify a binary system state directly from the current
+      context.
+
+
+    anti_patterns:
+      - id: not-when-confirmation-required
+        rule: Do not use when confirmation is required.
+      - id: not-for-navigation
+        rule: Do not use for navigation.
+      - id: not-for-multi-selection
+        rule: Do not use for multi-selection.
+
+
+    states:
+      - on
+      - off
+      - disabled
+
+
+    rules:
+      - id: reflect-actual-system-state
+        rule: Toggle state should reflect the actual system state.
+      - id: immediate-state-change
+        rule: State changes should occur immediately after interaction.
+      - id: row-tap-no-navigation
+        rule: Row tap should not trigger navigation.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 2031:1190
+    name: Toggle
+    type: COMPONENT_SET
+    w: 76
+    h: 137
+    radius: 5
+    strokes:
+    - type: SOLID
+      color: '#8a38f5'
+    strokeWeight: 1
+    children:
+    - id: 2031:1191
+      name: State=On state
+      type: COMPONENT
+      w: 36
+      h: 19
+      children:
+      - id: 2031:1192
+        name: Rectangle 217
+        type: RECTANGLE
+        w: 36
+        h: 19
+        radius: 40
+        fills:
+        - type: SOLID
+          color: '#171717'
+          token: button/toggle/track active
+      - id: 2031:1193
+        name: Rectangle 218
+        type: RECTANGLE
+        w: 17
+        h: 17
+        radius: 40
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: button/toggle/thumb
+    - id: 2031:1194
+      name: State=Off State
+      type: COMPONENT
+      w: 36
+      h: 19
+      children:
+      - id: 2031:1195
+        name: Rectangle 217
+        type: RECTANGLE
+        w: 36
+        h: 19
+        radius: 40
+        fills:
+        - type: SOLID
+          color: '#919191'
+          token: button/toggle/track inactive
+      - id: 2031:1196
+        name: Rectangle 218
+        type: RECTANGLE
+        w: 17
+        h: 17
+        radius: 40
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: button/toggle/thumb
+    - id: 2031:1197
+      name: State=Disable state
+      type: COMPONENT
+      w: 36
+      h: 19
+      children:
+      - id: 2031:1198
+        name: Rectangle 217
+        type: RECTANGLE
+        w: 36
+        h: 19
+        radius: 40
+        fills:
+        - type: SOLID
+          color: '#ededed'
+          token: button/toggle/track disabled
+      - id: 2031:1199
+        name: Rectangle 218
+        type: RECTANGLE
+        w: 17
+        h: 17
+        radius: 40
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: button/toggle/thumb

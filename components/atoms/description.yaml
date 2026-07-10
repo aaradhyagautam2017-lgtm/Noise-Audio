@@ -1,0 +1,115 @@
+# Description — ingested from Figma (445:8616)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: description
+name: Description
+type: atom
+node_id: 445:8616
+figma_fingerprint: e429f00b447a3f8e74485cff0ebb08049999600a
+figma_type: COMPONENT
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+authored_metadata: |
+  component:
+    id: description
+    name: Description
+    type: atom
+
+
+    purpose: >
+      A block of descriptive or disclaimer text.
+
+
+    usage: >
+      Used in one of two placements — beneath a card as that card's description,
+      or at the bottom above a CTA as a disclaimer (e.g. "if you turn on this
+      feature, you must turn off the others"). Used to describe a card or feature,
+      or to state a disclaimer.
+
+
+    design_intent: >
+      Provide a consistent way to attach explanatory or disclaimer text to a
+      card, feature, or action, separate from headings, so supplementary
+      information reads uniformly wherever it appears.
+
+
+    anti_patterns:
+      - id: not-a-heading
+        rule: >
+          Do not use as a heading or a title; it is supplementary text, not a
+          heading. Headings are the heading-content component and the Card
+          heading.
+
+
+    rules:
+      - id: placements
+        rule: >
+          Two placements: (1) under a card, as the card's description; (2) at the
+          bottom above a CTA, as a disclaimer.
+      - id: container-padding
+        rule: The text lives inside its container and respects the container's padding values.
+      - id: content-driven
+        rule: Content is fully content-driven; exact values come from Figma.
+
+
+    relationships:
+      - component_id: heading-content-component
+        relation: distinct
+        description: >
+          Heading-content is a title + supporting content inside a card;
+          Description is standalone supplementary/disclaimer text. Do not
+          substitute.
+      - component_id: card-heading
+        relation: distinct
+        description: >
+          Card heading labels a group of cards; Description is supplementary
+          text, not a heading. Do not substitute.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (typography, spacing, colors) are not stored here. They are
+        read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 445:8616
+    name: Description
+    type: COMPONENT
+    w: 390
+    h: 32
+    layout:
+      mode: HORIZONTAL
+      padding:
+      - 0
+      - 12
+      - 0
+      - 12
+      gap: 10
+      align: CENTER/CENTER
+    tokens:
+      paddingLeft: M
+      paddingRight: M
+    children:
+    - id: 445:8449
+      name: Upload up to 3 media files not exceeding 2 MB in the formats JPEG/JPG/PNG/HEIC/MP4
+      type: TEXT
+      w: 366
+      h: 32
+      fills:
+      - type: SOLID
+        color: '#919191'
+        token: text/secondary
+      chars: Upload up to 3 media files not exceeding 2 MB in the formats…
+      textStyle: Content/Small
+      font: Geist Regular
+      fontSize: 12
+      lineHeight: 130%
+      textAlign: LEFT

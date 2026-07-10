@@ -1,0 +1,814 @@
+# Modal card — ingested from Figma (2097:1930)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: modal-card
+name: Modal card
+type: organism
+node_id: 2097:1930
+figma_fingerprint: 21d9c86623d946fdffe7c9489dcf24ef5699f576
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  Type:
+  - Default modal
+  - Download list modal
+variants:
+- name: Type=Default modal
+  node_id: 2097:1931
+  figma_fingerprint: 4d26853eb81036120753f453ba082493e8beafac
+  width: 366
+  height: 530
+- name: Type=Download list modal
+  node_id: 2097:1954
+  figma_fingerprint: aca4990748c82dd6b30205663e30cb9138a4750c
+  width: 366
+  height: 408
+structural_references:
+- references: Actionables
+  ref_node_id: 329:2095
+  ref_fingerprint: 4b6a4ae9a8d5c00c90119bb74803d60125416864
+  variant_used: Action=Cross
+  instance_count: 2
+  visible_instances: 0
+  resolved: false
+  external_location: 'page: AI Metdata'
+  same_named_library_component: actionables
+- references: Primary cta
+  ref_node_id: 248:4940
+  ref_fingerprint: 13d9bcf56d34b8f5859397f76b4787da65b4f6f8
+  variant_used: State=Enabled, Usage=Bottomsheet
+  instance_count: 2
+  resolved: true
+  target_id: primary-cta-button
+- references: Secondary cta
+  ref_node_id: 250:4953
+  ref_fingerprint: 496c1152f7812e427b173dfadf82190e3ca7c3c0
+  variant_used: State=Enabled, Usecase=L1 L2 screens
+  instance_count: 1
+  resolved: true
+  target_id: secondary-cta-button
+- references: Link cta
+  ref_node_id: 463:1380
+  ref_fingerprint: c8690c419dcc5e5873b064217a90ab827caf16e9
+  variant_used: Usecase=Screens
+  instance_count: 1
+  resolved: true
+  target_id: link-cta
+authored_metadata: |
+  component:
+    id: modal-card
+    name: Modal card
+    type: organism
+
+
+    purpose: >
+      The white content block of a modal — presents an unavoidable action the
+      user must take, with a fixed set of structures.
+
+
+    usage: >
+      Used as the content block inside a Modal sheet (Modal card + grey overlay).
+      The agent selects the variant, then sets the allowed toggles.
+
+
+    design_intent: >
+      Force a clear, unavoidable decision at a break in the flow, presenting the
+      required action (and any supporting detail) in a consistent, non-dismissible
+      surface.
+
+
+    anti_patterns:
+      - id: not-standalone
+        rule: >
+          Do not use the Modal card on its own; it only exists inside a Modal
+          sheet (paired with the grey overlay).
+      - id: no-dismissal-affordance
+        rule: >
+          Do not add any dismissal affordance (cross, chevron, tap-outside-to-
+          close). A modal must be acted upon and cannot be skipped.
+      - id: no-invented-variants
+        rule: Do not invent new variant structures; the set is locked.
+      - id: download-list-scope
+        rule: >
+          Do not use the download-list variant for anything other than showing
+          current downloads.
+
+
+    composition:
+      embedded:
+        - name: Heading title
+        - name: Content (subheading)
+        - name: Content box
+          note: Contains an inner small heading and special content.
+        - name: Download-list variant contents
+          note: Fixed structure.
+      used_cta:
+        - primary-cta-button
+        - secondary-cta-button
+        - link-cta
+      excluded:
+        - name: cross
+          note: >
+            Deliberate. A modal has no dismissal affordance, so no close atom.
+
+
+    parts:
+      - name: Heading title
+        source: self-contained
+      - name: Content (subheading)
+        source: self-contained
+      - name: Content box
+        source: self-contained
+        note: Special container; holds an inner small heading + special content.
+      - name: CTAs
+        source: cta-family
+        note: Primary / Secondary / Link CTA, per the CTA toggles.
+
+
+    variants:
+      locked: true
+      values:
+        - name: default-modal
+          description: >
+            The main structure (heading, content, content box, CTAs) with the
+            toggles defined below.
+        - name: download-list-modal
+          fixed_structure: true
+          toggleable: false
+          description: >
+            Fixed, non-toggleable structure showing what is currently
+            downloading (rows of label + progress + download indicator). Used
+            only in that case.
+
+
+    structure_default_modal:
+      order:
+        - heading
+        - content
+        - content-box
+        - ctas
+
+
+    toggles:
+      applies_to: default-modal
+      heading:
+        states: [on]
+        note: Always present; cannot be toggled off.
+      content:
+        states: [on, off]
+        note: The subheading text under the heading.
+      content_box:
+        states: [on, off]
+        inner_small_heading:
+          states: [on, off]
+          note: Meaningful only when the content box is on.
+      ctas:
+        individual_toggle: true
+        count: [0, 1, 2, 3]
+        note: Each of the three CTAs toggles independently on/off.
+
+
+    rules:
+      dismissal:
+        - >
+          No dismissal affordance of any kind (no cross, no chevron, no
+          tap-outside-to-dismiss). The user must take an action.
+      structure:
+        - The heading is mandatory in the default modal.
+        - >
+          The variant structures are locked; the download-list variant's
+          structure is fixed and non-toggleable.
+      content_placement:
+        - >
+          Content vs Content box (strict): regular informational text — informing
+          or telling the user something — goes in the content (subheading). The
+          content box is a special container reserved for special/structured
+          content: lists, steps, directions, feature lists, and the like.
+          Informational prose -> content; structured/special content -> content box.
+      composition_workflow:
+        - >
+          Agent order: choose the variant, then (for the default modal) set the
+          content toggle, the content-box toggle and its inner small-heading
+          toggle, and which of the three CTAs are present.
+      usage_boundary:
+        - >
+          Use the Modal card (within a Modal sheet) when the action is unavoidable
+          and cannot be skipped. For optional, skippable actions, use the Action
+          card / Action sheet instead. (Mirror of the shared action-vs-modal rule.)
+
+
+    relationships:
+      - component_id: modal-sheet
+        relation: content-of
+        description: >
+          The Modal card is the content block placed inside the Modal sheet
+          (Modal card + grey overlay).
+      - component_id: action-card
+        relation: counterpart
+        description: >
+          Parallel counterpart for optional, skippable actions (see usage_boundary).
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 2097:1930
+    name: Modal card
+    type: COMPONENT_SET
+    w: 406
+    h: 998
+    radius: 5
+    strokes:
+    - type: SOLID
+      color: '#8a38f5'
+    strokeWeight: 1
+    children:
+    - id: 2097:1931
+      name: Type=Default modal
+      type: COMPONENT
+      w: 366
+      h: 530
+      layout:
+        mode: VERTICAL
+        padding:
+        - 24
+        - 0
+        - 16
+        - 0
+        gap: 24
+        align: CENTER/CENTER
+      radius: 32
+      fills:
+      - type: SOLID
+        color: '#ffffff'
+        token: background/canvas
+      tokens:
+        itemSpacing: Gaps/bottom sheet
+        paddingTop: XL
+        paddingBottom: L
+        topLeftRadius: Radius/Bottomsheet
+        topRightRadius: Radius/Bottomsheet
+        bottomLeftRadius: Radius/Bottomsheet
+        bottomRightRadius: Radius/Bottomsheet
+      children:
+      - id: 2097:1932
+        name: Frame 2147240587
+        type: FRAME
+        w: 366
+        h: 294
+        layout:
+          mode: VERTICAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 16
+          align: MIN/CENTER
+        tokens:
+          itemSpacing: L
+        children:
+        - id: 2097:1933
+          name: Frame 2147240588
+          type: FRAME
+          w: 366
+          h: 114
+          layout:
+            mode: VERTICAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 8
+            align: MIN/CENTER
+          tokens:
+            itemSpacing: S
+          children:
+          - id: 2097:1934
+            name: Bottomsheet heading
+            type: FRAME
+            w: 366
+            h: 52
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 16
+              - 0
+              - 16
+              gap: 12
+              align: CENTER/CENTER
+            tokens:
+              itemSpacing: Gaps/small gap
+              paddingLeft: Padding/Card Side Padding
+              paddingRight: Padding/Card Side Padding
+            children:
+            - id: 2097:1935
+              name: Frame 2147240563
+              type: FRAME
+              w: 36
+              h: 36
+              visible: false
+              children: []
+            - id: 2097:1936
+              name: Card content
+              type: FRAME
+              w: 334
+              h: 52
+              layout:
+                mode: VERTICAL
+                padding:
+                - 0
+                - 0
+                - 0
+                - 0
+                gap: 4
+                align: MIN/CENTER
+              tokens:
+                itemSpacing: XS
+              children:
+              - id: 2097:1937
+                name: Frame 2147227523
+                type: FRAME
+                w: 334
+                h: 52
+                layout:
+                  mode: HORIZONTAL
+                  padding:
+                  - 0
+                  - 0
+                  - 0
+                  - 0
+                  gap: 2
+                  align: CENTER/CENTER
+              - id: 2097:1942
+                name: Select an action
+                type: TEXT
+                w: 238
+                h: 16
+                visible: false
+                fills:
+                - type: SOLID
+                  color: '#919191'
+                  token: text/secondary
+                chars: Select an action
+                textStyle: Content/Small
+                font: Geist Regular
+                fontSize: 12
+                lineHeight: 130%
+                textAlign: CENTER
+            - id: 2097:1943
+              name: Actionables
+              type: INSTANCE
+              w: 36
+              h: 36
+              visible: false
+              instance_of:
+                id: 368:7766
+                name: Action=Cross
+                key: 5c5c76572e00d0364cfdb9c1034d5e90c6c1afb4
+                set:
+                  id: 329:2095
+                  name: Actionables
+              props:
+                Action: Cross
+          - id: 2097:1944
+            name: Deleting your account...
+            type: TEXT
+            w: 302
+            h: 54
+            fills:
+            - type: SOLID
+              color: '#919191'
+              token: text/secondary
+            chars: Deleting your account will disconnect your device from the a…
+            textStyle: Content/Medium
+            font: Geist Regular
+            fontSize: 14
+            textAlign: CENTER
+        - id: 2097:1945
+          name: Frame 2147240589
+          type: FRAME
+          w: 334
+          h: 164
+          layout:
+            mode: VERTICAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 8
+            align: MIN/MIN
+          tokens:
+            itemSpacing: S
+          children:
+          - id: 2097:1946
+            name: 'large card heading '
+            type: FRAME
+            w: 334
+            h: 16
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 16
+              - 0
+              - 16
+              gap: 16
+              align: MIN/MIN
+            tokens:
+              paddingLeft: Padding/Card Side Padding
+              paddingRight: Padding/Card Side Padding
+            children:
+            - id: 2097:1947
+              name: MY Devices
+              type: TEXT
+              w: 64
+              h: 16
+              fills:
+              - type: SOLID
+                color: '#919191'
+                token: text/secondary
+              chars: MY Devices
+              textStyle: Content/Small
+              font: Geist Regular
+              fontSize: 12
+              lineHeight: 130%
+              textAlign: LEFT
+          - id: 2097:1948
+            name: Frame 2147227739
+            type: FRAME
+            w: 334
+            h: 140
+            layout:
+              mode: VERTICAL
+              padding:
+              - 16
+              - 16
+              - 16
+              - 16
+              gap: 12
+              align: MIN/MIN
+            radius: 18
+            fills:
+            - type: SOLID
+              color: '#f7f7f7'
+              token: background/surface
+            tokens:
+              paddingLeft: Padding/Card Side Padding
+              paddingTop: Padding/Card Top, bottom Padding
+              paddingRight: Padding/Card Side Padding
+              paddingBottom: Padding/Card Top, bottom Padding
+              topLeftRadius: Radius/Card
+              topRightRadius: Radius/Card
+              bottomLeftRadius: Radius/Card
+              bottomRightRadius: Radius/Card
+            children:
+            - id: 2097:1949
+              name: Noise AI uses your inputs...
+              type: TEXT
+              w: 302
+              h: 108
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              chars: Noise AI uses your inputs to power responses and store chat …
+              textStyle: Content/Medium
+              font: Geist Regular
+              fontSize: 14
+              textAlign: LEFT
+      - id: 2097:1950
+        name: Frame 2147240585
+        type: FRAME
+        w: 334
+        h: 172
+        layout:
+          mode: VERTICAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 8
+          align: CENTER/CENTER
+        tokens:
+          itemSpacing: S
+        children:
+        - id: 2097:1951
+          name: Primary cta
+          type: INSTANCE
+          w: 334
+          h: 56
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 35
+            - 29
+            - 35
+            - 29
+            gap: 10
+            align: CENTER/CENTER
+          radius: 50
+          fills:
+          - type: SOLID
+            color: '#292929'
+            token: button/primary/background
+          instance_of:
+            id: 463:1376
+            name: State=Enabled, Usage=Bottomsheet
+            key: 7f46de06a43cb1df29fc66863e982acc41df593a
+            set:
+              id: 248:4940
+              name: Primary cta
+          props:
+            State: Enabled
+            Usage: Bottomsheet
+        - id: 2097:1952
+          name: Secondary cta
+          type: INSTANCE
+          w: 334
+          h: 56
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 35
+            - 29
+            - 35
+            - 29
+            gap: 10
+            align: CENTER/CENTER
+          radius: 50
+          fills:
+          - type: SOLID
+            color: '#f7f7f7'
+            token: button/secondary/background
+          instance_of:
+            id: 250:4952
+            name: State=Enabled, Usecase=L1 L2 screens
+            key: 58e65fde21a0624fc8a6c6e36cad9b6d6142e6f3
+            set:
+              id: 250:4953
+              name: Secondary cta
+          props:
+            State: Enabled
+            Usecase: L1 L2 screens
+        - id: 2097:1953
+          name: Link cta
+          type: INSTANCE
+          w: 334
+          h: 44
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 35
+            - 29
+            - 35
+            - 29
+            gap: 10
+            align: CENTER/CENTER
+          radius: 50
+          instance_of:
+            id: 428:1157
+            name: Usecase=Screens
+            key: 9b3442e944d3124f76a1389f83602ed8dc38ece4
+            set:
+              id: 463:1380
+              name: Link cta
+          props:
+            Usecase: Screens
+    - id: 2097:1954
+      name: Type=Download list modal
+      type: COMPONENT
+      w: 366
+      h: 408
+      layout:
+        mode: VERTICAL
+        padding:
+        - 24
+        - 0
+        - 16
+        - 0
+        gap: 24
+        align: CENTER/CENTER
+      radius: 32
+      fills:
+      - type: SOLID
+        color: '#ffffff'
+        token: background/canvas
+      tokens:
+        itemSpacing: Gaps/bottom sheet
+        paddingTop: XL
+        paddingBottom: L
+        topLeftRadius: Radius/Bottomsheet
+        topRightRadius: Radius/Bottomsheet
+        bottomLeftRadius: Radius/Bottomsheet
+        bottomRightRadius: Radius/Bottomsheet
+      children:
+      - id: 2097:1955
+        name: Bottomsheet heading
+        type: FRAME
+        w: 366
+        h: 52
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 16
+          gap: 12
+          align: CENTER/CENTER
+        tokens:
+          itemSpacing: Gaps/small gap
+          paddingLeft: Padding/Card Side Padding
+          paddingRight: Padding/Card Side Padding
+        children:
+        - id: 2097:1956
+          name: Frame 2147240563
+          type: FRAME
+          w: 36
+          h: 36
+          visible: false
+          children: []
+        - id: 2097:1957
+          name: Card content
+          type: FRAME
+          w: 334
+          h: 52
+          layout:
+            mode: VERTICAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 4
+            align: MIN/CENTER
+          tokens:
+            itemSpacing: XS
+          children:
+          - id: 2097:1958
+            name: Frame 2147227523
+            type: FRAME
+            w: 334
+            h: 52
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 2
+              align: CENTER/CENTER
+            children:
+            - id: 2097:1959
+              name: Are you sure you want to delete this thread?
+              type: TEXT
+              w: 334
+              h: 52
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              chars: 'Are you sure you
+
+                want to delete this thread?'
+              textStyle: 👄 Headings/Small
+              font: Saira SemiBold
+              fontSize: 24
+              lineHeight: 110%
+              textAlign: CENTER
+            - id: 2097:1960
+              name: Frame 2147227514
+              type: FRAME
+              w: 16
+              h: 16
+              visible: false
+              fills:
+              - type: SOLID
+                visible: false
+                color: '#ffffff'
+              children:
+              - id: 2097:1961
+                name: Ellipse 18092
+                type: ELLIPSE
+                w: 14
+                h: 14
+                fills:
+                - type: SOLID
+                  color: '#54656d'
+              - id: 2097:1962
+                name: Vector
+                type: VECTOR
+                w: 14
+                h: 14
+                fills:
+                - type: SOLID
+                  color: '#ffffff'
+          - id: 2097:1963
+            name: Select an action
+            type: TEXT
+            w: 238
+            h: 16
+            visible: false
+            fills:
+            - type: SOLID
+              color: '#919191'
+              token: text/secondary
+            chars: Select an action
+            textStyle: Content/Small
+            font: Geist Regular
+            fontSize: 12
+            lineHeight: 130%
+            textAlign: CENTER
+        - id: 2097:1964
+          name: Actionables
+          type: INSTANCE
+          w: 36
+          h: 36
+          visible: false
+          instance_of:
+            id: 368:7766
+            name: Action=Cross
+            key: 5c5c76572e00d0364cfdb9c1034d5e90c6c1afb4
+            set:
+              id: 329:2095
+              name: Actionables
+          props:
+            Action: Cross
+      - id: 2097:1965
+        name: Frame 2147227740 (download rows card)
+        type: FRAME
+        w: 334
+        h: 212
+        layout:
+          mode: VERTICAL
+          padding:
+          - 16
+          - 16
+          - 16
+          - 16
+          gap: 12
+          align: MIN/MIN
+        radius: 18
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: background/surface
+        tokens:
+          paddingLeft: Padding/Card Side Padding
+          paddingTop: Padding/Card Top, bottom Padding
+          paddingRight: Padding/Card Side Padding
+          paddingBottom: Padding/Card Top, bottom Padding
+          topLeftRadius: Radius/Card
+          topRightRadius: Radius/Card
+          bottomLeftRadius: Radius/Card
+          bottomRightRadius: Radius/Card
+        note: '6 download rows: each row = label text (Content/Medium, text/secondary) + count ''3/7''
+          (Roboto Mono Regular 14, text/secondary) + 20x20 progress indicator frame (radius 60.83), rows
+          gap 12 (Gaps/small gap)'
+      - id: 2097:2010
+        name: Primary cta
+        type: INSTANCE
+        w: 334
+        h: 56
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 35
+          - 29
+          - 35
+          - 29
+          gap: 10
+          align: CENTER/CENTER
+        radius: 50
+        fills:
+        - type: SOLID
+          color: '#292929'
+          token: button/primary/background
+        instance_of:
+          id: 463:1376
+          name: State=Enabled, Usage=Bottomsheet
+          key: 7f46de06a43cb1df29fc66863e982acc41df593a
+          set:
+            id: 248:4940
+            name: Primary cta
+        props:
+          State: Enabled
+          Usage: Bottomsheet

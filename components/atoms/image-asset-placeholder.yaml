@@ -1,0 +1,396 @@
+# Image, asset placeholder — ingested from Figma (458:8952)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: image-asset-placeholder
+name: Image, asset placeholder
+type: atom
+node_id: 458:8952
+figma_fingerprint: aeb5091d768aa1acd45c5220bcddd658abbcf259
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  size usage:
+  - S
+  - M
+  - L
+  - XS
+  - Native popup placeholder
+  - transcribe loading
+variants:
+- name: size usage=S
+  node_id: 458:8951
+  figma_fingerprint: 8636e0d10b8ff60561e4f3286ea799e97c0af21a
+  width: 390
+  height: 326
+- name: size usage=M
+  node_id: 494:2876
+  figma_fingerprint: 148484ce58c14d37d6676904ac32f2571a82c65b
+  width: 390
+  height: 400
+- name: size usage=L
+  node_id: 480:10902
+  figma_fingerprint: 1c06a64f32cb273490624d70aff45de9410a358f
+  width: 390
+  height: 510
+- name: size usage=XS
+  node_id: 458:8953
+  figma_fingerprint: 97c90ff1e4d4ee197423730a47a9a19da3db7c88
+  width: 390
+  height: 180
+- name: size usage=Native popup placeholder
+  node_id: 611:1266
+  figma_fingerprint: 11311250cd0986ca7941d0c7fd9b03a25fb35327
+  width: 270
+  height: 206
+- name: size usage=transcribe loading
+  node_id: 684:1205
+  figma_fingerprint: c75659b1f1f8bcae64995e4847a8907c72ac784f
+  width: 390
+  height: 72
+structural_references:
+- references: Profile icon
+  ref_node_id: 460:985
+  ref_fingerprint: 7b587fd74be99385447b4cbd0ad5f3cec41d448e
+  variant_used: state=Default
+  instance_count: 1
+  resolved: false
+  external_location: 'page: 06 Building Blocks'
+authored_metadata: |
+  component:
+    id: image-asset-placeholder
+    name: Image / asset placeholder
+    type: atom
+
+
+    purpose: >
+      A placeholder standing in for an image or asset, in a fixed set of sizes,
+      plus mock stand-ins for a device-native pop-up and a transcribing/loading
+      state.
+
+
+    usage: >
+      Used wherever a design needs a placeholder for an image, avatar, device
+      mock, native pop-up, or loading state. Because these are raw primitives,
+      the specific use case for any variant is defined by the organism or
+      molecule that uses it — not here.
+
+
+    design_intent: >
+      Provide a consistent, fixed library of placeholders so any design can
+      represent images, assets, device mocks, native pop-ups, and loading states
+      uniformly, without bespoke placeholder sizes.
+
+
+    anti_patterns:
+      - id: no-resize
+        rule: Do not change the placeholder sizes; the size set is fixed and locked.
+      - id: native-popup-is-mock-only
+        rule: >
+          Do not use the device-native-pop-up variant to build real OS pop-ups;
+          it is only a mock stand-in (the library does not reproduce native
+          pop-ups).
+
+
+    variants:
+      locked: true
+      note: Sizes cannot be changed.
+      values:
+        - name: xs
+          shape: circle
+          description: Circular avatar placeholder. Carries an optional profile icon.
+        - name: s
+          shape: rectangle
+          description: Small rectangular placeholder.
+        - name: n
+          shape: rectangle
+          description: Placeholder with a rule-of-thirds grid overlay.
+        - name: m
+          shape: rectangle
+          description: Large rectangular placeholder.
+        - name: device-native-pop-up
+          mock: true
+          description: >
+            A mock stand-in for a native OS pop-up (e.g. a system prompt to turn
+            on Bluetooth). Not a real pop-up; a placeholder representing one.
+        - name: transcribing-loading-pop-up
+          description: Placeholder for a transcribing/loading state.
+
+
+    toggles:
+      xs_profile_icon:
+        applies_to: xs
+        states: [on, off]
+        note: >
+          On the Size XS (circular avatar) variant, the profile icon can be shown
+          or hidden per the requirement.
+
+
+    rules:
+      - id: sizes-locked
+        rule: >
+          The six sizes/variants are fixed and locked; the agent selects among
+          them but never resizes or creates new ones.
+      - id: shape-lock
+        rule: >
+          Size XS is circular (avatar); the rule-of-thirds grid belongs to the N
+          variant.
+      - id: use-cases-owned-elsewhere
+        rule: >
+          Use cases are not documented on this component; they are owned by
+          whatever organism or molecule uses the placeholder.
+      - id: native-popup-mock
+        rule: The device-native-pop-up variant is a mock representation only.
+
+
+    ai_metadata:
+      - >
+        The designer may ask the agent to display the different placeholder
+        variants within a design, so options can be compared visually.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (dimensions, corner radius, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 458:8952
+    name: Image, asset placeholder
+    type: COMPONENT_SET
+    w: 843
+    h: 1092
+    radius: 5
+    strokes:
+    - type: SOLID
+      color: '#8a38f5'
+    strokeWeight: 1
+    children:
+    - id: 458:8951
+      name: size usage=S
+      type: COMPONENT
+      w: 390
+      h: 326
+      fills:
+      - type: SOLID
+        color: '#ededed'
+        token: border/separator line
+      children: []
+    - id: 494:2876
+      name: size usage=M
+      type: COMPONENT
+      w: 390
+      h: 400
+      fills:
+      - type: SOLID
+        color: '#ededed'
+        token: border/separator line
+      children: []
+    - id: 480:10902
+      name: size usage=L
+      type: COMPONENT
+      w: 390
+      h: 510
+      fills:
+      - type: SOLID
+        color: '#ededed'
+        token: border/separator line
+      - type: IMAGE
+        scaleMode: CROP
+      - type: SOLID
+        color: '#000000'
+        opacity: 0.4
+      children:
+      - id: 480:11131
+        name: Mask group
+        type: GROUP
+        w: 390
+        h: 390
+        children:
+        - id: 480:11132
+          name: Rectangle 34628946
+          type: RECTANGLE
+          w: 390
+          h: 390
+          radius: 260
+          fills:
+          - type: SOLID
+            color: '#d9d9d9'
+        - id: 480:11133
+          name: image 59
+          type: RECTANGLE
+          w: 951.4
+          h: 634.1
+          radius: 260
+          fills:
+          - type: IMAGE
+            scaleMode: FILL
+        - id: 480:11134
+          name: Group 2147227390
+          type: GROUP
+          w: 390
+          h: 349
+          children:
+          - id: 480:11135
+            name: Frame 2147227708
+            type: FRAME
+            w: 129
+            h: 349
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 129
+              align: MIN/CENTER
+            children:
+            - id: 480:11136
+              name: Vector 12309
+              type: VECTOR
+              w: 0
+              h: 387
+              strokes:
+              - type: SOLID
+                color: '#ffffff'
+                token: gray/1100
+              strokeWeight: 2
+            - id: 480:11137
+              name: Vector 12310
+              type: VECTOR
+              w: 0
+              h: 387
+              strokes:
+              - type: SOLID
+                color: '#ffffff'
+                token: gray/1100
+              strokeWeight: 2
+          - id: 480:11138
+            name: Frame 2147227709
+            type: FRAME
+            w: 126.5
+            h: 390
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 129
+              align: MIN/CENTER
+            children:
+            - id: 480:11139
+              name: Vector 12309
+              type: VECTOR
+              w: 0
+              h: 390
+              strokes:
+              - type: SOLID
+                color: '#ffffff'
+                token: gray/1100
+              strokeWeight: 2
+            - id: 480:11140
+              name: Vector 12310
+              type: VECTOR
+              w: 0
+              h: 390
+              strokes:
+              - type: SOLID
+                color: '#ffffff'
+                token: gray/1100
+              strokeWeight: 2
+    - id: 458:8953
+      name: size usage=XS
+      type: COMPONENT
+      w: 390
+      h: 180
+      fills:
+      - type: SOLID
+        color: '#ededed'
+        token: border/separator line
+      children:
+      - id: 460:1034
+        name: Profile icon
+        type: INSTANCE
+        w: 124
+        h: 124
+        instance_of:
+          id: 460:984
+          name: state=Default
+          key: aff5db4fc57709b00a30d1a66afd7bf4708e97da
+          set:
+            id: 460:985
+            name: Profile icon
+        props:
+          state: Default
+    - id: 611:1266
+      name: size usage=Native popup placeholder
+      type: COMPONENT
+      w: 270
+      h: 206
+      fills:
+      - type: SOLID
+        color: '#ededed'
+        token: border/separator line
+      children:
+      - id: 611:1267
+        name: Device native pop up
+        type: TEXT
+        w: 150
+        h: 52
+        fills:
+        - type: SOLID
+          color: '#454545'
+          token: text/primary
+        chars: Device native pop up
+        textStyle: 👄 Headings/Small
+        font: Saira SemiBold
+        fontSize: 24
+        lineHeight: 110%
+        textAlign: CENTER
+    - id: 684:1205
+      name: size usage=transcribe loading
+      type: COMPONENT
+      w: 390
+      h: 72
+      fills:
+      - type: SOLID
+        color: '#ffffff'
+        token: background/canvas
+      children:
+      - id: 686:1209
+        name: Group 2147227415
+        type: GROUP
+        w: 358
+        h: 56
+        children:
+        - id: 684:1206
+          name: Rectangle 161125011
+          type: RECTANGLE
+          w: 358
+          h: 24
+          radius: 4
+          fills:
+          - type: SOLID
+            color: '#ededed'
+            token: background/surface/raised+2
+        - id: 684:1207
+          name: Rectangle 161125013
+          type: RECTANGLE
+          w: 247
+          h: 24
+          radius: 4
+          fills:
+          - type: SOLID
+            color: '#ededed'
+            token: background/surface/raised+2

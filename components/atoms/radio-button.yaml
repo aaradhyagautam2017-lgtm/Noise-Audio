@@ -1,0 +1,173 @@
+# Radio Button — ingested from Figma (2031:1178)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: radio-button
+name: Radio Button
+type: atom
+node_id: 2031:1178
+figma_fingerprint: 5aaf9ca2a4ce74111f0f3c1f26e495c980cec34e
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  State:
+  - Selected
+  - Unselected
+  - Disabled
+variants:
+- name: State=Selected
+  node_id: 2031:1179
+  figma_fingerprint: 33416edc75acdc35c16b81b1c09fbcf92bee3557
+  width: 20
+  height: 20
+- name: State=Unselected
+  node_id: 2031:1183
+  figma_fingerprint: a96537eba15b919c4271a87316598848a97959eb
+  width: 20
+  height: 20
+- name: State=Disabled
+  node_id: 2031:1186
+  figma_fingerprint: 31b9f5228e170de98f5d6efde671374c34d804b2
+  width: 20
+  height: 20
+authored_metadata: |
+  component:
+    id: radio-button
+    name: Radio Button
+    type: atom
+
+
+    usage: >
+      Used for mutually exclusive choices where only one option can be selected
+      at a time.
+
+
+    design_intent: >
+      Allow users to choose one option from a predefined set of alternatives.
+
+
+    anti_patterns:
+      - id: not-for-navigation
+        rule: Do not use for navigation.
+      - id: not-for-multiple-selection
+        rule: Do not use for multiple selection.
+      - id: not-for-immediate-system-toggles
+        rule: Do not use for immediate system toggles.
+
+
+    states:
+      - selected
+      - unselected
+      - disabled
+
+
+    rules:
+      - id: single-selection-per-group
+        rule: Only one radio button may be selected within a group.
+      - id: new-selection-deselects-previous
+        rule: Selecting a new option deselects the previous option.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 2031:1178
+    name: Radio Button
+    type: COMPONENT_SET
+    w: 60
+    h: 140
+    radius: 5
+    strokes:
+    - type: SOLID
+      color: '#8a38f5'
+    strokeWeight: 1
+    children:
+    - id: 2031:1179
+      name: State=Selected
+      type: COMPONENT
+      w: 20
+      h: 20
+      children:
+      - id: 2031:1180
+        name: Group 2147227133
+        type: GROUP
+        w: 20
+        h: 20
+        children:
+        - id: 2031:1181
+          name: Rectangle 34628534
+          type: RECTANGLE
+          w: 20
+          h: 20
+          radius: 32.787498474121094
+          fills:
+          - type: SOLID
+            color: '#171717'
+            token: button/radio/on
+        - id: 2031:1182
+          name: Rectangle 34628536
+          type: RECTANGLE
+          w: 11
+          h: 11
+          radius: 32.787498474121094
+          fills:
+          - type: SOLID
+            color: '#f7f7f7'
+            token: background/surface
+    - id: 2031:1183
+      name: State=Unselected
+      type: COMPONENT
+      w: 20
+      h: 20
+      children:
+      - id: 2031:1184
+        name: Group 2147227133
+        type: GROUP
+        w: 20
+        h: 20
+        children:
+        - id: 2031:1185
+          name: Rectangle 34628534
+          type: RECTANGLE
+          w: 20
+          h: 20
+          radius: 32.787498474121094
+          strokes:
+          - type: SOLID
+            color: '#b5b5b5'
+            token: button/radio/off(stroke)
+          strokeWeight: 1
+    - id: 2031:1186
+      name: State=Disabled
+      type: COMPONENT
+      w: 20
+      h: 20
+      children:
+      - id: 2031:1187
+        name: Group 2147227133
+        type: GROUP
+        w: 20
+        h: 20
+        children:
+        - id: 2031:1188
+          name: Rectangle 34628534
+          type: RECTANGLE
+          w: 20
+          h: 20
+          radius: 32.787498474121094
+          strokes:
+          - type: SOLID
+            color: '#ededed'
+            token: button/radio/disable
+          strokeWeight: 1

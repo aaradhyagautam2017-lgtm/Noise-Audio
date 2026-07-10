@@ -1,0 +1,144 @@
+# Card heading — ingested from Figma (340:11254)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: card-heading
+name: 'Card heading '
+type: atom
+node_id: 340:11254
+figma_fingerprint: 1cf5d7102660483fa53fe58ba6462229a449e45c
+figma_type: COMPONENT
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+authored_metadata: |
+  component:
+    id: card-heading
+    name: Card heading
+    type: atom
+
+
+    purpose: >
+      A section heading that labels a group of cards or a categorized set of
+      items.
+
+
+    usage: >
+      Used to categorize features or parts — a heading placed above a bunch of
+      cards or a categorized group (e.g. labeling a set of Master cards). The
+      label text is always present; the trailing count can be shown or hidden.
+
+
+    design_intent: >
+      Give grouped or categorized cards a consistent section label so users can
+      scan and distinguish one category of items from another.
+
+
+    anti_patterns:
+      - id: not-a-card-title
+        rule: >
+          Do not use inside a card as its title; that is the heading-content
+          component's role. Card heading labels a group of cards; heading-content
+          sits within a single card.
+      - id: only-for-categorization
+        rule: Do not use for content that isn't a category or section grouping.
+
+
+    composition:
+      embedded:
+        - name: Label text
+          note: The category/section name; always present.
+        - name: Trailing numeric
+          note: Count indicator on the trailing end; toggleable.
+
+
+    toggles:
+      trailing_numeric:
+        states: [on, off]
+        note: >
+          A count indicator (e.g. "1/2"); its exact meaning is set by the context
+          that uses it.
+
+
+    rules:
+      - id: label-always-present
+        rule: The label text is always present.
+      - id: numeric-is-count
+        rule: The trailing numeric indicates a count.
+      - id: use-cases-owned-elsewhere
+        rule: >
+          Use cases are not documented here beyond "categorize features or
+          parts"; the specific categories are defined by whatever uses this
+          heading.
+      - id: not-inside-a-card
+        rule: >
+          Card heading labels a group of cards; it is never used as the title
+          inside a single card (that is the heading-content component).
+
+
+    relationships:
+      - component_id: heading-content-component
+        relation: distinct-sibling
+        description: >
+          Heading-content sits inside a card; Card heading labels a group of
+          cards. Do not substitute one for the other.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (typography, spacing, colors) are not stored here. They are
+        read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 340:11254
+    name: 'Card heading '
+    type: COMPONENT
+    w: 358
+    h: 16
+    layout:
+      mode: HORIZONTAL
+      padding:
+      - 0
+      - 16
+      - 0
+      - 16
+      gap: 16
+      align: SPACE_BETWEEN/MIN
+    tokens:
+      paddingLeft: Padding/Card Side Padding
+      paddingRight: Padding/Card Side Padding
+    children:
+    - id: 340:11251
+      name: MY Devices
+      type: TEXT
+      w: 67
+      h: 16
+      fills:
+      - type: SOLID
+        color: '#b5b5b5'
+        token: text/tertiary
+      chars: MY Devices
+      textStyle: Bold content/Small
+      font: Geist SemiBold
+      fontSize: 12
+      textAlign: LEFT
+    - id: 340:11252
+      name: 1/2
+      type: TEXT
+      w: 19
+      h: 16
+      tokens:
+        textRangeFills:
+        - text/tertiary
+        - text/disabled
+      chars: 1/2
+      textStyle: Bold content/Small
+      font: Geist SemiBold
+      fontSize: 12
+      textAlign: RIGHT

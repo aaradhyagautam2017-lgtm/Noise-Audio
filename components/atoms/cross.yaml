@@ -1,0 +1,140 @@
+# Cross — ingested from Figma (2031:1201)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: cross
+name: Cross
+type: atom
+node_id: 2031:1201
+figma_fingerprint: 4630976d22073248745eb76ebe8a4c2e55d2c1ef
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  Type:
+  - Default
+  - Disabled
+variants:
+- name: Type=Default
+  node_id: 2031:1202
+  figma_fingerprint: 9bc3963af9c9b9971461d8e4aa76cdd3c49ec7a7
+  width: 24
+  height: 24
+- name: Type=Disabled
+  node_id: 2031:1205
+  figma_fingerprint: 484dde46ccdbd794bb1af85c72def084e39ed47b
+  width: 24
+  height: 24
+authored_metadata: |
+  component:
+    id: cross
+    name: Cross
+    type: atom
+
+
+    usage: >
+      Used for removal, dismissal, disconnect, or close actions.
+
+
+    design_intent: >
+      Provide a lightweight destructive or dismissal action without introducing
+      a full button.
+
+
+    anti_patterns:
+      - id: not-for-navigation
+        rule: Do not use for navigation.
+      - id: not-for-selection
+        rule: Do not use for selection.
+      - id: not-as-confirmation
+        rule: Do not use as a confirmation mechanism.
+
+
+    states:
+      - default
+      - disabled
+
+
+    rules:
+      - id: only-when-removal-available
+        rule: Should only be used when removal or dismissal is available.
+      - id: no-combination-with-actionable
+        rule: Should not be combined with another actionable.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 2031:1201
+    name: Cross
+    type: COMPONENT_SET
+    w: 64
+    h: 108
+    radius: 5
+    strokes:
+    - type: SOLID
+      color: '#8a38f5'
+    strokeWeight: 1
+    children:
+    - id: 2031:1202
+      name: Type=Default
+      type: COMPONENT
+      w: 24
+      h: 24
+      children:
+      - id: 2031:1203
+        name: Vector
+        type: VECTOR
+        w: 12
+        h: 12
+        strokes:
+        - type: SOLID
+          color: '#919191'
+          token: button/actionable/enabled
+        strokeWeight: 1.5
+      - id: 2031:1204
+        name: Vector
+        type: VECTOR
+        w: 12
+        h: 12
+        strokes:
+        - type: SOLID
+          color: '#919191'
+          token: button/actionable/enabled
+        strokeWeight: 1.5
+    - id: 2031:1205
+      name: Type=Disabled
+      type: COMPONENT
+      w: 24
+      h: 24
+      children:
+      - id: 2031:1206
+        name: Vector
+        type: VECTOR
+        w: 12
+        h: 12
+        strokes:
+        - type: SOLID
+          color: '#ededed'
+          token: button/actionable/disabled
+        strokeWeight: 1.5
+      - id: 2031:1207
+        name: Vector
+        type: VECTOR
+        w: 12
+        h: 12
+        strokes:
+        - type: SOLID
+          color: '#ededed'
+          token: button/actionable/disabled
+        strokeWeight: 1.5

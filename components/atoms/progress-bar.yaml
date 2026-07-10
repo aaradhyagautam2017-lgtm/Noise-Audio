@@ -1,0 +1,127 @@
+# Progress bar — ingested from Figma (489:2133)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: progress-bar
+name: Progress bar
+type: atom
+node_id: 489:2133
+figma_fingerprint: f92b7ef136d4b0b6c9618e26f856f0d6537d346e
+figma_type: COMPONENT
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+authored_metadata: |
+  component:
+    id: progress-bar
+    name: Progress bar
+    type: atom
+
+
+    purpose: >
+      A horizontal progress bar with a content line beneath it, indicating the
+      progress of an ongoing process.
+
+
+    usage: >
+      Used to show that a process is underway and how far along it is, with a
+      short line of content describing it (e.g. "Transferring Firmware").
+
+
+    design_intent: >
+      Give ongoing processes a consistent, self-contained progress indicator with
+      a description, so progress states read uniformly wherever they appear.
+
+
+    anti_patterns:
+      - id: no-hiding-parts
+        rule: >
+          Do not remove or hide any part; both the bar and the content line are
+          always present.
+
+
+    composition:
+      embedded:
+        - name: Progress bar
+          note: Track + fill.
+        - name: Content line
+          note: Sits beneath the bar.
+      note: All parts embedded/self-contained; no child components.
+
+
+    rules:
+      - id: nothing-toggles
+        rule: Nothing toggles; both the bar and the content line are always present.
+      - id: fill-is-mock
+        rule: The fill level shown is a mock/sample value.
+      - id: owned-by-atom
+        rule: Content and structure are owned by this atom.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (bar dimensions, fill styling, typography, spacing, colors)
+        are not stored here. They are read live from Figma via MCP at consumption
+        time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 489:2133
+    name: Progress bar
+    type: COMPONENT
+    w: 240
+    h: 34
+    layout:
+      mode: VERTICAL
+      padding:
+      - 0
+      - 0
+      - 0
+      - 0
+      gap: 12
+      align: MIN/CENTER
+    children:
+    - id: 489:2128
+      name: Group 249
+      type: GROUP
+      w: 240
+      h: 4
+      children:
+      - id: 489:2129
+        name: Rectangle 221
+        type: RECTANGLE
+        w: 240
+        h: 4
+        opacity: 0.3
+        fills:
+        - type: SOLID
+          color: '#ededed'
+          token: border/separator line
+      - id: 489:2130
+        name: Rectangle 222
+        type: RECTANGLE
+        w: 95
+        h: 4
+        fills:
+        - type: SOLID
+          color: '#171717'
+          token: button/radio/on
+    - id: 489:2131
+      name: Transferring Firmware
+      type: TEXT
+      w: 240
+      h: 18
+      fills:
+      - type: SOLID
+        color: '#919191'
+        token: text/secondary
+      chars: Transferring Firmware
+      textStyle: Content/Medium
+      font: Geist Regular
+      fontSize: 14
+      textAlign: CENTER

@@ -1,0 +1,146 @@
+# Spacing / radius / padding tokens — authored YAML mirrored + Figma numeral variables
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  extracted_at: '2026-07-10'
+  authored_on:
+    component: spacing component
+    node_id: 2036:3057
+    figma_fingerprint: d4fbe273fc59cae9687828f129ceabac812c7309
+authored_spacing_tokens: |
+  spacing_tokens:
+    category: spacing
+    source: Noise Audio Design System
+
+
+    numeral:
+      description: Base spacing scale; primitive step values other spacing builds on.
+      tokens:
+        - token: space.numeral.xs
+          name: XS
+          value: 4
+        - token: space.numeral.s
+          name: S
+          value: 8
+        - token: space.numeral.m
+          name: M
+          value: 12
+        - token: space.numeral.l
+          name: L
+          value: 16
+        - token: space.numeral.xl
+          name: XL
+          value: 24
+        - token: space.numeral.xxl
+          name: XXL
+          value: 32
+        - token: space.numeral.xxxl
+          name: XXXL
+          value: 44
+        - token: space.numeral.very-big
+          name: Very big
+          value: 56
+        - token: space.numeral.rarely-use
+          name: Rarely use
+          value: 80
+
+
+    gaps:
+      description: Spacing applied between elements.
+      tokens:
+        - token: space.gap.bottom-sheet
+          name: Bottom sheet
+          value: 24
+        - token: space.gap.l2-card
+          name: L2-Card Gap
+          value: 16
+        - token: space.gap.small
+          name: Small gap
+          value: 12
+        - token: space.gap.smaller
+          name: Smaller gap
+          value: 8
+
+
+    radius:
+      description: Corner radius values.
+      tokens:
+        - token: radius.card
+          name: Card
+          value: 18
+        - token: radius.bottom-sheet
+          name: Bottomsheet
+          value: 32
+        - token: radius.slider-button
+          name: Slider button
+          value: 8
+        - token: radius.tiniest
+          name: Tiniest
+          value: 12
+
+
+    padding:
+      description: Spacing applied inside a container or against the screen edge.
+      tokens:
+        - token: padding.screen-side-margin
+          name: Screen side margin
+          value: 0
+        - token: padding.top-bottom-small
+          name: Top, bottom padding small
+          value: 12
+        - token: padding.card-side
+          name: Card Side Padding
+          value: 16
+        - token: padding.card-top-bottom
+          name: Card Top, bottom Padding
+          value: 16
+        - token: padding.bottom-sheet
+          name: Bottomsheet padding
+          value: 20
+figma_numeral_variables:
+- name: XS
+  value: 4
+- name: S
+  value: 8
+- name: M
+  value: 12
+- name: L
+  value: 16
+- name: XL
+  value: 24
+- name: XXL
+  value: 32
+- name: XXXL
+  value: 44
+- name: Very big
+  value: 56
+- name: Rarely use
+  value: 80
+- name: Gaps/bottom sheet
+  value: 24
+- name: Gaps/L2-Card Gap
+  value: 16
+- name: Gaps/small gap
+  value: 12
+- name: Gaps/smaller gap
+  value: 8
+- name: Radius/Card
+  value: 18
+- name: Radius/Bottomsheet
+  value: 32
+- name: Radius/Slider button
+  value: 8
+- name: Radius/Tiniest
+  value: 12
+- name: Padding/Screen side margin
+  value: 0
+- name: Padding/top, bottom padding small
+  value: 12
+- name: Padding/Card Side Padding
+  value: 16
+- name: Padding/Card Top, bottom Padding
+  value: 16
+- name: Padding/Bottomsheet padding
+  value: 20
+note: authored_spacing_tokens mirrors the designer-authored YAML on the 'spacing component' verbatim.
+  figma_numeral_variables lists the numeral variable collection actually bound to component properties;
+  the two agree on every value.

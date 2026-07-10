@@ -1,0 +1,195 @@
+# Modal Sheet — ingested from Figma (611:1378)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: modal-sheet
+name: Modal Sheet
+type: complex-organism
+node_id: 611:1378
+figma_fingerprint: 1ff5504fa0229284b6ae328723679fb94b0ab477
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  Type:
+  - App Modal
+  - Device native popup modal
+variants:
+- name: Type=App Modal
+  node_id: 466:3210
+  figma_fingerprint: f746c65e2e6ac4d1e51d311f5647586168ee1c98
+  width: 390
+  height: 844
+- name: Type=Device native popup modal
+  node_id: 611:1379
+  figma_fingerprint: 64f64c4c316444f632a8d3112b8fb789344565b3
+  width: 390
+  height: 844
+structural_references:
+- references: Status bar
+  ref_node_id: 374:7867
+  ref_fingerprint: be68a17515e3c6a025f9a9bb53be752af6d9362f
+  variant_used: Status bar
+  instance_count: 2
+  resolved: false
+  external_location: 'page: AI Metdata'
+  same_named_library_component: status-bar
+- references: Modal
+  ref_node_id: 786:4487
+  ref_fingerprint: c773f2fb739fd730e93d30947149d2488ef2af69
+  variant_used: Type=Default modal
+  instance_count: 1
+  resolved: false
+  external_location: 'page: 06 Building Blocks'
+- references: Home Indicator
+  ref_node_id: 386:1835
+  ref_fingerprint: 738983691dede508931f06f03be9edb515cd19e0
+  variant_used: Home Indicator
+  instance_count: 2
+  resolved: false
+  external_location: 'page: 06 Building Blocks'
+- references: Image, asset placeholder
+  ref_node_id: 458:8952
+  ref_fingerprint: aeb5091d768aa1acd45c5220bcddd658abbcf259
+  variant_used: size usage=Native popup placeholder
+  instance_count: 1
+  resolved: true
+  target_id: image-asset-placeholder
+authored_metadata: |
+  component:
+    id: modal-sheet
+    name: Modal sheet
+    type: complex-organism
+    type_note: An organism containing an organism or atom (the content variant).
+
+
+    purpose: >
+      The full modal surface — a grey dimming overlay with content anchored to
+      the bottom — used to present an unavoidable action the user must take.
+
+
+    usage: >
+      Used when the user must complete an action they cannot skip. Follows the
+      same container behavior as the Action sheet, except it is not freely
+      dismissible.
+
+
+    design_intent: >
+      Force an unavoidable decision at a break in the flow, presenting the
+      required action on a surface the user cannot casually dismiss.
+
+
+    anti_patterns:
+      - id: not-for-optional-actions
+        rule: Do not use for optional, skippable actions; use the Action sheet instead.
+      - id: no-internal-scroll
+        rule: >
+          Do not allow the content to scroll internally; the sheet grows to fit
+          its content.
+      - id: never-cover-status-bar
+        rule: >
+          Do not obscure or recolor the status bar with the overlay; the status
+          bar stays on top in its dedicated contrasting token.
+      - id: no-extra-dismissal
+        rule: >
+          Do not add a cross or any dismissal affordance beyond the ones each
+          variant explicitly permits.
+
+
+    composition:
+      owned:
+        - name: Grey dimming overlay
+          note: Exact color/opacity read from Figma.
+      content_variants:
+        - modal-card
+        - image-asset-placeholder (variant: device-native-pop-up)
+      on_top:
+        - name: Status bar
+          note: Remains rendered on top of the overlay (see relationships).
+
+
+    variants:
+      locked: true
+      values:
+        - name: modal-card-variant
+          contains:
+            component_id: modal-card
+          description: The Modal sheet contains the Modal card.
+        - name: device-native-pop-up-variant
+          contains:
+            component_id: image-asset-placeholder
+            pinned_variant: device-native-pop-up
+          description: >
+            The Modal sheet contains the image-asset-placeholder atom,
+            specifically its device-native-pop-up variant. Pinned: no other
+            variant of the atom is used here.
+
+
+    rules:
+      placement:
+        - >
+          The sheet is anchored (stuck) to the bottom of the screen and grows
+          upward to fit its content.
+      scroll:
+        - >
+          The content must never scroll; height is content-driven and expands
+          upward instead.
+      motion:
+        - >
+          Enters from the bottom (slides up) and exits to the bottom (slides
+          down), with the overlay fading accordingly. Smooth animation.
+      status_bar:
+        - >
+          Stays on top of the overlay in a contrasting color drawn from its
+          dedicated token; the overlay never covers or recolors it.
+      dismissal:
+        - variant: modal-card-variant
+          rule: >
+            Dismissible only via the actions (the Modal card's CTAs). No
+            overlay-tap, no swipe-down, no cross.
+        - variant: device-native-pop-up-variant
+          rule: >
+            Dismissible only by tapping outside the placeholder, or by choosing
+            one of the options inside the native pop-up. These are the only two
+            ways. This follows the device's own native pop-up conventions, not
+            ours.
+      usage_boundary:
+        - >
+          Use the Modal sheet when the action is unavoidable and cannot be
+          skipped. For optional, skippable actions, use the Action sheet.
+          (Mirror of the shared action-vs-modal rule.)
+
+
+    relationships:
+      - component_id: modal-card
+        relation: contains
+        description: Content of the Modal card variant.
+      - component_id: image-asset-placeholder
+        relation: contains
+        pinned_variant: device-native-pop-up
+        description: >
+          Content of the Device native pop up variant; pinned to that specific
+          atom variant.
+      - component_id: action-sheet
+        relation: counterpart
+        description: Parallel counterpart for optional, skippable actions (see usage_boundary).
+      - component_id: status-bar
+        relation: renders-on-top
+        description: >
+          Stays rendered on top of the overlay in its dedicated contrasting token.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (overlay color/opacity, corner radius, spacing, dimensions)
+        are not stored here. They are read live from Figma via MCP at consumption
+        time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree: see variants in visuals data

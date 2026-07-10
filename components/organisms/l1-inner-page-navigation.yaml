@@ -1,0 +1,613 @@
+# L1 Inner page navigation — ingested from Figma (2007:1007)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: l1-inner-page-navigation
+name: L1 Inner page navigation
+type: organism
+node_id: 2007:1007
+figma_fingerprint: bbd24c7b7a648836ba325942f634a414386375d6
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  state:
+  - Clean-Only Chevron
+  - One icon
+  - two icon
+  - Heading
+  - AI Token Banner
+  - Items Selected
+variants:
+- name: state=Clean-Only Chevron
+  node_id: 2007:1006
+  figma_fingerprint: 75609b3b8a5e8042ac16f4ace58531e6e5e6e772
+  width: 390
+  height: 56
+- name: state=One icon
+  node_id: 2007:1005
+  figma_fingerprint: 7ee78b3aedfe3e880b0f4a53b6f785b780840e20
+  width: 390
+  height: 56
+- name: state=two icon
+  node_id: 2007:1003
+  figma_fingerprint: f84ace9ab1d978447fdaee1c6e57d9a9afdef066
+  width: 390
+  height: 56
+- name: state=Heading
+  node_id: 2007:1002
+  figma_fingerprint: af0eec46a224782f790e1117a20a0a62895a3d12
+  width: 390
+  height: 56
+- name: state=AI Token Banner
+  node_id: 2007:1004
+  figma_fingerprint: 616c82594b625bcf07ed60a1c9a0f0bebe03ffa9
+  width: 390
+  height: 56
+- name: state=Items Selected
+  node_id: 2007:1001
+  figma_fingerprint: 9919069314214bf44e21fcb988c27e505e22764b
+  width: 390
+  height: 56
+structural_references:
+- references: system/Chevron
+  ref_node_id: 2007:379
+  ref_fingerprint: 7d33453c2f50af7fc44257ae137fab22e2f6db20
+  variant_used: State=Chevron back
+  instance_count: 5
+  resolved: false
+  external_location: orphaned (detached from any page)
+  same_named_library_component: chevron
+- references: system/Restart
+  ref_node_id: 2007:405
+  ref_fingerprint: d849ccc65bbbb17b5c6b86199354cd2267a8c2a1
+  variant_used: system/Restart
+  instance_count: 5
+  resolved: false
+  external_location: orphaned (detached from any page)
+- references: system/Downloading Success
+  ref_node_id: 2007:399
+  ref_fingerprint: 0c4bf18b77e38a794ff1d82c7d91d582f799a242
+  variant_used: system/Downloading Success
+  instance_count: 2
+  resolved: false
+  external_location: orphaned (detached from any page)
+- references: 'Transcribe time chips '
+  ref_node_id: 2007:416
+  ref_fingerprint: 2dd26abd96a76394a0bc3171dd2e22b2c59e37f1
+  variant_used: Property 1=High
+  instance_count: 1
+  resolved: false
+  external_location: orphaned (detached from any page)
+- references: system/cross
+  ref_node_id: 2007:411
+  ref_fingerprint: 96e4573dca6dc036787426ca1ce287ec1eedd3be
+  variant_used: system/cross
+  instance_count: 1
+  resolved: false
+  external_location: orphaned (detached from any page)
+  same_named_library_component: cross
+authored_metadata: |
+  component:
+    id: l1-inner-page-navigation
+    name: L1 inner page navigation
+    type: organism
+
+
+    usage: >
+      Used at the L1 inner pages layer to communicate page context and provide
+      access to navigation and page-specific actions.
+
+
+    design_intent: >
+      Provide users with clear orientation within an inner-page flow while
+      maintaining access to navigation and contextual actions.
+
+
+    anti_patterns:
+      - id: not-on-surface-level
+        rule: Do not use on surface-level pages.
+      - id: not-inside-containers
+        rule: Do not use inside cards or content containers.
+      - id: not-more-than-once
+        rule: Do not use more than once on a page.
+      - id: not-as-section-header
+        rule: Do not use as a section header.
+      - id: not-for-content-grouping
+        rule: Do not use for content grouping.
+      - id: not-replace-l2-headings
+        rule: Do not replace L2 page headings.
+
+
+    composition:
+      used_atoms:
+        - chevron
+        - cross
+
+
+    variant_axis:
+      name: state
+      base_variants:
+        heading_capable: true
+        heading_toggle: [on, off]
+        values:
+          - name: clean-only-chevron
+            figma_value: Clean-Only Chevron
+            contains:
+              - Leading Back Action
+          - name: one-icon
+            figma_value: One icon
+            contains:
+              - Leading Back Action
+              - One Trailing Action
+          - name: two-icon
+            figma_value: two icon
+            contains:
+              - Leading Back Action
+              - Two Trailing Actions
+          - name: heading
+            figma_value: Heading
+            role: example
+            note: >
+              Reference/example state showing a base variant with heading on:
+              leading back action + centered heading + trailing config.
+              Illustrates how the promoted heading looks and sits in the
+              centered slot. Not a distinct structural variant.
+      standalone_variants:
+        heading_capable: false
+        values:
+          - name: ai-token-banner
+            figma_value: AI Token Banner
+            contains:
+              - Leading Back Action
+              - AI Credit Indicator
+              - Trailing Action
+            note: No space for a heading; scroll/heading-push case does not exist.
+          - name: items-selected
+            figma_value: Items Selected
+            contains:
+              - Close Action
+              - Selection Count
+              - Contextual Actions
+            note: No heading; scroll/heading-push case does not exist.
+
+
+    parts:
+      - name: Leading Back Action
+        source: atom
+        atom: chevron
+        note: Back-direction chevron.
+      - name: Close Action
+        source: atom
+        atom: cross
+      - name: Page Title / Heading
+        source: self-contained
+        note: Plain text owned by this organism.
+      - name: Trailing Action
+        source: self-contained
+      - name: AI Credit Indicator
+        source: self-contained
+      - name: Selection Count
+        source: self-contained
+      - name: Contextual Actions
+        source: self-contained
+
+
+    rules:
+      hierarchy:
+        - Must represent L1 page hierarchy.
+        - Must always appear below the status bar.
+        - Must always appear above page content.
+      variant_selection:
+        - Choose the simplest variant capable of supporting required actions.
+        - Do not add trailing actions unless a clear user need exists.
+        - Items Selected should only appear during active selection states.
+      layout:
+        - Must span the page width.
+        - Title remains the primary focal element.
+        - Navigation actions should remain visually secondary to the page title.
+      scroll_behavior:
+        - >
+          On scroll (when page content overflows the first fold), receives the
+          promoted heading from the L2/Inner pages Heading into its centered
+          slot. Applies only to base variants (clean-only-chevron, one-icon,
+          two-icon); ai-token-banner and items-selected never receive a heading.
+        - >
+          On scroll, the L1 nav container and the status bar container gain a
+          fill of token/background/canvas (both are transparent at rest) so
+          scrolling content does not bleed through.
+        - >
+          On scroll, a subtle drop shadow appears on the L1 nav. The shadow is
+          directional: cast downward only, from the bottom edge of the L1 nav,
+          so it reads as content passing underneath. It must never extend upward
+          onto the status bar.
+        - The transition is a smooth animation, and reverses on scroll-down.
+      shadow_exception:
+        - >
+          This is the only component in the system that uses a drop shadow.
+          Shadows must not be introduced anywhere else in the app.
+
+
+    relationships:
+      - component_id: l2-inner-pages-heading
+        relation: heading-source
+        description: Supplies the promoted heading on scroll.
+      - component_id: status-bar
+        relation: shares-scroll-state
+        description: >
+          Also receives the token/background/canvas fill during this
+          component's scrolled state.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, height, colors) are not
+        stored here. They are read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 2007:1007
+    name: L1 Inner page navigation
+    type: COMPONENT_SET
+    w: 430
+    h: 436
+    radius: 5
+    strokes:
+    - type: SOLID
+      color: '#8a38f5'
+    strokeWeight: 1
+    children:
+    - id: 2007:1006
+      name: state=Clean-Only Chevron
+      type: COMPONENT
+      w: 390
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 12
+        - 0
+        - 12
+        gap: 46
+        align: MIN/CENTER
+      children:
+      - id: 2007:954
+        name: system/Chevron
+        type: INSTANCE
+        w: 24
+        h: 24
+        instance_of:
+          id: 2007:380
+          name: State=Chevron back
+          key: dfa4db7c4e15eee69d60e2adf2dd88bd4291785f
+          set:
+            id: 2007:379
+            name: system/Chevron
+        props:
+          State: Chevron back
+    - id: 2007:1005
+      name: state=One icon
+      type: COMPONENT
+      w: 390
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 12
+        - 0
+        - 12
+        gap: 46
+        align: SPACE_BETWEEN/CENTER
+      children:
+      - id: 2007:941
+        name: system/Chevron
+        type: INSTANCE
+        w: 24
+        h: 24
+        instance_of:
+          id: 2007:380
+          name: State=Chevron back
+          key: dfa4db7c4e15eee69d60e2adf2dd88bd4291785f
+          set:
+            id: 2007:379
+            name: system/Chevron
+        props:
+          State: Chevron back
+      - id: 2007:943
+        name: system/Restart
+        type: INSTANCE
+        w: 24
+        h: 24
+        instance_of:
+          id: 2007:405
+          name: system/Restart
+          key: d849ccc65bbbb17b5c6b86199354cd2267a8c2a1
+        props: {}
+    - id: 2007:1003
+      name: state=two icon
+      type: COMPONENT
+      w: 390
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 12
+        - 0
+        - 12
+        gap: 46
+        align: SPACE_BETWEEN/CENTER
+      children:
+      - id: 2007:935
+        name: system/Chevron
+        type: INSTANCE
+        w: 24
+        h: 24
+        instance_of:
+          id: 2007:380
+          name: State=Chevron back
+          key: dfa4db7c4e15eee69d60e2adf2dd88bd4291785f
+          set:
+            id: 2007:379
+            name: system/Chevron
+        props:
+          State: Chevron back
+      - id: 2007:937
+        name: 2 Icon grouped
+        type: FRAME
+        w: 60
+        h: 24
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 12
+          align: MAX/CENTER
+        children:
+        - id: 2007:938
+          name: system/Downloading Success
+          type: INSTANCE
+          w: 24
+          h: 24
+          instance_of:
+            id: 2007:399
+            name: system/Downloading Success
+            key: 0c4bf18b77e38a794ff1d82c7d91d582f799a242
+          props: {}
+        - id: 2007:939
+          name: system/Restart
+          type: INSTANCE
+          w: 24
+          h: 24
+          instance_of:
+            id: 2007:405
+            name: system/Restart
+            key: d849ccc65bbbb17b5c6b86199354cd2267a8c2a1
+          props: {}
+    - id: 2007:1002
+      name: state=Heading
+      type: COMPONENT
+      w: 390
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 12
+        - 0
+        - 12
+        gap: 46
+        align: SPACE_BETWEEN/CENTER
+      children:
+      - id: 2007:945
+        name: system/Chevron
+        type: INSTANCE
+        w: 24
+        h: 24
+        instance_of:
+          id: 2007:380
+          name: State=Chevron back
+          key: dfa4db7c4e15eee69d60e2adf2dd88bd4291785f
+          set:
+            id: 2007:379
+            name: system/Chevron
+        props:
+          State: Chevron back
+      - id: 2007:946
+        name: PRODUCT TIPS
+        type: TEXT
+        w: 318
+        h: 26
+        fills:
+        - type: SOLID
+          color: '#454545'
+          token: text/primary
+        chars: PRODUCT TIPS
+        textStyle: 👄 Headings/Small
+        font: Saira SemiBold
+        fontSize: 24
+        lineHeight: 110%
+        textAlign: CENTER
+      - id: 2007:947
+        name: Placeholder frame
+        type: INSTANCE
+        w: 24
+        h: 24
+        opacity: 0
+        instance_of:
+          id: 2007:405
+          name: system/Restart
+          key: d849ccc65bbbb17b5c6b86199354cd2267a8c2a1
+        props: {}
+    - id: 2007:1004
+      name: state=AI Token Banner
+      type: COMPONENT
+      w: 390
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 12
+        - 0
+        - 12
+        gap: 100
+        align: CENTER/CENTER
+      children:
+      - id: 2007:958
+        name: system/Chevron
+        type: INSTANCE
+        w: 24
+        h: 24
+        instance_of:
+          id: 2007:380
+          name: State=Chevron back
+          key: dfa4db7c4e15eee69d60e2adf2dd88bd4291785f
+          set:
+            id: 2007:379
+            name: system/Chevron
+        props:
+          State: Chevron back
+      - id: 2007:959
+        name: 'Transcribe time chips '
+        type: INSTANCE
+        w: 118
+        h: 24
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 4
+          - 8
+          - 4
+          - 8
+          gap: 4
+          align: CENTER/CENTER
+        radius: 12
+        fills:
+        - type: SOLID
+          color: '#f6fdf5'
+        strokes:
+        - type: SOLID
+          color: '#ade6a5'
+        strokeWeight: 1
+        instance_of:
+          id: 2007:417
+          name: Property 1=High
+          key: a6b94203a7811ed99ec43c8d15c593744e2b9d4f
+          set:
+            id: 2007:416
+            name: 'Transcribe time chips '
+        props:
+          Property 1: High
+      - id: 2007:960
+        name: system/Restart
+        type: INSTANCE
+        w: 24
+        h: 24
+        instance_of:
+          id: 2007:405
+          name: system/Restart
+          key: d849ccc65bbbb17b5c6b86199354cd2267a8c2a1
+        props: {}
+    - id: 2007:1001
+      name: state=Items Selected
+      type: COMPONENT
+      w: 390
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 12
+        - 0
+        - 12
+        gap: 46
+        align: SPACE_BETWEEN/CENTER
+      children:
+      - id: 2007:928
+        name: selected state
+        type: FRAME
+        w: 128
+        h: 24
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 8
+          align: MIN/CENTER
+        tokens:
+          itemSpacing: Gaps/smaller gap
+        children:
+        - id: 2007:929
+          name: system/cross
+          type: INSTANCE
+          w: 24
+          h: 24
+          instance_of:
+            id: 2007:411
+            name: system/cross
+            key: 96e4573dca6dc036787426ca1ce287ec1eedd3be
+          props: {}
+        - id: 2007:930
+          name: 1 item selected
+          type: TEXT
+          w: 96
+          h: 18
+          fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          chars: 1 item selected
+          textStyle: Content/Medium
+          font: Geist Regular
+          fontSize: 14
+          textAlign: LEFT
+      - id: 2007:931
+        name: 2 Icon grouped
+        type: FRAME
+        w: 60
+        h: 24
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 12
+          align: MAX/CENTER
+        children:
+        - id: 2007:932
+          name: system/Downloading Success
+          type: INSTANCE
+          w: 24
+          h: 24
+          instance_of:
+            id: 2007:399
+            name: system/Downloading Success
+            key: 0c4bf18b77e38a794ff1d82c7d91d582f799a242
+          props: {}
+        - id: 2007:933
+          name: system/Restart
+          type: INSTANCE
+          w: 24
+          h: 24
+          instance_of:
+            id: 2007:405
+            name: system/Restart
+            key: d849ccc65bbbb17b5c6b86199354cd2267a8c2a1
+          props: {}

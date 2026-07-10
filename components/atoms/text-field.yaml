@@ -1,0 +1,962 @@
+# Text field — ingested from Figma (445:8434)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: text-field
+name: Text field
+type: atom
+node_id: 445:8434
+figma_fingerprint: c32a11ab5b2fcac3c6c92f4a3723f63c390027fc
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  Type:
+  - small
+  - Noise Ai text field
+  - Big
+  - Bold
+  - File upload
+  - OTP
+variants:
+- name: Type=small
+  node_id: 445:8433
+  figma_fingerprint: 9d908769cc44db3b6e96ca7a4186a9dfa178cb7f
+  width: 358
+  height: 64
+- name: Type=Noise Ai text field
+  node_id: 758:875
+  figma_fingerprint: 433545cfa5e2a048c2991339e1ca20d48ff498c2
+  width: 358
+  height: 56
+- name: Type=Big
+  node_id: 445:8435
+  figma_fingerprint: 45689854c27d3095ff6e12df518210d8b2964cb5
+  width: 358
+  height: 178
+- name: Type=Bold
+  node_id: 569:3939
+  figma_fingerprint: 7a424aa8700a634a934a0e4113272ea9725aef9b
+  width: 358
+  height: 64
+- name: Type=File upload
+  node_id: 573:4090
+  figma_fingerprint: fc5e2f6d93261a06eef67dfeacf8c50757a80fc8
+  width: 358
+  height: 240
+- name: Type=OTP
+  node_id: 604:2554
+  figma_fingerprint: ab933f9671a200d6a8535b622cea092ac8f538c9
+  width: 358
+  height: 64
+structural_references:
+- references: Actionables
+  ref_node_id: 329:2095
+  ref_fingerprint: 4b6a4ae9a8d5c00c90119bb74803d60125416864
+  variant_used: Action=Chevron
+  instance_count: 1
+  resolved: false
+  external_location: 'page: AI Metdata'
+  same_named_library_component: actionables
+- references: 'Heading-content component '
+  ref_node_id: 301:20202
+  ref_fingerprint: 18df4dd5982a7e913f345ea9459801fb472a255b
+  variant_used: 'Heading-content component '
+  instance_count: 3
+  resolved: true
+  target_id: heading-content-component
+authored_metadata: |
+  component:
+    id: text-field
+    name: Text field
+    type: atom
+
+
+    purpose: >
+      A field where the user enters values or data, with a fixed set of variants
+      for different input cases.
+
+
+    usage: >
+      Used wherever the user inputs data. The agent picks the variant matching
+      the input case. Except for the Noise AI variant, a Text field is always
+      paired with a Card heading above it.
+
+
+    anti_patterns:
+      - id: no-field-without-heading
+        rule: >
+          Do not use a Text field (except the Noise AI variant) without its
+          paired Card heading.
+      - id: no-invented-variants
+        rule: Do not invent new variants; the set is fixed.
+
+
+    composition:
+      used_atoms:
+        - chevron
+      note: >
+        The Bold variant's chevron is the Chevron atom, referenced directly (not
+        the Actionables molecule). All other content is embedded/self-contained.
+
+
+    variants:
+      locked: true
+      values:
+        - name: small
+          description: >
+            Small text field. Trailing bottom-right character count (e.g. "0/50"),
+            toggleable.
+        - name: big
+          description: >
+            Large text field. Trailing bottom-right character count (e.g. "0/300"),
+            toggleable.
+        - name: bold
+          description: Bold-styled field with a trailing chevron (Chevron atom).
+          uses_atom: chevron
+        - name: file-upload
+          description: Shows the uploaded file with its title and a copy affordance.
+        - name: otp
+          description: >
+            Four value slots; supports a valid/invalid state and an option to
+            listen to the OTP (see OTP behavior).
+        - name: noise-ai-text-field
+          description: The AI prompt field ("Ask Anything").
+          exempt_from_heading_pairing: true
+
+
+    toggles:
+      character_count:
+        applies_to: [small, big]
+        states: [on, off]
+        note: The bottom-right letter count toggles on/off per requirement.
+      otp_lower_block:
+        applies_to: [otp]
+        states: [on, off]
+        numerical:
+          states: [on, off]
+          note: >
+            Within the lower block, the numerical toggles individually on/off
+            depending on the OTP state.
+
+
+    rules:
+      pairing:
+        - >
+          All variants except the Noise AI text field are always used with a Card
+          heading placed above them. The gap between the heading and the field is
+          exactly 8px, referencing space.numeral.s (= 8).
+      otp_behavior:
+        - >
+          If the entered OTP is invalid, the timer is not shown; the failed state
+          is displayed (e.g. "Incorrect OTP entered.").
+        - >
+          If the user wants to listen to the OTP and has entered nothing, the
+          resend-OTP state with the timer is shown (the usual resend flow).
+        - >
+          The failed OTP state and the resend OTP state are the two mutually
+          exclusive states of the lower block.
+      variant_scope:
+        - Character count is available only on the Small and Big variants.
+        - >
+          The Bold variant's chevron is the Chevron atom, referenced directly
+          (not via the Actionables molecule).
+        - >
+          The variant set is fixed; the agent selects among them but never creates
+          new ones.
+
+
+    relationships:
+      - component_id: card-heading
+        relation: paired-with
+        description: >
+          A Text field (except the Noise AI variant) is always paired with a Card
+          heading above it, at an 8px gap (space.numeral.s).
+      - component_id: chevron
+        relation: uses
+        description: Used directly by the Bold variant as its trailing chevron.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (typography, spacing, colors, dimensions) are not stored
+        here. They are read live from Figma via MCP at consumption time. The
+        heading-to-field gap resolves to space.numeral.s (= 8).
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 445:8434
+    name: Text field
+    type: COMPONENT_SET
+    w: 398
+    h: 886
+    radius: 5
+    strokes:
+    - type: SOLID
+      color: '#8a38f5'
+    strokeWeight: 1
+    children:
+    - id: 445:8433
+      name: Type=small
+      type: COMPONENT
+      w: 358
+      h: 64
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 0
+        - 0
+        - 0
+        gap: 8
+        align: MIN/CENTER
+      children:
+      - id: 445:8430
+        name: Frame 244
+        type: FRAME
+        w: 358
+        h: 64
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 16
+          gap: 34
+          align: MIN/CENTER
+        radius: 18
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: background/surface
+        tokens:
+          topLeftRadius: Radius/Card
+          topRightRadius: Radius/Card
+          bottomLeftRadius: Radius/Card
+          bottomRightRadius: Radius/Card
+        children:
+        - id: 445:8431
+          name: Briefly explain your problem
+          type: TEXT
+          w: 285
+          h: 18
+          fills:
+          - type: SOLID
+            color: '#919191'
+            token: text/secondary
+          chars: Briefly explain your problem
+          textStyle: Sub Headings/card headings
+          font: Saira Medium
+          fontSize: 16
+          lineHeight: 110%
+          textAlign: LEFT
+        - id: 445:8432
+          name: 0/50
+          type: TEXT
+          w: 29
+          h: 16
+          fills:
+          - type: SOLID
+            color: '#919191'
+            token: text/secondary
+          chars: 0/50
+          textStyle: Content/Small
+          font: Geist Regular
+          fontSize: 12
+          lineHeight: 130%
+          textAlign: RIGHT
+    - id: 758:875
+      name: Type=Noise Ai text field
+      type: COMPONENT
+      w: 358
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 0
+        - 0
+        - 0
+        gap: 8
+        align: MIN/CENTER
+      radius: 18
+      effects:
+      - type: DROP_SHADOW
+        radius: 4.599999904632568
+        offset:
+          x: 1
+          y: 1
+        spread: 0
+        color: '#0000001f'
+      children:
+      - id: 758:876
+        name: Frame 244
+        type: FRAME
+        w: 358
+        h: 56
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 16
+          gap: 34
+          align: MIN/CENTER
+        radius: 18
+        fills:
+        - type: SOLID
+          color: '#ffffff'
+          token: background/canvas
+        children:
+        - id: 758:898
+          name: Frame 2147240650
+          type: FRAME
+          w: 326
+          h: 32
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 70
+            align: SPACE_BETWEEN/CENTER
+          children:
+          - id: 758:899
+            name: '| Ask Anything'
+            type: TEXT
+            w: 254
+            h: 21
+            tokens:
+              textRangeFills:
+              - text/primary
+              - text/tertiary
+            chars: '| Ask Anything'
+            font: Geist Regular
+            textAlign: LEFT
+          - id: 758:900
+            name: Frame 2147240649
+            type: FRAME
+            w: 72
+            h: 32
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 8
+              align: MIN/CENTER
+            tokens:
+              itemSpacing: Gaps/smaller gap
+            children:
+            - id: 758:901
+              name: Frame 2147240647
+              type: FRAME
+              w: 32
+              h: 32
+              radius: 63
+              fills:
+              - type: SOLID
+                color: '#ededed'
+                token: border/separator line
+              children: []
+            - id: 758:902
+              name: Frame 2147240648
+              type: FRAME
+              w: 32
+              h: 32
+              radius: 63
+              fills:
+              - type: SOLID
+                color: '#ededed'
+                token: border/separator line
+              children: []
+    - id: 445:8435
+      name: Type=Big
+      type: COMPONENT
+      w: 358
+      h: 178
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 0
+        - 0
+        - 0
+        gap: 8
+        align: MIN/CENTER
+      children:
+      - id: 445:8436
+        name: Frame 244
+        type: FRAME
+        w: 358
+        h: 178
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 16
+          gap: 34
+          align: MIN/CENTER
+        radius: 18
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: background/surface
+        tokens:
+          topLeftRadius: Radius/Card
+          topRightRadius: Radius/Card
+          bottomLeftRadius: Radius/Card
+          bottomRightRadius: Radius/Card
+        children:
+        - id: 445:8437
+          name: Please share details of your issue
+          type: TEXT
+          w: 329
+          h: 18
+          fills:
+          - type: SOLID
+            color: '#919191'
+            token: text/secondary
+          chars: Please share details of your issue
+          textStyle: Sub Headings/card headings
+          font: Saira Medium
+          fontSize: 16
+          lineHeight: 110%
+          textAlign: LEFT
+        - id: 445:8438
+          name: 0/300
+          type: TEXT
+          w: 37
+          h: 16
+          fills:
+          - type: SOLID
+            color: '#919191'
+            token: text/secondary
+          chars: 0/300
+          textStyle: Content/Small
+          font: Geist Regular
+          fontSize: 12
+          lineHeight: 130%
+          textAlign: RIGHT
+    - id: 569:3939
+      name: Type=Bold
+      type: COMPONENT
+      w: 358
+      h: 64
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 0
+        - 0
+        - 0
+        gap: 8
+        align: MIN/CENTER
+      children:
+      - id: 569:3940
+        name: Frame 244
+        type: FRAME
+        w: 358
+        h: 64
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 16
+          gap: 34
+          align: SPACE_BETWEEN/CENTER
+        radius: 18
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: background/surface
+        tokens:
+          topLeftRadius: Radius/Card
+          topRightRadius: Radius/Card
+          bottomLeftRadius: Radius/Card
+          bottomRightRadius: Radius/Card
+        children:
+        - id: 569:3941
+          name: Briefly explain your problem
+          type: TEXT
+          w: 290
+          h: 23
+          fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          chars: Briefly explain your problem
+          textStyle: Sub Headings/Section title
+          font: Saira Medium
+          fontSize: 21
+          lineHeight: 110%
+          textAlign: LEFT
+        - id: 569:3943
+          name: Actionables
+          type: INSTANCE
+          w: 36
+          h: 36
+          instance_of:
+            id: 329:2094
+            name: Action=Chevron
+            key: 57e2ee1df03f08a8cb03623314a5d44f3c29fdbc
+            set:
+              id: 329:2095
+              name: Actionables
+          props:
+            Action: Chevron
+    - id: 573:4090
+      name: Type=File upload
+      type: COMPONENT
+      w: 358
+      h: 240
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 0
+        - 0
+        - 0
+        gap: 8
+        align: MIN/CENTER
+      children:
+      - id: 573:4091
+        name: Frame 244
+        type: FRAME
+        w: 358
+        h: 240
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 16
+          - 16
+          - 16
+          - 16
+          gap: 34
+          align: MIN/CENTER
+        radius: 18
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: background/surface
+        tokens:
+          paddingTop: Padding/Card Top, bottom Padding
+          paddingBottom: Padding/Card Top, bottom Padding
+          topLeftRadius: Radius/Card
+          topRightRadius: Radius/Card
+          bottomLeftRadius: Radius/Card
+          bottomRightRadius: Radius/Card
+        children:
+        - id: 573:4094
+          name: Frame 2147240603
+          type: FRAME
+          w: 267
+          h: 208
+          layout:
+            mode: VERTICAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 8
+            align: MIN/MIN
+          tokens:
+            itemSpacing: Gaps/smaller gap
+          children:
+          - id: 573:4095
+            name: Frame 2147240601
+            type: FRAME
+            w: 267
+            h: 64
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 16
+              align: MIN/CENTER
+            tokens:
+              itemSpacing: Gaps/L2-Card Gap
+            children:
+            - id: 573:4096
+              name: Text field with Heading
+              type: FRAME
+              w: 64
+              h: 64
+              radius: 8
+              fills:
+              - type: SOLID
+                color: '#ededed'
+                token: border/separator line
+              tokens:
+                topLeftRadius: Radius/Slider button
+                topRightRadius: Radius/Slider button
+                bottomLeftRadius: Radius/Slider button
+                bottomRightRadius: Radius/Slider button
+              children: []
+            - id: 573:4097
+              name: 'Heading-content component '
+              type: INSTANCE
+              w: 187
+              h: 38
+              layout:
+                mode: VERTICAL
+                padding:
+                - 0
+                - 0
+                - 0
+                - 0
+                gap: 4
+                align: MIN/MIN
+              instance_of:
+                id: 301:20202
+                name: 'Heading-content component '
+                key: 18df4dd5982a7e913f345ea9459801fb472a255b
+              props:
+                Heading#395:0: true
+                content#301:0: true
+          - id: 573:4098
+            name: Frame 2147240602
+            type: FRAME
+            w: 267
+            h: 64
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 16
+              align: MIN/CENTER
+            tokens:
+              itemSpacing: Gaps/L2-Card Gap
+            children:
+            - id: 573:4099
+              name: Text field with Heading
+              type: FRAME
+              w: 64
+              h: 64
+              radius: 8
+              fills:
+              - type: SOLID
+                color: '#ededed'
+                token: border/separator line
+              tokens:
+                topLeftRadius: Radius/Slider button
+                topRightRadius: Radius/Slider button
+                bottomLeftRadius: Radius/Slider button
+                bottomRightRadius: Radius/Slider button
+              children: []
+            - id: 573:4100
+              name: 'Heading-content component '
+              type: INSTANCE
+              w: 187
+              h: 38
+              layout:
+                mode: VERTICAL
+                padding:
+                - 0
+                - 0
+                - 0
+                - 0
+                gap: 4
+                align: MIN/MIN
+              instance_of:
+                id: 301:20202
+                name: 'Heading-content component '
+                key: 18df4dd5982a7e913f345ea9459801fb472a255b
+              props:
+                Heading#395:0: true
+                content#301:0: true
+          - id: 573:4101
+            name: Frame 2147240603
+            type: FRAME
+            w: 267
+            h: 64
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 16
+              align: MIN/CENTER
+            tokens:
+              itemSpacing: Gaps/L2-Card Gap
+            children:
+            - id: 573:4102
+              name: Text field with Heading
+              type: FRAME
+              w: 64
+              h: 64
+              radius: 8
+              fills:
+              - type: SOLID
+                color: '#ededed'
+                token: border/separator line
+              tokens:
+                topLeftRadius: Radius/Slider button
+                topRightRadius: Radius/Slider button
+                bottomLeftRadius: Radius/Slider button
+                bottomRightRadius: Radius/Slider button
+              children: []
+            - id: 573:4103
+              name: 'Heading-content component '
+              type: INSTANCE
+              w: 187
+              h: 38
+              layout:
+                mode: VERTICAL
+                padding:
+                - 0
+                - 0
+                - 0
+                - 0
+                gap: 4
+                align: MIN/MIN
+              instance_of:
+                id: 301:20202
+                name: 'Heading-content component '
+                key: 18df4dd5982a7e913f345ea9459801fb472a255b
+              props:
+                Heading#395:0: true
+                content#301:0: true
+    - id: 604:2554
+      name: Type=OTP
+      type: COMPONENT
+      w: 358
+      h: 64
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 0
+        - 0
+        - 0
+        gap: 8
+        align: MIN/CENTER
+      children:
+      - id: 604:2555
+        name: Frame 244
+        type: FRAME
+        w: 83.5
+        h: 64
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 16
+          gap: 34
+          align: CENTER/CENTER
+        radius: 18
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: background/surface
+        tokens:
+          topLeftRadius: Radius/Card
+          topRightRadius: Radius/Card
+          bottomLeftRadius: Radius/Card
+          bottomRightRadius: Radius/Card
+        children:
+        - id: 604:2566
+          name: '1'
+          type: TEXT
+          w: 9
+          h: 23
+          fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          chars: '1'
+          textStyle: Sub Headings/Section title
+          font: Saira Medium
+          fontSize: 21
+          lineHeight: 110%
+          textAlign: LEFT
+      - id: 604:2558
+        name: Frame 245
+        type: FRAME
+        w: 83.5
+        h: 64
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 16
+          gap: 34
+          align: CENTER/CENTER
+        radius: 18
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: background/surface
+        tokens:
+          topLeftRadius: Radius/Card
+          topRightRadius: Radius/Card
+          bottomLeftRadius: Radius/Card
+          bottomRightRadius: Radius/Card
+        children:
+        - id: 604:2567
+          name: '1'
+          type: TEXT
+          w: 9
+          h: 23
+          fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          chars: '1'
+          textStyle: Sub Headings/Section title
+          font: Saira Medium
+          fontSize: 21
+          lineHeight: 110%
+          textAlign: LEFT
+      - id: 604:2560
+        name: Frame 246
+        type: FRAME
+        w: 83.5
+        h: 64
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 16
+          gap: 34
+          align: CENTER/CENTER
+        radius: 18
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: background/surface
+        tokens:
+          topLeftRadius: Radius/Card
+          topRightRadius: Radius/Card
+          bottomLeftRadius: Radius/Card
+          bottomRightRadius: Radius/Card
+        children:
+        - id: 604:2568
+          name: '1'
+          type: TEXT
+          w: 9
+          h: 23
+          fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          chars: '1'
+          textStyle: Sub Headings/Section title
+          font: Saira Medium
+          fontSize: 21
+          lineHeight: 110%
+          textAlign: LEFT
+      - id: 604:2562
+        name: Frame 247
+        type: FRAME
+        w: 83.5
+        h: 64
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 16
+          gap: 34
+          align: CENTER/CENTER
+        radius: 18
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: background/surface
+        tokens:
+          topLeftRadius: Radius/Card
+          topRightRadius: Radius/Card
+          bottomLeftRadius: Radius/Card
+          bottomRightRadius: Radius/Card
+        children:
+        - id: 604:2569
+          name: '1'
+          type: TEXT
+          w: 9
+          h: 23
+          fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          chars: '1'
+          textStyle: Sub Headings/Section title
+          font: Saira Medium
+          fontSize: 21
+          lineHeight: 110%
+          textAlign: LEFT
+      - id: 605:2824
+        name: Frame 2147240604
+        type: FRAME
+        w: 358
+        h: 18
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 83
+          align: MAX/CENTER
+        children:
+        - id: 605:2822
+          name: Incorrect OTP entered.
+          type: TEXT
+          w: 234
+          h: 18
+          fills:
+          - type: SOLID
+            color: '#c42e2e'
+            token: text/colored/red
+          chars: Incorrect OTP entered.
+          textStyle: Content/Medium
+          font: Geist Regular
+          fontSize: 14
+          textAlign: LEFT
+        - id: 605:2823
+          name: 00:30
+          type: TEXT
+          w: 41
+          h: 18
+          fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          chars: 00:30
+          textStyle: Content/Medium
+          font: Geist Regular
+          fontSize: 14
+          textAlign: CENTER

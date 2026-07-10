@@ -1,0 +1,206 @@
+# Chevron — ingested from Figma (2031:1154)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: chevron
+name: Chevron
+type: atom
+node_id: 2031:1154
+figma_fingerprint: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  State:
+  - Chevron back
+  - Chevron Forward
+  - Chevron Up
+  - Chevron Down
+variants:
+- name: State=Chevron back
+  node_id: 2031:1155
+  figma_fingerprint: 18168f712f86c866b368a7688dc8ed14c902d480
+  width: 24
+  height: 24
+- name: State=Chevron Forward
+  node_id: 2031:1158
+  figma_fingerprint: 653106d2eb5f0477f9f4a7e65e97326031757988
+  width: 24
+  height: 24
+- name: State=Chevron Up
+  node_id: 2031:1161
+  figma_fingerprint: 05e04caf6e2407ff439192594714d67746a22401
+  width: 24
+  height: 24
+- name: State=Chevron Down
+  node_id: 2031:1164
+  figma_fingerprint: a46d1fd28929fee93882bfba5bbeb322a41e288b
+  width: 24
+  height: 24
+authored_metadata: |
+  component:
+    id: chevron
+    name: Chevron
+    type: atom
+
+
+    usage: >
+      Used when tapping the row navigates to another screen or opens a deeper
+      configuration layer.
+
+
+    design_intent: >
+      Communicate forward navigation without introducing additional visual weight.
+
+
+    anti_patterns:
+      - id: not-for-binary-states
+        rule: Do not use for binary states.
+      - id: not-for-selections
+        rule: Do not use for selections.
+      - id: not-for-destructive-actions
+        rule: Do not use for destructive actions.
+
+
+    states:
+      - chevron-back
+      - chevron-forward
+      - chevron-up
+      - chevron-down
+
+
+    rules:
+      - id: row-must-be-tappable
+        rule: Row must be tappable.
+      - id: no-adjacent-actionable
+        rule: Chevron should not appear alongside another actionable.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 2031:1154
+    name: Chevron
+    type: COMPONENT_SET
+    w: 68
+    h: 208
+    radius: 5
+    strokes:
+    - type: SOLID
+      color: '#8a38f5'
+    strokeWeight: 1
+    children:
+    - id: 2031:1155
+      name: State=Chevron back
+      type: COMPONENT
+      w: 24
+      h: 24
+      children:
+      - id: 2031:1156
+        name: Chevron Left - Iconly Pro
+        type: FRAME
+        w: 24
+        h: 24
+        fills:
+        - type: SOLID
+          visible: false
+          color: '#ffffff'
+        children:
+        - id: 2031:1157
+          name: Vector
+          type: VECTOR
+          w: 7
+          h: 14
+          strokes:
+          - type: SOLID
+            color: '#454545'
+            token: icon/primary
+          strokeWeight: 1.5
+    - id: 2031:1158
+      name: State=Chevron Forward
+      type: COMPONENT
+      w: 24
+      h: 24
+      children:
+      - id: 2031:1159
+        name: Chevron Left - Iconly Pro
+        type: FRAME
+        w: 24
+        h: 24
+        fills:
+        - type: SOLID
+          visible: false
+          color: '#ffffff'
+        children:
+        - id: 2031:1160
+          name: Vector
+          type: VECTOR
+          w: 7
+          h: 14
+          strokes:
+          - type: SOLID
+            color: '#919191'
+            token: button/actionable/enabled
+          strokeWeight: 1.5
+    - id: 2031:1161
+      name: State=Chevron Up
+      type: COMPONENT
+      w: 24
+      h: 24
+      children:
+      - id: 2031:1162
+        name: Chevron Left - Iconly Pro
+        type: FRAME
+        w: 24
+        h: 24
+        fills:
+        - type: SOLID
+          visible: false
+          color: '#ffffff'
+        children:
+        - id: 2031:1163
+          name: Vector
+          type: VECTOR
+          w: 7
+          h: 14
+          strokes:
+          - type: SOLID
+            color: '#919191'
+            token: button/actionable/enabled
+          strokeWeight: 1.5
+    - id: 2031:1164
+      name: State=Chevron Down
+      type: COMPONENT
+      w: 24
+      h: 24
+      children:
+      - id: 2031:1165
+        name: Chevron Left - Iconly Pro
+        type: FRAME
+        w: 24
+        h: 24
+        fills:
+        - type: SOLID
+          visible: false
+          color: '#ffffff'
+        children:
+        - id: 2031:1166
+          name: Vector
+          type: VECTOR
+          w: 7
+          h: 14
+          strokes:
+          - type: SOLID
+            color: '#919191'
+            token: button/actionable/enabled
+          strokeWeight: 1.5

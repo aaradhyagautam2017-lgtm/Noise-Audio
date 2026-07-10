@@ -1,0 +1,355 @@
+# Primary cta — ingested from Figma (248:4940)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: primary-cta-button
+name: Primary cta
+type: atom
+node_id: 248:4940
+figma_fingerprint: 13d9bcf56d34b8f5859397f76b4787da65b4f6f8
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  State:
+  - Enabled
+  - pressed
+  - Disabled
+  Usage:
+  - L1 L2 screens
+  - Bottomsheet
+variants:
+- name: State=Enabled, Usage=L1 L2 screens
+  node_id: 248:4939
+  figma_fingerprint: 0c2495c21fe0eca05d56984477a88bc74ed95aec
+  width: 358
+  height: 56
+- name: State=pressed, Usage=L1 L2 screens
+  node_id: 567:3837
+  figma_fingerprint: 8fd2acf79c2b613d2b7728a94396a74ab2c27725
+  width: 358
+  height: 56
+- name: State=Disabled, Usage=L1 L2 screens
+  node_id: 248:4941
+  figma_fingerprint: 92467e0a9fbe4633dd5395a678d7181b969661c9
+  width: 358
+  height: 56
+- name: State=Disabled, Usage=Bottomsheet
+  node_id: 463:1378
+  figma_fingerprint: a84af6e98e4b3170e0e09d0b4b05000a2cf44f67
+  width: 334
+  height: 56
+- name: State=Enabled, Usage=Bottomsheet
+  node_id: 463:1376
+  figma_fingerprint: 7f46de06a43cb1df29fc66863e982acc41df593a
+  width: 334
+  height: 56
+- name: State=pressed, Usage=Bottomsheet
+  node_id: 567:3849
+  figma_fingerprint: a46647059d4f9cd33d957b28d3b035a23f86d54f
+  width: 334
+  height: 56
+authored_metadata: |
+  component:
+    id: primary-cta-button
+    name: Primary CTA Button
+    type: atom
+    reusable: true
+    standalone: true
+
+
+    purpose: >
+      Primary call-to-action button that triggers the main action on a screen.
+
+
+    usage: >
+      Use for the single most important action in a given context
+      (e.g. Continue, Confirm, Buy).
+
+
+    design_intent: >
+      Give users one clear, high-emphasis action target so the primary path
+      on any screen is immediately obvious and unambiguous.
+
+
+    anti_patterns:
+      - id: single-primary-per-view
+        rule: >
+          Do not use more than one enabled Primary CTA in the same view;
+          it dilutes action priority.
+      - id: not-for-secondary-actions
+        rule: >
+          Do not use for secondary or dismissive actions.
+
+
+    variant_axes:
+      state:
+        - name: enabled
+          interactive: true
+          description: Default interactive state; the action is available.
+        - name: disabled
+          interactive: false
+          description: Action is currently unavailable; not interactive.
+        - name: pressed
+          interactive: true
+          transient: true
+          description: >
+            Transient state shown at the moment of tap, while the button
+            is being activated.
+      usage:
+        - name: regular
+          context: L1/L2 screens
+          description: Standard placement on regular screens; full width.
+        - name: bottom_sheet
+          context: Bottom sheets and action sheets
+          description: >
+            Reduced width to fit within bottom sheets and action sheets.
+
+
+    rules:
+      - id: shape-pill
+        rule: Pill shape (fully rounded corners).
+      - id: label-single-line
+        rule: Label is single-line, centered.
+      - id: bottom-sheet-width
+        rule: >
+          Bottom-sheet usage variant is narrower than the regular variant
+          to fit within bottom sheets and action sheets.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+
+
+    metadata_governance:
+      source_of_truth: this_yaml
+      human_readable: generated_on_demand
+      note: >
+        Human-readable metadata is not stored separately. It is reconstructed
+        from this file to guarantee a single source of truth and prevent drift.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 248:4940
+    name: Primary cta
+    type: COMPONENT_SET
+    w: 848
+    h: 261
+    radius: 5
+    strokes:
+    - type: SOLID
+      color: '#8a38f5'
+    strokeWeight: 1
+    children:
+    - id: 248:4939
+      name: State=Enabled, Usage=L1 L2 screens
+      type: COMPONENT
+      w: 358
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 35
+        - 29
+        - 35
+        - 29
+        gap: 10
+        align: CENTER/CENTER
+      radius: 50
+      fills:
+      - type: SOLID
+        color: '#292929'
+        token: button/primary/background
+      children:
+      - id: 248:4938
+        name: Text
+        type: TEXT
+        w: 29
+        h: 18
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: text/inverted
+        chars: Text
+        textStyle: Bold content/Big
+        font: Geist SemiBold
+        fontSize: 14
+        textAlign: CENTER
+    - id: 567:3837
+      name: State=pressed, Usage=L1 L2 screens
+      type: COMPONENT
+      w: 358
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 35
+        - 29
+        - 35
+        - 29
+        gap: 10
+        align: CENTER/CENTER
+      radius: 50
+      fills:
+      - type: SOLID
+        color: '#696969'
+        token: button/primary/pressed
+      children:
+      - id: 567:3838
+        name: Text
+        type: TEXT
+        w: 29
+        h: 18
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: text/inverted
+        chars: Text
+        textStyle: Bold content/Big
+        font: Geist SemiBold
+        fontSize: 14
+        textAlign: CENTER
+    - id: 248:4941
+      name: State=Disabled, Usage=L1 L2 screens
+      type: COMPONENT
+      w: 358
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 35
+        - 29
+        - 35
+        - 29
+        gap: 10
+        align: CENTER/CENTER
+      radius: 50
+      fills:
+      - type: SOLID
+        color: '#f7f7f7'
+        token: button/primary/disabled
+      children:
+      - id: 248:4942
+        name: Text
+        type: TEXT
+        w: 29
+        h: 18
+        fills:
+        - type: SOLID
+          color: '#d1d1d1'
+          token: text/disabled
+        chars: Text
+        textStyle: Bold content/Big
+        font: Geist SemiBold
+        fontSize: 14
+        textAlign: CENTER
+    - id: 463:1378
+      name: State=Disabled, Usage=Bottomsheet
+      type: COMPONENT
+      w: 334
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 35
+        - 29
+        - 35
+        - 29
+        gap: 10
+        align: CENTER/CENTER
+      radius: 50
+      fills:
+      - type: SOLID
+        color: '#f7f7f7'
+        token: button/primary/disabled
+      children:
+      - id: 463:1379
+        name: Text
+        type: TEXT
+        w: 29
+        h: 18
+        fills:
+        - type: SOLID
+          color: '#d1d1d1'
+          token: text/disabled
+        chars: Text
+        textStyle: Bold content/Big
+        font: Geist SemiBold
+        fontSize: 14
+        textAlign: CENTER
+    - id: 463:1376
+      name: State=Enabled, Usage=Bottomsheet
+      type: COMPONENT
+      w: 334
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 35
+        - 29
+        - 35
+        - 29
+        gap: 10
+        align: CENTER/CENTER
+      radius: 50
+      fills:
+      - type: SOLID
+        color: '#292929'
+        token: button/primary/background
+      children:
+      - id: 463:1377
+        name: Text
+        type: TEXT
+        w: 29
+        h: 18
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: text/inverted
+        chars: Text
+        textStyle: Bold content/Big
+        font: Geist SemiBold
+        fontSize: 14
+        textAlign: CENTER
+    - id: 567:3849
+      name: State=pressed, Usage=Bottomsheet
+      type: COMPONENT
+      w: 334
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 35
+        - 29
+        - 35
+        - 29
+        gap: 10
+        align: CENTER/CENTER
+      radius: 50
+      fills:
+      - type: SOLID
+        color: '#696969'
+        token: button/primary/pressed
+      children:
+      - id: 567:3850
+        name: Text
+        type: TEXT
+        w: 29
+        h: 18
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: text/inverted
+        chars: Text
+        textStyle: Bold content/Big
+        font: Geist SemiBold
+        fontSize: 14
+        textAlign: CENTER

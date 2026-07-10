@@ -1,0 +1,148 @@
+# Privacy policy tab — ingested from Figma (450:8770)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: privacy-policy-tab
+name: Privacy policy tab
+type: atom
+node_id: 450:8770
+figma_fingerprint: b9945fc2df7c786e4dddeba14021e7f232c580af
+figma_type: COMPONENT
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+authored_metadata: |
+  component:
+    id: privacy-policy-tab
+    name: Privacy policy tab
+    type: atom
+
+
+    purpose: >
+      A standalone entry point to the privacy policy, terms & conditions, and app
+      version.
+
+
+    usage: >
+      Used to give the user access to the privacy policy, terms & conditions, and
+      to see the app version — typically on the settings page.
+
+
+    design_intent: >
+      Provide a consistent, self-contained footer-style block for legal links and
+      app version, so this information appears uniformly wherever it's placed.
+
+
+    anti_patterns:
+      - id: no-splitting
+        rule: >
+          Do not split up its parts or use them individually; it is a single fixed
+          unit.
+
+
+    composition:
+      embedded:
+        - name: Privacy Policy link
+        - name: Terms & Conditions link
+        - name: App Version label
+      note: All parts are embedded/self-contained; no child components.
+
+
+    rules:
+      - id: fixed-structure
+        rule: >
+          Fixed three-part structure: Privacy Policy, Terms & Conditions, and App
+          Version. All three are always present.
+      - id: app-version-static
+        rule: The App Version is a static label.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (typography, spacing, colors) are not stored here. They are
+        read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 450:8770
+    name: Privacy policy tab
+    type: COMPONENT
+    w: 358
+    h: 48
+    layout:
+      mode: VERTICAL
+      padding:
+      - 0
+      - 0
+      - 0
+      - 0
+      gap: 16
+      align: MIN/CENTER
+    tokens:
+      itemSpacing: L
+    children:
+    - id: 450:8767
+      name: Frame 2147240582
+      type: FRAME
+      w: 358
+      h: 16
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 32
+        - 0
+        - 32
+        gap: 69
+        align: SPACE_BETWEEN/CENTER
+      children:
+      - id: 450:8763
+        name: Privacy Policy
+        type: TEXT
+        w: 76
+        h: 16
+        fills:
+        - type: SOLID
+          color: '#454545'
+          token: text/primary
+        chars: Privacy Policy
+        textStyle: Content/Small
+        font: Geist Regular
+        fontSize: 12
+        lineHeight: 130%
+        textAlign: CENTER
+      - id: 450:8764
+        name: Terms & Conditions
+        type: TEXT
+        w: 106
+        h: 16
+        fills:
+        - type: SOLID
+          color: '#454545'
+          token: text/primary
+        chars: Terms & Conditions
+        textStyle: Content/Small
+        font: Geist Regular
+        fontSize: 12
+        lineHeight: 130%
+        textAlign: CENTER
+    - id: 450:8765
+      name: App Version 1.02
+      type: TEXT
+      w: 358
+      h: 16
+      fills:
+      - type: SOLID
+        color: '#919191'
+        token: text/secondary
+      chars: App Version 1.02
+      textStyle: Content/Small
+      font: Geist Regular
+      fontSize: 12
+      lineHeight: 130%
+      textAlign: CENTER

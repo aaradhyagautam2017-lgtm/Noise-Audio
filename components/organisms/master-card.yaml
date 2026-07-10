@@ -1,0 +1,343 @@
+# Master card — ingested from Figma (396:728)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: master-card
+name: Master card
+type: organism
+node_id: 396:728
+figma_fingerprint: 2a70e23d69359d2c963b4663448e7b7de1f923bb
+figma_type: COMPONENT
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+structural_references:
+- references: Circled icon
+  ref_node_id: 301:20193
+  ref_fingerprint: 3f75da4032522d0fd24cdc6a863b275bb7ccf56d
+  variant_used: Circled icon
+  instance_count: 1
+  resolved: false
+  external_location: 'page: 06 Building Blocks'
+- references: 'Heading-content component '
+  ref_node_id: 301:20202
+  ref_fingerprint: 18df4dd5982a7e913f345ea9459801fb472a255b
+  variant_used: 'Heading-content component '
+  instance_count: 1
+  resolved: true
+  target_id: heading-content-component
+- references: Actionables
+  ref_node_id: 329:2095
+  ref_fingerprint: 4b6a4ae9a8d5c00c90119bb74803d60125416864
+  variant_used: Action=Chevron
+  instance_count: 1
+  resolved: false
+  external_location: 'page: AI Metdata'
+  same_named_library_component: actionables
+authored_metadata: |
+  component:
+    id: master-card
+    name: Master card
+    type: organism
+    reusable: true
+    standalone: true
+
+
+    usage: >
+      This is the master card used in the majority of table cell use cases.
+      Can be used as a standalone card or as a row within a grouped list.
+
+
+    design_intent: >
+      Provide a flexible row pattern that supports both standalone surfaces and
+      grouped lists while maintaining consistent content hierarchy and
+      interaction patterns.
+
+
+    anti_patterns:
+      - id: no-dual-corner-radius
+        rule: >
+          Do not apply both row-level and container-level corner radius
+          simultaneously.
+      - id: no-standalone-when-grouped
+        rule: >
+          Do not use standalone cards when multiple related items should be
+          grouped.
+      - id: grouped-list-requires-separators
+        rule: >
+          Do not use grouped-list mode without enabling separator lines between
+          rows.
+      - id: single-primary-actionable-per-row
+        rule: >
+          Do not place more than one primary actionable in a row.
+      - id: notification-chin-standalone-only
+        rule: >
+          Notification chin can only be used with a standalone card.
+      - id: no-separator-with-standalone-or-chin
+        rule: >
+          Do not add a separator line to a standalone card or a card with a
+          notification chin.
+      - id: no-stroke
+        rule: >
+          Do not add a stroke to the component regardless of it being a
+          standalone component or a table cell component.
+
+
+    composition:
+      used_molecules:
+        - actionables
+      used_atoms:
+        - heading-content-component
+
+
+    content_structure:
+      - name: Leading Icon
+        required: false
+      - name: Title
+        required: true
+      - name: Description
+        required: false
+      - name: Notification Chin
+        required: false
+        constraint: Only available in standalone card mode.
+      - name: Trailing Actionable
+        required: false
+        options:
+          - Chevron
+          - Toggle
+          - Checkbox
+          - Cross
+          - Badge
+
+
+    rules:
+      - id: single-primary-actionable
+        rule: Only one primary actionable per row.
+      - id: actionables-right-aligned
+        rule: Actionables always remain right aligned.
+      - id: actionable-replacement-no-layout-shift
+        rule: Replacing an actionable must not affect content layout.
+      - id: actionables-inherit-vertical-alignment
+        rule: Actionables inherit the component's vertical alignment.
+      - id: no-checkbox-in-this-component
+        rule: >
+          Never add a checkbox in this component even though it is in the
+          actionables.
+      - id: separator-inset
+        rule: >
+          The separator line between rows is inset, not full-width. It begins at
+          the start of the text/content block (aligned after the leading icon)
+          and runs to the trailing edge. It must never extend under the leading
+          icon. Applies only in grouped-list mode.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 396:728
+    name: Master card
+    type: COMPONENT
+    w: 358
+    h: 86
+    layout:
+      mode: VERTICAL
+      padding:
+      - 0
+      - 0
+      - 0
+      - 0
+      gap: -18
+      align: MIN/MIN
+    children:
+    - id: 396:689
+      name: Frame 2147227754
+      type: FRAME
+      w: 358
+      h: 86
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 16
+        - 0
+        - 0
+        - 16
+        gap: 8
+        align: MIN/CENTER
+      tokens:
+        itemSpacing: Gaps/smaller gap
+        paddingLeft: Padding/Card Side Padding
+        paddingTop: Padding/Card Top, bottom Padding
+      children:
+      - id: 396:688
+        name: Frame 2147227753
+        type: FRAME
+        w: 40
+        h: 70
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 0
+          - 12
+          - 0
+          gap: 10
+          align: MIN/CENTER
+        children:
+        - id: 396:680
+          name: Circled icon
+          type: INSTANCE
+          w: 40
+          h: 40
+          radius: 100
+          instance_of:
+            id: 301:20193
+            name: Circled icon
+            key: 3f75da4032522d0fd24cdc6a863b275bb7ccf56d
+          props: {}
+      - id: 396:679
+        name: Frame 2147227752
+        type: FRAME
+        w: 294
+        h: 70
+        layout:
+          mode: VERTICAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 0
+          align: MAX/MAX
+        children:
+        - id: 396:677
+          name: Frame 2147227751
+          type: FRAME
+          w: 294
+          h: 70
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 16
+            - 16
+            - 0
+            gap: 12
+            align: MIN/CENTER
+          tokens:
+            itemSpacing: M
+            paddingRight: L
+          children:
+          - id: 396:656
+            name: 'Heading-content component '
+            type: INSTANCE
+            w: 230
+            h: 54
+            layout:
+              mode: VERTICAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 4
+              align: MIN/MIN
+            instance_of:
+              id: 301:20202
+              name: 'Heading-content component '
+              key: 18df4dd5982a7e913f345ea9459801fb472a255b
+            props:
+              Heading#395:0: true
+              content#301:0: true
+          - id: 396:662
+            name: Actionables
+            type: INSTANCE
+            w: 36
+            h: 36
+            instance_of:
+              id: 329:2094
+              name: Action=Chevron
+              key: 57e2ee1df03f08a8cb03623314a5d44f3c29fdbc
+              set:
+                id: 329:2095
+                name: Actionables
+            props:
+              Action: Chevron
+        - id: 396:678
+          name: Line 53
+          type: LINE
+          w: 294
+          h: 0
+          visible: false
+          strokes:
+          - type: SOLID
+            color: '#ededed'
+            token: border/separator line
+          strokeWeight: 1
+    - id: 396:690
+      name: Frame 2147227755
+      type: FRAME
+      w: 358
+      h: 42
+      visible: false
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 4
+        - 48
+        - 4
+        - 48
+        gap: 10
+        align: MIN/MAX
+      children:
+      - id: 396:691
+        name: Exclude
+        type: BOOLEAN_OPERATION
+        w: 358
+        h: 42
+        fills:
+        - type: SOLID
+          color: '#454545'
+          token: background/surface/raised+6
+        children:
+        - id: 396:692
+          name: Rectangle 34628910
+          type: RECTANGLE
+          w: 358
+          h: 92
+          radius: 18
+          fills:
+          - type: SOLID
+            color: '#ffffff'
+        - id: 396:693
+          name: Rectangle 34628911
+          type: RECTANGLE
+          w: 358
+          h: 116
+          radius: 18
+          fills:
+          - type: SOLID
+            color: '#ffa9a9'
+      - id: 396:694
+        name: Please disable ANC to experience Spatial Audio
+        type: TEXT
+        w: 261
+        h: 16
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: text/inverted
+        chars: Please disable ANC to experience Spatial Audio
+        textStyle: Content/Small
+        font: Geist Regular
+        fontSize: 12
+        lineHeight: 130%
+        textAlign: LEFT

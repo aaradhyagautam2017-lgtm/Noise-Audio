@@ -1,0 +1,198 @@
+# Link cta — ingested from Figma (463:1380)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: link-cta
+name: Link cta
+type: atom
+node_id: 463:1380
+figma_fingerprint: c8690c419dcc5e5873b064217a90ab827caf16e9
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  Usecase:
+  - Screens
+  - Bottomsheet
+variants:
+- name: Usecase=Screens
+  node_id: 428:1157
+  figma_fingerprint: 9b3442e944d3124f76a1389f83602ed8dc38ece4
+  width: 358
+  height: 44
+- name: Usecase=Bottomsheet
+  node_id: 463:1381
+  figma_fingerprint: 1b3d8af496a9af73419453cb87c3cf80847644e2
+  width: 334
+  height: 44
+authored_metadata: |
+  component:
+    id: link-cta
+    name: Link CTA
+    type: atom
+    reusable: true
+    standalone: true
+
+
+    purpose: >
+      Text-only, underlined call-to-action for presenting inline links.
+
+
+    usage: >
+      Use for the lowest-emphasis actions or navigational links
+      (e.g. UPDATE, Terms of Service, "Click here"). Typically appears below
+      or alongside Primary/Secondary CTAs, or inline within body text.
+
+
+    design_intent: >
+      Provide a minimal, low-commitment action affordance that stays visually
+      subordinate to button CTAs while remaining clearly tappable through
+      underline styling.
+
+
+    anti_patterns:
+      - id: not-for-high-priority
+        rule: >
+          Do not use for primary or high-priority actions; it carries the
+          least visual weight of the CTA family.
+      - id: no-container-fill
+        rule: >
+          Do not give it a filled/button background; its distinction is being
+          container-less text.
+
+
+    variant_axes:
+      state:
+        - name: default
+          interactive: true
+          description: Single state only; Link CTA has no enabled/disabled/pressed distinction.
+      usage:
+        - name: regular
+          context: L1/L2 screens
+          description: Standard placement on regular screens.
+        - name: bottom_sheet
+          context: Bottom sheets and action sheets
+          description: >
+            Reduced width to fit within bottom sheets and action sheets.
+
+
+    rules:
+      - id: text-underlined
+        rule: Text is underlined.
+      - id: label-centered
+        rule: Label is centered.
+      - id: no-container
+        rule: No container fill or border.
+      - id: bottom-sheet-width
+        rule: >
+          Bottom-sheet usage variant is narrower than the regular variant
+          to fit within bottom sheets and action sheets.
+
+
+    relationships:
+      - component_id: primary-cta-button
+        relation: emphasis-family
+        description: Highest-emphasis member of the CTA family.
+      - component_id: secondary-cta-button
+        relation: emphasis-family
+        description: Mid-emphasis member of the CTA family.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+
+
+    metadata_governance:
+      source_of_truth: this_yaml
+      human_readable: generated_on_demand
+      note: >
+        Human-readable metadata is not stored separately. It is reconstructed
+        from this file to guarantee a single source of truth and prevent drift.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 463:1380
+    name: Link cta
+    type: COMPONENT_SET
+    w: 768
+    h: 96
+    radius: 5
+    strokes:
+    - type: SOLID
+      color: '#8a38f5'
+    strokeWeight: 1
+    children:
+    - id: 428:1157
+      name: Usecase=Screens
+      type: COMPONENT
+      w: 358
+      h: 44
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 35
+        - 29
+        - 35
+        - 29
+        gap: 10
+        align: CENTER/CENTER
+      radius: 50
+      children:
+      - id: 428:1154
+        name: For any other query Click here
+        type: TEXT
+        w: 131
+        h: 36
+        fills:
+        - type: SOLID
+          color: '#454545'
+          token: text/primary
+        chars: 'For any other query
+
+          Click here'
+        textStyle: Bold content/Big
+        font: Geist SemiBold
+        fontSize: 14
+        textAlign: CENTER
+        decoration: UNDERLINE
+    - id: 463:1381
+      name: Usecase=Bottomsheet
+      type: COMPONENT
+      w: 334
+      h: 44
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 35
+        - 29
+        - 35
+        - 29
+        gap: 10
+        align: CENTER/CENTER
+      radius: 50
+      children:
+      - id: 463:1382
+        name: For any other query Click here
+        type: TEXT
+        w: 131
+        h: 36
+        fills:
+        - type: SOLID
+          color: '#454545'
+          token: text/primary
+        chars: 'For any other query
+
+          Click here'
+        textStyle: Bold content/Big
+        font: Geist SemiBold
+        fontSize: 14
+        textAlign: CENTER
+        decoration: UNDERLINE

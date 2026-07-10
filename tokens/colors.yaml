@@ -1,0 +1,219 @@
+# Color tokens — synced from Figma variables (collections: color, tokens)
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  extracted_at: '2026-07-10'
+collections:
+  color:
+    description: Primitive color scale (single mode).
+    variables:
+      gray/100: '#000000'
+      gray/200: '#171717'
+      gray/300: '#292929'
+      gray/400: '#454545'
+      gray/500: '#696969'
+      gray/600: '#919191'
+      gray/700: '#b5b5b5'
+      gray/800: '#d1d1d1'
+      gray/900: '#ededed'
+      gray/1000: '#f7f7f7'
+      gray/1100: '#ffffff'
+      red/100: '#ffdada'
+      red/200: '#eb9494'
+      red/300: '#dc4848'
+      red/400: '#c42e2e'
+      red/500: '#9e1e1e'
+      red/600: '#7a1616'
+      red/700: '#5a1010'
+      red/800: '#3a0a0a'
+      red/900: '#240c0c'
+      red/1000: '#170707'
+      green/100: '#c4ecd2'
+      green/200: '#6ec494'
+      green/300: '#2ea864'
+      green/400: '#1c8a4c'
+      green/500: '#14683a'
+      green/600: '#125a32'
+      green/700: '#0e4426'
+      green/800: '#082e1a'
+      green/900: '#062012'
+      green/1000: '#04140c'
+      amber/100: '#fae0b8'
+      amber/200: '#d4a055'
+      amber/300: '#d4882f'
+      amber/400: '#b6732b'
+      amber/500: '#8a5218'
+      amber/600: '#7a4d18'
+      amber/700: '#5c3810'
+      amber/800: '#3d2408'
+      amber/900: '#241a08'
+  tokens:
+    description: Semantic color tokens with light/dark modes. alias:<name> points into the color collection.
+    modes:
+    - light
+    - dark
+    variables:
+      background/canvas:
+        light: alias:gray/1100
+        dark: alias:gray/100
+      background/surface:
+        light: alias:gray/1000
+        dark: alias:gray/200
+      background/surface/green:
+        light: alias:green/100
+        dark: alias:green/900
+      background/surface/red:
+        light: alias:red/100
+        dark: alias:red/900
+      background/surface/raised+2:
+        light: alias:gray/900
+        dark: alias:gray/300
+      background/surface/raised+5:
+        light: alias:gray/500
+        dark: alias:gray/700
+      background/surface/raised+6:
+        light: alias:gray/400
+        dark: alias:gray/800
+      text/primary:
+        light: alias:gray/400
+        dark: alias:gray/1000
+      text/secondary:
+        light: alias:gray/600
+        dark: alias:gray/600
+      text/tertiary:
+        light: alias:gray/700
+        dark: alias:gray/700
+      text/disabled:
+        light: alias:gray/800
+        dark: alias:gray/400
+      text/inverted:
+        light: alias:gray/1000
+        dark: alias:gray/200
+      text/cta:
+        light: alias:gray/200
+        dark: alias:gray/1000
+      text/colored/red:
+        light: alias:red/400
+        dark: alias:red/400
+      text/colored/green:
+        light: alias:green/400
+        dark: alias:green/400
+      text/colored/amber:
+        light: alias:amber/400
+        dark: alias:amber/400
+      text/colored/gray:
+        light: alias:gray/200
+        dark: alias:gray/1000
+      icon/primary:
+        light: alias:gray/400
+        dark: alias:gray/900
+      icon/disable:
+        light: alias:gray/800
+        dark: alias:gray/400
+      icon/red:
+        light: alias:red/300
+        dark: alias:red/300
+      icon/green:
+        light: alias:green/300
+        dark: alias:green/300
+      icon/inverted:
+        light: alias:gray/1000
+        dark: alias:gray/200
+      icon/cta:
+        light: alias:gray/200
+        dark: alias:gray/1000
+      button/primary/background:
+        light: alias:gray/300
+        dark: alias:gray/1000
+      button/primary/pressed:
+        light: alias:gray/500
+        dark: alias:gray/600
+      button/primary/disabled:
+        light: alias:gray/1000
+        dark: alias:gray/200
+      button/secondary/background:
+        light: alias:gray/1000
+        dark: alias:gray/300
+      button/secondary/pressed:
+        light: alias:gray/500
+        dark: '#ffffff'
+      button/link/text:
+        light: alias:gray/400
+        dark: alias:gray/1000
+      button/actionable/enabled:
+        light: alias:gray/600
+        dark: alias:gray/600
+      button/actionable/disabled:
+        light: alias:gray/900
+        dark: alias:gray/300
+      button/toggle/thumb:
+        light: alias:gray/1000
+        dark: alias:gray/200
+      button/toggle/track active:
+        light: alias:gray/200
+        dark: alias:gray/1000
+      button/toggle/track inactive:
+        light: alias:gray/600
+        dark: alias:gray/500
+      button/toggle/track disabled:
+        light: alias:gray/900
+        dark: alias:gray/300
+      button/radio/on:
+        light: alias:gray/200
+        dark: alias:gray/1000
+      button/radio/off(stroke):
+        light: alias:gray/700
+        dark: alias:gray/500
+      button/radio/disable:
+        light: alias:gray/900
+        dark: alias:gray/300
+      button/checkbox/checked:
+        light: alias:gray/200
+        dark: alias:gray/1000
+      button/checkbox/unchecked:
+        light: alias:gray/700
+        dark: alias:gray/500
+      button/checkbox/disable:
+        light: alias:gray/900
+        dark: alias:gray/300
+      button/chip/selected:
+        light: alias:gray/200
+        dark: alias:gray/1000
+      button/chip/unselected (stroke):
+        light: alias:gray/700
+        dark: alias:gray/500
+      battery/high:
+        light: alias:green/300
+        dark: alias:green/300
+      battery/medium:
+        light: alias:amber/300
+        dark: alias:amber/300
+      battery/critical:
+        light: alias:red/300
+        dark: alias:red/300
+      border/separator line:
+        light: alias:gray/900
+        dark: alias:gray/500
+      border/default:
+        light: alias:gray/800
+        dark: alias:gray/500
+      border/icon:
+        light: alias:gray/700
+        dark: alias:gray/500
+      border/disable:
+        light: alias:gray/900
+        dark: alias:gray/300
+      default/status bar:
+        light: alias:gray/100
+        dark: alias:gray/1100
+      Ios/Liquid glass:
+        light: '#f7f7f7a6'
+        dark: '#171717a6'
+      Ios/primary button:
+        light: '#292929a6'
+        dark: '#f7f7f7a6'
+      Ios/Secondary button:
+        light: '#f7f7f7a6'
+        dark: '#292929a6'
+      Ios/Equalizer card:
+        light: '#f7f7f700'
+        dark: '#17171700'

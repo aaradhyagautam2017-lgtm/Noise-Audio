@@ -1,0 +1,366 @@
+# Secondary cta — ingested from Figma (250:4953)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: secondary-cta-button
+name: Secondary cta
+type: atom
+node_id: 250:4953
+figma_fingerprint: 496c1152f7812e427b173dfadf82190e3ca7c3c0
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  State:
+  - Enabled
+  - pressed
+  - Disabled
+  Usecase:
+  - L1 L2 screens
+  - Bottomsheet
+variants:
+- name: State=Enabled, Usecase=L1 L2 screens
+  node_id: 250:4952
+  figma_fingerprint: 58e65fde21a0624fc8a6c6e36cad9b6d6142e6f3
+  width: 358
+  height: 56
+- name: State=pressed, Usecase=L1 L2 screens
+  node_id: 567:3853
+  figma_fingerprint: ea20010334dc5e76bf44c95ee179c95db82f1652
+  width: 358
+  height: 56
+- name: State=Enabled, Usecase=Bottomsheet
+  node_id: 463:1383
+  figma_fingerprint: 2355a0855783be2889dd6b0a9b61add15fffd908
+  width: 334
+  height: 56
+- name: State=pressed, Usecase=Bottomsheet
+  node_id: 567:3864
+  figma_fingerprint: 4ac1b54f413a1fbfefc9eaee1cafe6a0b6d6df89
+  width: 334
+  height: 56
+- name: State=Disabled, Usecase=L1 L2 screens
+  node_id: 253:4954
+  figma_fingerprint: 05732df75fce931d25b7725633c81789121c606f
+  width: 358
+  height: 56
+- name: State=Disabled, Usecase=Bottomsheet
+  node_id: 463:1385
+  figma_fingerprint: c3a1c49f2c4203f91186be2b8710e78cf28139cc
+  width: 334
+  height: 56
+authored_metadata: |
+  component:
+    id: secondary-cta-button
+    name: Secondary CTA Button
+    type: atom
+    reusable: true
+    standalone: true
+
+
+    purpose: >
+      Lower-emphasis call-to-action button for supporting or alternative actions.
+
+
+    usage: >
+      Use for actions that are available but not the primary path
+      (e.g. Forget this device, Cancel, Skip). Often paired alongside
+      a Primary CTA.
+
+
+    design_intent: >
+      Offer users a clear secondary choice without competing for attention
+      with the primary action, preserving a single obvious action hierarchy
+      per screen.
+
+
+    anti_patterns:
+      - id: not-for-main-action
+        rule: >
+          Do not use for the main action on a screen; that role belongs
+          to the Primary CTA.
+      - id: no-higher-weight-than-primary
+        rule: >
+          Do not place a Secondary CTA with higher visual weight than the
+          Primary CTA in the same view.
+
+
+    variant_axes:
+      state:
+        - name: enabled
+          interactive: true
+          description: Default interactive state; the action is available.
+        - name: disabled
+          interactive: false
+          description: Action is currently unavailable; not interactive.
+        - name: pressed
+          interactive: true
+          transient: true
+          description: >
+            Transient state shown at the moment of tap, while the button
+            is being activated.
+      usage:
+        - name: regular
+          context: L1/L2 screens
+          description: Standard placement on regular screens; full width.
+        - name: bottom_sheet
+          context: Bottom sheets and action sheets
+          description: >
+            Reduced width to fit within bottom sheets and action sheets.
+
+
+    rules:
+      - id: shape-pill
+        rule: Pill shape (fully rounded corners).
+      - id: label-single-line
+        rule: Label is single-line, centered.
+      - id: bottom-sheet-width
+        rule: >
+          Bottom-sheet usage variant is narrower than the regular variant
+          to fit within bottom sheets and action sheets.
+
+
+    relationships:
+      - component_id: primary-cta-button
+        relation: emphasis-counterpart
+        description: >
+          Higher-emphasis counterpart. Secondary CTA is the lower-priority
+          pairing option in the same action hierarchy.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+
+
+    metadata_governance:
+      source_of_truth: this_yaml
+      human_readable: generated_on_demand
+      note: >
+        Human-readable metadata is not stored separately. It is reconstructed
+        from this file to guarantee a single source of truth and prevent drift.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 250:4953
+    name: Secondary cta
+    type: COMPONENT_SET
+    w: 826
+    h: 261
+    radius: 5
+    strokes:
+    - type: SOLID
+      color: '#8a38f5'
+    strokeWeight: 1
+    children:
+    - id: 250:4952
+      name: State=Enabled, Usecase=L1 L2 screens
+      type: COMPONENT
+      w: 358
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 35
+        - 29
+        - 35
+        - 29
+        gap: 10
+        align: CENTER/CENTER
+      radius: 50
+      fills:
+      - type: SOLID
+        color: '#f7f7f7'
+        token: button/secondary/background
+      children:
+      - id: 250:4951
+        name: Forget this device
+        type: TEXT
+        w: 121
+        h: 18
+        fills:
+        - type: SOLID
+          color: '#171717'
+          token: text/cta
+        chars: Forget this device
+        textStyle: Bold content/Big
+        font: Geist SemiBold
+        fontSize: 14
+        textAlign: CENTER
+    - id: 567:3853
+      name: State=pressed, Usecase=L1 L2 screens
+      type: COMPONENT
+      w: 358
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 35
+        - 29
+        - 35
+        - 29
+        gap: 10
+        align: CENTER/CENTER
+      radius: 50
+      fills:
+      - type: SOLID
+        color: '#696969'
+        token: button/secondary/pressed
+      children:
+      - id: 567:3854
+        name: Forget this device
+        type: TEXT
+        w: 121
+        h: 18
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: text/inverted
+        chars: Forget this device
+        textStyle: Bold content/Big
+        font: Geist SemiBold
+        fontSize: 14
+        textAlign: CENTER
+    - id: 463:1383
+      name: State=Enabled, Usecase=Bottomsheet
+      type: COMPONENT
+      w: 334
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 35
+        - 29
+        - 35
+        - 29
+        gap: 10
+        align: CENTER/CENTER
+      radius: 50
+      fills:
+      - type: SOLID
+        color: '#f7f7f7'
+        token: button/secondary/background
+      children:
+      - id: 463:1384
+        name: Forget this device
+        type: TEXT
+        w: 121
+        h: 18
+        fills:
+        - type: SOLID
+          color: '#171717'
+          token: text/cta
+        chars: Forget this device
+        textStyle: Bold content/Big
+        font: Geist SemiBold
+        fontSize: 14
+        textAlign: CENTER
+    - id: 567:3864
+      name: State=pressed, Usecase=Bottomsheet
+      type: COMPONENT
+      w: 334
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 35
+        - 29
+        - 35
+        - 29
+        gap: 10
+        align: CENTER/CENTER
+      radius: 50
+      fills:
+      - type: SOLID
+        color: '#696969'
+        token: button/secondary/pressed
+      children:
+      - id: 567:3865
+        name: Forget this device
+        type: TEXT
+        w: 121
+        h: 18
+        fills:
+        - type: SOLID
+          color: '#f7f7f7'
+          token: text/inverted
+        chars: Forget this device
+        textStyle: Bold content/Big
+        font: Geist SemiBold
+        fontSize: 14
+        textAlign: CENTER
+    - id: 253:4954
+      name: State=Disabled, Usecase=L1 L2 screens
+      type: COMPONENT
+      w: 358
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 35
+        - 29
+        - 35
+        - 29
+        gap: 10
+        align: CENTER/CENTER
+      radius: 50
+      fills:
+      - type: SOLID
+        color: '#f7f7f7'
+        token: button/secondary/background
+      children:
+      - id: 253:4955
+        name: Forget this device
+        type: TEXT
+        w: 121
+        h: 18
+        fills:
+        - type: SOLID
+          color: '#d1d1d1'
+          token: text/disabled
+        chars: Forget this device
+        textStyle: Bold content/Big
+        font: Geist SemiBold
+        fontSize: 14
+        textAlign: CENTER
+    - id: 463:1385
+      name: State=Disabled, Usecase=Bottomsheet
+      type: COMPONENT
+      w: 334
+      h: 56
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 35
+        - 29
+        - 35
+        - 29
+        gap: 10
+        align: CENTER/CENTER
+      radius: 50
+      fills:
+      - type: SOLID
+        color: '#f7f7f7'
+        token: button/secondary/background
+      children:
+      - id: 463:1386
+        name: Forget this device
+        type: TEXT
+        w: 121
+        h: 18
+        fills:
+        - type: SOLID
+          color: '#d1d1d1'
+          token: text/disabled
+        chars: Forget this device
+        textStyle: Bold content/Big
+        font: Geist SemiBold
+        fontSize: 14
+        textAlign: CENTER

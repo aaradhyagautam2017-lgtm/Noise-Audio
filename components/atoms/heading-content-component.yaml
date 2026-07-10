@@ -1,0 +1,161 @@
+# Heading-content component — ingested from Figma (301:20202)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: heading-content-component
+name: 'Heading-content component '
+type: atom
+node_id: 301:20202
+figma_fingerprint: 18df4dd5982a7e913f345ea9459801fb472a255b
+figma_type: COMPONENT
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+authored_metadata: |
+  component:
+    id: heading-content-component
+    name: Heading-content component
+    type: atom
+
+
+    usage:
+      - Section introductions
+      - Feature descriptions
+      - Setting explanations
+      - Empty states
+      - Informational cards
+      - List items
+      - Preference descriptions
+
+
+    design_intent: >
+      Provide a consistent information hierarchy that helps users quickly
+      understand a topic before reading supporting details.
+
+
+    anti_patterns:
+      - id: not-for-actionable-without-parent
+        rule: >
+          Do not use for actionable content without a parent interaction
+          component.
+      - id: no-multiple-support-levels
+        rule: >
+          Do not use when more than one level of supporting content is needed.
+      - id: not-for-long-form
+        rule: Do not use for long-form paragraphs.
+      - id: not-for-status-communication
+        rule: Do not use for status communication.
+
+
+    rules:
+      heading:
+        - Should communicate the primary message.
+        - Keep concise.
+        - Prefer 1-3 words.
+        - Maximum 2 lines.
+      supporting_content:
+        - Explains the heading.
+        - Adds context or benefit.
+        - Written in sentence form.
+        - Maximum 2-3 lines.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 301:20202
+    name: 'Heading-content component '
+    type: COMPONENT
+    w: 187
+    h: 54
+    layout:
+      mode: VERTICAL
+      padding:
+      - 0
+      - 0
+      - 0
+      - 0
+      gap: 4
+      align: MIN/MIN
+    children:
+    - id: 301:20195
+      name: Frame 2147227523
+      type: FRAME
+      w: 187
+      h: 18
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 0
+        - 0
+        - 0
+        gap: 2
+        align: MIN/CENTER
+      children:
+      - id: 301:20196
+        name: Audio boost
+        type: TEXT
+        w: 187
+        h: 18
+        fills:
+        - type: SOLID
+          color: '#454545'
+          token: text/primary
+        chars: Audio boost
+        textStyle: Sub Headings/card headings
+        font: Saira Medium
+        fontSize: 16
+        lineHeight: 110%
+        textAlign: LEFT
+      - id: 301:20197
+        name: Frame 2147227514
+        type: FRAME
+        w: 16
+        h: 16
+        visible: false
+        fills:
+        - type: SOLID
+          visible: false
+          color: '#ffffff'
+        children:
+        - id: 301:20198
+          name: Ellipse 18092
+          type: ELLIPSE
+          w: 14
+          h: 14
+          fills:
+          - type: SOLID
+            color: '#54656d'
+        - id: 301:20199
+          name: Vector
+          type: VECTOR
+          w: 14
+          h: 14
+          fills:
+          - type: SOLID
+            color: '#ffffff'
+    - id: 301:20200
+      name: Amplify your audio for a louder and richer sound
+      type: TEXT
+      w: 187
+      h: 32
+      fills:
+      - type: SOLID
+        color: '#919191'
+        token: text/secondary
+      chars: Amplify your audio for a louder and richer sound
+      textStyle: Content/Small
+      font: Geist Regular
+      fontSize: 12
+      lineHeight: 130%
+      textAlign: LEFT

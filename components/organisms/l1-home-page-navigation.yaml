@@ -1,0 +1,229 @@
+# L1/Home page — ingested from Figma (243:6378)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: l1-home-page-navigation
+name: L1/Home page
+type: organism
+node_id: 243:6378
+figma_fingerprint: 948135f671d61083862a0d646e005015301c3beb
+figma_type: COMPONENT
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+structural_references:
+- references: system/Selected device
+  ref_node_id: 231:26268
+  ref_fingerprint: 03ad1a0a6d577e5a1be225a336129abdd65011bb
+  variant_used: system/Selected device
+  instance_count: 1
+  resolved: false
+  external_location: 'page: 04 Icons'
+- references: system/Device option 1
+  ref_node_id: 231:26277
+  ref_fingerprint: 4d96fbeda6cf40fe9c7671ad1af3411514e99f66
+  variant_used: system/Device option 1
+  instance_count: 1
+  resolved: false
+  external_location: 'page: 04 Icons'
+- references: system/Device adder
+  ref_node_id: 231:26218
+  ref_fingerprint: 0dde9bc143e29224b01dfaeed0984a830f77b712
+  variant_used: system/Device adder
+  instance_count: 1
+  resolved: false
+  external_location: 'page: 04 Icons'
+- references: system/Downloading Success
+  ref_node_id: 231:26254
+  ref_fingerprint: 3d582057d55a75e85899e2bf444dd3e57235409f
+  variant_used: system/Downloading Success
+  instance_count: 1
+  resolved: false
+  external_location: 'page: 04 Icons'
+- references: system/Store
+  ref_node_id: 231:26234
+  ref_fingerprint: 7e190f81d8f1cb9c677d288cf5696295b2af4416
+  variant_used: system/Store
+  instance_count: 1
+  resolved: false
+  external_location: 'page: 04 Icons'
+authored_metadata: |
+  component:
+    id: l1-home-page-navigation
+    name: L1/Home page navigation
+    type: organism
+
+
+    purpose: >
+      Top-level (L1) navigation used on surface-level pages, providing device
+      switching and quick access to download activity and the store.
+
+
+    usage: >
+      Used as the L1 navigation on surface-level pages only: homepage,
+      settings page, and Noise AI page.
+
+
+    design_intent: >
+      Give users a consistent home-level anchor for switching active devices and
+      reaching high-frequency destinations (downloads, store) without competing
+      with page content.
+
+
+    anti_patterns:
+      - id: not-on-inner-pages
+        rule: >
+          Do not use on inner pages (any page one layer deeper, reached by
+          tapping into a feature); inner pages use L1 inner page navigation
+          instead.
+      - id: not-more-than-once
+        rule: Do not use more than once on a page.
+
+
+    variants: none
+
+
+    parts:
+      - name: Device switcher
+        source: component
+        linked: false
+        note: Component-backed; not linked in this test run.
+      - name: Download process icon
+        source: self-contained
+      - name: Store bag icon
+        source: self-contained
+        note: Entry point to the store/shop.
+
+
+    rules:
+      placement:
+        - Must represent L1 page hierarchy.
+        - Must always appear below the status bar.
+        - Must always appear above page content.
+        - >
+          May only appear on surface-level pages: homepage, settings, and
+          Noise AI page.
+
+
+    relationships:
+      - component_id: l1-inner-page-navigation
+        relation: sibling
+        description: >
+          Inner-page counterpart at the same L1 level. This component is
+          home-only; the counterpart is inner-page-only.
+
+
+    constraints:
+      allowed_pages:
+        - homepage
+        - settings
+        - noise-ai
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, height, colors) are not
+        stored here. They are read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 243:6378
+    name: L1/Home page
+    type: COMPONENT
+    w: 390
+    h: 56
+    layout:
+      mode: HORIZONTAL
+      padding:
+      - 0
+      - 12
+      - 0
+      - 12
+      gap: 46
+      align: SPACE_BETWEEN/CENTER
+    children:
+    - id: 243:6381
+      name: Frame 2147240561
+      type: FRAME
+      w: 112
+      h: 32
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 0
+        - 0
+        - 0
+        gap: 12
+        align: MIN/CENTER
+      children:
+      - id: 243:6382
+        name: system/Selected device
+        type: INSTANCE
+        w: 32
+        h: 32
+        instance_of:
+          id: 231:26268
+          name: system/Selected device
+          key: 03ad1a0a6d577e5a1be225a336129abdd65011bb
+        props: {}
+      - id: 243:6383
+        name: system/Device option 1
+        type: INSTANCE
+        w: 32
+        h: 32
+        instance_of:
+          id: 231:26277
+          name: system/Device option 1
+          key: 4d96fbeda6cf40fe9c7671ad1af3411514e99f66
+        props: {}
+      - id: 243:6418
+        name: system/Device adder
+        type: INSTANCE
+        w: 24
+        h: 24
+        instance_of:
+          id: 231:26218
+          name: system/Device adder
+          key: 0dde9bc143e29224b01dfaeed0984a830f77b712
+        props: {}
+    - id: 243:6427
+      name: Frame 2147240562
+      type: FRAME
+      w: 60
+      h: 24
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 0
+        - 0
+        - 0
+        gap: 12
+        align: MIN/CENTER
+      children:
+      - id: 243:6379
+        name: system/Downloading Success
+        type: INSTANCE
+        w: 24
+        h: 24
+        instance_of:
+          id: 231:26254
+          name: system/Downloading Success
+          key: 3d582057d55a75e85899e2bf444dd3e57235409f
+        props: {}
+      - id: 243:6422
+        name: system/Store
+        type: INSTANCE
+        w: 24
+        h: 24
+        instance_of:
+          id: 231:26234
+          name: system/Store
+          key: 7e190f81d8f1cb9c677d288cf5696295b2af4416
+        props: {}

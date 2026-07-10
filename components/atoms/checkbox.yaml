@@ -1,0 +1,186 @@
+# Checkbox — ingested from Figma (2031:1168)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: checkbox
+name: Checkbox
+type: atom
+node_id: 2031:1168
+figma_fingerprint: 5d813fa76c98d5e979b8e58f3097ee481b6974bc
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  state:
+  - Selected
+  - Not selected
+  - Disabled
+variants:
+- name: state=Selected
+  node_id: 2031:1169
+  figma_fingerprint: 04eb54bcdd00307a5a2fc1f26f5b2b9c6134b2a2
+  width: 24
+  height: 24
+- name: state=Not selected
+  node_id: 2031:1171
+  figma_fingerprint: 9a3200424d84fab3ff94be88d846fb91f8687e4c
+  width: 24
+  height: 24
+- name: state=Disabled
+  node_id: 2031:1174
+  figma_fingerprint: d46e2d73204296f5cb1d0ba30ca83596ec27f9c7
+  width: 24
+  height: 24
+authored_metadata: |
+  component:
+    id: checkbox
+    name: Checkbox
+    type: atom
+
+
+    usage: >
+      Used for independent selections where multiple options may be selected
+      simultaneously.
+
+
+    design_intent: >
+      Enable independent selection without affecting other available options.
+
+
+    anti_patterns:
+      - id: not-for-navigation
+        rule: Do not use for navigation.
+      - id: not-for-mutually-exclusive
+        rule: Do not use for mutually exclusive choices.
+      - id: not-for-system-settings
+        rule: Do not use for system settings.
+
+
+    states:
+      - selected
+      - not-selected
+      - disabled
+
+
+    rules:
+      - id: multiple-selection-per-group
+        rule: Multiple checkboxes may be selected within the same group.
+      - id: selection-state-always-visible
+        rule: Selection state must remain visible at all times.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 2031:1168
+    name: Checkbox
+    type: COMPONENT_SET
+    w: 64
+    h: 152
+    radius: 5
+    strokes:
+    - type: SOLID
+      color: '#8a38f5'
+    strokeWeight: 1
+    children:
+    - id: 2031:1169
+      name: state=Selected
+      type: COMPONENT
+      w: 24
+      h: 24
+      fills:
+      - type: SOLID
+        visible: false
+        color: '#ffffff'
+      children:
+      - id: 2031:1170
+        name: Vector
+        type: VECTOR
+        w: 24
+        h: 24
+        fills:
+        - type: SOLID
+          color: '#171717'
+          token: button/checkbox/checked
+    - id: 2031:1171
+      name: state=Not selected
+      type: COMPONENT
+      w: 24
+      h: 24
+      fills:
+      - type: SOLID
+        visible: false
+        color: '#ffffff'
+      children:
+      - id: 2031:1172
+        name: Frame 2147227260
+        type: FRAME
+        w: 24
+        h: 24
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 10
+          - 10
+          - 10
+          - 10
+          gap: 10
+          align: CENTER/CENTER
+        children:
+        - id: 2031:1173
+          name: Rectangle 34628635
+          type: RECTANGLE
+          w: 24
+          h: 24
+          radius: 4.5
+          strokes:
+          - type: SOLID
+            color: '#b5b5b5'
+            token: button/checkbox/unchecked
+          strokeWeight: 1.5
+    - id: 2031:1174
+      name: state=Disabled
+      type: COMPONENT
+      w: 24
+      h: 24
+      fills:
+      - type: SOLID
+        visible: false
+        color: '#ffffff'
+      children:
+      - id: 2031:1175
+        name: Frame 2147227260
+        type: FRAME
+        w: 24
+        h: 24
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 10
+          - 10
+          - 10
+          - 10
+          gap: 10
+          align: CENTER/CENTER
+        children:
+        - id: 2031:1176
+          name: Rectangle 34628635
+          type: RECTANGLE
+          w: 24
+          h: 24
+          radius: 4.5
+          strokes:
+          - type: SOLID
+            color: '#ededed'
+            token: button/checkbox/disable
+          strokeWeight: 1.5

@@ -1,0 +1,298 @@
+# Checkbox card — ingested from Figma (2032:1265)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: checkbox-card
+name: Checkbox card
+type: organism
+node_id: 2032:1265
+figma_fingerprint: 63123afdabcda90456472d6efa03baaae5bfae51
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  position:
+  - checkbox Left
+  - checkbox Right
+variants:
+- name: position=checkbox Left
+  node_id: 2032:1266
+  figma_fingerprint: 7b249f1c025150c8a974d2b64ade153c9ad941a2
+  width: 358
+  height: 70
+- name: position=checkbox Right
+  node_id: 2032:1271
+  figma_fingerprint: 182fb64d236892ce5782c9d504e1a0fefab0cd23
+  width: 358
+  height: 54
+structural_references:
+- references: Actionables
+  ref_node_id: 2031:437
+  ref_fingerprint: 0a882bdbac2c480461f90be87753b78e6db7b513
+  variant_used: Action=Checkbox
+  instance_count: 2
+  resolved: false
+  external_location: orphaned (detached from any page)
+  same_named_library_component: actionables
+- references: 'Heading-content component '
+  ref_node_id: 2031:372
+  ref_fingerprint: f5ea68900a77d59ba8ee0e29b01d0c34cfcb0622
+  variant_used: 'Heading-content component '
+  instance_count: 2
+  resolved: false
+  external_location: orphaned (detached from any page)
+  same_named_library_component: heading-content-component
+- references: Cross
+  ref_node_id: 2031:416
+  ref_fingerprint: b24505a4b9fdd4e693875ffc88e0903aab65fbc0
+  variant_used: Type=Default
+  instance_count: 1
+  resolved: false
+  external_location: orphaned (detached from any page)
+  same_named_library_component: cross
+authored_metadata: |
+  component:
+    id: checkbox-card
+    name: Checkbox card
+    type: organism
+
+
+    usage: >
+      Used for multi-selection lists where users can select and optionally
+      remove items.
+
+
+    design_intent: >
+      Provide a scalable and consistent pattern for presenting selectable items
+      while maintaining clear information hierarchy and selection visibility.
+
+
+    anti_patterns:
+      - id: no-standalone-card
+        rule: Do not use as a standalone card.
+      - id: no-outside-list
+        rule: Do not use outside a list structure.
+      - id: no-radio-or-toggle
+        rule: Do not combine with radio buttons or toggles.
+      - id: not-for-navigation
+        rule: Do not use for navigation patterns.
+
+
+    composition:
+      used_molecules:
+        - actionables
+      used_atoms:
+        - cross
+        - heading-content-component
+
+
+    variants:
+      - name: checkbox-left
+        contains:
+          - checkbox-actionable-molecule
+          - heading-content-atom
+          - cross-atom
+        usage: Use when items can be selected and independently removed.
+      - name: checkbox-right
+        contains:
+          - checkbox-actionable-molecule
+          - heading-content-atom
+        usage: Use when item selection is the only required action.
+
+
+    rules:
+      list_structure:
+        - Must always exist within a list.
+        - Must never be used as an isolated card.
+        - Multiple items must be grouped inside a parent frame.
+      parent_frame:
+        - Follow Master Card construction principles.
+        - Apply surface color token on the parent frame.
+        - Apply 18px corner radius on the parent frame.
+        - Parent frame must always have 12px top padding.
+        - Parent frame must always have 12px bottom padding.
+        - Parent frame should not have any internal spacing between the elements.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 2032:1265
+    name: Checkbox card
+    type: COMPONENT_SET
+    w: 398
+    h: 168
+    radius: 5
+    strokes:
+    - type: SOLID
+      color: '#8a38f5'
+    strokeWeight: 1
+    children:
+    - id: 2032:1266
+      name: position=checkbox Left
+      type: COMPONENT
+      w: 358
+      h: 70
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 8
+        - 16
+        - 8
+        - 16
+        gap: 57
+        align: MIN/CENTER
+      tokens:
+        paddingLeft: Gaps/L2-Card Gap
+        paddingTop: S
+        paddingRight: Gaps/L2-Card Gap
+        paddingBottom: S
+      children:
+      - id: 2032:1267
+        name: Frame 2147227749
+        type: FRAME
+        w: 245
+        h: 54
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 8
+          align: MIN/CENTER
+        tokens:
+          itemSpacing: S
+        children:
+        - id: 2032:1268
+          name: Actionables
+          type: INSTANCE
+          w: 36
+          h: 36
+          instance_of:
+            id: 2031:442
+            name: Action=Checkbox
+            key: 3e2ecb7776960b84b1233004b4978898b15c5df2
+            set:
+              id: 2031:437
+              name: Actionables
+          props:
+            Action: Checkbox
+        - id: 2032:1269
+          name: 'Heading-content component '
+          type: INSTANCE
+          w: 201
+          h: 54
+          layout:
+            mode: VERTICAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 4
+            align: MIN/MIN
+          instance_of:
+            id: 2031:372
+            name: 'Heading-content component '
+            key: f5ea68900a77d59ba8ee0e29b01d0c34cfcb0622
+          props:
+            Heading#395:0: true
+            content#301:0: true
+      - id: 2032:1270
+        name: Cross
+        type: INSTANCE
+        w: 24
+        h: 24
+        instance_of:
+          id: 2031:417
+          name: Type=Default
+          key: 96e4573dca6dc036787426ca1ce287ec1eedd3be
+          set:
+            id: 2031:416
+            name: Cross
+        props:
+          Type: Default
+    - id: 2032:1271
+      name: position=checkbox Right
+      type: COMPONENT
+      w: 358
+      h: 54
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 8
+        - 16
+        - 8
+        - 16
+        gap: 57
+        align: MIN/CENTER
+      tokens:
+        paddingLeft: Gaps/L2-Card Gap
+        paddingTop: S
+        paddingRight: Gaps/L2-Card Gap
+        paddingBottom: S
+      children:
+      - id: 2032:1272
+        name: Frame 2147227749
+        type: FRAME
+        w: 326
+        h: 38
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 8
+          align: MIN/CENTER
+        tokens:
+          itemSpacing: S
+        children:
+        - id: 2032:1273
+          name: 'Heading-content component '
+          type: INSTANCE
+          w: 282
+          h: 38
+          layout:
+            mode: VERTICAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 4
+            align: MIN/MIN
+          instance_of:
+            id: 2031:372
+            name: 'Heading-content component '
+            key: f5ea68900a77d59ba8ee0e29b01d0c34cfcb0622
+          props:
+            Heading#395:0: true
+            content#301:0: true
+        - id: 2032:1274
+          name: Actionables
+          type: INSTANCE
+          w: 36
+          h: 36
+          instance_of:
+            id: 2031:442
+            name: Action=Checkbox
+            key: 3e2ecb7776960b84b1233004b4978898b15c5df2
+            set:
+              id: 2031:437
+              name: Actionables
+          props:
+            Action: Checkbox

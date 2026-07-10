@@ -1,0 +1,122 @@
+# L2/Inner pages Heading — ingested from Figma (244:133)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: l2-inner-pages-heading
+name: L2/Inner pages Heading
+type: molecule
+node_id: 244:133
+figma_fingerprint: b315ce3a53f3c7c83388272cb7b77659f4e07c50
+figma_type: COMPONENT
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+authored_metadata: |
+  component:
+    id: l2-inner-pages-heading
+    name: L2/Inner pages Heading
+    type: molecule
+
+
+    usage: >
+      Used as the primary heading for inner pages that exist one level deeper
+      than surface-level pages.
+
+
+    design_intent: >
+      Provide clear navigation hierarchy by identifying the primary destination
+      within an inner-page experience.
+
+
+    anti_patterns:
+      - id: not-on-surface-level
+        rule: Do not use on surface-level pages.
+      - id: not-as-section-heading
+        rule: Do not use as a section heading.
+      - id: not-inside-containers
+        rule: Do not use inside cards, sheets, or modals.
+      - id: not-for-l1-hierarchy
+        rule: Do not use for L1 page hierarchy.
+      - id: not-for-content-grouping
+        rule: Do not use for content grouping.
+
+
+    rules:
+      hierarchy:
+        - Must always represent L2 page hierarchy.
+        - Must only appear on inner pages.
+        - Must appear below L1 content hierarchy.
+        - >
+          Sits flush directly under the L1 inner page navigation, with no
+          padding or spacing between them.
+      content:
+        - Should communicate the page destination or purpose.
+        - Prefer concise and scannable wording.
+        - Max 2 line content is supported.
+      layout:
+        - Height is content driven.
+        - Minimum height is 56px.
+        - When content occupies a single line, component height remains 56px.
+        - When content wraps, height expands based on content.
+      scroll_behavior:
+        - >
+          When page content overflows the first fold and the user scrolls up,
+          this heading collapses and its text promotes into the L1 inner page
+          navigation's centered heading slot.
+        - >
+          Promotion applies only when the active L1 variant is a base variant
+          (clean-only-chevron, one-icon, two-icon); it does not occur with
+          ai-token-banner or items-selected.
+        - The transition is a smooth animation, and reverses on scroll-down.
+
+
+    relationships:
+      - component_id: l1-inner-page-navigation
+        relation: heading-destination
+        description: Destination that receives this heading on scroll.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 244:133
+    name: L2/Inner pages Heading
+    type: COMPONENT
+    w: 390
+    h: 90
+    layout:
+      mode: HORIZONTAL
+      padding:
+      - 8
+      - 16
+      - 8
+      - 16
+      gap: 10
+      align: MIN/CENTER
+    children:
+    - id: 243:6766
+      name: ABOUT YOUR DEVICE
+      type: TEXT
+      w: 217
+      h: 74
+      fills:
+      - type: SOLID
+        color: '#454545'
+        token: text/primary
+      chars: 'ABOUT
+
+        YOUR DEVICE'
+      textStyle: 👄 Headings/Medium
+      font: Saira SemiBold
+      fontSize: 34
+      lineHeight: 110%
+      textAlign: LEFT

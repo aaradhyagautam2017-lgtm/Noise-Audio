@@ -1,0 +1,261 @@
+# Actionables — ingested from Figma (2031:1132)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: actionables
+name: Actionables
+type: molecule
+node_id: 2031:1132
+figma_fingerprint: 319c48cae4ec45084ee2296b6d0e0460d0d27a40
+figma_type: COMPONENT_SET
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+variant_axes:
+  Action:
+  - Chevron
+  - Toggle
+  - Checkbox
+  - Cross
+  - Radio button
+variants:
+- name: Action=Chevron
+  node_id: 2031:1133
+  figma_fingerprint: 5aa26073652ead8866d4f0477aa2774525762ff7
+  width: 36
+  height: 36
+- name: Action=Toggle
+  node_id: 2031:1135
+  figma_fingerprint: f81e84c32e447f93362ded82139020e0bebe9277
+  width: 36
+  height: 36
+- name: Action=Checkbox
+  node_id: 2031:1137
+  figma_fingerprint: b67729a7d6e3edbd1217ef6367f460cddb25f4f9
+  width: 36
+  height: 36
+- name: Action=Cross
+  node_id: 2031:1139
+  figma_fingerprint: caf20759a0ee914689f8413ca09b2818a64486b5
+  width: 36
+  height: 36
+- name: Action=Radio button
+  node_id: 2031:1141
+  figma_fingerprint: 16843fea00305b1ee7f7ec1114c7255650a3d5fb
+  width: 36
+  height: 36
+structural_references:
+- references: Chevron
+  ref_node_id: 2031:379
+  ref_fingerprint: 7d33453c2f50af7fc44257ae137fab22e2f6db20
+  variant_used: State=Chevron Forward
+  instance_count: 1
+  resolved: false
+  external_location: orphaned (detached from any page)
+  same_named_library_component: chevron
+- references: Toggle
+  ref_node_id: 2031:392
+  ref_fingerprint: 537b10b920390c7a350338dbf78426355a0ae316
+  variant_used: State=On state
+  instance_count: 1
+  resolved: false
+  external_location: orphaned (detached from any page)
+  same_named_library_component: toggle
+- references: Checkbox
+  ref_node_id: 2031:406
+  ref_fingerprint: 23528b75800b5fdb04b8e881ec4df9f2e668faed
+  variant_used: state=Selected
+  instance_count: 1
+  resolved: false
+  external_location: orphaned (detached from any page)
+  same_named_library_component: checkbox
+- references: Cross
+  ref_node_id: 2031:416
+  ref_fingerprint: b24505a4b9fdd4e693875ffc88e0903aab65fbc0
+  variant_used: Type=Default
+  instance_count: 1
+  resolved: false
+  external_location: orphaned (detached from any page)
+  same_named_library_component: cross
+- references: Radio Button
+  ref_node_id: 2031:426
+  ref_fingerprint: 882ee39c83e87dabd9550591ca1e5ad08b88a0d1
+  variant_used: State=Selected
+  instance_count: 1
+  resolved: false
+  external_location: orphaned (detached from any page)
+  same_named_library_component: radio-button
+authored_metadata: |
+  component:
+    id: actionables
+    name: Actionables
+    type: molecule
+
+
+    usage: >
+      Provide a consistent trailing action area for organism level components.
+
+
+    design_intent: >
+      Provide a unified interaction slot that allows different interaction
+      patterns to be substituted without affecting content structure, spacing,
+      or hierarchy.
+
+
+    supported_variants:
+      - toggle
+      - checkbox
+      - radio-button
+      - chevron
+      - cross
+
+
+    composition:
+      used_atoms:
+        - chevron
+        - toggle
+        - checkbox
+        - cross
+        - radio-button
+
+
+    rules:
+      - id: single-actionable-per-row
+        rule: Only one actionable may exist within a row.
+      - id: swap-no-layout-shift
+        rule: Swapping actionable variants must not affect content layout.
+      - id: inherit-vertical-alignment
+        rule: Actionables inherit the parent component's vertical alignment.
+      - id: visually-secondary-to-content
+        rule: Actionables should remain visually secondary to content.
+      - id: consistent-touch-targets
+        rule: Actionables must preserve consistent touch targets across variants.
+
+
+    visual_properties:
+      source: figma_mcp
+      note: >
+        Exact values (corner radius, padding, width, colors) are not stored here.
+        They are read live from Figma via MCP at consumption time.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 2031:1132
+    name: Actionables
+    type: COMPONENT_SET
+    w: 76
+    h: 300
+    radius: 5
+    strokes:
+    - type: SOLID
+      color: '#8a38f5'
+    strokeWeight: 1
+    children:
+    - id: 2031:1133
+      name: Action=Chevron
+      type: COMPONENT
+      w: 36
+      h: 36
+      children:
+      - id: 2031:1134
+        name: Chevron
+        type: INSTANCE
+        w: 24
+        h: 24
+        instance_of:
+          id: 2031:383
+          name: State=Chevron Forward
+          key: ad151e3f403b9af22f6a9fdf67f57d64caec3420
+          set:
+            id: 2031:379
+            name: Chevron
+        props:
+          State: Chevron Forward
+    - id: 2031:1135
+      name: Action=Toggle
+      type: COMPONENT
+      w: 36
+      h: 36
+      children:
+      - id: 2031:1136
+        name: Toggle
+        type: INSTANCE
+        w: 36
+        h: 19
+        instance_of:
+          id: 2031:393
+          name: State=On state
+          key: ce3e23cb59efe2ce35e84617d1395916b0fe71ce
+          set:
+            id: 2031:392
+            name: Toggle
+        props:
+          State: On state
+    - id: 2031:1137
+      name: Action=Checkbox
+      type: COMPONENT
+      w: 36
+      h: 36
+      children:
+      - id: 2031:1138
+        name: Checkbox
+        type: INSTANCE
+        w: 24
+        h: 24
+        fills:
+        - type: SOLID
+          visible: false
+          color: '#ffffff'
+        instance_of:
+          id: 2031:407
+          name: state=Selected
+          key: 3d05716dad7ccd77588012ec5407aac0f327635b
+          set:
+            id: 2031:406
+            name: Checkbox
+        props:
+          state: Selected
+    - id: 2031:1139
+      name: Action=Cross
+      type: COMPONENT
+      w: 36
+      h: 36
+      children:
+      - id: 2031:1140
+        name: Cross
+        type: INSTANCE
+        w: 24
+        h: 24
+        instance_of:
+          id: 2031:417
+          name: Type=Default
+          key: 96e4573dca6dc036787426ca1ce287ec1eedd3be
+          set:
+            id: 2031:416
+            name: Cross
+        props:
+          Type: Default
+    - id: 2031:1141
+      name: Action=Radio button
+      type: COMPONENT
+      w: 36
+      h: 36
+      children:
+      - id: 2031:1142
+        name: Radio Button
+        type: INSTANCE
+        w: 20
+        h: 20
+        instance_of:
+          id: 2031:427
+          name: State=Selected
+          key: 07de329483dd2a072cc4740c3d79b0df8db92816
+          set:
+            id: 2031:426
+            name: Radio Button
+        props:
+          State: Selected

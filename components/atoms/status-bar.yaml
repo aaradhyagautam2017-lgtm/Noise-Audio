@@ -1,0 +1,213 @@
+# Status bar — ingested from Figma (2007:775)
+# authored_metadata is mirrored verbatim from the top-level Figma component description.
+id: status-bar
+name: Status bar
+type: atom
+node_id: 2007:775
+figma_fingerprint: 0642c8e04f3d5b41411530a951699e5567e63f29
+figma_type: COMPONENT
+source:
+  file_key: QjVyM5bRXgIOZn8PO1e0eK
+  page: Test pilot run
+  page_node_id: 2025:148
+  extracted_at: '2026-07-10'
+authored_metadata: |
+  component:
+  id: status-bar
+  name: Status bar
+  type: atom
+
+
+  usage: >
+  Used at the top of every screen as the highest hierarchy level in the
+  interface.
+
+
+  design_intent: >
+  Provides a dedicated region for operating system information while
+  establishing the starting point of the application hierarchy.
+
+
+  anti_patterns:
+  - id: no-app-content-inside
+  rule: Do not place application content inside the status bar.
+  - id: not-for-navigation
+  rule: Do not use for navigation.
+  - id: not-for-page-titles
+  rule: Do not use for page titles.
+  - id: not-for-actions-or-controls
+  rule: Do not use for actions or controls.
+  - id: not-removable
+  rule: Do not remove from standard application screens.
+
+
+  rules:
+  hierarchy:
+  - Represents L0 hierarchy.
+  - Must always appear above L1 navigation.
+  - Must always appear above page content.
+  placement:
+  - Must remain fixed at the top of the screen.
+  - Must be the first visible component in the page structure.
+  content_ownership:
+  - System information is owned by the operating system.
+  - Application content must not occupy this region.
+
+
+  visual_properties:
+  source: figma_mcp
+  note: >
+  Exact values (corner radius, padding, width, colors) are not stored here.
+  They are read live from Figma via MCP at consumption time.
+
+  rules:
+      scroll_state:
+        - >
+          During the L1 inner page navigation's scrolled state, the status bar
+          container receives a token/background/canvas fill (it is otherwise
+          transparent). This behavior is owned/driven by
+          l1-inner-page-navigation.
+
+
+    relationships:
+      - component_id: l1-inner-page-navigation
+        relation: shares-scroll-state
+        description: >
+          Drives the status bar's canvas fill during its scrolled state.
+visual_values:
+  source: figma_mcp
+  extracted_at: '2026-07-10'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
+    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
+    governs itself.'
+  tree:
+    id: 2007:775
+    name: Status bar
+    type: COMPONENT
+    w: 390
+    h: 59
+    layout:
+      mode: HORIZONTAL
+      padding:
+      - 0
+      - 0
+      - 0
+      - 0
+      gap: 38
+      align: MIN/CENTER
+    children:
+    - id: 2007:753
+      name: Time
+      type: FRAME
+      w: 95
+      h: 22
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 6
+        - 0
+        - 16
+        gap: 10
+        align: CENTER/CENTER
+      children:
+      - id: 2007:754
+        name: Time
+        type: TEXT
+        w: 37
+        h: 22
+        fills:
+        - type: SOLID
+          color: '#000000'
+          token: default/status bar
+        chars: '9:41'
+        font: SF Pro Semibold
+        fontSize: 17
+        lineHeight: 22
+        textAlign: CENTER
+    - id: 2007:755
+      name: Dynamic Island spacer
+      type: FRAME
+      w: 124
+      h: 10
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 0
+        - 0
+        - 0
+        gap: 0
+        align: CENTER/CENTER
+      children: []
+    - id: 2007:756
+      name: Levels
+      type: FRAME
+      w: 95
+      h: 13
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 16
+        - 0
+        - 6
+        gap: 7
+        align: CENTER/CENTER
+      children:
+      - id: 2007:757
+        name: Cellular Connection
+        type: VECTOR
+        w: 19.2
+        h: 12.2
+        fills:
+        - type: SOLID
+          color: '#000000'
+          token: default/status bar
+      - id: 2007:758
+        name: Wifi
+        type: VECTOR
+        w: 17.1
+        h: 12.3
+        fills:
+        - type: SOLID
+          color: '#000000'
+          token: default/status bar
+      - id: 2007:759
+        name: Battery
+        type: GROUP
+        w: 27.3
+        h: 13
+        children:
+        - id: 2007:760
+          name: Border
+          type: RECTANGLE
+          w: 25
+          h: 13
+          opacity: 0.35
+          radius: 4.300000190734863
+          strokes:
+          - type: SOLID
+            color: '#000000'
+            token: default/status bar
+          strokeWeight: 1
+        - id: 2007:761
+          name: Cap
+          type: VECTOR
+          w: 1.3
+          h: 4.1
+          opacity: 0.4
+          fills:
+          - type: SOLID
+            color: '#000000'
+            token: default/status bar
+        - id: 2007:762
+          name: Capacity
+          type: RECTANGLE
+          w: 21
+          h: 9
+          radius: 2.5
+          fills:
+          - type: SOLID
+            color: '#000000'
+            token: default/status bar
