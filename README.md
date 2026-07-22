@@ -19,7 +19,7 @@ rulebook that governs how anything in this repository may be used.
 
 ```
 AGENT.md                  READ FIRST — the reasoning rulebook (human-placed; not generated).
-CONTROL_PANEL.md          Screen state panel rules (human-placed) — NOT YET PROVIDED, see report.
+CONTROL_PANEL.md          Screen state panel rules (human-placed; not generated).
 registry.yaml             The map: every component with ids, fingerprints, edges, usage counts.
 INGESTION_REPORT.md       Gaps, drift, dangling references found during ingestion.
 components/
@@ -51,7 +51,7 @@ typography, spacing/radius), a component graph, and a detail page per component 
 live preview rendered from the extracted visual values, a copyable Figma fingerprint, the full
 authored metadata rendered from the stored YAML, and clickable composition / relationships /
 used-by links. It is a **rendered view of the repo only** — it contains nothing that is not in
-the repo, flags repo gaps (missing CONTROL_PANEL.md, dangling Figma references, unparseable
+the repo, flags repo gaps (a missing CONTROL_PANEL.md, dangling Figma references, unparseable
 metadata) with warning badges, and regenerates with:
 
 ```
