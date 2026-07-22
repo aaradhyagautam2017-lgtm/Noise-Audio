@@ -13,13 +13,16 @@ source:
   extracted_at: '2026-07-10'
 structural_references:
 - references: Status bar
-  ref_node_id: 374:7867
-  ref_fingerprint: be68a17515e3c6a025f9a9bb53be752af6d9362f
+  ref_node_id: 2007:775
+  ref_fingerprint: 0642c8e04f3d5b41411530a951699e5567e63f29
   variant_used: Status bar
   instance_count: 1
-  resolved: false
-  external_location: 'page: AI Metdata'
-  same_named_library_component: status-bar
+  resolved: true
+  target_id: status-bar
+  rewired_from:
+    node_id: 374:7867
+    fingerprint: be68a17515e3c6a025f9a9bb53be752af6d9362f
+    location: 'page: AI Metdata'
 - references: Action Sheet
   ref_node_id: 420:1299
   ref_fingerprint: 175c082ef321a9d4f2771d7a8b42c3b76d507393
@@ -141,7 +144,5 @@ authored_metadata: |
 visual_values:
   source: figma_mcp
   extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
-    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
   tree: see variants in visuals data

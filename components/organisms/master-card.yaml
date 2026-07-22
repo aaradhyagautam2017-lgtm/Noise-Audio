@@ -27,13 +27,16 @@ structural_references:
   resolved: true
   target_id: heading-content-component
 - references: Actionables
-  ref_node_id: 329:2095
-  ref_fingerprint: 4b6a4ae9a8d5c00c90119bb74803d60125416864
+  ref_node_id: 2031:1132
+  ref_fingerprint: 319c48cae4ec45084ee2296b6d0e0460d0d27a40
   variant_used: Action=Chevron
   instance_count: 1
-  resolved: false
-  external_location: 'page: AI Metdata'
-  same_named_library_component: actionables
+  resolved: true
+  target_id: actionables
+  rewired_from:
+    node_id: 329:2095
+    fingerprint: 4b6a4ae9a8d5c00c90119bb74803d60125416864
+    location: 'page: AI Metdata'
 authored_metadata: |
   component:
     id: master-card
@@ -139,9 +142,7 @@ authored_metadata: |
 visual_values:
   source: figma_mcp
   extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
-    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
   tree:
     id: 396:728
     name: Master card
@@ -263,12 +264,13 @@ visual_values:
             w: 36
             h: 36
             instance_of:
-              id: 329:2094
-              name: Action=Chevron
-              key: 57e2ee1df03f08a8cb03623314a5d44f3c29fdbc
+              id: 2031:1132
+              name: Actionables
+              key: 319c48cae4ec45084ee2296b6d0e0460d0d27a40
               set:
-                id: 329:2095
+                id: 2031:1132
                 name: Actionables
+              rewired_from: 329:2095
             props:
               Action: Chevron
         - id: 396:678

@@ -52,13 +52,16 @@ variants:
   height: 56
 structural_references:
 - references: system/Chevron
-  ref_node_id: 2007:379
-  ref_fingerprint: 7d33453c2f50af7fc44257ae137fab22e2f6db20
+  ref_node_id: 2031:1154
+  ref_fingerprint: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
   variant_used: State=Chevron back
   instance_count: 5
-  resolved: false
-  external_location: orphaned (detached from any page)
-  same_named_library_component: chevron
+  resolved: true
+  target_id: chevron
+  rewired_from:
+    node_id: 2007:379
+    fingerprint: 7d33453c2f50af7fc44257ae137fab22e2f6db20
+    location: orphaned (detached from any page)
 - references: system/Restart
   ref_node_id: 2007:405
   ref_fingerprint: d849ccc65bbbb17b5c6b86199354cd2267a8c2a1
@@ -81,13 +84,16 @@ structural_references:
   resolved: false
   external_location: orphaned (detached from any page)
 - references: system/cross
-  ref_node_id: 2007:411
-  ref_fingerprint: 96e4573dca6dc036787426ca1ce287ec1eedd3be
+  ref_node_id: 2031:1201
+  ref_fingerprint: 4630976d22073248745eb76ebe8a4c2e55d2c1ef
   variant_used: system/cross
   instance_count: 1
-  resolved: false
-  external_location: orphaned (detached from any page)
-  same_named_library_component: cross
+  resolved: true
+  target_id: cross
+  rewired_from:
+    node_id: 2007:411
+    fingerprint: 96e4573dca6dc036787426ca1ce287ec1eedd3be
+    location: orphaned (detached from any page)
 authored_metadata: |
   component:
     id: l1-inner-page-navigation
@@ -248,9 +254,7 @@ authored_metadata: |
 visual_values:
   source: figma_mcp
   extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
-    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
   tree:
     id: 2007:1007
     name: L1 Inner page navigation
@@ -284,12 +288,13 @@ visual_values:
         w: 24
         h: 24
         instance_of:
-          id: 2007:380
-          name: State=Chevron back
-          key: dfa4db7c4e15eee69d60e2adf2dd88bd4291785f
+          id: 2031:1154
+          name: Chevron
+          key: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
           set:
-            id: 2007:379
-            name: system/Chevron
+            id: 2031:1154
+            name: Chevron
+          rewired_from: 2007:379
         props:
           State: Chevron back
     - id: 2007:1005
@@ -313,12 +318,13 @@ visual_values:
         w: 24
         h: 24
         instance_of:
-          id: 2007:380
-          name: State=Chevron back
-          key: dfa4db7c4e15eee69d60e2adf2dd88bd4291785f
+          id: 2031:1154
+          name: Chevron
+          key: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
           set:
-            id: 2007:379
-            name: system/Chevron
+            id: 2031:1154
+            name: Chevron
+          rewired_from: 2007:379
         props:
           State: Chevron back
       - id: 2007:943
@@ -352,12 +358,13 @@ visual_values:
         w: 24
         h: 24
         instance_of:
-          id: 2007:380
-          name: State=Chevron back
-          key: dfa4db7c4e15eee69d60e2adf2dd88bd4291785f
+          id: 2031:1154
+          name: Chevron
+          key: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
           set:
-            id: 2007:379
-            name: system/Chevron
+            id: 2031:1154
+            name: Chevron
+          rewired_from: 2007:379
         props:
           State: Chevron back
       - id: 2007:937
@@ -416,12 +423,13 @@ visual_values:
         w: 24
         h: 24
         instance_of:
-          id: 2007:380
-          name: State=Chevron back
-          key: dfa4db7c4e15eee69d60e2adf2dd88bd4291785f
+          id: 2031:1154
+          name: Chevron
+          key: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
           set:
-            id: 2007:379
-            name: system/Chevron
+            id: 2031:1154
+            name: Chevron
+          rewired_from: 2007:379
         props:
           State: Chevron back
       - id: 2007:946
@@ -471,12 +479,13 @@ visual_values:
         w: 24
         h: 24
         instance_of:
-          id: 2007:380
-          name: State=Chevron back
-          key: dfa4db7c4e15eee69d60e2adf2dd88bd4291785f
+          id: 2031:1154
+          name: Chevron
+          key: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
           set:
-            id: 2007:379
-            name: system/Chevron
+            id: 2031:1154
+            name: Chevron
+          rewired_from: 2007:379
         props:
           State: Chevron back
       - id: 2007:959
@@ -558,9 +567,10 @@ visual_values:
           w: 24
           h: 24
           instance_of:
-            id: 2007:411
-            name: system/cross
-            key: 96e4573dca6dc036787426ca1ce287ec1eedd3be
+            id: 2031:1201
+            name: Cross
+            key: 4630976d22073248745eb76ebe8a4c2e55d2c1ef
+            rewired_from: 2007:411
           props: {}
         - id: 2007:930
           name: 1 item selected

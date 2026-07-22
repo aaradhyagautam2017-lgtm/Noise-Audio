@@ -43,15 +43,24 @@
 
 ## 5. Broken / dangling structural references (Figma instance wiring)
 
+> **Update — rewiring pass, 2026-07-22 (designer-confirmed).** The original ingestion drifted
+> off the source page and wired many instances to off-page copies (pages “06 Building Blocks” /
+> “AI Metdata” / “04 Icons”), even though the correct components exist on the source page. Per
+> the designer, only components on page `2025:148` are the source of truth. **17 of the 32
+> dangling references — every one that had an in-page twin — were rewired to that twin** (see
+> §5c). The remaining **15** have no in-page component and stay flagged (§5b). Rewired edges now
+> carry `resolved: true`, a `target_id`, and a `rewired_from*` provenance field in both
+> `registry.yaml` (`figma_instance_edges`) and each component’s `structural_references`; the
+> corresponding `visual_values` tree instances were repointed so previews resolve.
+> `authored_metadata` was not touched (it already declared the correct in-page graph).
+
 The metadata-declared graph is **fully resolved — 0 broken metadata edges** (every
 `used_atoms` / `used_molecules` / `used_cta` / `used_organisms` / `contains` / `relationships`
 target exists in the library).
 
-However, the **raw Figma instance wiring** inside several components points at components that
-are **not on the ingested page**. These are catalogued per component under
-`structural_references` (`resolved: false`) and in `registry.yaml` (`figma_instance_edges`).
-Nothing was silently re-pointed; where a same-named library component exists it is recorded as
-`same_named_library_component` for the designer to confirm.
+The **raw Figma instance wiring** inside several components originally pointed at components
+**not on the ingested page**. The tables below record the original ingestion state; §5c records
+what each was rewired to.
 
 ### 5a. Duplicate-component drift (a library twin exists, but the instance points elsewhere)
 
@@ -86,7 +95,27 @@ graph; the Figma wiring lags it. The registry keeps both layers visible.
 These are functional parts of the components but live outside the declared library page. They
 are not modeled as library components (Law: only the page is the universe); each is recorded on
 the consuming component so a future phase can either ingest them or the designer can move them
-onto the library page.
+onto the library page. **These 15 references were NOT rewired** — there is no in-page component
+to point them at. They remain `resolved: false` and continue to render as flagged/ghost nodes.
+
+### 5c. Rewiring applied (2026-07-22) — §5a resolved to in-page twins
+
+Every §5a reference (a same-named component exists on the source page) was repointed to that
+in-page twin. Node ids below are the in-page targets now stored as `target_id`:
+
+| Consuming component | Reference (was off-page) | Rewired to (in-page) |
+|---|---|---|
+| `actionables` | Chevron, Toggle, Checkbox, Cross, Radio Button | `chevron` `2031:1154`, `toggle` `2031:1190`, `checkbox` `2031:1168`, `cross` `2031:1201`, `radio-button` `2031:1178` |
+| `master-card`, `text-field`, `modal-card`, `action-card` | Actionables `329:2095` | `actionables` `2031:1132` |
+| `checkbox-card` | Actionables `2031:437`, Heading-content `2031:372`, Cross `2031:416` | `actionables` `2031:1132`, `heading-content-component` `301:20202`, `cross` `2031:1201` |
+| `action-card` | Radio Button `395:636` | `radio-button` `2031:1178` |
+| `l1-inner-page-navigation` | system/Chevron `2007:379`, system/cross `2007:411` | `chevron` `2031:1154`, `cross` `2031:1201` |
+| `action-sheet`, `modal-sheet` | Status bar `374:7867` | `status-bar` `2007:775` |
+
+Result: **32 → 15 dangling** Figma instance edges (`registry.yaml`
+`validation.dangling_figma_instance_edges: 15`). All previews for the rewired components now
+resolve their nested instances to in-page library components; only genuine §5b externals still
+render as ghost markers.
 
 ## 6. Design ↔ metadata drift (variant axes vs authored YAML)
 
@@ -145,10 +174,12 @@ onto the library page.
 Repository built: 26 component files (both layers: verbatim authored metadata + extracted
 visual values, every one carrying `id`, `name`, `type`, `node_id`, `figma_fingerprint`),
 3 token catalogs, `css/tokens.css`, validated `registry.yaml` (0 unresolved metadata edges,
-32 dangling Figma instance edges catalogued), `AGENT.md` placed, `screens/` empty.
-No screens, dashboards, or graphs were composed.
+originally 32 dangling Figma instance edges catalogued — **now 15 after the 2026-07-22 rewiring
+pass, §5c**), `AGENT.md` placed, `screens/` empty.
+No screens, dashboards, or graphs were composed during ingestion.
 
-**Open items for the designer:** provide `CONTROL_PANEL.md`; confirm the
-`image-asset-placeholder` n/L naming; decide whether to relink organism internals to the
-library copies (§5a) and/or move the §5b off-page dependencies onto the library page;
-review the `status-bar` duplicate `rules:` keys and the `button/secondary/pressed` dark value.
+**Open items for the designer:** ~~provide `CONTROL_PANEL.md`~~ (added 2026-07-22);
+~~relink organism internals to the library copies (§5a)~~ (done 2026-07-22, §5c); confirm the
+`image-asset-placeholder` n/L naming; decide whether to move the remaining §5b off-page
+dependencies (15 decorative icons / off-page composites with no in-page twin) onto the library
+page; review the `status-bar` duplicate `rules:` keys and the `button/secondary/pressed` dark value.

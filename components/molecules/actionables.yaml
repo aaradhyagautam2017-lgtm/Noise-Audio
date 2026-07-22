@@ -46,45 +46,60 @@ variants:
   height: 36
 structural_references:
 - references: Chevron
-  ref_node_id: 2031:379
-  ref_fingerprint: 7d33453c2f50af7fc44257ae137fab22e2f6db20
+  ref_node_id: 2031:1154
+  ref_fingerprint: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
   variant_used: State=Chevron Forward
   instance_count: 1
-  resolved: false
-  external_location: orphaned (detached from any page)
-  same_named_library_component: chevron
+  resolved: true
+  target_id: chevron
+  rewired_from:
+    node_id: 2031:379
+    fingerprint: 7d33453c2f50af7fc44257ae137fab22e2f6db20
+    location: orphaned (detached from any page)
 - references: Toggle
-  ref_node_id: 2031:392
-  ref_fingerprint: 537b10b920390c7a350338dbf78426355a0ae316
+  ref_node_id: 2031:1190
+  ref_fingerprint: 5671f20fe570cab72796a90ebac8b77ca42e0621
   variant_used: State=On state
   instance_count: 1
-  resolved: false
-  external_location: orphaned (detached from any page)
-  same_named_library_component: toggle
+  resolved: true
+  target_id: toggle
+  rewired_from:
+    node_id: 2031:392
+    fingerprint: 537b10b920390c7a350338dbf78426355a0ae316
+    location: orphaned (detached from any page)
 - references: Checkbox
-  ref_node_id: 2031:406
-  ref_fingerprint: 23528b75800b5fdb04b8e881ec4df9f2e668faed
+  ref_node_id: 2031:1168
+  ref_fingerprint: 5d813fa76c98d5e979b8e58f3097ee481b6974bc
   variant_used: state=Selected
   instance_count: 1
-  resolved: false
-  external_location: orphaned (detached from any page)
-  same_named_library_component: checkbox
+  resolved: true
+  target_id: checkbox
+  rewired_from:
+    node_id: 2031:406
+    fingerprint: 23528b75800b5fdb04b8e881ec4df9f2e668faed
+    location: orphaned (detached from any page)
 - references: Cross
-  ref_node_id: 2031:416
-  ref_fingerprint: b24505a4b9fdd4e693875ffc88e0903aab65fbc0
+  ref_node_id: 2031:1201
+  ref_fingerprint: 4630976d22073248745eb76ebe8a4c2e55d2c1ef
   variant_used: Type=Default
   instance_count: 1
-  resolved: false
-  external_location: orphaned (detached from any page)
-  same_named_library_component: cross
+  resolved: true
+  target_id: cross
+  rewired_from:
+    node_id: 2031:416
+    fingerprint: b24505a4b9fdd4e693875ffc88e0903aab65fbc0
+    location: orphaned (detached from any page)
 - references: Radio Button
-  ref_node_id: 2031:426
-  ref_fingerprint: 882ee39c83e87dabd9550591ca1e5ad08b88a0d1
+  ref_node_id: 2031:1178
+  ref_fingerprint: 5aaf9ca2a4ce74111f0f3c1f26e495c980cec34e
   variant_used: State=Selected
   instance_count: 1
-  resolved: false
-  external_location: orphaned (detached from any page)
-  same_named_library_component: radio-button
+  resolved: true
+  target_id: radio-button
+  rewired_from:
+    node_id: 2031:426
+    fingerprint: 882ee39c83e87dabd9550591ca1e5ad08b88a0d1
+    location: orphaned (detached from any page)
 authored_metadata: |
   component:
     id: actionables
@@ -140,9 +155,7 @@ authored_metadata: |
 visual_values:
   source: figma_mcp
   extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
-    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
   tree:
     id: 2031:1132
     name: Actionables
@@ -167,12 +180,13 @@ visual_values:
         w: 24
         h: 24
         instance_of:
-          id: 2031:383
-          name: State=Chevron Forward
-          key: ad151e3f403b9af22f6a9fdf67f57d64caec3420
+          id: 2031:1154
+          name: Chevron
+          key: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
           set:
-            id: 2031:379
+            id: 2031:1154
             name: Chevron
+          rewired_from: 2031:379
         props:
           State: Chevron Forward
     - id: 2031:1135
@@ -187,12 +201,13 @@ visual_values:
         w: 36
         h: 19
         instance_of:
-          id: 2031:393
-          name: State=On state
-          key: ce3e23cb59efe2ce35e84617d1395916b0fe71ce
+          id: 2031:1190
+          name: Toggle
+          key: 5671f20fe570cab72796a90ebac8b77ca42e0621
           set:
-            id: 2031:392
+            id: 2031:1190
             name: Toggle
+          rewired_from: 2031:392
         props:
           State: On state
     - id: 2031:1137
@@ -211,12 +226,13 @@ visual_values:
           visible: false
           color: '#ffffff'
         instance_of:
-          id: 2031:407
-          name: state=Selected
-          key: 3d05716dad7ccd77588012ec5407aac0f327635b
+          id: 2031:1168
+          name: Checkbox
+          key: 5d813fa76c98d5e979b8e58f3097ee481b6974bc
           set:
-            id: 2031:406
+            id: 2031:1168
             name: Checkbox
+          rewired_from: 2031:406
         props:
           state: Selected
     - id: 2031:1139
@@ -231,12 +247,13 @@ visual_values:
         w: 24
         h: 24
         instance_of:
-          id: 2031:417
-          name: Type=Default
-          key: 96e4573dca6dc036787426ca1ce287ec1eedd3be
+          id: 2031:1201
+          name: Cross
+          key: 4630976d22073248745eb76ebe8a4c2e55d2c1ef
           set:
-            id: 2031:416
+            id: 2031:1201
             name: Cross
+          rewired_from: 2031:416
         props:
           Type: Default
     - id: 2031:1141
@@ -251,11 +268,12 @@ visual_values:
         w: 20
         h: 20
         instance_of:
-          id: 2031:427
-          name: State=Selected
-          key: 07de329483dd2a072cc4740c3d79b0df8db92816
+          id: 2031:1178
+          name: Radio Button
+          key: 5aaf9ca2a4ce74111f0f3c1f26e495c980cec34e
           set:
-            id: 2031:426
+            id: 2031:1178
             name: Radio Button
+          rewired_from: 2031:426
         props:
           State: Selected

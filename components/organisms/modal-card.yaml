@@ -28,14 +28,17 @@ variants:
   height: 408
 structural_references:
 - references: Actionables
-  ref_node_id: 329:2095
-  ref_fingerprint: 4b6a4ae9a8d5c00c90119bb74803d60125416864
+  ref_node_id: 2031:1132
+  ref_fingerprint: 319c48cae4ec45084ee2296b6d0e0460d0d27a40
   variant_used: Action=Cross
   instance_count: 2
   visible_instances: 0
-  resolved: false
-  external_location: 'page: AI Metdata'
-  same_named_library_component: actionables
+  resolved: true
+  target_id: actionables
+  rewired_from:
+    node_id: 329:2095
+    fingerprint: 4b6a4ae9a8d5c00c90119bb74803d60125416864
+    location: 'page: AI Metdata'
 - references: Primary cta
   ref_node_id: 248:4940
   ref_fingerprint: 13d9bcf56d34b8f5859397f76b4787da65b4f6f8
@@ -220,9 +223,7 @@ authored_metadata: |
 visual_values:
   source: figma_mcp
   extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
-    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
   tree:
     id: 2097:1930
     name: Modal card
@@ -377,12 +378,13 @@ visual_values:
               h: 36
               visible: false
               instance_of:
-                id: 368:7766
-                name: Action=Cross
-                key: 5c5c76572e00d0364cfdb9c1034d5e90c6c1afb4
+                id: 2031:1132
+                name: Actionables
+                key: 319c48cae4ec45084ee2296b6d0e0460d0d27a40
                 set:
-                  id: 329:2095
+                  id: 2031:1132
                   name: Actionables
+                rewired_from: 329:2095
               props:
                 Action: Cross
           - id: 2097:1944
@@ -744,12 +746,13 @@ visual_values:
           h: 36
           visible: false
           instance_of:
-            id: 368:7766
-            name: Action=Cross
-            key: 5c5c76572e00d0364cfdb9c1034d5e90c6c1afb4
+            id: 2031:1132
+            name: Actionables
+            key: 319c48cae4ec45084ee2296b6d0e0460d0d27a40
             set:
-              id: 329:2095
+              id: 2031:1132
               name: Actionables
+            rewired_from: 329:2095
           props:
             Action: Cross
       - id: 2097:1965
@@ -780,9 +783,7 @@ visual_values:
           topRightRadius: Radius/Card
           bottomLeftRadius: Radius/Card
           bottomRightRadius: Radius/Card
-        note: '6 download rows: each row = label text (Content/Medium, text/secondary) + count ''3/7''
-          (Roboto Mono Regular 14, text/secondary) + 20x20 progress indicator frame (radius 60.83), rows
-          gap 12 (Gaps/small gap)'
+        note: '6 download rows: each row = label text (Content/Medium, text/secondary) + count ''3/7'' (Roboto Mono Regular 14, text/secondary) + 20x20 progress indicator frame (radius 60.83), rows gap 12 (Gaps/small gap)'
       - id: 2097:2010
         name: Primary cta
         type: INSTANCE
