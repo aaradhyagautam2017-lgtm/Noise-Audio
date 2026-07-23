@@ -100,7 +100,7 @@ GRAPH_JS = r"""
   var link = function (n) { return bundled ? '#/components/' + n.id : n.dashboard; };
   var goTo = function (n) { if (bundled) { location.hash = link(n); } else { location.href = link(n); } };
 
-  var TYPE_COLOR = { atom: '#1c8a4c', molecule: '#b6732b', organism: '#c42e2e', 'complex-organism': '#7a1616' };
+  var TYPE_COLOR = { atom: '#1c7a45', molecule: '#9c6a1f', organism: '#b3261e', 'complex-organism': '#6b1414' };
   // concentric bands, atoms innermost growing out to molecules then organisms — like Obsidian's
   // force graph, but biased into layers so the taxonomy stays legible at a glance.
   var BAND = { atoms: [0, 165], molecules: [165, 280], organisms: [280, 410] };
@@ -227,7 +227,7 @@ GRAPH_JS = r"""
   }
   var defs = el('defs', {});
   var arrow = el('marker', { id: 'og-arrow', viewBox: '0 0 8 8', refX: 7, refY: 4, markerWidth: 6, markerHeight: 6, orient: 'auto' }, defs);
-  el('path', { d: 'M0,0 L8,4 L0,8 z', fill: '#8a8a8a' }, arrow);
+  el('path', { d: 'M0,0 L8,4 L0,8 z', fill: '#7a7a7a' }, arrow);
 
   var viewport = el('g', { id: 'og-viewport' });
   var edgeLayer = el('g', { class: 'og-edges' }, viewport);
@@ -440,29 +440,30 @@ GRAPH_JS = r"""
 GRAPH_CSS = """
 .ograph{width:100%;height:100%;display:block;touch-action:none;user-select:none}
 .og-toolbar{position:absolute;top:20px;right:20px;display:flex;flex-direction:column;gap:6px;z-index:2}
-.og-toolbar button{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.06)}
-.og-toolbar button:hover{border-color:var(--ink3)}
-.og-hint{position:absolute;left:20px;bottom:16px;font-size:11.5px;color:var(--ink3);background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:4px 12px;z-index:2}
+.og-toolbar button{width:30px;height:30px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.06);transition:border-color .15s,transform .1s}
+.og-toolbar button:hover{border-color:var(--blue);color:var(--blue)}
+.og-toolbar button:active{transform:scale(.9)}
+.og-hint{position:absolute;left:20px;bottom:16px;font-size:11.5px;color:var(--ink3);background:var(--panel);border:1px solid var(--line);border-radius:var(--r-pill);padding:4px 12px;z-index:2;font-family:var(--font-text)}
 .og-node{cursor:pointer}
 .og-node.dimmed{opacity:.15}
-.og-dot{stroke:#fff;stroke-width:2;transition:opacity .12s}
-.og-dot-ghost{fill:#fff7e8;stroke:#c42e2e;stroke-dasharray:2 2;r:5}
-.og-label{font-size:11px;fill:var(--ink);opacity:var(--og-label-op,1);transition:opacity .15s,font-size .15s;pointer-events:none}
-.og-label-ghost{fill:#9e1e1e;font-size:10px}
+.og-dot{stroke:var(--panel);stroke-width:2;transition:opacity .12s}
+.og-dot-ghost{fill:var(--warn-bg);stroke:var(--organism);stroke-dasharray:2 2;r:5}
+.og-label{font-size:11px;fill:var(--ink);opacity:var(--og-label-op,1);transition:opacity .15s,font-size .15s;pointer-events:none;font-family:var(--font-text)}
+.og-label-ghost{fill:var(--organism);font-size:10px}
 .og-edge{stroke-width:1.3;transition:opacity .12s,stroke-width .12s}
-.og-e-structural{stroke:#8a8a8a;opacity:.55}
-.og-e-behavioral{stroke:#8a38f5;stroke-dasharray:5 4;opacity:.4}
-.og-e-dangling{stroke:#c42e2e;stroke-dasharray:2 4;stroke-width:1.6;opacity:.6}
+.og-e-structural{stroke:var(--ink3);opacity:.5}
+.og-e-behavioral{stroke:var(--plum);stroke-dasharray:5 4;opacity:.4}
+.og-e-dangling{stroke:var(--organism);stroke-dasharray:2 4;stroke-width:1.6;opacity:.6}
 .og-edge.dimmed{opacity:.04}
 .og-edge.hot{opacity:1;stroke-width:2.2}
-.legend{display:flex;gap:18px;flex-wrap:wrap;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0;font-size:12.5px}
+.legend{display:flex;gap:18px;flex-wrap:wrap;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:10px 16px;margin:12px 0;font-size:12.5px}
 .legend .sw{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-2px;margin-right:5px}
-.legend .ln{display:inline-block;width:26px;height:0;border-top:2px solid #8a8a8a;vertical-align:3px;margin-right:5px}
-.legend .ln.dash{border-top-style:dashed;border-color:#8a38f5}
-.legend .ln.bad{border-top-style:dotted;border-color:#c42e2e}
+.legend .ln{display:inline-block;width:26px;height:0;border-top:2px solid var(--ink3);vertical-align:3px;margin-right:5px}
+.legend .ln.dash{border-top-style:dashed;border-color:var(--plum)}
+.legend .ln.bad{border-top-style:dotted;border-color:var(--organism)}
 .legend .grow{display:inline-flex;align-items:center;gap:3px}
-.legend .g1{width:8px;height:8px;border-radius:50%;background:#696969}
-.legend .g2{width:14px;height:14px;border-radius:50%;background:#696969}
+.legend .g1{width:8px;height:8px;border-radius:50%;background:var(--ink3)}
+.legend .g2{width:14px;height:14px;border-radius:50%;background:var(--ink3)}
 """
 
 def main():
@@ -490,10 +491,10 @@ def main():
     <code>id</code>, <code>node_id</code> and <code>figma_fingerprint</code>.</p>
     <div class="legend">
       <span><b>Legend</b></span>
-      <span><span class="sw" style="background:#1c8a4c"></span>atom</span>
-      <span><span class="sw" style="background:#b6732b"></span>molecule</span>
-      <span><span class="sw" style="background:#c42e2e"></span>organism</span>
-      <span><span class="sw" style="background:#7a1616"></span>complex-organism</span>
+      <span><span class="sw" style="background:#1c7a45"></span>atom</span>
+      <span><span class="sw" style="background:#9c6a1f"></span>molecule</span>
+      <span><span class="sw" style="background:#b3261e"></span>organism</span>
+      <span><span class="sw" style="background:#6b1414"></span>complex-organism</span>
       <span><span class="ln"></span>solid = is built from (part → whole)</span>
       <span><span class="ln dash"></span>dashed = behavioral relationship</span>
       {dangling_legend}
