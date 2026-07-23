@@ -555,27 +555,9 @@ def spacing_page():
     """
     return page("Spacing & radius", "spacing", body)
 
-def doc_badge(cid):
-    filled, total, err = doc_status[cid]
-    if err:
-        return '<span class="docbadge docbadge-low" title="authored_metadata did not parse as YAML">⚠ unparsed</span>'
-    cls = "docbadge" if filled >= 4 else "docbadge docbadge-low"
-    return f'<span class="{cls}" title="{filled} of {total} documentation fields present">{filled}/{total} docs</span>'
-
 # ----------------------------------------------------------------- overview + graph
 def overview_page():
     counts = registry["counts"]
-    cards = []
-    for gname, ids in group_defs:
-        items = "".join(
-            f'''<a class="card" href="components/{cid}.html">
-                 <div class="cardname">{E(components[cid]["name"].strip())}</div>
-                 <div class="dim">{E(cid)}</div>
-                 <div class="cardmeta"><span class="typebadge t-{E(reg_by_id[cid]["type"])}">{E(TYPE_BADGE.get(reg_by_id[cid]["type"]))}</span>
-                 {"<span class=warnbadge title=dangling-references>" + str(sum(1 for e in reg_by_id[cid].get("figma_instance_edges",[]) or [] if not e["resolved"] and not e.get("excluded"))) + "</span>" if any(not e["resolved"] and not e.get("excluded") for e in reg_by_id[cid].get("figma_instance_edges",[]) or []) else ""}
-                 {doc_badge(cid)}</div>
-               </a>''' for cid in ids)
-        cards.append(f'<h2>{gname} <span class="count">{len(ids)}</span></h2><div class="cardgrid">{items}</div>')
     warns = []
     if control_panel_missing:
         warns.append(warn("<b>CONTROL_PANEL.md is missing from the repo root.</b> It is designer-provided and was not supplied in Phase 1 (see INGESTION_REPORT.md §4)."))
@@ -696,8 +678,6 @@ component = yaml.safe_load(open(registry["components"][i]["file"]))
       {split_html}
       <div class="quicklinks"><a class="btn" href="graph.html">Open the component graph →</a></div>
     </section>
-
-    {''.join(cards)}
     """
     return page("Overview", "overview", body)
 
@@ -753,11 +733,6 @@ a{color:inherit}
 .t-atom{background:var(--atom)}.t-molecule{background:var(--molecule)}.t-organism{background:var(--organism)}.t-complex-organism{background:var(--complex)}
 .dim{color:var(--ink3);font-weight:400;font-size:12px}
 .rel{color:var(--ink3);font-size:12px;font-style:italic}
-.cardgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:22px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px;text-decoration:none;display:block;transition:border-color .12s}
-.card:hover{border-color:var(--blue)}
-.cardname{font-family:var(--font-display);font-weight:600;font-size:15px;letter-spacing:-0.006em}
-.cardmeta{margin-top:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .metasection{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 18px;margin:14px 0}
 .metasection h3{margin:0 0 10px;font-size:15px}
 .metaheader{margin-top:28px}
@@ -853,8 +828,6 @@ ul.rules li{margin:5px 0}
 .meter{height:7px;border-radius:var(--r-pill);background:var(--blue-tint);overflow:hidden}
 .meter-fill{height:100%;background:var(--blue);border-radius:var(--r-pill)}
 .codeblock{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;font-family:var(--font-mono);font-size:11.5px;line-height:1.6;overflow-x:auto;white-space:pre;margin:8px 0 14px}
-.docbadge{background:var(--line-soft);color:var(--ink3);border-radius:var(--r-pill);padding:0 6px;font-size:10px;font-variant-numeric:tabular-nums}
-.docbadge-low{background:var(--warn-bg);color:var(--warn-ink);border:1px solid var(--warn-line)}
 @media (prefers-color-scheme: dark){ /* dashboard chrome stays light-neutral by design; component tokens page shows both modes explicitly */ }
 """
 

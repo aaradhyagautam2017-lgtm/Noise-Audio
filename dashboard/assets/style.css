@@ -45,11 +45,6 @@ a{color:inherit}
 .t-atom{background:var(--atom)}.t-molecule{background:var(--molecule)}.t-organism{background:var(--organism)}.t-complex-organism{background:var(--complex)}
 .dim{color:var(--ink3);font-weight:400;font-size:12px}
 .rel{color:var(--ink3);font-size:12px;font-style:italic}
-.cardgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:22px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px;text-decoration:none;display:block;transition:border-color .12s}
-.card:hover{border-color:var(--blue)}
-.cardname{font-family:var(--font-display);font-weight:600;font-size:15px;letter-spacing:-0.006em}
-.cardmeta{margin-top:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .metasection{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 18px;margin:14px 0}
 .metasection h3{margin:0 0 10px;font-size:15px}
 .metaheader{margin-top:28px}
@@ -145,6 +140,4 @@ ul.rules li{margin:5px 0}
 .meter{height:7px;border-radius:var(--r-pill);background:var(--blue-tint);overflow:hidden}
 .meter-fill{height:100%;background:var(--blue);border-radius:var(--r-pill)}
 .codeblock{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;font-family:var(--font-mono);font-size:11.5px;line-height:1.6;overflow-x:auto;white-space:pre;margin:8px 0 14px}
-.docbadge{background:var(--line-soft);color:var(--ink3);border-radius:var(--r-pill);padding:0 6px;font-size:10px;font-variant-numeric:tabular-nums}
-.docbadge-low{background:var(--warn-bg);color:var(--warn-ink);border:1px solid var(--warn-line)}
 @media (prefers-color-scheme: dark){ /* dashboard chrome stays light-neutral by design; component tokens page shows both modes explicitly */ }
