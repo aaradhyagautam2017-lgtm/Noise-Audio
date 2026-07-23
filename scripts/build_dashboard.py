@@ -68,6 +68,58 @@ control_panel_missing = not os.path.exists(os.path.join(ROOT, "CONTROL_PANEL.md"
 
 E = lambda s: html.escape(str(s), quote=True)
 
+# ----------------------------------------------------------------- library-health stats
+# Everything below is read straight from the repo at build time (authored_metadata,
+# figma_instance_edges, structural/behavioral edges) — there is no separate "score";
+# these are the same facts the component pages already show, aggregated for the overview.
+CORE_DOC_FIELDS = [("purpose", "Purpose"), ("usage", "Usage"),
+                    ("design_intent", "Design intent"), ("anti_patterns", "Anti-patterns"),
+                    ("rules", "Rules")]
+
+def parse_authored_body(cid):
+    """Same parse the component page uses (render_metadata): the component's
+    authored_metadata is itself a YAML document, optionally nested under 'component'."""
+    try:
+        parsed = yaml.safe_load(components[cid].get("authored_metadata"))
+    except yaml.YAMLError:
+        return None, True
+    if not isinstance(parsed, dict):
+        return None, True
+    body = parsed.get("component", parsed)
+    return (body, False) if isinstance(body, dict) else (None, True)
+
+doc_status = {}                                    # cid -> (filled, total, parse_error)
+field_coverage = {k: 0 for k, _ in CORE_DOC_FIELDS}
+for cid in order:
+    body, err = parse_authored_body(cid)
+    if err:
+        doc_status[cid] = (0, len(CORE_DOC_FIELDS), True)
+        continue
+    filled = 0
+    for key, _ in CORE_DOC_FIELDS:
+        if body.get(key):
+            filled += 1
+            field_coverage[key] += 1
+    doc_status[cid] = (filled, len(CORE_DOC_FIELDS), False)
+doc_parse_errors = sum(1 for _, _, err in doc_status.values() if err)
+
+ref_resolved = ref_excluded = ref_dangling = 0
+for c in registry["components"]:
+    for e in (c.get("figma_instance_edges") or []):
+        if e.get("excluded"):
+            ref_excluded += 1
+        elif e.get("resolved"):
+            ref_resolved += 1
+        else:
+            ref_dangling += 1
+ref_total = ref_resolved + ref_excluded + ref_dangling
+
+total_structural = sum(len((c.get("structural_edges") or {}).get("uses", []) or [])
+                       for c in registry["components"])
+total_behavioral = sum(len(c.get("behavioral_edges") or []) for c in registry["components"])
+total_relationships = total_structural + total_behavioral
+avg_connections = (2 * total_relationships / len(order)) if order else 0
+
 # ----------------------------------------------------------------- shell
 def sidebar(prefix, active):
     def item(href, label, key, count=None, warn=0):
@@ -503,6 +555,13 @@ def spacing_page():
     """
     return page("Spacing & radius", "spacing", body)
 
+def doc_badge(cid):
+    filled, total, err = doc_status[cid]
+    if err:
+        return '<span class="docbadge docbadge-low" title="authored_metadata did not parse as YAML">⚠ unparsed</span>'
+    cls = "docbadge" if filled >= 4 else "docbadge docbadge-low"
+    return f'<span class="{cls}" title="{filled} of {total} documentation fields present">{filled}/{total} docs</span>'
+
 # ----------------------------------------------------------------- overview + graph
 def overview_page():
     counts = registry["counts"]
@@ -513,7 +572,8 @@ def overview_page():
                  <div class="cardname">{E(components[cid]["name"].strip())}</div>
                  <div class="dim">{E(cid)}</div>
                  <div class="cardmeta"><span class="typebadge t-{E(reg_by_id[cid]["type"])}">{E(TYPE_BADGE.get(reg_by_id[cid]["type"]))}</span>
-                 {"<span class=warnbadge title=dangling-references>" + str(sum(1 for e in reg_by_id[cid].get("figma_instance_edges",[]) or [] if not e["resolved"] and not e.get("excluded"))) + "</span>" if any(not e["resolved"] and not e.get("excluded") for e in reg_by_id[cid].get("figma_instance_edges",[]) or []) else ""}</div>
+                 {"<span class=warnbadge title=dangling-references>" + str(sum(1 for e in reg_by_id[cid].get("figma_instance_edges",[]) or [] if not e["resolved"] and not e.get("excluded"))) + "</span>" if any(not e["resolved"] and not e.get("excluded") for e in reg_by_id[cid].get("figma_instance_edges",[]) or []) else ""}
+                 {doc_badge(cid)}</div>
                </a>''' for cid in ids)
         cards.append(f'<h2>{gname} <span class="count">{len(ids)}</span></h2><div class="cardgrid">{items}</div>')
     warns = []
@@ -522,6 +582,45 @@ def overview_page():
     de = validation.get("dangling_figma_instance_edges", 0)
     if de:
         warns.append(warn(f"<b>{de} dangling Figma instance references</b> across the library — instances whose main component lives outside the ingested page. Flagged on each affected component page and catalogued in INGESTION_REPORT.md §5."))
+    if doc_parse_errors:
+        warns.append(warn(f"<b>{doc_parse_errors} component(s) have authored_metadata that fails to parse as YAML</b> — shown raw on their page instead of rendered sections."))
+
+    n_atoms, n_molecules = len(by_type.get("atom", [])), len(by_type.get("molecule", []))
+    n_organisms, n_complex = len(by_type.get("organism", [])), len(by_type.get("complex-organism", []))
+    n_total = len(order)
+    breakdown = [("Atoms", n_atoms, "var(--atom)"), ("Molecules", n_molecules, "var(--molecule)"),
+                 ("Organisms", n_organisms, "var(--organism)"), ("Complex organisms", n_complex, "var(--complex)")]
+    kpi_html = "".join(
+        f'<div class="kpi"><div class="kpi-value">{v}</div><div class="kpi-label">{E(label)}</div></div>'
+        for label, v, _ in breakdown)
+    propbar_html = "".join(
+        f'<div class="propbar-seg" style="flex:{max(v,1)};background:{color}" '
+        f'title="{E(label)} — {v} ({(v/n_total*100 if n_total else 0):.0f}%)"></div>'
+        for label, v, color in breakdown if v)
+    legend_html = "".join(
+        f'<span><span class="ov-sw" style="background:{color}"></span>{E(label)} <b>{v}</b></span>'
+        for label, v, color in breakdown if v)
+
+    meter_rows = sorted(((label, field_coverage[key], len(order)) for key, label in CORE_DOC_FIELDS),
+                        key=lambda r: -r[1])
+    meters_html = "".join(f'''
+      <div class="meterrow">
+        <div class="meterrow-top"><span class="meterrow-label">{E(label)}</span><span class="meterrow-frac">{n}/{total}</span></div>
+        <div class="meter"><div class="meter-fill" style="width:{(n/total*100 if total else 0):.1f}%"></div></div>
+      </div>''' for label, n, total in meter_rows)
+
+    ref_pct = (ref_resolved / ref_total * 100) if ref_total else 100
+    dangling_tile_cls = "kpi kpi-warn" if ref_dangling else "kpi"
+    split_html = ""
+    if total_relationships:
+        struct_pct = total_structural / total_relationships * 100
+        split_html = (f'<div class="propbar splitbar"><div class="propbar-seg" style="flex:{total_structural or 1};background:var(--ink3)" '
+                      f'title="Structural (is built from) — {total_structural}"></div>'
+                      f'<div class="propbar-seg" style="flex:{total_behavioral or 1};background:var(--plum)" '
+                      f'title="Behavioral — {total_behavioral}"></div></div>'
+                      f'<div class="ov-legend"><span><span class="ov-sw" style="background:var(--ink3)"></span>Structural (built from) <b>{total_structural}</b></span>'
+                      f'<span><span class="ov-sw" style="background:var(--plum)"></span>Behavioral <b>{total_behavioral}</b></span></div>')
+
     body = f"""
     <header class="landing">
       <h1>{E(registry["app"])} <span class="dim">Design Language System</span></h1>
@@ -534,14 +633,70 @@ def overview_page():
         <a class="btn" href="{E(registry["source"]["figma_url"])}">Figma source ↗</a>
       </div>
       <div class="pills">
-        <span class="pill">{counts["atoms"]} atoms</span>
-        <span class="pill">{counts["molecules"]} molecules</span>
-        <span class="pill">{counts["organisms"]} organisms</span>
         <span class="pill">{counts["token_sources"]} token source</span>
         <span class="pill">ingested {E(registry["generated"])}</span>
       </div>
     </header>
     {''.join(warns)}
+
+    <section class="metasection">
+      <h3>Library at a glance</h3>
+      <div class="hero"><div class="hero-value">{n_total}</div><div class="hero-label">components in the library</div></div>
+      <div class="kpirow">{kpi_html}</div>
+      <div class="propbar">{propbar_html}</div>
+      <div class="ov-legend">{legend_html}</div>
+    </section>
+
+    <section class="metasection">
+      <h3>How this library works</h3>
+      <p>Figma is the only source of truth. This repository (<code>registry.yaml</code> + <code>components/**.yaml</code>) is
+      an ingested, versioned mirror of it, and this dashboard is a rendered view of the repository — never a second source
+      of truth in either direction. To change a component, change it in Figma and re-run the ingestion; do not hand-edit
+      the generated HTML.</p>
+      <p><b>When to use what:</b> browse this dashboard to look up a component's Figma variants, rules and anti-patterns
+      before building a screen with it; read <a href="../registry.yaml">registry.yaml</a> or
+      <a href="graph.html">graph/graph.json</a> when you need the whole library's structure at once (composition,
+      usage counts, relationships); read a component's own <code>components/&lt;tier&gt;/&lt;id&gt;.yaml</code> for its
+      full authored governance.</p>
+      <p class="dim">Quickstart for an agent consuming this library programmatically:</p>
+      <pre class="codeblock">registry = yaml.safe_load(open("registry.yaml"))["registry"]
+component = yaml.safe_load(open(registry["components"][i]["file"]))
+# every component exposes: id, node_id (Figma in-file locator),
+# figma_fingerprint (stable component key), structural_edges.uses,
+# behavioral_edges, authored_metadata (usage / design_intent / rules / anti_patterns)</pre>
+      <div class="quicklinks">
+        <a class="btn" href="../AGENT.md">AGENT.md</a>
+        <a class="btn" href="../CONTROL_PANEL.md">CONTROL_PANEL.md</a>
+        <a class="btn" href="../INGESTION_REPORT.md">INGESTION_REPORT.md</a>
+      </div>
+    </section>
+
+    <section class="metasection">
+      <h3>System understanding</h3>
+      <p class="dim">What the library actually knows about itself right now — computed fresh from the repo on every
+      build, not a fixed score.</p>
+
+      <h4 class="subhead">Documentation coverage <span class="dim">— components with each field authored</span></h4>
+      {meters_html}
+
+      <h4 class="subhead">Reference integrity <span class="dim">— every Figma instance reference, reviewed</span></h4>
+      <div class="kpirow">
+        <div class="kpi"><div class="kpi-value">{ref_resolved}</div><div class="kpi-label">Resolved to a real in-page component</div></div>
+        <div class="kpi"><div class="kpi-value">{ref_excluded}</div><div class="kpi-label">Reviewed and confirmed not a dependency</div></div>
+        <div class="{dangling_tile_cls}"><div class="kpi-value">{ref_dangling}</div><div class="kpi-label">Still dangling</div></div>
+      </div>
+      <p class="dim">{ref_total} Figma instance references tracked across the library; {ref_pct:.0f}% resolve to a
+      component that exists in the ingested page (see <a href="../INGESTION_REPORT.md">INGESTION_REPORT.md §5</a>).</p>
+
+      <h4 class="subhead">Relationship density <span class="dim">— how much of the graph is actually wired</span></h4>
+      <div class="kpirow">
+        <div class="kpi"><div class="kpi-value">{total_relationships}</div><div class="kpi-label">Relationships mapped</div></div>
+        <div class="kpi"><div class="kpi-value">{avg_connections:.1f}</div><div class="kpi-label">Avg. connections per component</div></div>
+      </div>
+      {split_html}
+      <div class="quicklinks"><a class="btn" href="graph.html">Open the component graph →</a></div>
+    </section>
+
     {''.join(cards)}
     """
     return page("Overview", "overview", body)
@@ -563,7 +718,7 @@ STYLE = """
 :root{--bg:#f5f5f7;--panel:#ffffff;--pearl:#fafafc;--ink:#1d1d1f;--ink2:#333333;--ink3:#7a7a7a;--line:#e0e0e0;--line-soft:#f0f0f0;
 --accent:#1d1d1f;--blue:#0066cc;--blue-focus:#0071e3;--blue-dark:#2997ff;
 --warn-bg:#fff9ec;--warn-line:#c9861f;--warn-ink:#7a5210;
---atom:#1c7a45;--molecule:#9c6a1f;--organism:#b3261e;--complex:#6b1414;--plum:#7d6a9e;
+--atom:#1c7a45;--molecule:#9c6a1f;--organism:#b3261e;--complex:#6b1414;--plum:#7d6a9e;--blue-tint:#d8e9fb;
 --font-display:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter',system-ui,sans-serif;
 --font-text:-apple-system,BlinkMacSystemFont,'SF Pro Text','Inter',system-ui,sans-serif;
 --font-mono:ui-monospace,'SF Mono','Roboto Mono',monospace;
@@ -602,7 +757,7 @@ a{color:inherit}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px;text-decoration:none;display:block;transition:border-color .12s}
 .card:hover{border-color:var(--blue)}
 .cardname{font-family:var(--font-display);font-weight:600;font-size:15px;letter-spacing:-0.006em}
-.cardmeta{margin-top:8px;display:flex;gap:6px;align-items:center}
+.cardmeta{margin-top:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 .metasection{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 18px;margin:14px 0}
 .metasection h3{margin:0 0 10px;font-size:15px}
 .metaheader{margin-top:28px}
@@ -672,6 +827,34 @@ ul.rules li{margin:5px 0}
 .g-label{font-size:10.5px;text-anchor:middle;fill:var(--ink)}
 .g-edge{fill:none;stroke:#b5b5b5;stroke-width:1.2;opacity:.75}
 .g-beh{stroke-dasharray:4 3;stroke:var(--plum);opacity:.55}
+/* overview — library-health dashboard */
+.subhead{font-size:13px;font-weight:600;color:var(--ink2);margin:22px 0 10px;letter-spacing:0}
+.subhead:first-of-type{margin-top:6px}
+.subhead .dim{font-weight:400}
+.hero{margin:4px 0 14px}
+.hero-value{font-family:var(--font-display);font-size:48px;font-weight:600;letter-spacing:-0.02em;line-height:1}
+.hero-label{color:var(--ink3);font-size:13px;margin-top:2px}
+.kpirow{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.kpi{background:var(--pearl);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 16px;flex:1;min-width:150px}
+.kpi-value{font-family:var(--font-display);font-size:26px;font-weight:600;letter-spacing:-0.01em;font-variant-numeric:tabular-nums}
+.kpi-label{color:var(--ink3);font-size:12px;margin-top:2px;line-height:1.35}
+.kpi-warn{background:var(--warn-bg);border-color:var(--warn-line)}
+.kpi-warn .kpi-value{color:var(--warn-ink)}
+.propbar{display:flex;gap:2px;height:20px;border-radius:var(--r-pill);overflow:hidden;background:var(--line-soft);margin:4px 0 10px}
+.propbar-seg{min-width:3px}
+.propbar.splitbar{height:10px;margin-top:6px}
+.ov-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--ink2);margin-bottom:4px}
+.ov-legend .ov-sw{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:-1px;margin-right:6px}
+.ov-legend b{color:var(--ink);font-weight:600;margin-left:3px;font-variant-numeric:tabular-nums}
+.meterrow{margin:11px 0}
+.meterrow-top{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px}
+.meterrow-label{color:var(--ink2)}
+.meterrow-frac{color:var(--ink3);font-variant-numeric:tabular-nums}
+.meter{height:7px;border-radius:var(--r-pill);background:var(--blue-tint);overflow:hidden}
+.meter-fill{height:100%;background:var(--blue);border-radius:var(--r-pill)}
+.codeblock{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;font-family:var(--font-mono);font-size:11.5px;line-height:1.6;overflow-x:auto;white-space:pre;margin:8px 0 14px}
+.docbadge{background:var(--line-soft);color:var(--ink3);border-radius:var(--r-pill);padding:0 6px;font-size:10px;font-variant-numeric:tabular-nums}
+.docbadge-low{background:var(--warn-bg);color:var(--warn-ink);border:1px solid var(--warn-line)}
 @media (prefers-color-scheme: dark){ /* dashboard chrome stays light-neutral by design; component tokens page shows both modes explicitly */ }
 """
 
