@@ -438,6 +438,9 @@ GRAPH_JS = r"""
 """
 
 GRAPH_CSS = """
+.graphwrap{display:flex;align-items:stretch;gap:0}
+.graphstage{flex:1;min-width:0;position:relative;height:100%}
+#graph-mount{width:100%;height:100%}
 .ograph{width:100%;height:100%;display:block;touch-action:none;user-select:none}
 .og-toolbar{position:absolute;top:20px;right:20px;display:flex;flex-direction:column;gap:6px;z-index:2}
 .og-toolbar button{width:30px;height:30px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.06);transition:border-color .15s,transform .1s}
@@ -464,6 +467,11 @@ GRAPH_CSS = """
 .legend .grow{display:inline-flex;align-items:center;gap:3px}
 .legend .g1{width:8px;height:8px;border-radius:50%;background:var(--ink3)}
 .legend .g2{width:14px;height:14px;border-radius:50%;background:var(--ink3)}
+.graph-legend{flex:none;width:180px;flex-direction:column;align-items:flex-start;flex-wrap:nowrap;gap:12px;
+  background:transparent;border:none;border-radius:0;margin:0;padding:6px 0 6px 18px;
+  border-left:1px solid var(--line)}
+.graph-legend .legend-title{font-family:var(--font-display);font-weight:600;font-size:12.5px;color:var(--ink)}
+.graph-desc{margin:14px 2px 0}
 """
 
 def main():
@@ -482,33 +490,35 @@ def main():
     They are shown as broken, never repaired (details: INGESTION_REPORT.md §5).</p>""") if n_dangling else ""
     body = f"""
     <header class="pagehead"><h1>Component graph</h1></header>
-    <p class="dim">The canonical wiring of the library, generated from <code>registry.yaml</code> and laid out
+    <div class="graphwrap">
+      <div class="graphstage">
+        <div id="graph-mount"></div>
+        <div class="og-toolbar">
+          <button type="button" data-zoom="in" title="Zoom in">+</button>
+          <button type="button" data-zoom="out" title="Zoom out">−</button>
+          <button type="button" data-zoom="reset" title="Reset view">⤢</button>
+        </div>
+        <div class="og-hint">Scroll to zoom · drag canvas to pan · drag a node to reposition</div>
+      </div>
+      <aside class="legend graph-legend">
+        <span class="legend-title">Legend</span>
+        <span><span class="sw" style="background:#1c7a45"></span>atom</span>
+        <span><span class="sw" style="background:#9c6a1f"></span>molecule</span>
+        <span><span class="sw" style="background:#b3261e"></span>organism</span>
+        <span><span class="sw" style="background:#6b1414"></span>complex-organism</span>
+        <span><span class="ln"></span>solid = is built from (part → whole)</span>
+        <span><span class="ln dash"></span>dashed = behavioral relationship</span>
+        {dangling_legend}
+        <span class="grow"><span class="g1"></span><span class="g2"></span> size = usage count</span>
+      </aside>
+    </div>
+    <p class="dim graph-desc">The canonical wiring of the library, generated from <code>registry.yaml</code> and laid out
     live by a force simulation — atoms cluster at the center, molecules and organisms grow outward as they
     compose from what's inside them, exactly like the underlying <code>used_atoms</code>/<code>used_molecules</code>
     relationships. Hover a component to spotlight everything it is wired to; drag a node to reposition it;
     scroll or use the controls to zoom; click a node to open its dashboard page. The identical data is queryable
     by the agent at <code>graph/graph.json</code> (and embedded in this page), with every node exposing
     <code>id</code>, <code>node_id</code> and <code>figma_fingerprint</code>.</p>
-    <div class="legend">
-      <span><b>Legend</b></span>
-      <span><span class="sw" style="background:#1c7a45"></span>atom</span>
-      <span><span class="sw" style="background:#9c6a1f"></span>molecule</span>
-      <span><span class="sw" style="background:#b3261e"></span>organism</span>
-      <span><span class="sw" style="background:#6b1414"></span>complex-organism</span>
-      <span><span class="ln"></span>solid = is built from (part → whole)</span>
-      <span><span class="ln dash"></span>dashed = behavioral relationship</span>
-      {dangling_legend}
-      <span class="grow"><span class="g1"></span><span class="g2"></span> size = usage count</span>
-    </div>
-    <div class="graphwrap">
-      <div id="graph-mount"></div>
-      <div class="og-toolbar">
-        <button type="button" data-zoom="in" title="Zoom in">+</button>
-        <button type="button" data-zoom="out" title="Zoom out">−</button>
-        <button type="button" data-zoom="reset" title="Reset view">⤢</button>
-      </div>
-      <div class="og-hint">Scroll to zoom · drag canvas to pan · drag a node to reposition</div>
-    </div>
     {dangling_note}
     <style>{GRAPH_CSS}</style>
     <script type="application/json" id="graph-data">{payload}</script>
