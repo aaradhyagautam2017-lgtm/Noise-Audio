@@ -546,9 +546,10 @@ GRAPH_CSS = """
 .og-edge.hot{opacity:1;stroke-width:2.2}
 .og-settings-btn{font-size:14px}
 .og-settings-btn[aria-expanded="true"]{border-color:var(--blue);color:var(--blue)}
-.og-settings-panel{position:absolute;top:166px;right:20px;width:210px;max-height:calc(100% - 186px);overflow-y:auto;
+.og-settings-panel{position:absolute;top:166px;right:20px;width:210px;max-height:calc(100% - 186px);overflow-y:auto;scrollbar-width:none;
   background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;
   box-shadow:0 6px 20px rgba(0,0,0,.16);z-index:3;font-size:12.5px}
+.og-settings-panel::-webkit-scrollbar{display:none}
 .og-settings-panel[hidden]{display:none}
 .og-settings-title{font-family:var(--font-display);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);margin:14px 0 6px}
 .og-settings-title:first-child{margin-top:0}

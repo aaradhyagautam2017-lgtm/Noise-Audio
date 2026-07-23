@@ -719,7 +719,8 @@ body{margin:0;font-family:var(--font-text);background:var(--bg);color:var(--ink)
 h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;letter-spacing:-0.01em}
 a{color:inherit}
 .layout{display:flex;min-height:100vh}
-.sidebar{width:264px;flex:none;background:var(--panel);border-right:1px solid var(--line);padding:14px 10px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar{width:264px;flex:none;background:var(--panel);border-right:1px solid var(--line);padding:14px 10px;position:sticky;top:0;height:100vh;overflow-y:auto;scrollbar-width:none}
+.sidebar::-webkit-scrollbar{display:none}
 .appswitcher{display:flex;gap:8px;align-items:center;margin-bottom:14px}
 .applogo{width:30px;height:30px;border-radius:var(--r-sm);background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:600}
 .appswitcher select{flex:1;padding:6px 8px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font:inherit}
@@ -778,13 +779,15 @@ ul.rules li{margin:5px 0}
 .linklist a,.comp-block a{color:var(--blue)}
 .rawyaml{margin-top:14px}
 .rawyaml summary{cursor:pointer;color:var(--ink2);font-size:13px}
-.rawyaml pre{background:#1d1d1f;color:#f5f5f7;border-radius:var(--r-lg);padding:14px;overflow:auto;font-size:12px;font-family:var(--font-mono)}
+.rawyaml pre{background:#1d1d1f;color:#f5f5f7;border-radius:var(--r-lg);padding:14px;overflow:auto;font-size:12px;font-family:var(--font-mono);scrollbar-width:none}
+.rawyaml pre::-webkit-scrollbar{display:none}
 .footer{margin-top:36px;padding-top:12px;border-top:1px solid var(--line);color:var(--ink3);font-size:12px}
 /* preview -- the ONE place a shadow is allowed, standing in for Apple's product-photography shadow */
 .pv-caption{color:var(--ink3);font-size:12px;margin:0 0 10px}
 .pv-block{margin:10px 0 18px}
 .pv-variantname{font-size:12.5px;font-weight:600;margin-bottom:6px}
-.pv-stage{background:repeating-conic-gradient(#f4f4f5 0 25%,#fafafa 0 50%) 0 0/16px 16px;border:1px solid var(--line);border-radius:var(--r-md);padding:16px;overflow-x:auto}
+.pv-stage{background:repeating-conic-gradient(#f4f4f5 0 25%,#fafafa 0 50%) 0 0/16px 16px;border:1px solid var(--line);border-radius:var(--r-md);padding:16px;overflow-x:auto;scrollbar-width:none}
+.pv-stage::-webkit-scrollbar{display:none}
 .pv-scale{transform-origin:top left}
 .pv-frame{flex:none}
 .pv-frame[data-stack="1"]{display:flex;align-items:center;justify-content:center}
@@ -838,7 +841,8 @@ ul.rules li{margin:5px 0}
 .meterrow-frac{color:var(--ink3);font-variant-numeric:tabular-nums}
 .meter{height:7px;border-radius:var(--r-pill);background:var(--blue-tint);overflow:hidden}
 .meter-fill{height:100%;background:var(--blue);border-radius:var(--r-pill)}
-.codeblock{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;font-family:var(--font-mono);font-size:11.5px;line-height:1.6;overflow-x:auto;white-space:pre;margin:8px 0 14px}
+.codeblock{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;font-family:var(--font-mono);font-size:11.5px;line-height:1.6;overflow-x:auto;white-space:pre;margin:8px 0 14px;scrollbar-width:none}
+.codeblock::-webkit-scrollbar{display:none}
 .themebtn{width:30px;height:30px;flex:none;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--bg);color:var(--ink2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;transition:border-color .12s,transform .1s}
 .themebtn:hover{border-color:var(--blue);color:var(--blue)}
 .themebtn:active{transform:scale(.9)}
