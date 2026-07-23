@@ -69,6 +69,9 @@ structural_references:
   instance_count: 5
   resolved: false
   external_location: orphaned (detached from any page)
+  excluded: true
+  excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+  excluded_at: '2026-07-22'
 - references: system/Downloading Success
   ref_node_id: 2007:399
   ref_fingerprint: 0c4bf18b77e38a794ff1d82c7d91d582f799a242
@@ -76,6 +79,9 @@ structural_references:
   instance_count: 2
   resolved: false
   external_location: orphaned (detached from any page)
+  excluded: true
+  excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+  excluded_at: '2026-07-22'
 - references: 'Transcribe time chips '
   ref_node_id: 2007:416
   ref_fingerprint: 2dd26abd96a76394a0bc3171dd2e22b2c59e37f1
@@ -83,6 +89,9 @@ structural_references:
   instance_count: 1
   resolved: false
   external_location: orphaned (detached from any page)
+  excluded: true
+  excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+  excluded_at: '2026-07-22'
 - references: system/cross
   ref_node_id: 2031:1201
   ref_fingerprint: 4630976d22073248745eb76ebe8a4c2e55d2c1ef

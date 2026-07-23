@@ -31,6 +31,9 @@ structural_references:
   resolved: false
   external_location: 'page: 06 Building Blocks'
   same_named_library_component: action-sheet
+  excluded: true
+  excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+  excluded_at: '2026-07-22'
 - references: Home Indicator
   ref_node_id: 386:1835
   ref_fingerprint: 738983691dede508931f06f03be9edb515cd19e0
@@ -38,6 +41,9 @@ structural_references:
   instance_count: 1
   resolved: false
   external_location: 'page: 06 Building Blocks'
+  excluded: true
+  excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+  excluded_at: '2026-07-22'
 authored_metadata: |
   component:
     id: action-sheet

@@ -113,9 +113,43 @@ in-page twin. Node ids below are the in-page targets now stored as `target_id`:
 | `action-sheet`, `modal-sheet` | Status bar `374:7867` | `status-bar` `2007:775` |
 
 Result: **32 → 15 dangling** Figma instance edges (`registry.yaml`
-`validation.dangling_figma_instance_edges: 15`). All previews for the rewired components now
-resolve their nested instances to in-page library components; only genuine §5b externals still
-render as ghost markers.
+`validation.dangling_figma_instance_edges: 15`, after §5c). All previews for the rewired
+components now resolve their nested instances to in-page library components.
+
+### 5d. Delinking applied (2026-07-22) — the remaining 15 confirmed non-dependencies
+
+> **Designer confirmation:** metadata was authored for only a subset of components; the raw
+> Figma instance wiring on several components incidentally picked up nodes on “04 Icons” / “06
+> Building Blocks” / orphaned nodes that are **not real library dependencies** — an artifact of
+> incomplete authoring, not intentional design relationships. Example: `image-asset-placeholder`’s
+> “Profile icon” reference was “forcefully picked” from page 6 and was never meant to be part of
+> the composition.
+
+All 15 §5b entries were marked `excluded: true` (with `excluded_reason` and `excluded_at`) in
+both `registry.yaml` `figma_instance_edges` and each component’s `structural_references` —
+**never deleted**, so the audit trail (what Figma actually wired, and why it was ruled out)
+stays intact. This is distinct from §5c: rewiring repointed a reference at a real in-page twin;
+excluding records that a reference was never a real dependency in the first place.
+
+| Component | Excluded reference(s) |
+|---|---|
+| `l1-home-page-navigation` | system/Selected device, Device option 1, Device adder, Downloading Success, Store (page “04 Icons”) |
+| `action-sheet` | Action Sheet `420:1299`, Home Indicator `386:1835` (page “06 Building Blocks”) |
+| `image-asset-placeholder` | Profile icon `460:985` (page “06 Building Blocks”) |
+| `modal-sheet` | Modal `786:4487`, Home Indicator `386:1835` (page “06 Building Blocks”) |
+| `master-card` | Circled icon `301:20193` (page “06 Building Blocks”) |
+| `l1-inner-page-navigation` | system/Restart, system/Downloading Success, Transcribe time chips (orphaned) |
+| `action-card` | Bottomsheet heading `414:3175` (page “06 Building Blocks”) |
+
+`scripts/build_dashboard.py` and `scripts/build_graph.py` were updated so `excluded` edges are
+never counted toward `dangling_figma_instance_edges`, never rendered as a red/dangling graph
+edge, and never shown as a component warning badge — they instead render as a calm informational
+note on the affected component's dashboard page. `visual_values` (the raw Figma extraction) was
+**not modified** — the icon art still renders in the schematic preview exactly as it exists in
+Figma; only its status as a *library dependency* changed.
+
+Result: **`validation.dangling_figma_instance_edges: 0`**, **`excluded_figma_instance_edges: 15`**.
+The component graph now renders with zero red/dangling edges.
 
 ## 6. Design ↔ metadata drift (variant axes vs authored YAML)
 
@@ -173,13 +207,16 @@ render as ghost markers.
 
 Repository built: 26 component files (both layers: verbatim authored metadata + extracted
 visual values, every one carrying `id`, `name`, `type`, `node_id`, `figma_fingerprint`),
-3 token catalogs, `css/tokens.css`, validated `registry.yaml` (0 unresolved metadata edges,
-originally 32 dangling Figma instance edges catalogued — **now 15 after the 2026-07-22 rewiring
-pass, §5c**), `AGENT.md` placed, `screens/` empty.
-No screens, dashboards, or graphs were composed during ingestion.
+3 token catalogs, `css/tokens.css`, validated `registry.yaml` (0 unresolved metadata edges;
+originally 32 dangling Figma instance edges catalogued — 17 rewired to in-page twins
+(2026-07-22, §5c) and the remaining 15 confirmed by the designer as non-dependencies and
+excluded (2026-07-22, §5d) — **`dangling_figma_instance_edges: 0`**), `AGENT.md` placed,
+`screens/` empty. No screens, dashboards, or graphs were composed during ingestion.
 
 **Open items for the designer:** ~~provide `CONTROL_PANEL.md`~~ (added 2026-07-22);
-~~relink organism internals to the library copies (§5a)~~ (done 2026-07-22, §5c); confirm the
-`image-asset-placeholder` n/L naming; decide whether to move the remaining §5b off-page
-dependencies (15 decorative icons / off-page composites with no in-page twin) onto the library
-page; review the `status-bar` duplicate `rules:` keys and the `button/secondary/pressed` dark value.
+~~relink organism internals to the library copies (§5a)~~ (done 2026-07-22, §5c);
+~~review the 15 off-page references (§5b)~~ (confirmed non-dependencies and excluded,
+2026-07-22, §5d); confirm the `image-asset-placeholder` n/L naming; icon vector art (chevron,
+cross, checkbox/radio glyphs) still renders as schematic placeholders pending real SVGs — the
+designer will supply these directly; review the `status-bar` duplicate `rules:` keys and the
+`button/secondary/pressed` dark value.

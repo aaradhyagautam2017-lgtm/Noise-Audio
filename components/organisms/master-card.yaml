@@ -19,6 +19,9 @@ structural_references:
   instance_count: 1
   resolved: false
   external_location: 'page: 06 Building Blocks'
+  excluded: true
+  excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+  excluded_at: '2026-07-22'
 - references: 'Heading-content component '
   ref_node_id: 301:20202
   ref_fingerprint: 18df4dd5982a7e913f345ea9459801fb472a255b

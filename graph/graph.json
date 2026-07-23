@@ -384,51 +384,6 @@
    "relation": "sibling"
   },
   {
-   "type": "dangling",
-   "source": "l1-home-page-navigation",
-   "ref_name": "system/Selected device",
-   "ref_node_id": "231:26268",
-   "external_location": "page: 04 Icons",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-home-page-navigation",
-   "ref_name": "system/Device option 1",
-   "ref_node_id": "231:26277",
-   "external_location": "page: 04 Icons",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-home-page-navigation",
-   "ref_name": "system/Device adder",
-   "ref_node_id": "231:26218",
-   "external_location": "page: 04 Icons",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-home-page-navigation",
-   "ref_name": "system/Downloading Success",
-   "ref_node_id": "231:26254",
-   "external_location": "page: 04 Icons",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-home-page-navigation",
-   "ref_name": "system/Store",
-   "ref_node_id": "231:26234",
-   "external_location": "page: 04 Icons",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
    "type": "structural",
    "source": "primary-cta-button",
    "target": "modal-card",
@@ -483,33 +438,6 @@
    "relation": "renders-on-top"
   },
   {
-   "type": "dangling",
-   "source": "action-sheet",
-   "ref_name": "Action Sheet",
-   "ref_node_id": "420:1299",
-   "external_location": "page: 06 Building Blocks",
-   "same_named_library_component": "action-sheet",
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "action-sheet",
-   "ref_name": "Home Indicator",
-   "ref_node_id": "386:1835",
-   "external_location": "page: 06 Building Blocks",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "image-asset-placeholder",
-   "ref_name": "Profile icon",
-   "ref_node_id": "460:985",
-   "external_location": "page: 06 Building Blocks",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
    "type": "structural",
    "source": "modal-card",
    "target": "modal-sheet",
@@ -544,24 +472,6 @@
    "source": "modal-sheet",
    "target": "status-bar",
    "relation": "renders-on-top"
-  },
-  {
-   "type": "dangling",
-   "source": "modal-sheet",
-   "ref_name": "Modal",
-   "ref_node_id": "786:4487",
-   "external_location": "page: 06 Building Blocks",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "modal-sheet",
-   "ref_name": "Home Indicator",
-   "ref_node_id": "386:1835",
-   "external_location": "page: 06 Building Blocks",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
   },
   {
    "type": "behavioral",
@@ -612,15 +522,6 @@
    "meaning": "master-card is built from heading-content-component"
   },
   {
-   "type": "dangling",
-   "source": "master-card",
-   "ref_name": "Circled icon",
-   "ref_node_id": "301:20193",
-   "external_location": "page: 06 Building Blocks",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
    "type": "structural",
    "source": "actionables",
    "target": "checkbox-card",
@@ -663,33 +564,6 @@
    "relation": "shares-scroll-state"
   },
   {
-   "type": "dangling",
-   "source": "l1-inner-page-navigation",
-   "ref_name": "system/Restart",
-   "ref_node_id": "2007:405",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-inner-page-navigation",
-   "ref_name": "system/Downloading Success",
-   "ref_node_id": "2007:399",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-inner-page-navigation",
-   "ref_name": "Transcribe time chips ",
-   "ref_node_id": "2007:416",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
    "type": "structural",
    "source": "cross",
    "target": "action-card",
@@ -730,15 +604,6 @@
    "source": "action-card",
    "target": "modal-card",
    "relation": "counterpart"
-  },
-  {
-   "type": "dangling",
-   "source": "action-card",
-   "ref_name": "Bottomsheet heading",
-   "ref_node_id": "414:3175",
-   "external_location": "page: 06 Building Blocks",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
   }
  ]
 }

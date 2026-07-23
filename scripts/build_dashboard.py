@@ -95,7 +95,7 @@ def sidebar(prefix, active):
     for gname, ids in group_defs:
         parts.append(f'<div class="navgroup">{gname} <span class="count">{len(ids)}</span></div>')
         for cid in ids:
-            dangling = sum(1 for e in reg_by_id[cid].get("figma_instance_edges", []) or [] if not e["resolved"])
+            dangling = sum(1 for e in reg_by_id[cid].get("figma_instance_edges", []) or [] if not e["resolved"] and not e.get("excluded"))
             parts.append(item(f"components/{cid}.html", components[cid]["name"].strip(), f"c-{cid}", warn=dangling))
     parts.append("</nav></aside>")
     return "".join(parts)
@@ -339,7 +339,8 @@ def component_page(cid):
     comp = components[cid]
     reg = reg_by_id[cid]
     name = comp["name"].strip()
-    dangling = [e for e in reg.get("figma_instance_edges", []) or [] if not e["resolved"]]
+    dangling = [e for e in reg.get("figma_instance_edges", []) or [] if not e["resolved"] and not e.get("excluded")]
+    excluded = [e for e in reg.get("figma_instance_edges", []) or [] if e.get("excluded")]
     warns = []
     if dangling:
         items = "".join(
@@ -349,6 +350,12 @@ def component_page(cid):
             for e in dangling)
         warns.append(warn(f'{len(dangling)} Figma instance reference(s) inside this component point outside '
                           f'the ingested library page (see INGESTION_REPORT.md):<ul>{items}</ul>'))
+    excluded_note = ""
+    if excluded:
+        items = "".join(f'<li><b>{E(e["references"])}</b> (node <code>{E(e["ref_node_id"])}</code>) — {E(e.get("external_location",""))}</li>' for e in excluded)
+        excluded_note = (f'<p class="dim">{len(excluded)} raw Figma instance reference(s) in this component were '
+                         f'reviewed and excluded — confirmed not real library dependencies (see INGESTION_REPORT.md §5d):'
+                         f'<ul>{items}</ul></p>')
 
     ids_block = (f'<div class="idsblock"><h3>Identifiers</h3>'
                  + copyable("Name", name)
@@ -397,6 +404,7 @@ def component_page(cid):
       <div class="dim">source file: <code>{E(reg["file"])}</code></div>
     </header>
     {"".join(warns)}
+    {excluded_note}
     <section class="metasection"><h3>Preview</h3>{render_preview(comp)}</section>
     {ids_block}
     {variants_block}
@@ -505,7 +513,7 @@ def overview_page():
                  <div class="cardname">{E(components[cid]["name"].strip())}</div>
                  <div class="dim">{E(cid)}</div>
                  <div class="cardmeta"><span class="typebadge t-{E(reg_by_id[cid]["type"])}">{E(TYPE_BADGE.get(reg_by_id[cid]["type"]))}</span>
-                 {"<span class=warnbadge title=dangling-references>" + str(sum(1 for e in reg_by_id[cid].get("figma_instance_edges",[]) or [] if not e["resolved"])) + "</span>" if any(not e["resolved"] for e in reg_by_id[cid].get("figma_instance_edges",[]) or []) else ""}</div>
+                 {"<span class=warnbadge title=dangling-references>" + str(sum(1 for e in reg_by_id[cid].get("figma_instance_edges",[]) or [] if not e["resolved"] and not e.get("excluded"))) + "</span>" if any(not e["resolved"] and not e.get("excluded") for e in reg_by_id[cid].get("figma_instance_edges",[]) or []) else ""}</div>
                </a>''' for cid in ids)
         cards.append(f'<h2>{gname} <span class="count">{len(ids)}</span></h2><div class="cardgrid">{items}</div>')
     warns = []

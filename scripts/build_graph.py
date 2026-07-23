@@ -52,7 +52,7 @@ def build_graph_data():
             edges.append({"type": "behavioral", "source": c["id"], "target": e["target"],
                           "relation": e["relation"]})
         for e in c.get("figma_instance_edges", []) or []:
-            if not e.get("resolved"):
+            if not e.get("resolved") and not e.get("excluded"):
                 edges.append({
                     "type": "dangling", "source": c["id"],
                     "ref_name": e["references"], "ref_node_id": e["ref_node_id"],

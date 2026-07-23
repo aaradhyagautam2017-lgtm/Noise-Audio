@@ -70,6 +70,9 @@ structural_references:
   instance_count: 8
   resolved: false
   external_location: 'page: 06 Building Blocks'
+  excluded: true
+  excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+  excluded_at: '2026-07-22'
 - references: Radio Button
   ref_node_id: 2031:1178
   ref_fingerprint: 5aaf9ca2a4ce74111f0f3c1f26e495c980cec34e
