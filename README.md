@@ -33,6 +33,8 @@ tokens/
 css/
   tokens.css              Concrete token values synced from Figma (light + dark custom properties)
 dashboard/                Designer dashboard — a static, browsable site generated FROM this repo (Phase 2).
+video/                    Remotion project (React-based motion graphics/video, scaffolded via
+                          `npx create-video`) for producing promo/demo videos. See video/README.md.
 graph/
   graph.json              The canonical component graph in queryable form (Phase 3) — nodes with
                           id/node_id/figma_fingerprint/usage_count, typed directional edges,
