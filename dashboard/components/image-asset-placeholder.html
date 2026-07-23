@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+<script>(function(){try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Image, asset placeholder — Noise Audio DLS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +15,9 @@
         <select onchange="void 0" title="App switcher">
           <option selected>Noise Audio</option>
         </select>
+        <button type="button" class="themebtn" id="theme-toggle" title="Toggle color theme" aria-label="Toggle color theme">
+          <span class="theme-ico theme-ico-sun">☀</span><span class="theme-ico theme-ico-moon">☾</span>
+        </button>
       </div>
       <nav>
         <div class="navgroup">Overview</div>
