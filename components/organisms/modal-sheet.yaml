@@ -28,13 +28,16 @@ variants:
   height: 844
 structural_references:
 - references: Status bar
-  ref_node_id: 374:7867
-  ref_fingerprint: be68a17515e3c6a025f9a9bb53be752af6d9362f
+  ref_node_id: 2007:775
+  ref_fingerprint: 0642c8e04f3d5b41411530a951699e5567e63f29
   variant_used: Status bar
   instance_count: 2
-  resolved: false
-  external_location: 'page: AI Metdata'
-  same_named_library_component: status-bar
+  resolved: true
+  target_id: status-bar
+  rewired_from:
+    node_id: 374:7867
+    fingerprint: be68a17515e3c6a025f9a9bb53be752af6d9362f
+    location: 'page: AI Metdata'
 - references: Modal
   ref_node_id: 786:4487
   ref_fingerprint: c773f2fb739fd730e93d30947149d2488ef2af69
@@ -42,6 +45,9 @@ structural_references:
   instance_count: 1
   resolved: false
   external_location: 'page: 06 Building Blocks'
+  excluded: true
+  excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+  excluded_at: '2026-07-22'
 - references: Home Indicator
   ref_node_id: 386:1835
   ref_fingerprint: 738983691dede508931f06f03be9edb515cd19e0
@@ -49,6 +55,9 @@ structural_references:
   instance_count: 2
   resolved: false
   external_location: 'page: 06 Building Blocks'
+  excluded: true
+  excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+  excluded_at: '2026-07-22'
 - references: Image, asset placeholder
   ref_node_id: 458:8952
   ref_fingerprint: aeb5091d768aa1acd45c5220bcddd658abbcf259
@@ -189,7 +198,5 @@ authored_metadata: |
 visual_values:
   source: figma_mcp
   extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
-    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
   tree: see variants in visuals data

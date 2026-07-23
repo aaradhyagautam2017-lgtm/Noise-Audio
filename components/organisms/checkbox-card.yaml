@@ -28,29 +28,38 @@ variants:
   height: 54
 structural_references:
 - references: Actionables
-  ref_node_id: 2031:437
-  ref_fingerprint: 0a882bdbac2c480461f90be87753b78e6db7b513
+  ref_node_id: 2031:1132
+  ref_fingerprint: 319c48cae4ec45084ee2296b6d0e0460d0d27a40
   variant_used: Action=Checkbox
   instance_count: 2
-  resolved: false
-  external_location: orphaned (detached from any page)
-  same_named_library_component: actionables
+  resolved: true
+  target_id: actionables
+  rewired_from:
+    node_id: 2031:437
+    fingerprint: 0a882bdbac2c480461f90be87753b78e6db7b513
+    location: orphaned (detached from any page)
 - references: 'Heading-content component '
-  ref_node_id: 2031:372
-  ref_fingerprint: f5ea68900a77d59ba8ee0e29b01d0c34cfcb0622
+  ref_node_id: 301:20202
+  ref_fingerprint: 18df4dd5982a7e913f345ea9459801fb472a255b
   variant_used: 'Heading-content component '
   instance_count: 2
-  resolved: false
-  external_location: orphaned (detached from any page)
-  same_named_library_component: heading-content-component
+  resolved: true
+  target_id: heading-content-component
+  rewired_from:
+    node_id: 2031:372
+    fingerprint: f5ea68900a77d59ba8ee0e29b01d0c34cfcb0622
+    location: orphaned (detached from any page)
 - references: Cross
-  ref_node_id: 2031:416
-  ref_fingerprint: b24505a4b9fdd4e693875ffc88e0903aab65fbc0
+  ref_node_id: 2031:1201
+  ref_fingerprint: 4630976d22073248745eb76ebe8a4c2e55d2c1ef
   variant_used: Type=Default
   instance_count: 1
-  resolved: false
-  external_location: orphaned (detached from any page)
-  same_named_library_component: cross
+  resolved: true
+  target_id: cross
+  rewired_from:
+    node_id: 2031:416
+    fingerprint: b24505a4b9fdd4e693875ffc88e0903aab65fbc0
+    location: orphaned (detached from any page)
 authored_metadata: |
   component:
     id: checkbox-card
@@ -123,9 +132,7 @@ authored_metadata: |
 visual_values:
   source: figma_mcp
   extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
-    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
   tree:
     id: 2032:1265
     name: Checkbox card
@@ -181,12 +188,13 @@ visual_values:
           w: 36
           h: 36
           instance_of:
-            id: 2031:442
-            name: Action=Checkbox
-            key: 3e2ecb7776960b84b1233004b4978898b15c5df2
+            id: 2031:1132
+            name: Actionables
+            key: 319c48cae4ec45084ee2296b6d0e0460d0d27a40
             set:
-              id: 2031:437
+              id: 2031:1132
               name: Actionables
+            rewired_from: 2031:437
           props:
             Action: Checkbox
         - id: 2032:1269
@@ -204,9 +212,10 @@ visual_values:
             gap: 4
             align: MIN/MIN
           instance_of:
-            id: 2031:372
+            id: 301:20202
             name: 'Heading-content component '
-            key: f5ea68900a77d59ba8ee0e29b01d0c34cfcb0622
+            key: 18df4dd5982a7e913f345ea9459801fb472a255b
+            rewired_from: 2031:372
           props:
             Heading#395:0: true
             content#301:0: true
@@ -216,12 +225,13 @@ visual_values:
         w: 24
         h: 24
         instance_of:
-          id: 2031:417
-          name: Type=Default
-          key: 96e4573dca6dc036787426ca1ce287ec1eedd3be
+          id: 2031:1201
+          name: Cross
+          key: 4630976d22073248745eb76ebe8a4c2e55d2c1ef
           set:
-            id: 2031:416
+            id: 2031:1201
             name: Cross
+          rewired_from: 2031:416
         props:
           Type: Default
     - id: 2032:1271
@@ -276,9 +286,10 @@ visual_values:
             gap: 4
             align: MIN/MIN
           instance_of:
-            id: 2031:372
+            id: 301:20202
             name: 'Heading-content component '
-            key: f5ea68900a77d59ba8ee0e29b01d0c34cfcb0622
+            key: 18df4dd5982a7e913f345ea9459801fb472a255b
+            rewired_from: 2031:372
           props:
             Heading#395:0: true
             content#301:0: true
@@ -288,11 +299,12 @@ visual_values:
           w: 36
           h: 36
           instance_of:
-            id: 2031:442
-            name: Action=Checkbox
-            key: 3e2ecb7776960b84b1233004b4978898b15c5df2
+            id: 2031:1132
+            name: Actionables
+            key: 319c48cae4ec45084ee2296b6d0e0460d0d27a40
             set:
-              id: 2031:437
+              id: 2031:1132
               name: Actionables
+            rewired_from: 2031:437
           props:
             Action: Checkbox

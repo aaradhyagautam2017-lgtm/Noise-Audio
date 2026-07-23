@@ -3,7 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Component graph — Noise Audio DLS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600&family=Geist:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 </head><body>
 <div class="layout">
@@ -23,57 +23,67 @@
         <a class="navitem " href="foundations-colors.html">Colors &amp; tokens</a>
         <a class="navitem " href="foundations-typography.html">Typography</a>
         <a class="navitem " href="foundations-spacing.html">Spacing &amp; radius</a>
-    <div class="navgroup">Atoms <span class="count">16</span></div><a class="navitem " href="components/primary-cta-button.html">Primary cta</a><a class="navitem " href="components/secondary-cta-button.html">Secondary cta</a><a class="navitem " href="components/link-cta.html">Link cta</a><a class="navitem " href="components/chevron.html">Chevron</a><a class="navitem " href="components/checkbox.html">Checkbox</a><a class="navitem " href="components/radio-button.html">Radio Button</a><a class="navitem " href="components/toggle.html">Toggle</a><a class="navitem " href="components/cross.html">Cross</a><a class="navitem " href="components/heading-content-component.html">Heading-content component</a><a class="navitem " href="components/status-bar.html">Status bar</a><a class="navitem " href="components/image-asset-placeholder.html">Image, asset placeholder<span class="warnbadge" title="dangling Figma references">1</span></a><a class="navitem " href="components/card-heading.html">Card heading</a><a class="navitem " href="components/description.html">Description</a><a class="navitem " href="components/text-field.html">Text field<span class="warnbadge" title="dangling Figma references">1</span></a><a class="navitem " href="components/privacy-policy-tab.html">Privacy policy tab</a><a class="navitem " href="components/progress-bar.html">Progress bar</a><div class="navgroup">Molecules <span class="count">2</span></div><a class="navitem " href="components/actionables.html">Actionables<span class="warnbadge" title="dangling Figma references">5</span></a><a class="navitem " href="components/l2-inner-pages-heading.html">L2/Inner pages Heading</a><div class="navgroup">Organisms <span class="count">8</span></div><a class="navitem " href="components/l1-home-page-navigation.html">L1/Home page<span class="warnbadge" title="dangling Figma references">5</span></a><a class="navitem " href="components/modal-card.html">Modal card<span class="warnbadge" title="dangling Figma references">1</span></a><a class="navitem " href="components/master-card.html">Master card<span class="warnbadge" title="dangling Figma references">2</span></a><a class="navitem " href="components/checkbox-card.html">Checkbox card<span class="warnbadge" title="dangling Figma references">3</span></a><a class="navitem " href="components/l1-inner-page-navigation.html">L1 Inner page navigation<span class="warnbadge" title="dangling Figma references">5</span></a><a class="navitem " href="components/action-card.html">Action card<span class="warnbadge" title="dangling Figma references">3</span></a><a class="navitem " href="components/action-sheet.html">Action sheet<span class="warnbadge" title="dangling Figma references">3</span></a><a class="navitem " href="components/modal-sheet.html">Modal Sheet<span class="warnbadge" title="dangling Figma references">3</span></a></nav></aside>
+    <div class="navgroup">Atoms <span class="count">16</span></div><a class="navitem " href="components/primary-cta-button.html">Primary cta</a><a class="navitem " href="components/secondary-cta-button.html">Secondary cta</a><a class="navitem " href="components/link-cta.html">Link cta</a><a class="navitem " href="components/chevron.html">Chevron</a><a class="navitem " href="components/checkbox.html">Checkbox</a><a class="navitem " href="components/radio-button.html">Radio Button</a><a class="navitem " href="components/toggle.html">Toggle</a><a class="navitem " href="components/cross.html">Cross</a><a class="navitem " href="components/heading-content-component.html">Heading-content component</a><a class="navitem " href="components/status-bar.html">Status bar</a><a class="navitem " href="components/image-asset-placeholder.html">Image, asset placeholder</a><a class="navitem " href="components/card-heading.html">Card heading</a><a class="navitem " href="components/description.html">Description</a><a class="navitem " href="components/text-field.html">Text field</a><a class="navitem " href="components/privacy-policy-tab.html">Privacy policy tab</a><a class="navitem " href="components/progress-bar.html">Progress bar</a><div class="navgroup">Molecules <span class="count">2</span></div><a class="navitem " href="components/actionables.html">Actionables</a><a class="navitem " href="components/l2-inner-pages-heading.html">L2/Inner pages Heading</a><div class="navgroup">Organisms <span class="count">8</span></div><a class="navitem " href="components/l1-home-page-navigation.html">L1/Home page</a><a class="navitem " href="components/modal-card.html">Modal card</a><a class="navitem " href="components/master-card.html">Master card</a><a class="navitem " href="components/checkbox-card.html">Checkbox card</a><a class="navitem " href="components/l1-inner-page-navigation.html">L1 Inner page navigation</a><a class="navitem " href="components/action-card.html">Action card</a><a class="navitem " href="components/action-sheet.html">Action sheet</a><a class="navitem " href="components/modal-sheet.html">Modal Sheet</a></nav></aside>
 <main class="main">
 
     <header class="pagehead"><h1>Component graph</h1></header>
-    <p class="dim">The canonical wiring of the library, generated from <code>registry.yaml</code> in one pass —
-    it renders only nodes and edges that exist there, at fixed, deterministic positions (registry order,
-    tiered by type). Hover a component to spotlight everything it is wired to; click it to open its
-    dashboard page. The identical data is queryable by the agent at <code>graph/graph.json</code>
-    (and embedded in this page), with every node exposing <code>id</code>, <code>node_id</code> and
-    <code>figma_fingerprint</code>.</p>
+    <p class="dim">The canonical wiring of the library, generated from <code>registry.yaml</code> and laid out
+    live by a force simulation — atoms cluster at the center, molecules and organisms grow outward as they
+    compose from what's inside them, exactly like the underlying <code>used_atoms</code>/<code>used_molecules</code>
+    relationships. Hover a component to spotlight everything it is wired to; drag a node to reposition it;
+    scroll or use the controls to zoom; click a node to open its dashboard page. The identical data is queryable
+    by the agent at <code>graph/graph.json</code> (and embedded in this page), with every node exposing
+    <code>id</code>, <code>node_id</code> and <code>figma_fingerprint</code>.</p>
     <div class="legend">
       <span><b>Legend</b></span>
-      <span><span class="sw" style="background:#1c8a4c"></span>atom</span>
-      <span><span class="sw" style="background:#b6732b"></span>molecule</span>
-      <span><span class="sw" style="background:#c42e2e"></span>organism</span>
-      <span><span class="sw" style="background:#7a1616"></span>complex-organism</span>
+      <span><span class="sw" style="background:#1c7a45"></span>atom</span>
+      <span><span class="sw" style="background:#9c6a1f"></span>molecule</span>
+      <span><span class="sw" style="background:#b3261e"></span>organism</span>
+      <span><span class="sw" style="background:#6b1414"></span>complex-organism</span>
       <span><span class="ln"></span>solid = is built from (part → whole)</span>
       <span><span class="ln dash"></span>dashed = behavioral relationship</span>
-      <span><span class="ln bad"></span>red = dangling reference (32, registry-flagged)</span>
+      
       <span class="grow"><span class="g1"></span><span class="g2"></span> size = usage count</span>
     </div>
-    <div class="graphwrap"><div id="graph-mount"></div></div>
-    <p class="dim">Dangling references are drawn to ghost markers on the right — components the registry
-    says exist outside the ingested library page. They are shown as broken, never repaired
-    (details: INGESTION_REPORT.md §5).</p>
+    <div class="graphwrap">
+      <div id="graph-mount"></div>
+      <div class="og-toolbar">
+        <button type="button" data-zoom="in" title="Zoom in">+</button>
+        <button type="button" data-zoom="out" title="Zoom out">−</button>
+        <button type="button" data-zoom="reset" title="Reset view">⤢</button>
+      </div>
+      <div class="og-hint">Scroll to zoom · drag canvas to pan · drag a node to reposition</div>
+    </div>
+    
     <style>
-.cgraph{width:100%;min-width:1200px}
-.g-colsub{font-size:10.5px;fill:#919191}
-.g-broken{fill:#c42e2e}
-.g-dot{stroke:#fff;stroke-width:2}
-.g-nodegroup{cursor:pointer}
-.g-nodegroup.dimmed,.g-ghost.dimmed{opacity:.14}
-.g-name{font-size:11.5px;fill:#171717}
-.g-edge{fill:none;stroke-width:1.3;transition:opacity .12s}
-.e-structural{stroke:#8a8a8a;opacity:.65}
-.e-behavioral{stroke:#8a38f5;stroke-dasharray:5 4;opacity:.5}
-.e-dangling{stroke:#c42e2e;stroke-dasharray:2 4;stroke-width:1.6;opacity:.75}
-.g-edge.dimmed{opacity:.05}
-.g-edge.hot{opacity:1;stroke-width:2.2}
-.g-ghost rect{fill:#fff7e8;stroke:#c42e2e;stroke-dasharray:3 3}
-.g-ghostlabel{font-size:10.5px;fill:#9e1e1e}
-.legend{display:flex;gap:18px;flex-wrap:wrap;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0;font-size:12.5px}
+.ograph{width:100%;height:100%;display:block;touch-action:none;user-select:none}
+.og-toolbar{position:absolute;top:20px;right:20px;display:flex;flex-direction:column;gap:6px;z-index:2}
+.og-toolbar button{width:30px;height:30px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.06);transition:border-color .15s,transform .1s}
+.og-toolbar button:hover{border-color:var(--blue);color:var(--blue)}
+.og-toolbar button:active{transform:scale(.9)}
+.og-hint{position:absolute;left:20px;bottom:16px;font-size:11.5px;color:var(--ink3);background:var(--panel);border:1px solid var(--line);border-radius:var(--r-pill);padding:4px 12px;z-index:2;font-family:var(--font-text)}
+.og-node{cursor:pointer}
+.og-node.dimmed{opacity:.15}
+.og-dot{stroke:var(--panel);stroke-width:2;transition:opacity .12s}
+.og-dot-ghost{fill:var(--warn-bg);stroke:var(--organism);stroke-dasharray:2 2;r:5}
+.og-label{font-size:11px;fill:var(--ink);opacity:var(--og-label-op,1);transition:opacity .15s,font-size .15s;pointer-events:none;font-family:var(--font-text)}
+.og-label-ghost{fill:var(--organism);font-size:10px}
+.og-edge{stroke-width:1.3;transition:opacity .12s,stroke-width .12s}
+.og-e-structural{stroke:var(--ink3);opacity:.5}
+.og-e-behavioral{stroke:var(--plum);stroke-dasharray:5 4;opacity:.4}
+.og-e-dangling{stroke:var(--organism);stroke-dasharray:2 4;stroke-width:1.6;opacity:.6}
+.og-edge.dimmed{opacity:.04}
+.og-edge.hot{opacity:1;stroke-width:2.2}
+.legend{display:flex;gap:18px;flex-wrap:wrap;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:10px 16px;margin:12px 0;font-size:12.5px}
 .legend .sw{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-2px;margin-right:5px}
-.legend .ln{display:inline-block;width:26px;height:0;border-top:2px solid #8a8a8a;vertical-align:3px;margin-right:5px}
-.legend .ln.dash{border-top-style:dashed;border-color:#8a38f5}
-.legend .ln.bad{border-top-style:dotted;border-color:#c42e2e}
+.legend .ln{display:inline-block;width:26px;height:0;border-top:2px solid var(--ink3);vertical-align:3px;margin-right:5px}
+.legend .ln.dash{border-top-style:dashed;border-color:var(--plum)}
+.legend .ln.bad{border-top-style:dotted;border-color:var(--organism)}
 .legend .grow{display:inline-flex;align-items:center;gap:3px}
-.legend .g1{width:8px;height:8px;border-radius:50%;background:#696969}
-.legend .g2{width:14px;height:14px;border-radius:50%;background:#696969}
+.legend .g1{width:8px;height:8px;border-radius:50%;background:var(--ink3)}
+.legend .g2{width:14px;height:14px;border-radius:50%;background:var(--ink3)}
 </style>
-    <script type="application/json" id="graph-data">{"app": "Noise Audio", "generated_from": "registry.yaml", "generated": "2026-07-10", "source": {"figma_file_key": "QjVyM5bRXgIOZn8PO1e0eK", "figma_page": "Test pilot run", "figma_page_node_id": "2025:148", "figma_url": "https://www.figma.com/design/QjVyM5bRXgIOZn8PO1e0eK/?node-id=2025-148"}, "traversal": {"top_down": "Start at nodes with tier=organisms. A component C's parts are the sources of structural edges whose target == C. Recurse into molecules, then atoms.", "lateral": "Behavioral edges are directional as declared in the authored metadata (source declares the relation toward target).", "upward": "A component C's consumers ('used by') are the targets of structural edges whose source == C.", "identity": "Every node exposes id (repo file components/<tier>/<id>.yaml), node_id (Figma in-file locator) and figma_fingerprint (stable component key).", "dangling": "Edges with type=dangling are broken references flagged by the registry: the component's Figma instance points outside the ingested library page. They are rendered as broken, never repaired."}, "legend": {"node_color": "component type", "node_size": "usage count", "solid_edge": "structural \u2014 is built from (drawn part \u2192 whole)", "dashed_edge": "behavioral relationship", "red_edge": "dangling reference flagged in the registry"}, "counts": {"atoms": 16, "molecules": 2, "organisms": 8, "token_sources": 1}, "nodes": [{"id": "primary-cta-button", "name": "Primary cta", "type": "atom", "tier": "atoms", "node_id": "248:4940", "figma_fingerprint": "13d9bcf56d34b8f5859397f76b4787da65b4f6f8", "usage_count": 4, "file": "components/atoms/primary-cta-button.yaml", "dashboard": "components/primary-cta-button.html"}, {"id": "secondary-cta-button", "name": "Secondary cta", "type": "atom", "tier": "atoms", "node_id": "250:4953", "figma_fingerprint": "496c1152f7812e427b173dfadf82190e3ca7c3c0", "usage_count": 3, "file": "components/atoms/secondary-cta-button.yaml", "dashboard": "components/secondary-cta-button.html"}, {"id": "link-cta", "name": "Link cta", "type": "atom", "tier": "atoms", "node_id": "463:1380", "figma_fingerprint": "c8690c419dcc5e5873b064217a90ab827caf16e9", "usage_count": 2, "file": "components/atoms/link-cta.yaml", "dashboard": "components/link-cta.html"}, {"id": "actionables", "name": "Actionables", "type": "molecule", "tier": "molecules", "node_id": "2031:1132", "figma_fingerprint": "319c48cae4ec45084ee2296b6d0e0460d0d27a40", "usage_count": 3, "file": "components/molecules/actionables.yaml", "dashboard": "components/actionables.html"}, {"id": "chevron", "name": "Chevron", "type": "atom", "tier": "atoms", "node_id": "2031:1154", "figma_fingerprint": "01dc1aeeb4cb8263bbcdf477e7be617bb160ed27", "usage_count": 4, "file": "components/atoms/chevron.yaml", "dashboard": "components/chevron.html"}, {"id": "checkbox", "name": "Checkbox", "type": "atom", "tier": "atoms", "node_id": "2031:1168", "figma_fingerprint": "5d813fa76c98d5e979b8e58f3097ee481b6974bc", "usage_count": 1, "file": "components/atoms/checkbox.yaml", "dashboard": "components/checkbox.html"}, {"id": "radio-button", "name": "Radio Button", "type": "atom", "tier": "atoms", "node_id": "2031:1178", "figma_fingerprint": "5aaf9ca2a4ce74111f0f3c1f26e495c980cec34e", "usage_count": 1, "file": "components/atoms/radio-button.yaml", "dashboard": "components/radio-button.html"}, {"id": "toggle", "name": "Toggle", "type": "atom", "tier": "atoms", "node_id": "2031:1190", "figma_fingerprint": "5671f20fe570cab72796a90ebac8b77ca42e0621", "usage_count": 1, "file": "components/atoms/toggle.yaml", "dashboard": "components/toggle.html"}, {"id": "cross", "name": "Cross", "type": "atom", "tier": "atoms", "node_id": "2031:1201", "figma_fingerprint": "4630976d22073248745eb76ebe8a4c2e55d2c1ef", "usage_count": 4, "file": "components/atoms/cross.yaml", "dashboard": "components/cross.html"}, {"id": "heading-content-component", "name": "Heading-content component", "type": "atom", "tier": "atoms", "node_id": "301:20202", "figma_fingerprint": "18df4dd5982a7e913f345ea9459801fb472a255b", "usage_count": 4, "file": "components/atoms/heading-content-component.yaml", "dashboard": "components/heading-content-component.html"}, {"id": "l2-inner-pages-heading", "name": "L2/Inner pages Heading", "type": "molecule", "tier": "molecules", "node_id": "244:133", "figma_fingerprint": "b315ce3a53f3c7c83388272cb7b77659f4e07c50", "usage_count": 1, "file": "components/molecules/l2-inner-pages-heading.yaml", "dashboard": "components/l2-inner-pages-heading.html"}, {"id": "status-bar", "name": "Status bar", "type": "atom", "tier": "atoms", "node_id": "2007:775", "figma_fingerprint": "0642c8e04f3d5b41411530a951699e5567e63f29", "usage_count": 3, "file": "components/atoms/status-bar.yaml", "dashboard": "components/status-bar.html"}, {"id": "l1-home-page-navigation", "name": "L1/Home page", "type": "organism", "tier": "organisms", "node_id": "243:6378", "figma_fingerprint": "948135f671d61083862a0d646e005015301c3beb", "usage_count": 0, "file": "components/organisms/l1-home-page-navigation.yaml", "dashboard": "components/l1-home-page-navigation.html"}, {"id": "modal-card", "name": "Modal card", "type": "organism", "tier": "organisms", "node_id": "2097:1930", "figma_fingerprint": "21d9c86623d946fdffe7c9489dcf24ef5699f576", "usage_count": 3, "file": "components/organisms/modal-card.yaml", "dashboard": "components/modal-card.html"}, {"id": "action-sheet", "name": "Action sheet", "type": "complex-organism", "tier": "organisms", "node_id": "418:965", "figma_fingerprint": "32faaefa1091152dce02bc7f3330092f25545cf5", "usage_count": 2, "file": "components/organisms/action-sheet.yaml", "dashboard": "components/action-sheet.html"}, {"id": "image-asset-placeholder", "name": "Image, asset placeholder", "type": "atom", "tier": "atoms", "node_id": "458:8952", "figma_fingerprint": "aeb5091d768aa1acd45c5220bcddd658abbcf259", "usage_count": 2, "file": "components/atoms/image-asset-placeholder.yaml", "dashboard": "components/image-asset-placeholder.html"}, {"id": "modal-sheet", "name": "Modal Sheet", "type": "complex-organism", "tier": "organisms", "node_id": "611:1378", "figma_fingerprint": "1ff5504fa0229284b6ae328723679fb94b0ab477", "usage_count": 2, "file": "components/organisms/modal-sheet.yaml", "dashboard": "components/modal-sheet.html"}, {"id": "card-heading", "name": "Card heading", "type": "atom", "tier": "atoms", "node_id": "340:11254", "figma_fingerprint": "1cf5d7102660483fa53fe58ba6462229a449e45c", "usage_count": 2, "file": "components/atoms/card-heading.yaml", "dashboard": "components/card-heading.html"}, {"id": "description", "name": "Description", "type": "atom", "tier": "atoms", "node_id": "445:8616", "figma_fingerprint": "e429f00b447a3f8e74485cff0ebb08049999600a", "usage_count": 0, "file": "components/atoms/description.yaml", "dashboard": "components/description.html"}, {"id": "text-field", "name": "Text field", "type": "atom", "tier": "atoms", "node_id": "445:8434", "figma_fingerprint": "c32a11ab5b2fcac3c6c92f4a3723f63c390027fc", "usage_count": 0, "file": "components/atoms/text-field.yaml", "dashboard": "components/text-field.html"}, {"id": "privacy-policy-tab", "name": "Privacy policy tab", "type": "atom", "tier": "atoms", "node_id": "450:8770", "figma_fingerprint": "b9945fc2df7c786e4dddeba14021e7f232c580af", "usage_count": 0, "file": "components/atoms/privacy-policy-tab.yaml", "dashboard": "components/privacy-policy-tab.html"}, {"id": "progress-bar", "name": "Progress bar", "type": "atom", "tier": "atoms", "node_id": "489:2133", "figma_fingerprint": "f92b7ef136d4b0b6c9618e26f856f0d6537d346e", "usage_count": 0, "file": "components/atoms/progress-bar.yaml", "dashboard": "components/progress-bar.html"}, {"id": "master-card", "name": "Master card", "type": "organism", "tier": "organisms", "node_id": "396:728", "figma_fingerprint": "2a70e23d69359d2c963b4663448e7b7de1f923bb", "usage_count": 0, "file": "components/organisms/master-card.yaml", "dashboard": "components/master-card.html"}, {"id": "checkbox-card", "name": "Checkbox card", "type": "organism", "tier": "organisms", "node_id": "2032:1265", "figma_fingerprint": "63123afdabcda90456472d6efa03baaae5bfae51", "usage_count": 0, "file": "components/organisms/checkbox-card.yaml", "dashboard": "components/checkbox-card.html"}, {"id": "l1-inner-page-navigation", "name": "L1 Inner page navigation", "type": "organism", "tier": "organisms", "node_id": "2007:1007", "figma_fingerprint": "bbd24c7b7a648836ba325942f634a414386375d6", "usage_count": 3, "file": "components/organisms/l1-inner-page-navigation.yaml", "dashboard": "components/l1-inner-page-navigation.html"}, {"id": "action-card", "name": "Action card", "type": "organism", "tier": "organisms", "node_id": "2096:1434", "figma_fingerprint": "f21a114bbd31c9be808ce2265358902b7aeefbc4", "usage_count": 3, "file": "components/organisms/action-card.yaml", "dashboard": "components/action-card.html"}], "edges": [{"type": "behavioral", "source": "secondary-cta-button", "target": "primary-cta-button", "relation": "emphasis-counterpart"}, {"type": "behavioral", "source": "link-cta", "target": "primary-cta-button", "relation": "emphasis-family"}, {"type": "behavioral", "source": "link-cta", "target": "secondary-cta-button", "relation": "emphasis-family"}, {"type": "structural", "source": "chevron", "target": "actionables", "meaning": "actionables is built from chevron"}, {"type": "structural", "source": "toggle", "target": "actionables", "meaning": "actionables is built from toggle"}, {"type": "structural", "source": "checkbox", "target": "actionables", "meaning": "actionables is built from checkbox"}, {"type": "structural", "source": "cross", "target": "actionables", "meaning": "actionables is built from cross"}, {"type": "structural", "source": "radio-button", "target": "actionables", "meaning": "actionables is built from radio-button"}, {"type": "dangling", "source": "actionables", "ref_name": "Chevron", "ref_node_id": "2031:379", "external_location": "orphaned (detached from any page)", "same_named_library_component": "chevron", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "actionables", "ref_name": "Toggle", "ref_node_id": "2031:392", "external_location": "orphaned (detached from any page)", "same_named_library_component": "toggle", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "actionables", "ref_name": "Checkbox", "ref_node_id": "2031:406", "external_location": "orphaned (detached from any page)", "same_named_library_component": "checkbox", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "actionables", "ref_name": "Cross", "ref_node_id": "2031:416", "external_location": "orphaned (detached from any page)", "same_named_library_component": "cross", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "actionables", "ref_name": "Radio Button", "ref_node_id": "2031:426", "external_location": "orphaned (detached from any page)", "same_named_library_component": "radio-button", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "behavioral", "source": "l2-inner-pages-heading", "target": "l1-inner-page-navigation", "relation": "heading-destination"}, {"type": "behavioral", "source": "status-bar", "target": "l1-inner-page-navigation", "relation": "shares-scroll-state"}, {"type": "behavioral", "source": "l1-home-page-navigation", "target": "l1-inner-page-navigation", "relation": "sibling"}, {"type": "dangling", "source": "l1-home-page-navigation", "ref_name": "system/Selected device", "ref_node_id": "231:26268", "external_location": "page: 04 Icons", "same_named_library_component": null, "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "l1-home-page-navigation", "ref_name": "system/Device option 1", "ref_node_id": "231:26277", "external_location": "page: 04 Icons", "same_named_library_component": null, "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "l1-home-page-navigation", "ref_name": "system/Device adder", "ref_node_id": "231:26218", "external_location": "page: 04 Icons", "same_named_library_component": null, "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "l1-home-page-navigation", "ref_name": "system/Downloading Success", "ref_node_id": "231:26254", "external_location": "page: 04 Icons", "same_named_library_component": null, "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "l1-home-page-navigation", "ref_name": "system/Store", "ref_node_id": "231:26234", "external_location": "page: 04 Icons", "same_named_library_component": null, "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "structural", "source": "primary-cta-button", "target": "modal-card", "meaning": "modal-card is built from primary-cta-button"}, {"type": "structural", "source": "secondary-cta-button", "target": "modal-card", "meaning": "modal-card is built from secondary-cta-button"}, {"type": "structural", "source": "link-cta", "target": "modal-card", "meaning": "modal-card is built from link-cta"}, {"type": "behavioral", "source": "modal-card", "target": "modal-sheet", "relation": "content-of"}, {"type": "behavioral", "source": "modal-card", "target": "action-card", "relation": "counterpart"}, {"type": "dangling", "source": "modal-card", "ref_name": "Actionables", "ref_node_id": "329:2095", "external_location": "page: AI Metdata", "same_named_library_component": "actionables", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "structural", "source": "action-card", "target": "action-sheet", "meaning": "action-sheet is built from action-card"}, {"type": "behavioral", "source": "action-sheet", "target": "action-card", "relation": "contains"}, {"type": "behavioral", "source": "action-sheet", "target": "modal-sheet", "relation": "counterpart"}, {"type": "behavioral", "source": "action-sheet", "target": "status-bar", "relation": "renders-on-top"}, {"type": "dangling", "source": "action-sheet", "ref_name": "Status bar", "ref_node_id": "374:7867", "external_location": "page: AI Metdata", "same_named_library_component": "status-bar", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "action-sheet", "ref_name": "Action Sheet", "ref_node_id": "420:1299", "external_location": "page: 06 Building Blocks", "same_named_library_component": "action-sheet", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "action-sheet", "ref_name": "Home Indicator", "ref_node_id": "386:1835", "external_location": "page: 06 Building Blocks", "same_named_library_component": null, "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "image-asset-placeholder", "ref_name": "Profile icon", "ref_node_id": "460:985", "external_location": "page: 06 Building Blocks", "same_named_library_component": null, "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "structural", "source": "modal-card", "target": "modal-sheet", "meaning": "modal-sheet is built from modal-card"}, {"type": "structural", "source": "image-asset-placeholder", "target": "modal-sheet", "meaning": "modal-sheet is built from image-asset-placeholder"}, {"type": "behavioral", "source": "modal-sheet", "target": "modal-card", "relation": "contains"}, {"type": "behavioral", "source": "modal-sheet", "target": "image-asset-placeholder", "relation": "contains"}, {"type": "behavioral", "source": "modal-sheet", "target": "action-sheet", "relation": "counterpart"}, {"type": "behavioral", "source": "modal-sheet", "target": "status-bar", "relation": "renders-on-top"}, {"type": "dangling", "source": "modal-sheet", "ref_name": "Status bar", "ref_node_id": "374:7867", "external_location": "page: AI Metdata", "same_named_library_component": "status-bar", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "modal-sheet", "ref_name": "Modal", "ref_node_id": "786:4487", "external_location": "page: 06 Building Blocks", "same_named_library_component": null, "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "modal-sheet", "ref_name": "Home Indicator", "ref_node_id": "386:1835", "external_location": "page: 06 Building Blocks", "same_named_library_component": null, "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "behavioral", "source": "card-heading", "target": "heading-content-component", "relation": "distinct-sibling"}, {"type": "behavioral", "source": "description", "target": "heading-content-component", "relation": "distinct"}, {"type": "behavioral", "source": "description", "target": "card-heading", "relation": "distinct"}, {"type": "structural", "source": "chevron", "target": "text-field", "meaning": "text-field is built from chevron"}, {"type": "behavioral", "source": "text-field", "target": "card-heading", "relation": "paired-with"}, {"type": "behavioral", "source": "text-field", "target": "chevron", "relation": "uses"}, {"type": "dangling", "source": "text-field", "ref_name": "Actionables", "ref_node_id": "329:2095", "external_location": "page: AI Metdata", "same_named_library_component": "actionables", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "structural", "source": "actionables", "target": "master-card", "meaning": "master-card is built from actionables"}, {"type": "structural", "source": "heading-content-component", "target": "master-card", "meaning": "master-card is built from heading-content-component"}, {"type": "dangling", "source": "master-card", "ref_name": "Circled icon", "ref_node_id": "301:20193", "external_location": "page: 06 Building Blocks", "same_named_library_component": null, "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "master-card", "ref_name": "Actionables", "ref_node_id": "329:2095", "external_location": "page: AI Metdata", "same_named_library_component": "actionables", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "structural", "source": "actionables", "target": "checkbox-card", "meaning": "checkbox-card is built from actionables"}, {"type": "structural", "source": "cross", "target": "checkbox-card", "meaning": "checkbox-card is built from cross"}, {"type": "structural", "source": "heading-content-component", "target": "checkbox-card", "meaning": "checkbox-card is built from heading-content-component"}, {"type": "dangling", "source": "checkbox-card", "ref_name": "Actionables", "ref_node_id": "2031:437", "external_location": "orphaned (detached from any page)", "same_named_library_component": "actionables", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "checkbox-card", "ref_name": "Heading-content component ", "ref_node_id": "2031:372", "external_location": "orphaned (detached from any page)", "same_named_library_component": "heading-content-component", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "checkbox-card", "ref_name": "Cross", "ref_node_id": "2031:416", "external_location": "orphaned (detached from any page)", "same_named_library_component": "cross", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "structural", "source": "chevron", "target": "l1-inner-page-navigation", "meaning": "l1-inner-page-navigation is built from chevron"}, {"type": "structural", "source": "cross", "target": "l1-inner-page-navigation", "meaning": "l1-inner-page-navigation is built from cross"}, {"type": "behavioral", "source": "l1-inner-page-navigation", "target": "l2-inner-pages-heading", "relation": "heading-source"}, {"type": "behavioral", "source": "l1-inner-page-navigation", "target": "status-bar", "relation": "shares-scroll-state"}, {"type": "dangling", "source": "l1-inner-page-navigation", "ref_name": "system/Chevron", "ref_node_id": "2007:379", "external_location": "orphaned (detached from any page)", "same_named_library_component": "chevron", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "l1-inner-page-navigation", "ref_name": "system/Restart", "ref_node_id": "2007:405", "external_location": "orphaned (detached from any page)", "same_named_library_component": null, "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "l1-inner-page-navigation", "ref_name": "system/Downloading Success", "ref_node_id": "2007:399", "external_location": "orphaned (detached from any page)", "same_named_library_component": null, "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "l1-inner-page-navigation", "ref_name": "Transcribe time chips ", "ref_node_id": "2007:416", "external_location": "orphaned (detached from any page)", "same_named_library_component": null, "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "l1-inner-page-navigation", "ref_name": "system/cross", "ref_node_id": "2007:411", "external_location": "orphaned (detached from any page)", "same_named_library_component": "cross", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "structural", "source": "cross", "target": "action-card", "meaning": "action-card is built from cross"}, {"type": "structural", "source": "actionables", "target": "action-card", "meaning": "action-card is built from actionables"}, {"type": "structural", "source": "primary-cta-button", "target": "action-card", "meaning": "action-card is built from primary-cta-button"}, {"type": "structural", "source": "secondary-cta-button", "target": "action-card", "meaning": "action-card is built from secondary-cta-button"}, {"type": "structural", "source": "link-cta", "target": "action-card", "meaning": "action-card is built from link-cta"}, {"type": "behavioral", "source": "action-card", "target": "action-sheet", "relation": "content-of"}, {"type": "behavioral", "source": "action-card", "target": "modal-card", "relation": "counterpart"}, {"type": "dangling", "source": "action-card", "ref_name": "Bottomsheet heading", "ref_node_id": "414:3175", "external_location": "page: 06 Building Blocks", "same_named_library_component": null, "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "action-card", "ref_name": "Radio Button", "ref_node_id": "395:636", "external_location": "page: AI Metdata", "same_named_library_component": "radio-button", "status": "dangling \u2014 instance points outside the ingested page"}, {"type": "dangling", "source": "action-card", "ref_name": "Actionables", "ref_node_id": "329:2095", "external_location": "page: AI Metdata", "same_named_library_component": "actionables", "status": "dangling \u2014 instance points outside the ingested page"}]}</script>
+    <script type="application/json" id="graph-data">{"app": "Noise Audio", "generated_from": "registry.yaml", "generated": "2026-07-10", "source": {"figma_file_key": "QjVyM5bRXgIOZn8PO1e0eK", "figma_page": "Test pilot run", "figma_page_node_id": "2025:148", "figma_url": "https://www.figma.com/design/QjVyM5bRXgIOZn8PO1e0eK/?node-id=2025-148"}, "traversal": {"top_down": "Start at nodes with tier=organisms. A component C's parts are the sources of structural edges whose target == C. Recurse into molecules, then atoms.", "lateral": "Behavioral edges are directional as declared in the authored metadata (source declares the relation toward target).", "upward": "A component C's consumers ('used by') are the targets of structural edges whose source == C.", "identity": "Every node exposes id (repo file components/<tier>/<id>.yaml), node_id (Figma in-file locator) and figma_fingerprint (stable component key).", "dangling": "Edges with type=dangling are broken references flagged by the registry: the component's Figma instance points outside the ingested library page. They are rendered as broken, never repaired."}, "legend": {"node_color": "component type", "node_size": "usage count", "solid_edge": "structural \u2014 is built from (drawn part \u2192 whole)", "dashed_edge": "behavioral relationship", "red_edge": "dangling reference flagged in the registry"}, "counts": {"atoms": 16, "molecules": 2, "organisms": 8, "token_sources": 1}, "nodes": [{"id": "primary-cta-button", "name": "Primary cta", "type": "atom", "tier": "atoms", "node_id": "248:4940", "figma_fingerprint": "13d9bcf56d34b8f5859397f76b4787da65b4f6f8", "usage_count": 4, "file": "components/atoms/primary-cta-button.yaml", "dashboard": "components/primary-cta-button.html"}, {"id": "secondary-cta-button", "name": "Secondary cta", "type": "atom", "tier": "atoms", "node_id": "250:4953", "figma_fingerprint": "496c1152f7812e427b173dfadf82190e3ca7c3c0", "usage_count": 3, "file": "components/atoms/secondary-cta-button.yaml", "dashboard": "components/secondary-cta-button.html"}, {"id": "link-cta", "name": "Link cta", "type": "atom", "tier": "atoms", "node_id": "463:1380", "figma_fingerprint": "c8690c419dcc5e5873b064217a90ab827caf16e9", "usage_count": 2, "file": "components/atoms/link-cta.yaml", "dashboard": "components/link-cta.html"}, {"id": "actionables", "name": "Actionables", "type": "molecule", "tier": "molecules", "node_id": "2031:1132", "figma_fingerprint": "319c48cae4ec45084ee2296b6d0e0460d0d27a40", "usage_count": 3, "file": "components/molecules/actionables.yaml", "dashboard": "components/actionables.html"}, {"id": "chevron", "name": "Chevron", "type": "atom", "tier": "atoms", "node_id": "2031:1154", "figma_fingerprint": "01dc1aeeb4cb8263bbcdf477e7be617bb160ed27", "usage_count": 4, "file": "components/atoms/chevron.yaml", "dashboard": "components/chevron.html"}, {"id": "checkbox", "name": "Checkbox", "type": "atom", "tier": "atoms", "node_id": "2031:1168", "figma_fingerprint": "5d813fa76c98d5e979b8e58f3097ee481b6974bc", "usage_count": 1, "file": "components/atoms/checkbox.yaml", "dashboard": "components/checkbox.html"}, {"id": "radio-button", "name": "Radio Button", "type": "atom", "tier": "atoms", "node_id": "2031:1178", "figma_fingerprint": "5aaf9ca2a4ce74111f0f3c1f26e495c980cec34e", "usage_count": 1, "file": "components/atoms/radio-button.yaml", "dashboard": "components/radio-button.html"}, {"id": "toggle", "name": "Toggle", "type": "atom", "tier": "atoms", "node_id": "2031:1190", "figma_fingerprint": "5671f20fe570cab72796a90ebac8b77ca42e0621", "usage_count": 1, "file": "components/atoms/toggle.yaml", "dashboard": "components/toggle.html"}, {"id": "cross", "name": "Cross", "type": "atom", "tier": "atoms", "node_id": "2031:1201", "figma_fingerprint": "4630976d22073248745eb76ebe8a4c2e55d2c1ef", "usage_count": 4, "file": "components/atoms/cross.yaml", "dashboard": "components/cross.html"}, {"id": "heading-content-component", "name": "Heading-content component", "type": "atom", "tier": "atoms", "node_id": "301:20202", "figma_fingerprint": "18df4dd5982a7e913f345ea9459801fb472a255b", "usage_count": 4, "file": "components/atoms/heading-content-component.yaml", "dashboard": "components/heading-content-component.html"}, {"id": "l2-inner-pages-heading", "name": "L2/Inner pages Heading", "type": "molecule", "tier": "molecules", "node_id": "244:133", "figma_fingerprint": "b315ce3a53f3c7c83388272cb7b77659f4e07c50", "usage_count": 1, "file": "components/molecules/l2-inner-pages-heading.yaml", "dashboard": "components/l2-inner-pages-heading.html"}, {"id": "status-bar", "name": "Status bar", "type": "atom", "tier": "atoms", "node_id": "2007:775", "figma_fingerprint": "0642c8e04f3d5b41411530a951699e5567e63f29", "usage_count": 3, "file": "components/atoms/status-bar.yaml", "dashboard": "components/status-bar.html"}, {"id": "l1-home-page-navigation", "name": "L1/Home page", "type": "organism", "tier": "organisms", "node_id": "243:6378", "figma_fingerprint": "948135f671d61083862a0d646e005015301c3beb", "usage_count": 0, "file": "components/organisms/l1-home-page-navigation.yaml", "dashboard": "components/l1-home-page-navigation.html"}, {"id": "modal-card", "name": "Modal card", "type": "organism", "tier": "organisms", "node_id": "2097:1930", "figma_fingerprint": "21d9c86623d946fdffe7c9489dcf24ef5699f576", "usage_count": 3, "file": "components/organisms/modal-card.yaml", "dashboard": "components/modal-card.html"}, {"id": "action-sheet", "name": "Action sheet", "type": "complex-organism", "tier": "organisms", "node_id": "418:965", "figma_fingerprint": "32faaefa1091152dce02bc7f3330092f25545cf5", "usage_count": 2, "file": "components/organisms/action-sheet.yaml", "dashboard": "components/action-sheet.html"}, {"id": "image-asset-placeholder", "name": "Image, asset placeholder", "type": "atom", "tier": "atoms", "node_id": "458:8952", "figma_fingerprint": "aeb5091d768aa1acd45c5220bcddd658abbcf259", "usage_count": 2, "file": "components/atoms/image-asset-placeholder.yaml", "dashboard": "components/image-asset-placeholder.html"}, {"id": "modal-sheet", "name": "Modal Sheet", "type": "complex-organism", "tier": "organisms", "node_id": "611:1378", "figma_fingerprint": "1ff5504fa0229284b6ae328723679fb94b0ab477", "usage_count": 2, "file": "components/organisms/modal-sheet.yaml", "dashboard": "components/modal-sheet.html"}, {"id": "card-heading", "name": "Card heading", "type": "atom", "tier": "atoms", "node_id": "340:11254", "figma_fingerprint": "1cf5d7102660483fa53fe58ba6462229a449e45c", "usage_count": 2, "file": "components/atoms/card-heading.yaml", "dashboard": "components/card-heading.html"}, {"id": "description", "name": "Description", "type": "atom", "tier": "atoms", "node_id": "445:8616", "figma_fingerprint": "e429f00b447a3f8e74485cff0ebb08049999600a", "usage_count": 0, "file": "components/atoms/description.yaml", "dashboard": "components/description.html"}, {"id": "text-field", "name": "Text field", "type": "atom", "tier": "atoms", "node_id": "445:8434", "figma_fingerprint": "c32a11ab5b2fcac3c6c92f4a3723f63c390027fc", "usage_count": 0, "file": "components/atoms/text-field.yaml", "dashboard": "components/text-field.html"}, {"id": "privacy-policy-tab", "name": "Privacy policy tab", "type": "atom", "tier": "atoms", "node_id": "450:8770", "figma_fingerprint": "b9945fc2df7c786e4dddeba14021e7f232c580af", "usage_count": 0, "file": "components/atoms/privacy-policy-tab.yaml", "dashboard": "components/privacy-policy-tab.html"}, {"id": "progress-bar", "name": "Progress bar", "type": "atom", "tier": "atoms", "node_id": "489:2133", "figma_fingerprint": "f92b7ef136d4b0b6c9618e26f856f0d6537d346e", "usage_count": 0, "file": "components/atoms/progress-bar.yaml", "dashboard": "components/progress-bar.html"}, {"id": "master-card", "name": "Master card", "type": "organism", "tier": "organisms", "node_id": "396:728", "figma_fingerprint": "2a70e23d69359d2c963b4663448e7b7de1f923bb", "usage_count": 0, "file": "components/organisms/master-card.yaml", "dashboard": "components/master-card.html"}, {"id": "checkbox-card", "name": "Checkbox card", "type": "organism", "tier": "organisms", "node_id": "2032:1265", "figma_fingerprint": "63123afdabcda90456472d6efa03baaae5bfae51", "usage_count": 0, "file": "components/organisms/checkbox-card.yaml", "dashboard": "components/checkbox-card.html"}, {"id": "l1-inner-page-navigation", "name": "L1 Inner page navigation", "type": "organism", "tier": "organisms", "node_id": "2007:1007", "figma_fingerprint": "bbd24c7b7a648836ba325942f634a414386375d6", "usage_count": 3, "file": "components/organisms/l1-inner-page-navigation.yaml", "dashboard": "components/l1-inner-page-navigation.html"}, {"id": "action-card", "name": "Action card", "type": "organism", "tier": "organisms", "node_id": "2096:1434", "figma_fingerprint": "f21a114bbd31c9be808ce2265358902b7aeefbc4", "usage_count": 3, "file": "components/organisms/action-card.yaml", "dashboard": "components/action-card.html"}], "edges": [{"type": "behavioral", "source": "secondary-cta-button", "target": "primary-cta-button", "relation": "emphasis-counterpart"}, {"type": "behavioral", "source": "link-cta", "target": "primary-cta-button", "relation": "emphasis-family"}, {"type": "behavioral", "source": "link-cta", "target": "secondary-cta-button", "relation": "emphasis-family"}, {"type": "structural", "source": "chevron", "target": "actionables", "meaning": "actionables is built from chevron"}, {"type": "structural", "source": "toggle", "target": "actionables", "meaning": "actionables is built from toggle"}, {"type": "structural", "source": "checkbox", "target": "actionables", "meaning": "actionables is built from checkbox"}, {"type": "structural", "source": "cross", "target": "actionables", "meaning": "actionables is built from cross"}, {"type": "structural", "source": "radio-button", "target": "actionables", "meaning": "actionables is built from radio-button"}, {"type": "behavioral", "source": "l2-inner-pages-heading", "target": "l1-inner-page-navigation", "relation": "heading-destination"}, {"type": "behavioral", "source": "status-bar", "target": "l1-inner-page-navigation", "relation": "shares-scroll-state"}, {"type": "behavioral", "source": "l1-home-page-navigation", "target": "l1-inner-page-navigation", "relation": "sibling"}, {"type": "structural", "source": "primary-cta-button", "target": "modal-card", "meaning": "modal-card is built from primary-cta-button"}, {"type": "structural", "source": "secondary-cta-button", "target": "modal-card", "meaning": "modal-card is built from secondary-cta-button"}, {"type": "structural", "source": "link-cta", "target": "modal-card", "meaning": "modal-card is built from link-cta"}, {"type": "behavioral", "source": "modal-card", "target": "modal-sheet", "relation": "content-of"}, {"type": "behavioral", "source": "modal-card", "target": "action-card", "relation": "counterpart"}, {"type": "structural", "source": "action-card", "target": "action-sheet", "meaning": "action-sheet is built from action-card"}, {"type": "behavioral", "source": "action-sheet", "target": "action-card", "relation": "contains"}, {"type": "behavioral", "source": "action-sheet", "target": "modal-sheet", "relation": "counterpart"}, {"type": "behavioral", "source": "action-sheet", "target": "status-bar", "relation": "renders-on-top"}, {"type": "structural", "source": "modal-card", "target": "modal-sheet", "meaning": "modal-sheet is built from modal-card"}, {"type": "structural", "source": "image-asset-placeholder", "target": "modal-sheet", "meaning": "modal-sheet is built from image-asset-placeholder"}, {"type": "behavioral", "source": "modal-sheet", "target": "modal-card", "relation": "contains"}, {"type": "behavioral", "source": "modal-sheet", "target": "image-asset-placeholder", "relation": "contains"}, {"type": "behavioral", "source": "modal-sheet", "target": "action-sheet", "relation": "counterpart"}, {"type": "behavioral", "source": "modal-sheet", "target": "status-bar", "relation": "renders-on-top"}, {"type": "behavioral", "source": "card-heading", "target": "heading-content-component", "relation": "distinct-sibling"}, {"type": "behavioral", "source": "description", "target": "heading-content-component", "relation": "distinct"}, {"type": "behavioral", "source": "description", "target": "card-heading", "relation": "distinct"}, {"type": "structural", "source": "chevron", "target": "text-field", "meaning": "text-field is built from chevron"}, {"type": "behavioral", "source": "text-field", "target": "card-heading", "relation": "paired-with"}, {"type": "behavioral", "source": "text-field", "target": "chevron", "relation": "uses"}, {"type": "structural", "source": "actionables", "target": "master-card", "meaning": "master-card is built from actionables"}, {"type": "structural", "source": "heading-content-component", "target": "master-card", "meaning": "master-card is built from heading-content-component"}, {"type": "structural", "source": "actionables", "target": "checkbox-card", "meaning": "checkbox-card is built from actionables"}, {"type": "structural", "source": "cross", "target": "checkbox-card", "meaning": "checkbox-card is built from cross"}, {"type": "structural", "source": "heading-content-component", "target": "checkbox-card", "meaning": "checkbox-card is built from heading-content-component"}, {"type": "structural", "source": "chevron", "target": "l1-inner-page-navigation", "meaning": "l1-inner-page-navigation is built from chevron"}, {"type": "structural", "source": "cross", "target": "l1-inner-page-navigation", "meaning": "l1-inner-page-navigation is built from cross"}, {"type": "behavioral", "source": "l1-inner-page-navigation", "target": "l2-inner-pages-heading", "relation": "heading-source"}, {"type": "behavioral", "source": "l1-inner-page-navigation", "target": "status-bar", "relation": "shares-scroll-state"}, {"type": "structural", "source": "cross", "target": "action-card", "meaning": "action-card is built from cross"}, {"type": "structural", "source": "actionables", "target": "action-card", "meaning": "action-card is built from actionables"}, {"type": "structural", "source": "primary-cta-button", "target": "action-card", "meaning": "action-card is built from primary-cta-button"}, {"type": "structural", "source": "secondary-cta-button", "target": "action-card", "meaning": "action-card is built from secondary-cta-button"}, {"type": "structural", "source": "link-cta", "target": "action-card", "meaning": "action-card is built from link-cta"}, {"type": "behavioral", "source": "action-card", "target": "action-sheet", "relation": "content-of"}, {"type": "behavioral", "source": "action-card", "target": "modal-card", "relation": "counterpart"}]}</script>
     <script>
 (function () {
   var data = JSON.parse(document.getElementById('graph-data').textContent);
@@ -82,131 +92,342 @@
   // when this page is bundled into the single-file dashboard, route via hashes
   var bundled = !!document.querySelector('[data-page]');
   var link = function (n) { return bundled ? '#/components/' + n.id : n.dashboard; };
+  var goTo = function (n) { if (bundled) { location.hash = link(n); } else { location.href = link(n); } };
 
-  var TYPE_COLOR = { atom: '#1c8a4c', molecule: '#b6732b', organism: '#c42e2e', 'complex-organism': '#7a1616' };
-  var tiers = ['atoms', 'molecules', 'organisms'];
-  var X = { atoms: 150, molecules: 480, organisms: 810 }, GX = 1120;
-  var ROW = 52, TOP = 86;
+  var TYPE_COLOR = { atom: '#1c7a45', molecule: '#9c6a1f', organism: '#b3261e', 'complex-organism': '#6b1414' };
+  // concentric bands, atoms innermost growing out to molecules then organisms — like Obsidian's
+  // force graph, but biased into layers so the taxonomy stays legible at a glance.
+  var BAND = { atoms: [0, 165], molecules: [165, 280], organisms: [280, 410] };
+  var W = 1400, H = 900, CX = W / 2, CY = H / 2;
 
+  var radius = function (n) { return 8 + 2.6 * Math.min(n.usage_count, 8); };
+
+  // ---------------------------------------------------------------- seed node positions
   var byTier = { atoms: [], molecules: [], organisms: [] };
   data.nodes.forEach(function (n) { byTier[n.tier].push(n); });
-  var pos = {};
-  tiers.forEach(function (t) {
-    byTier[t].forEach(function (n, i) { pos[n.id] = { x: X[t], y: TOP + i * ROW }; });
-  });
-  // ghost markers for dangling references, deduped by ref_node_id (registry data, not invented)
+  var nodes = [], nodeById = {};
+  function seed(list, band) {
+    var n = list.length;
+    list.forEach(function (src, i) {
+      var a = (i / Math.max(n, 1)) * Math.PI * 2 + Math.random() * 0.4;
+      var r = (band[0] + band[1]) / 2 + (Math.random() - 0.5) * (band[1] - band[0]) * 0.6;
+      var node = {
+        id: src.id, name: src.name, type: src.type, tier: src.tier,
+        node_id: src.node_id, figma_fingerprint: src.figma_fingerprint,
+        usage_count: src.usage_count, file: src.file, dashboard: src.dashboard,
+        x: CX + Math.cos(a) * r, y: CY + Math.sin(a) * r, vx: 0, vy: 0,
+        band: band, r: radius(src), ghost: false,
+      };
+      nodes.push(node); nodeById[node.id] = node;
+    });
+  }
+  seed(byTier.atoms, BAND.atoms);
+  seed(byTier.molecules, BAND.molecules);
+  seed(byTier.organisms, BAND.organisms);
+
+  // ghost nodes: dangling references, deduped by ref_node_id (registry data, not invented).
+  // Placed on their own outer ring, static (no physics) — broken, shown, never repaired.
   var ghosts = {}, ghostOrder = [];
   data.edges.forEach(function (e) {
     if (e.type !== 'dangling') return;
     if (!ghosts[e.ref_node_id]) { ghosts[e.ref_node_id] = e; ghostOrder.push(e.ref_node_id); }
   });
-  var gpos = {};
-  ghostOrder.forEach(function (gid, i) { gpos[gid] = { x: GX, y: TOP + i * 34 }; });
+  var GR = 470;
+  ghostOrder.forEach(function (gid, i) {
+    var e = ghosts[gid];
+    var a = (i / Math.max(ghostOrder.length, 1)) * Math.PI * 2;
+    var node = {
+      id: 'ghost:' + gid, name: e.ref_name, type: 'ghost', ghost: true, static: true,
+      x: CX + Math.cos(a) * GR, y: CY + Math.sin(a) * GR, vx: 0, vy: 0, r: 5,
+      external_location: e.external_location, same_named_library_component: e.same_named_library_component,
+    };
+    nodes.push(node); nodeById[node.id] = node;
+  });
 
-  var H = Math.max(TOP + byTier.atoms.length * ROW, TOP + ghostOrder.length * 34) + 40;
+  // ---------------------------------------------------------------- edges + adjacency
+  var edges = [], adj = {};
+  function addAdj(a, b) { (adj[a] = adj[a] || {})[b] = 1; (adj[b] = adj[b] || {})[a] = 1; }
+  data.edges.forEach(function (e) {
+    var aId = e.source, bId = e.type === 'dangling' ? 'ghost:' + e.ref_node_id : e.target;
+    var a = nodeById[aId], b = nodeById[bId];
+    if (!a || !b) return;
+    edges.push({
+      a: a, b: b, type: e.type,
+      title: e.type === 'structural' ? e.meaning
+        : e.type === 'behavioral' ? e.source + ' —[' + e.relation + ']→ ' + e.target
+        : e.source + ' → ' + e.ref_name + ' (' + (e.external_location || 'outside library') + ') — dangling reference',
+    });
+    addAdj(aId, bId);
+  });
+  var IDEAL = { structural: 95, behavioral: 160, dangling: 140 };
+  var SPRING = { structural: 0.018, behavioral: 0.01, dangling: 0.008 };
+
+  // ---------------------------------------------------------------- physics (n-body, spring, radial band)
+  var REPULSE = 2400, CROSS_TIER_REPULSE = 0.3, DAMPING = 0.82, BAND_PULL = 0.28;
+  var live = nodes.filter(function (n) { return !n.static; });
+  var dragging = null, panning = false, rafId = null, asleep = false;
+
+  function physicsStep() {
+    for (var i = 0; i < live.length; i++) {
+      for (var j = i + 1; j < live.length; j++) {
+        var A = live[i], B = live[j];
+        var dx = B.x - A.x, dy = B.y - A.y, d2 = dx * dx + dy * dy; if (d2 < 4) d2 = 4;
+        // repulsion is much weaker across tiers than within one: cross-tier separation is the
+        // radial band constraint's job below, not this force's — letting repulsion push evenly
+        // across tiers is what drags atoms/organisms into the same radius band.
+        var sameTier = A.tier === B.tier;
+        var f = (REPULSE * (sameTier ? 1 : CROSS_TIER_REPULSE)) / d2;
+        var d = Math.sqrt(d2), fx = dx / d * f, fy = dy / d * f;
+        A.vx -= fx; A.vy -= fy; B.vx += fx; B.vy += fy;
+      }
+    }
+    edges.forEach(function (e) {
+      var A = e.a, B = e.b;
+      if (A.static && B.static) return;
+      var dx = B.x - A.x, dy = B.y - A.y, d = Math.sqrt(dx * dx + dy * dy) || 1;
+      var k = SPRING[e.type] || 0.01, ideal = IDEAL[e.type] || 110;
+      var f = k * (d - ideal), fx = dx / d * f, fy = dy / d * f;
+      if (!A.static) { A.vx += fx; A.vy += fy; }
+      if (!B.static) { B.vx -= fx; B.vy -= fy; }
+    });
+    var ke = 0;
+    live.forEach(function (n) {
+      if (n === dragging) { n.vx = 0; n.vy = 0; return; }
+      n.vx *= DAMPING; n.vy *= DAMPING;
+      n.x += n.vx; n.y += n.vy;
+      // hard radial constraint, applied AFTER integration so it always wins over the spring/
+      // repulsion tug-of-war: pull this frame's distance-from-center a fixed fraction toward the
+      // tier's band midpoint. Angular position (and so which neighbors cluster together) is left
+      // entirely to the forces above — only the ring the node sits on is enforced.
+      var dx = n.x - CX, dy = n.y - CY, d = Math.sqrt(dx * dx + dy * dy) || 0.001;
+      var mid = (n.band[0] + n.band[1]) / 2;
+      var newD = d + (mid - d) * BAND_PULL;
+      n.x = CX + dx / d * newD; n.y = CY + dy / d * newD;
+      ke += n.vx * n.vx + n.vy * n.vy;
+    });
+    return ke;
+  }
+
+  // ---------------------------------------------------------------- SVG scaffold
   var svg = document.createElementNS(svgNS, 'svg');
-  svg.setAttribute('viewBox', '0 0 1330 ' + H);
-  svg.setAttribute('class', 'cgraph');
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.setAttribute('class', 'ograph');
+  svg.setAttribute('tabindex', '0');
   mount.appendChild(svg);
-
   function el(tag, attrs, parent) {
     var e = document.createElementNS(svgNS, tag);
     for (var k in attrs) e.setAttribute(k, attrs[k]);
     (parent || svg).appendChild(e); return e;
   }
-  // arrowhead for structural edges (part -> whole)
   var defs = el('defs', {});
-  var m = el('marker', { id: 'arrow', viewBox: '0 0 8 8', refX: 7, refY: 4, markerWidth: 6, markerHeight: 6, orient: 'auto' }, defs);
-  el('path', { d: 'M0,0 L8,4 L0,8 z', fill: '#8a8a8a' }, m);
+  var arrow = el('marker', { id: 'og-arrow', viewBox: '0 0 8 8', refX: 7, refY: 4, markerWidth: 6, markerHeight: 6, orient: 'auto' }, defs);
+  el('path', { d: 'M0,0 L8,4 L0,8 z', fill: '#7a7a7a' }, arrow);
 
-  // tier headers with counts
-  var tierCounts = { atoms: data.counts.atoms, molecules: data.counts.molecules, organisms: data.counts.organisms };
-  tiers.forEach(function (t) {
-    el('text', { x: X[t], y: 34, class: 'g-col' }).textContent =
-      t.charAt(0).toUpperCase() + t.slice(1) + ' — ' + tierCounts[t];
-    el('text', { x: X[t], y: 52, class: 'g-colsub' }).textContent =
-      { atoms: 'raw parts', molecules: 'combinations', organisms: 'complete patterns' }[t];
+  var viewport = el('g', { id: 'og-viewport' });
+  var edgeLayer = el('g', { class: 'og-edges' }, viewport);
+  // dots and labels are separate layers, labels drawn LAST, so a label can never be painted
+  // over by some other node's circle just because that node happened to be created later —
+  // paint order previously followed per-node creation order, not proximity, which cut labels
+  // off behind neighboring dots. All labels now sit above all dots, always.
+  var dotLayer = el('g', { class: 'og-dots' }, viewport);
+  var labelLayer = el('g', { class: 'og-labels' }, viewport);
+
+  var edgeEls = edges.map(function (e) {
+    var cls = e.type === 'structural' ? 'og-e-structural' : e.type === 'behavioral' ? 'og-e-behavioral' : 'og-e-dangling';
+    var line = el('line', { class: 'og-edge ' + cls }, edgeLayer);
+    if (e.type === 'structural') line.setAttribute('marker-end', 'url(#og-arrow)');
+    el('title', {}, line).textContent = e.title;
+    return { el: line, edge: e };
   });
-  if (ghostOrder.length) {
-    el('text', { x: GX, y: 34, class: 'g-col g-broken' }).textContent = 'Outside the library — ' + ghostOrder.length;
-    el('text', { x: GX, y: 52, class: 'g-colsub' }).textContent = 'dangling references (registry-flagged)';
+
+  var nodeEls = {}, labelEls = [];
+  nodes.forEach(function (n) {
+    var dg = el('g', { class: 'og-node' + (n.ghost ? ' og-ghost' : ''), 'data-key': n.id }, dotLayer);
+    var lg = el('g', { class: 'og-node' + (n.ghost ? ' og-ghost' : ''), 'data-key': n.id }, labelLayer);
+    var title;
+    if (n.ghost) {
+      el('circle', { r: n.r, class: 'og-dot og-dot-ghost' }, dg);
+      var lbl = el('text', { class: 'og-label og-label-ghost', x: n.r + 6, y: 4 }, lg);
+      lbl.textContent = '✕ ' + n.name;
+      title = n.name + ' — ' + (n.external_location || 'outside library') +
+        (n.same_named_library_component ? '; same-named library component: ' + n.same_named_library_component : '');
+      labelEls.push({ el: lbl, ghost: true });
+    } else {
+      el('circle', { r: n.r, class: 'og-dot', fill: TYPE_COLOR[n.type] }, dg);
+      var lbl2 = el('text', { class: 'og-label', x: n.r + 6, y: 4 }, lg);
+      lbl2.textContent = n.name;
+      title = n.id + '\ntype: ' + n.type + ' · usage count: ' + n.usage_count +
+        '\nnode_id: ' + n.node_id + '\nfingerprint: ' + n.figma_fingerprint + '\nfile: ' + n.file;
+      dg.style.cursor = 'pointer'; lg.style.cursor = 'pointer';
+      labelEls.push({ el: lbl2, ghost: false });
+    }
+    el('title', {}, dg).textContent = title;
+    el('title', {}, lg).textContent = title;
+    nodeEls[n.id] = { dot: dg, label: lg };
+  });
+
+  function render() {
+    nodes.forEach(function (n) {
+      var t = 'translate(' + n.x.toFixed(1) + ',' + n.y.toFixed(1) + ')';
+      nodeEls[n.id].dot.setAttribute('transform', t);
+      nodeEls[n.id].label.setAttribute('transform', t);
+    });
+    edgeEls.forEach(function (e) {
+      var a = e.edge.a, b = e.edge.b;
+      e.el.setAttribute('x1', a.x); e.el.setAttribute('y1', a.y);
+      e.el.setAttribute('x2', b.x); e.el.setAttribute('y2', b.y);
+    });
   }
 
-  var radius = function (n) { return 9 + 2.5 * Math.min(n.usage_count, 8); };
-  var edgeEls = [], nodeEls = {}, adj = {};
-  function addAdj(a, b) { (adj[a] = adj[a] || {})[b] = 1; (adj[b] = adj[b] || {})[a] = 1; }
+  // ---------------------------------------------------------------- run/settle loop
+  var frame = 0;
+  var MIN_SETTLE_FRAMES = 260; // the radial band-pull is a slow exponential correction (not
+  // reflected in velocity/KE) — isolated nodes can go velocity-quiet in ~10 frames while still
+  // far outside their tier's ring, so sleep must not trigger on KE alone until it's had time to converge.
+  function tick() {
+    var ke = physicsStep();
+    render();
+    frame++;
+    if (ke < 0.6 && frame > MIN_SETTLE_FRAMES && !dragging) { asleep = true; rafId = null; return; }
+    rafId = requestAnimationFrame(tick);
+  }
+  function wake() { if (rafId == null) { asleep = false; frame = 0; rafId = requestAnimationFrame(tick); } }
+  render();
+  wake();
 
-  var eg = el('g', { class: 'edges' });
-  data.edges.forEach(function (e, idx) {
-    var a, b, cls;
-    if (e.type === 'dangling') { a = pos[e.source]; b = gpos[e.ref_node_id]; cls = 'e-dangling'; }
-    else { a = pos[e.source]; b = pos[e.target]; cls = e.type === 'structural' ? 'e-structural' : 'e-behavioral'; }
-    if (!a || !b) return;
-    var ra = e.type === 'dangling' ? 0 : radius(data.nodes.find(function (n) { return n.id === e.source; }));
-    var x1 = a.x + (b.x > a.x ? ra : -ra), x2 = b.x - (b.x > a.x ? 12 : -12);
-    if (e.type === 'behavioral' && a.x === b.x) { x1 = a.x + ra; x2 = b.x + 12; }
-    var mx = (x1 + x2) / 2;
-    var p = el('path', { class: 'g-edge ' + cls,
-      d: 'M' + x1 + ',' + a.y + ' C' + mx + ',' + a.y + ' ' + mx + ',' + b.y + ' ' + x2 + ',' + b.y }, eg);
-    if (e.type === 'structural') p.setAttribute('marker-end', 'url(#arrow)');
-    var t = el('title', {}, p);
-    t.textContent = e.type === 'structural' ? e.meaning
-      : e.type === 'behavioral' ? e.source + ' —[' + e.relation + ']→ ' + e.target
-      : e.source + ' → ' + e.ref_name + ' (' + (e.external_location || 'outside library') + ') — dangling reference';
-    var key = e.type === 'dangling' ? 'ghost:' + e.ref_node_id : e.target;
-    edgeEls.push({ el: p, a: e.source, b: key });
-    addAdj(e.source, key);
+  // ---------------------------------------------------------------- zoom / pan
+  var view = { x: 0, y: 0, scale: 1 };
+  // Labels live inside the same scaled group as the nodes, so a plain font-size would grow
+  // linearly with zoom forever (unreadable at high zoom, all-or-nothing at low zoom). Instead
+  // labels are invisible below LABEL_ZOOM_MIN, fade + grow in screen-space size between MIN and
+  // MAX, then hold a fixed on-screen size beyond MAX — done by counter-dividing the local
+  // font-size by view.scale so the RENDERED pixel size is the thing being controlled, not the
+  // local SVG unit size.
+  var LABEL_ZOOM_MIN = 0.55, LABEL_ZOOM_MAX = 1.6;
+  var LABEL_PX_MIN = 7, LABEL_PX_MAX = 17, GHOST_PX_RATIO = 0.85;
+  function applyView() {
+    viewport.setAttribute('transform', 'translate(' + view.x + ',' + view.y + ') scale(' + view.scale + ')');
+    var t = Math.max(0, Math.min(1, (view.scale - LABEL_ZOOM_MIN) / (LABEL_ZOOM_MAX - LABEL_ZOOM_MIN)));
+    var screenPx = LABEL_PX_MIN + t * (LABEL_PX_MAX - LABEL_PX_MIN);
+    var localPx = screenPx / view.scale;
+    labelLayer.style.setProperty('--og-label-op', t);
+    labelEls.forEach(function (l) {
+      l.el.style.fontSize = (localPx * (l.ghost ? GHOST_PX_RATIO : 1)).toFixed(2) + 'px';
+    });
+  }
+  function fitView() { view.x = 0; view.y = 0; view.scale = 1; applyView(); }
+  fitView();
+
+  function localPoint(clientX, clientY) {
+    var rect = svg.getBoundingClientRect();
+    return { x: (clientX - rect.left) * (W / rect.width), y: (clientY - rect.top) * (H / rect.height) };
+  }
+  function toWorld(clientX, clientY) {
+    var p = localPoint(clientX, clientY);
+    return { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
+  }
+
+  svg.addEventListener('wheel', function (ev) {
+    ev.preventDefault();
+    var p = localPoint(ev.clientX, ev.clientY);
+    var world = { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
+    var dy = Math.max(-120, Math.min(120, ev.deltaY)); // clamp stray large-delta spikes (some trackpads/mice)
+    var factor = Math.exp(-dy * 0.0055);
+    var newScale = Math.min(4, Math.max(0.15, view.scale * factor));
+    view.x = p.x - world.x * newScale;
+    view.y = p.y - world.y * newScale;
+    view.scale = newScale;
+    applyView();
+  }, { passive: false });
+
+  var dragKey = null, dragMoved = false, dragPointerId = null, panStart = null, panViewStart = null;
+  var CLICK_SLOP = 4;
+
+  svg.addEventListener('pointerdown', function (ev) {
+    var g = ev.target.closest('.og-node');
+    dragPointerId = ev.pointerId;
+    svg.setPointerCapture(ev.pointerId);
+    if (g && !g.classList.contains('og-ghost')) {
+      dragKey = g.getAttribute('data-key'); dragMoved = false;
+      dragging = nodeById[dragKey];
+      wake();
+    } else {
+      panning = true; panStart = { x: ev.clientX, y: ev.clientY }; panViewStart = { x: view.x, y: view.y };
+    }
   });
-
-  // ghost nodes (broken-reference targets named in the registry)
-  ghostOrder.forEach(function (gid) {
-    var e = ghosts[gid], p = gpos[gid];
-    var g = el('g', { class: 'g-ghost', 'data-key': 'ghost:' + gid });
-    el('rect', { x: p.x - 12, y: p.y - 11, width: 200, height: 22, rx: 6 }, g);
-    el('text', { x: p.x + 2, y: p.y + 4, class: 'g-ghostlabel' }, g).textContent = '✕ ' + e.ref_name;
-    var t = el('title', {}, g);
-    t.textContent = e.ref_name + ' (' + gid + ') — ' + (e.external_location || 'outside library') +
-      (e.same_named_library_component ? '; same-named library component: ' + e.same_named_library_component : '');
-    nodeEls['ghost:' + gid] = g;
+  svg.addEventListener('pointermove', function (ev) {
+    if (dragKey) {
+      var w = toWorld(ev.clientX, ev.clientY);
+      var n = nodeById[dragKey];
+      var moved = Math.abs(w.x - n.x) > CLICK_SLOP || Math.abs(w.y - n.y) > CLICK_SLOP;
+      if (moved) dragMoved = true;
+      n.x = w.x; n.y = w.y; n.vx = 0; n.vy = 0;
+      render();
+    } else if (panning) {
+      var scaleX = W / svg.getBoundingClientRect().width;
+      view.x = panViewStart.x + (ev.clientX - panStart.x) * scaleX;
+      view.y = panViewStart.y + (ev.clientY - panStart.y) * scaleX;
+      applyView();
+    }
   });
+  function endPointer(ev) {
+    if (dragKey) {
+      if (!dragMoved) goTo(nodeById[dragKey]);
+      dragging = null; dragKey = null; dragMoved = false;
+      wake();
+    }
+    panning = false;
+    if (dragPointerId != null) { try { svg.releasePointerCapture(dragPointerId); } catch (e) {} dragPointerId = null; }
+  }
+  svg.addEventListener('pointerup', endPointer);
+  svg.addEventListener('pointercancel', endPointer);
+  svg.style.cursor = 'grab';
+  svg.addEventListener('pointerdown', function (ev) { if (!ev.target.closest('.og-node')) svg.style.cursor = 'grabbing'; });
+  window.addEventListener('pointerup', function () { svg.style.cursor = 'grab'; });
 
-  // component nodes
-  data.nodes.forEach(function (n) {
-    var p = pos[n.id], r = radius(n);
-    var a = document.createElementNS(svgNS, 'a');
-    a.setAttribute('href', link(n));
-    a.setAttribute('class', 'g-nodegroup');
-    a.setAttribute('data-key', n.id);
-    svg.appendChild(a);
-    el('circle', { cx: p.x, cy: p.y, r: r, class: 'g-dot', fill: TYPE_COLOR[n.type] }, a);
-    el('text', { x: p.x + r + 7, y: p.y + 4, class: 'g-name' }, a).textContent = n.name;
-    var t = el('title', {}, a);
-    t.textContent = n.id + '\ntype: ' + n.type + ' · usage count: ' + n.usage_count +
-      '\nnode_id: ' + n.node_id + '\nfingerprint: ' + n.figma_fingerprint + '\nfile: ' + n.file;
-    nodeEls[n.id] = a;
-  });
+  // zoom toolbar
+  var toolbar = mount.parentElement.querySelector('.og-toolbar');
+  if (toolbar) {
+    toolbar.querySelector('[data-zoom=in]').addEventListener('click', function () { zoomBy(1.3); });
+    toolbar.querySelector('[data-zoom=out]').addEventListener('click', function () { zoomBy(1 / 1.3); });
+    toolbar.querySelector('[data-zoom=reset]').addEventListener('click', fitView);
+  }
+  function zoomBy(factor) {
+    var p = { x: W / 2, y: H / 2 };
+    var world = { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
+    view.scale = Math.min(4, Math.max(0.15, view.scale * factor));
+    view.x = p.x - world.x * view.scale; view.y = p.y - world.y * view.scale;
+    applyView();
+  }
 
-  // hover spotlight: highlight the node's whole neighborhood, dim the rest
+  // ---------------------------------------------------------------- hover spotlight
   function spotlight(key) {
-    var keep = { }; keep[key] = 1;
+    var keep = {}; keep[key] = 1;
     for (var k in (adj[key] || {})) keep[k] = 1;
-    for (var id in nodeEls) nodeEls[id].classList.toggle('dimmed', !keep[id]);
+    for (var id in nodeEls) {
+      var on = !keep[id];
+      nodeEls[id].dot.classList.toggle('dimmed', on);
+      nodeEls[id].label.classList.toggle('dimmed', on);
+    }
     edgeEls.forEach(function (e) {
-      var on = e.a === key || e.b === key;
+      var on = e.edge.a.id === key || e.edge.b.id === key;
       e.el.classList.toggle('dimmed', !on);
       e.el.classList.toggle('hot', on);
     });
   }
-  function clear() {
-    for (var id in nodeEls) nodeEls[id].classList.remove('dimmed');
+  function clearSpotlight() {
+    for (var id in nodeEls) {
+      nodeEls[id].dot.classList.remove('dimmed');
+      nodeEls[id].label.classList.remove('dimmed');
+    }
     edgeEls.forEach(function (e) { e.el.classList.remove('dimmed', 'hot'); });
   }
-  for (var id in nodeEls) {
-    (function (key) {
-      nodeEls[key].addEventListener('mouseenter', function () { spotlight(key); });
-      nodeEls[key].addEventListener('mouseleave', clear);
-    })(id);
-  }
+  viewport.addEventListener('pointerover', function (ev) {
+    var g = ev.target.closest('.og-node'); if (g) spotlight(g.getAttribute('data-key'));
+  });
+  viewport.addEventListener('pointerout', function (ev) {
+    var g = ev.target.closest('.og-node'); if (g) clearSpotlight();
+  });
 })();
 </script>
     

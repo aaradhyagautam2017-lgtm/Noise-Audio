@@ -68,6 +68,58 @@ control_panel_missing = not os.path.exists(os.path.join(ROOT, "CONTROL_PANEL.md"
 
 E = lambda s: html.escape(str(s), quote=True)
 
+# ----------------------------------------------------------------- library-health stats
+# Everything below is read straight from the repo at build time (authored_metadata,
+# figma_instance_edges, structural/behavioral edges) — there is no separate "score";
+# these are the same facts the component pages already show, aggregated for the overview.
+CORE_DOC_FIELDS = [("purpose", "Purpose"), ("usage", "Usage"),
+                    ("design_intent", "Design intent"), ("anti_patterns", "Anti-patterns"),
+                    ("rules", "Rules")]
+
+def parse_authored_body(cid):
+    """Same parse the component page uses (render_metadata): the component's
+    authored_metadata is itself a YAML document, optionally nested under 'component'."""
+    try:
+        parsed = yaml.safe_load(components[cid].get("authored_metadata"))
+    except yaml.YAMLError:
+        return None, True
+    if not isinstance(parsed, dict):
+        return None, True
+    body = parsed.get("component", parsed)
+    return (body, False) if isinstance(body, dict) else (None, True)
+
+doc_status = {}                                    # cid -> (filled, total, parse_error)
+field_coverage = {k: 0 for k, _ in CORE_DOC_FIELDS}
+for cid in order:
+    body, err = parse_authored_body(cid)
+    if err:
+        doc_status[cid] = (0, len(CORE_DOC_FIELDS), True)
+        continue
+    filled = 0
+    for key, _ in CORE_DOC_FIELDS:
+        if body.get(key):
+            filled += 1
+            field_coverage[key] += 1
+    doc_status[cid] = (filled, len(CORE_DOC_FIELDS), False)
+doc_parse_errors = sum(1 for _, _, err in doc_status.values() if err)
+
+ref_resolved = ref_excluded = ref_dangling = 0
+for c in registry["components"]:
+    for e in (c.get("figma_instance_edges") or []):
+        if e.get("excluded"):
+            ref_excluded += 1
+        elif e.get("resolved"):
+            ref_resolved += 1
+        else:
+            ref_dangling += 1
+ref_total = ref_resolved + ref_excluded + ref_dangling
+
+total_structural = sum(len((c.get("structural_edges") or {}).get("uses", []) or [])
+                       for c in registry["components"])
+total_behavioral = sum(len(c.get("behavioral_edges") or []) for c in registry["components"])
+total_relationships = total_structural + total_behavioral
+avg_connections = (2 * total_relationships / len(order)) if order else 0
+
 # ----------------------------------------------------------------- shell
 def sidebar(prefix, active):
     def item(href, label, key, count=None, warn=0):
@@ -95,7 +147,7 @@ def sidebar(prefix, active):
     for gname, ids in group_defs:
         parts.append(f'<div class="navgroup">{gname} <span class="count">{len(ids)}</span></div>')
         for cid in ids:
-            dangling = sum(1 for e in reg_by_id[cid].get("figma_instance_edges", []) or [] if not e["resolved"])
+            dangling = sum(1 for e in reg_by_id[cid].get("figma_instance_edges", []) or [] if not e["resolved"] and not e.get("excluded"))
             parts.append(item(f"components/{cid}.html", components[cid]["name"].strip(), f"c-{cid}", warn=dangling))
     parts.append("</nav></aside>")
     return "".join(parts)
@@ -106,7 +158,7 @@ def page(title, active, body, prefix=""):
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{E(title)} — {E(registry["app"])} DLS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600&family=Geist:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{prefix}assets/style.css">
 </head><body>
 <div class="layout">
@@ -339,7 +391,8 @@ def component_page(cid):
     comp = components[cid]
     reg = reg_by_id[cid]
     name = comp["name"].strip()
-    dangling = [e for e in reg.get("figma_instance_edges", []) or [] if not e["resolved"]]
+    dangling = [e for e in reg.get("figma_instance_edges", []) or [] if not e["resolved"] and not e.get("excluded")]
+    excluded = [e for e in reg.get("figma_instance_edges", []) or [] if e.get("excluded")]
     warns = []
     if dangling:
         items = "".join(
@@ -349,6 +402,12 @@ def component_page(cid):
             for e in dangling)
         warns.append(warn(f'{len(dangling)} Figma instance reference(s) inside this component point outside '
                           f'the ingested library page (see INGESTION_REPORT.md):<ul>{items}</ul>'))
+    excluded_note = ""
+    if excluded:
+        items = "".join(f'<li><b>{E(e["references"])}</b> (node <code>{E(e["ref_node_id"])}</code>) — {E(e.get("external_location",""))}</li>' for e in excluded)
+        excluded_note = (f'<p class="dim">{len(excluded)} raw Figma instance reference(s) in this component were '
+                         f'reviewed and excluded — confirmed not real library dependencies (see INGESTION_REPORT.md §5d):'
+                         f'<ul>{items}</ul></p>')
 
     ids_block = (f'<div class="idsblock"><h3>Identifiers</h3>'
                  + copyable("Name", name)
@@ -397,6 +456,7 @@ def component_page(cid):
       <div class="dim">source file: <code>{E(reg["file"])}</code></div>
     </header>
     {"".join(warns)}
+    {excluded_note}
     <section class="metasection"><h3>Preview</h3>{render_preview(comp)}</section>
     {ids_block}
     {variants_block}
@@ -495,6 +555,13 @@ def spacing_page():
     """
     return page("Spacing & radius", "spacing", body)
 
+def doc_badge(cid):
+    filled, total, err = doc_status[cid]
+    if err:
+        return '<span class="docbadge docbadge-low" title="authored_metadata did not parse as YAML">⚠ unparsed</span>'
+    cls = "docbadge" if filled >= 4 else "docbadge docbadge-low"
+    return f'<span class="{cls}" title="{filled} of {total} documentation fields present">{filled}/{total} docs</span>'
+
 # ----------------------------------------------------------------- overview + graph
 def overview_page():
     counts = registry["counts"]
@@ -505,7 +572,8 @@ def overview_page():
                  <div class="cardname">{E(components[cid]["name"].strip())}</div>
                  <div class="dim">{E(cid)}</div>
                  <div class="cardmeta"><span class="typebadge t-{E(reg_by_id[cid]["type"])}">{E(TYPE_BADGE.get(reg_by_id[cid]["type"]))}</span>
-                 {"<span class=warnbadge title=dangling-references>" + str(sum(1 for e in reg_by_id[cid].get("figma_instance_edges",[]) or [] if not e["resolved"])) + "</span>" if any(not e["resolved"] for e in reg_by_id[cid].get("figma_instance_edges",[]) or []) else ""}</div>
+                 {"<span class=warnbadge title=dangling-references>" + str(sum(1 for e in reg_by_id[cid].get("figma_instance_edges",[]) or [] if not e["resolved"] and not e.get("excluded"))) + "</span>" if any(not e["resolved"] and not e.get("excluded") for e in reg_by_id[cid].get("figma_instance_edges",[]) or []) else ""}
+                 {doc_badge(cid)}</div>
                </a>''' for cid in ids)
         cards.append(f'<h2>{gname} <span class="count">{len(ids)}</span></h2><div class="cardgrid">{items}</div>')
     warns = []
@@ -514,6 +582,45 @@ def overview_page():
     de = validation.get("dangling_figma_instance_edges", 0)
     if de:
         warns.append(warn(f"<b>{de} dangling Figma instance references</b> across the library — instances whose main component lives outside the ingested page. Flagged on each affected component page and catalogued in INGESTION_REPORT.md §5."))
+    if doc_parse_errors:
+        warns.append(warn(f"<b>{doc_parse_errors} component(s) have authored_metadata that fails to parse as YAML</b> — shown raw on their page instead of rendered sections."))
+
+    n_atoms, n_molecules = len(by_type.get("atom", [])), len(by_type.get("molecule", []))
+    n_organisms, n_complex = len(by_type.get("organism", [])), len(by_type.get("complex-organism", []))
+    n_total = len(order)
+    breakdown = [("Atoms", n_atoms, "var(--atom)"), ("Molecules", n_molecules, "var(--molecule)"),
+                 ("Organisms", n_organisms, "var(--organism)"), ("Complex organisms", n_complex, "var(--complex)")]
+    kpi_html = "".join(
+        f'<div class="kpi"><div class="kpi-value">{v}</div><div class="kpi-label">{E(label)}</div></div>'
+        for label, v, _ in breakdown)
+    propbar_html = "".join(
+        f'<div class="propbar-seg" style="flex:{max(v,1)};background:{color}" '
+        f'title="{E(label)} — {v} ({(v/n_total*100 if n_total else 0):.0f}%)"></div>'
+        for label, v, color in breakdown if v)
+    legend_html = "".join(
+        f'<span><span class="ov-sw" style="background:{color}"></span>{E(label)} <b>{v}</b></span>'
+        for label, v, color in breakdown if v)
+
+    meter_rows = sorted(((label, field_coverage[key], len(order)) for key, label in CORE_DOC_FIELDS),
+                        key=lambda r: -r[1])
+    meters_html = "".join(f'''
+      <div class="meterrow">
+        <div class="meterrow-top"><span class="meterrow-label">{E(label)}</span><span class="meterrow-frac">{n}/{total}</span></div>
+        <div class="meter"><div class="meter-fill" style="width:{(n/total*100 if total else 0):.1f}%"></div></div>
+      </div>''' for label, n, total in meter_rows)
+
+    ref_pct = (ref_resolved / ref_total * 100) if ref_total else 100
+    dangling_tile_cls = "kpi kpi-warn" if ref_dangling else "kpi"
+    split_html = ""
+    if total_relationships:
+        struct_pct = total_structural / total_relationships * 100
+        split_html = (f'<div class="propbar splitbar"><div class="propbar-seg" style="flex:{total_structural or 1};background:var(--ink3)" '
+                      f'title="Structural (is built from) — {total_structural}"></div>'
+                      f'<div class="propbar-seg" style="flex:{total_behavioral or 1};background:var(--plum)" '
+                      f'title="Behavioral — {total_behavioral}"></div></div>'
+                      f'<div class="ov-legend"><span><span class="ov-sw" style="background:var(--ink3)"></span>Structural (built from) <b>{total_structural}</b></span>'
+                      f'<span><span class="ov-sw" style="background:var(--plum)"></span>Behavioral <b>{total_behavioral}</b></span></div>')
+
     body = f"""
     <header class="landing">
       <h1>{E(registry["app"])} <span class="dim">Design Language System</span></h1>
@@ -526,14 +633,70 @@ def overview_page():
         <a class="btn" href="{E(registry["source"]["figma_url"])}">Figma source ↗</a>
       </div>
       <div class="pills">
-        <span class="pill">{counts["atoms"]} atoms</span>
-        <span class="pill">{counts["molecules"]} molecules</span>
-        <span class="pill">{counts["organisms"]} organisms</span>
         <span class="pill">{counts["token_sources"]} token source</span>
         <span class="pill">ingested {E(registry["generated"])}</span>
       </div>
     </header>
     {''.join(warns)}
+
+    <section class="metasection">
+      <h3>Library at a glance</h3>
+      <div class="hero"><div class="hero-value">{n_total}</div><div class="hero-label">components in the library</div></div>
+      <div class="kpirow">{kpi_html}</div>
+      <div class="propbar">{propbar_html}</div>
+      <div class="ov-legend">{legend_html}</div>
+    </section>
+
+    <section class="metasection">
+      <h3>How this library works</h3>
+      <p>Figma is the only source of truth. This repository (<code>registry.yaml</code> + <code>components/**.yaml</code>) is
+      an ingested, versioned mirror of it, and this dashboard is a rendered view of the repository — never a second source
+      of truth in either direction. To change a component, change it in Figma and re-run the ingestion; do not hand-edit
+      the generated HTML.</p>
+      <p><b>When to use what:</b> browse this dashboard to look up a component's Figma variants, rules and anti-patterns
+      before building a screen with it; read <a href="../registry.yaml">registry.yaml</a> or
+      <a href="graph.html">graph/graph.json</a> when you need the whole library's structure at once (composition,
+      usage counts, relationships); read a component's own <code>components/&lt;tier&gt;/&lt;id&gt;.yaml</code> for its
+      full authored governance.</p>
+      <p class="dim">Quickstart for an agent consuming this library programmatically:</p>
+      <pre class="codeblock">registry = yaml.safe_load(open("registry.yaml"))["registry"]
+component = yaml.safe_load(open(registry["components"][i]["file"]))
+# every component exposes: id, node_id (Figma in-file locator),
+# figma_fingerprint (stable component key), structural_edges.uses,
+# behavioral_edges, authored_metadata (usage / design_intent / rules / anti_patterns)</pre>
+      <div class="quicklinks">
+        <a class="btn" href="../AGENT.md">AGENT.md</a>
+        <a class="btn" href="../CONTROL_PANEL.md">CONTROL_PANEL.md</a>
+        <a class="btn" href="../INGESTION_REPORT.md">INGESTION_REPORT.md</a>
+      </div>
+    </section>
+
+    <section class="metasection">
+      <h3>System understanding</h3>
+      <p class="dim">What the library actually knows about itself right now — computed fresh from the repo on every
+      build, not a fixed score.</p>
+
+      <h4 class="subhead">Documentation coverage <span class="dim">— components with each field authored</span></h4>
+      {meters_html}
+
+      <h4 class="subhead">Reference integrity <span class="dim">— every Figma instance reference, reviewed</span></h4>
+      <div class="kpirow">
+        <div class="kpi"><div class="kpi-value">{ref_resolved}</div><div class="kpi-label">Resolved to a real in-page component</div></div>
+        <div class="kpi"><div class="kpi-value">{ref_excluded}</div><div class="kpi-label">Reviewed and confirmed not a dependency</div></div>
+        <div class="{dangling_tile_cls}"><div class="kpi-value">{ref_dangling}</div><div class="kpi-label">Still dangling</div></div>
+      </div>
+      <p class="dim">{ref_total} Figma instance references tracked across the library; {ref_pct:.0f}% resolve to a
+      component that exists in the ingested page (see <a href="../INGESTION_REPORT.md">INGESTION_REPORT.md §5</a>).</p>
+
+      <h4 class="subhead">Relationship density <span class="dim">— how much of the graph is actually wired</span></h4>
+      <div class="kpirow">
+        <div class="kpi"><div class="kpi-value">{total_relationships}</div><div class="kpi-label">Relationships mapped</div></div>
+        <div class="kpi"><div class="kpi-value">{avg_connections:.1f}</div><div class="kpi-label">Avg. connections per component</div></div>
+      </div>
+      {split_html}
+      <div class="quicklinks"><a class="btn" href="graph.html">Open the component graph →</a></div>
+    </section>
+
     {''.join(cards)}
     """
     return page("Overview", "overview", body)
@@ -544,44 +707,59 @@ def overview_page():
 
 # ----------------------------------------------------------------- assets
 STYLE = """
-:root{--bg:#f7f7f7;--panel:#ffffff;--ink:#171717;--ink2:#696969;--ink3:#919191;--line:#ededed;
---accent:#292929;--warn-bg:#fff7e8;--warn-line:#d4882f;--atom:#1c8a4c;--molecule:#b6732b;--organism:#c42e2e;}
+/* Reskinned to Apple's documented web design language (VoltAgent/awesome-design-md, apple/DESIGN.md):
+   parchment/white/near-black surfaces, one Action Blue accent for everything interactive, SF Pro's
+   tight tracking (Inter as the open-source stand-in per the spec's own substitution note), the
+   300/400/600/700 weight ladder with 500 deliberately absent, zero decorative shadows (the single
+   permitted shadow is reserved for the component preview stage, standing in for "product photography"),
+   and `scale(0.96)` as the universal press micro-interaction. Category colors (atom/molecule/organism)
+   are kept — they encode real taxonomy, not decoration — but deepened out of Material-candy territory
+   to sit quietly in Apple's low-chroma world. */
+:root{--bg:#f5f5f7;--panel:#ffffff;--pearl:#fafafc;--ink:#1d1d1f;--ink2:#333333;--ink3:#7a7a7a;--line:#e0e0e0;--line-soft:#f0f0f0;
+--accent:#1d1d1f;--blue:#0066cc;--blue-focus:#0071e3;--blue-dark:#2997ff;
+--warn-bg:#fff9ec;--warn-line:#c9861f;--warn-ink:#7a5210;
+--atom:#1c7a45;--molecule:#9c6a1f;--organism:#b3261e;--complex:#6b1414;--plum:#7d6a9e;--blue-tint:#d8e9fb;
+--font-display:-apple-system,BlinkMacSystemFont,'SF Pro Display','Inter',system-ui,sans-serif;
+--font-text:-apple-system,BlinkMacSystemFont,'SF Pro Text','Inter',system-ui,sans-serif;
+--font-mono:ui-monospace,'SF Mono','Roboto Mono',monospace;
+--r-sm:8px;--r-md:11px;--r-lg:18px;--r-pill:9999px;}
 *{box-sizing:border-box}
-body{margin:0;font-family:'Geist',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
-h1,h2,h3,h4{font-family:'Saira',sans-serif;font-weight:600}
+body{margin:0;font-family:var(--font-text);background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;letter-spacing:-0.01em}
 a{color:inherit}
 .layout{display:flex;min-height:100vh}
 .sidebar{width:264px;flex:none;background:var(--panel);border-right:1px solid var(--line);padding:14px 10px;position:sticky;top:0;height:100vh;overflow-y:auto}
 .appswitcher{display:flex;gap:8px;align-items:center;margin-bottom:14px}
-.applogo{width:30px;height:30px;border-radius:9px;background:var(--accent);color:#f7f7f7;display:flex;align-items:center;justify-content:center;font-family:'Saira';font-weight:600}
-.appswitcher select{flex:1;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font:inherit}
+.applogo{width:30px;height:30px;border-radius:var(--r-sm);background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:600}
+.appswitcher select{flex:1;padding:6px 8px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg);font:inherit}
 .navgroup{margin:14px 6px 4px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
-.navitem{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;text-decoration:none;color:var(--ink);font-size:13px}
+.navitem{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:var(--r-sm);text-decoration:none;color:var(--ink);font-size:13px;transition:background .12s}
 .navitem:hover{background:var(--bg)}
-.navitem.active{background:var(--accent);color:#f7f7f7}
-.count{margin-left:auto;background:var(--line);color:var(--ink2);border-radius:99px;padding:0 7px;font-size:11px}
-.navitem.active .count{background:#454545;color:#ededed}
-.warnbadge{background:var(--warn-bg);border:1px solid var(--warn-line);color:#8a5218;border-radius:99px;padding:0 6px;font-size:10px}
+.navitem.active{background:var(--accent);color:#fff}
+.count{margin-left:auto;background:var(--line-soft);color:var(--ink2);border-radius:var(--r-pill);padding:0 7px;font-size:11px}
+.navitem.active .count{background:rgba(255,255,255,.18);color:#fff}
+.warnbadge{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink);border-radius:var(--r-pill);padding:0 6px;font-size:10px}
 .main{flex:1;padding:28px 36px;max-width:1080px}
-.pagehead h1{margin:0 8px 6px 0;display:inline-block}
-.landing h1{font-size:34px;margin:0}
-.tagline{color:var(--ink2);max-width:640px}
+.pagehead h1{margin:0 8px 6px 0;display:inline-block;font-size:24px}
+.landing h1{font-size:32px;margin:0;letter-spacing:-0.02em}
+.tagline{color:var(--ink2);max-width:640px;font-weight:300;font-size:15px;line-height:1.5}
 .quicklinks{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-.btn{background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:7px 14px;text-decoration:none;font-size:13px}
-.btn:hover{border-color:var(--ink3)}
+.btn{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-pill);padding:7px 14px;text-decoration:none;font-size:13px;transition:border-color .12s,transform .1s}
+.btn:hover{border-color:var(--blue);color:var(--blue)}
+.btn:active{transform:scale(.96)}
 .pills{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
-.pill{background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:3px 10px;font-size:12px;color:var(--ink2)}
-.typebadge{display:inline-block;border-radius:99px;padding:2px 10px;font-size:11px;color:#fff;vertical-align:middle}
-.t-atom{background:var(--atom)}.t-molecule{background:var(--molecule)}.t-organism{background:var(--organism)}.t-complex-organism{background:#7a1616}
+.pill{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-pill);padding:3px 10px;font-size:12px;color:var(--ink2)}
+.typebadge{display:inline-block;border-radius:var(--r-pill);padding:2px 10px;font-size:11px;color:#fff;vertical-align:middle}
+.t-atom{background:var(--atom)}.t-molecule{background:var(--molecule)}.t-organism{background:var(--organism)}.t-complex-organism{background:var(--complex)}
 .dim{color:var(--ink3);font-weight:400;font-size:12px}
 .rel{color:var(--ink3);font-size:12px;font-style:italic}
 .cardgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-bottom:22px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;text-decoration:none;display:block}
-.card:hover{border-color:var(--ink3)}
-.cardname{font-family:'Saira';font-weight:500;font-size:15px}
-.cardmeta{margin-top:8px;display:flex;gap:6px;align-items:center}
-.metasection{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin:14px 0}
-.metasection h3{margin:0 0 10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px;text-decoration:none;display:block;transition:border-color .12s}
+.card:hover{border-color:var(--blue)}
+.cardname{font-family:var(--font-display);font-weight:600;font-size:15px;letter-spacing:-0.006em}
+.cardmeta{margin-top:8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.metasection{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 18px;margin:14px 0}
+.metasection h3{margin:0 0 10px;font-size:15px}
 .metaheader{margin-top:28px}
 .kvs{margin:2px 0 2px 2px;border-left:2px solid var(--line);padding-left:10px}
 .kv{margin:4px 0}
@@ -589,36 +767,38 @@ a{color:inherit}
 .kv .v{margin-left:2px}
 ul{margin:4px 0;padding-left:20px}
 ul.rules li{margin:5px 0}
-.ruleid{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:11px}
+.ruleid{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:11px;font-family:var(--font-mono)}
 .table{border-collapse:collapse;width:100%;font-size:13px}
-.table th{text-align:left;color:var(--ink3);font-weight:500;font-size:12px;border-bottom:1px solid var(--line);padding:6px 8px}
+.table th{text-align:left;color:var(--ink3);font-weight:600;font-size:12px;border-bottom:1px solid var(--line);padding:6px 8px}
 .table td{border-bottom:1px solid var(--line);padding:6px 8px;vertical-align:middle}
-.darkcell{background:#171717;color:#ededed;border-radius:4px}
+.darkcell{background:#1d1d1f;color:#fff;border-radius:4px}
 .swatch{display:inline-block;width:18px;height:18px;border-radius:6px;border:1px solid var(--line);vertical-align:middle;margin-right:8px}
-.warning{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:12px;padding:10px 14px;margin:12px 0;font-size:13px}
+.warning{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:var(--r-lg);padding:10px 14px;margin:12px 0;font-size:13px;color:var(--ink2)}
 .warning ul{margin:6px 0 0}
-.missing{color:var(--warn-line);font-style:italic}
-.idsblock{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin:14px 0}
-.idsblock h3{margin:0 0 10px}
+.missing{color:var(--warn-ink);font-style:italic}
+.idsblock{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 18px;margin:14px 0}
+.idsblock h3{margin:0 0 10px;font-size:15px}
 .idrow{display:flex;align-items:center;gap:8px;margin:6px 0}
 .idlabel{width:130px;color:var(--ink3);font-size:12px;flex:none}
-.idvalue{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-family:'Roboto Mono',monospace;font-size:12px;overflow-wrap:anywhere}
-.copybtn{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:4px 10px;cursor:pointer;font:inherit;font-size:12px}
-.copybtn:hover{border-color:var(--ink3)}
-.copybtn.copied{background:var(--atom);color:#fff;border-color:var(--atom)}
+.idvalue{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);padding:4px 10px;font-family:var(--font-mono);font-size:12px;overflow-wrap:anywhere}
+.copybtn{border:1px solid var(--line);background:var(--pearl);color:var(--ink2);border-radius:var(--r-sm);padding:4px 10px;cursor:pointer;font:inherit;font-size:12px;transition:border-color .12s,transform .1s}
+.copybtn:hover{border-color:var(--blue);color:var(--blue)}
+.copybtn:active{transform:scale(.96)}
+.copybtn.copied{background:var(--blue);color:#fff;border-color:var(--blue)}
 .copybtn.small{padding:2px 7px;margin-left:6px}
-.fpcell code{font-size:11px}
+.fpcell code{font-size:11px;font-family:var(--font-mono)}
 .linklist{list-style:none;padding-left:2px}
 .linklist li{margin:4px 0}
+.linklist a,.comp-block a{color:var(--blue)}
 .rawyaml{margin-top:14px}
 .rawyaml summary{cursor:pointer;color:var(--ink2);font-size:13px}
-.rawyaml pre{background:#171717;color:#ededed;border-radius:12px;padding:14px;overflow:auto;font-size:12px;font-family:'Roboto Mono',monospace}
+.rawyaml pre{background:#1d1d1f;color:#f5f5f7;border-radius:var(--r-lg);padding:14px;overflow:auto;font-size:12px;font-family:var(--font-mono)}
 .footer{margin-top:36px;padding-top:12px;border-top:1px solid var(--line);color:var(--ink3);font-size:12px}
-/* preview */
+/* preview -- the ONE place a shadow is allowed, standing in for Apple's product-photography shadow */
 .pv-caption{color:var(--ink3);font-size:12px;margin:0 0 10px}
 .pv-block{margin:10px 0 18px}
 .pv-variantname{font-size:12.5px;font-weight:600;margin-bottom:6px}
-.pv-stage{background:repeating-conic-gradient(#f0f0f0 0 25%,#fafafa 0 50%) 0 0/16px 16px;border:1px solid var(--line);border-radius:12px;padding:16px;overflow-x:auto}
+.pv-stage{background:repeating-conic-gradient(#f4f4f5 0 25%,#fafafa 0 50%) 0 0/16px 16px;border:1px solid var(--line);border-radius:var(--r-md);padding:16px;overflow-x:auto}
 .pv-scale{transform-origin:top left}
 .pv-frame{flex:none}
 .pv-frame[data-stack="1"]{display:flex;align-items:center;justify-content:center}
@@ -626,27 +806,55 @@ ul.rules li{margin:5px 0}
 .pv-text{display:block;flex:none;overflow:hidden}
 .pv-shape{display:block;flex:none;min-width:2px;min-height:2px}
 .pv-shape:not([style*="background"]):not([style*="border"]){background:#d9d9d9;border-radius:2px}
-.pv-instance{display:flex;flex:none;align-items:center;justify-content:center;outline:1.5px dashed #8a38f5;outline-offset:-1.5px;border-radius:6px;overflow:hidden}
-.pv-instance-label{font-size:10px;background:#8a38f51a;border-radius:4px;padding:1px 5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pv-instance-label a{color:#8a38f5;text-decoration:none}
-.pv-unresolved{color:#8a5218}
+.pv-instance{display:flex;flex:none;align-items:center;justify-content:center;outline:1.5px dashed var(--plum);outline-offset:-1.5px;border-radius:6px;overflow:hidden}
+.pv-instance-label{font-size:10px;background:#7d6a9e1a;border-radius:4px;padding:1px 5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pv-instance-label a{color:var(--plum);text-decoration:none}
+.pv-unresolved{color:var(--warn-ink)}
 .pv-note{font-size:11px;color:var(--ink3);padding:4px}
 /* typography page */
 .typo-row{display:flex;gap:20px;align-items:center;border-bottom:1px solid var(--line);padding:12px 0}
 .typo-meta{width:380px;flex:none}
-.typo-sample{flex:1;overflow:hidden;white-space:nowrap}
-.shadow-sample{width:120px;height:56px;border-radius:12px;background:#fff}
+.typo-sample{flex:1;overflow:hidden;white-space:nowrap;font-family:var(--font-display)}
+.shadow-sample{width:120px;height:56px;border-radius:var(--r-md);background:#fff}
 .barviz{display:inline-block;height:12px;background:var(--accent);border-radius:3px;vertical-align:middle}
 .radviz{display:inline-block;width:36px;height:36px;border:2px solid var(--accent);vertical-align:middle}
 /* graph */
-.graphwrap{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:10px;overflow:auto}
+.graphwrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:10px;overflow:hidden;position:relative;height:min(78vh,760px)}
 .graph{width:100%;min-width:900px}
-.g-col{font-family:'Saira';font-size:14px;font-weight:600;fill:var(--ink2)}
+.g-col{font-family:var(--font-display);font-size:14px;font-weight:600;fill:var(--ink2)}
 .g-node{fill:#fff;stroke:var(--line)}
-.g-node.t-atom{stroke:var(--atom)}.g-node.t-molecule{stroke:var(--molecule)}.g-node.t-organism{stroke:var(--organism)}.g-node.t-complex-organism{stroke:#7a1616}
+.g-node.t-atom{stroke:var(--atom)}.g-node.t-molecule{stroke:var(--molecule)}.g-node.t-organism{stroke:var(--organism)}.g-node.t-complex-organism{stroke:var(--complex)}
 .g-label{font-size:10.5px;text-anchor:middle;fill:var(--ink)}
 .g-edge{fill:none;stroke:#b5b5b5;stroke-width:1.2;opacity:.75}
-.g-beh{stroke-dasharray:4 3;stroke:#8a38f5;opacity:.55}
+.g-beh{stroke-dasharray:4 3;stroke:var(--plum);opacity:.55}
+/* overview — library-health dashboard */
+.subhead{font-size:13px;font-weight:600;color:var(--ink2);margin:22px 0 10px;letter-spacing:0}
+.subhead:first-of-type{margin-top:6px}
+.subhead .dim{font-weight:400}
+.hero{margin:4px 0 14px}
+.hero-value{font-family:var(--font-display);font-size:48px;font-weight:600;letter-spacing:-0.02em;line-height:1}
+.hero-label{color:var(--ink3);font-size:13px;margin-top:2px}
+.kpirow{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.kpi{background:var(--pearl);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 16px;flex:1;min-width:150px}
+.kpi-value{font-family:var(--font-display);font-size:26px;font-weight:600;letter-spacing:-0.01em;font-variant-numeric:tabular-nums}
+.kpi-label{color:var(--ink3);font-size:12px;margin-top:2px;line-height:1.35}
+.kpi-warn{background:var(--warn-bg);border-color:var(--warn-line)}
+.kpi-warn .kpi-value{color:var(--warn-ink)}
+.propbar{display:flex;gap:2px;height:20px;border-radius:var(--r-pill);overflow:hidden;background:var(--line-soft);margin:4px 0 10px}
+.propbar-seg{min-width:3px}
+.propbar.splitbar{height:10px;margin-top:6px}
+.ov-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--ink2);margin-bottom:4px}
+.ov-legend .ov-sw{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:-1px;margin-right:6px}
+.ov-legend b{color:var(--ink);font-weight:600;margin-left:3px;font-variant-numeric:tabular-nums}
+.meterrow{margin:11px 0}
+.meterrow-top{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px}
+.meterrow-label{color:var(--ink2)}
+.meterrow-frac{color:var(--ink3);font-variant-numeric:tabular-nums}
+.meter{height:7px;border-radius:var(--r-pill);background:var(--blue-tint);overflow:hidden}
+.meter-fill{height:100%;background:var(--blue);border-radius:var(--r-pill)}
+.codeblock{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;font-family:var(--font-mono);font-size:11.5px;line-height:1.6;overflow-x:auto;white-space:pre;margin:8px 0 14px}
+.docbadge{background:var(--line-soft);color:var(--ink3);border-radius:var(--r-pill);padding:0 6px;font-size:10px;font-variant-numeric:tabular-nums}
+.docbadge-low{background:var(--warn-bg);color:var(--warn-ink);border:1px solid var(--warn-line)}
 @media (prefers-color-scheme: dark){ /* dashboard chrome stays light-neutral by design; component tokens page shows both modes explicitly */ }
 """
 

@@ -366,51 +366,6 @@
    "meaning": "actionables is built from radio-button"
   },
   {
-   "type": "dangling",
-   "source": "actionables",
-   "ref_name": "Chevron",
-   "ref_node_id": "2031:379",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": "chevron",
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "actionables",
-   "ref_name": "Toggle",
-   "ref_node_id": "2031:392",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": "toggle",
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "actionables",
-   "ref_name": "Checkbox",
-   "ref_node_id": "2031:406",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": "checkbox",
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "actionables",
-   "ref_name": "Cross",
-   "ref_node_id": "2031:416",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": "cross",
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "actionables",
-   "ref_name": "Radio Button",
-   "ref_node_id": "2031:426",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": "radio-button",
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
    "type": "behavioral",
    "source": "l2-inner-pages-heading",
    "target": "l1-inner-page-navigation",
@@ -427,51 +382,6 @@
    "source": "l1-home-page-navigation",
    "target": "l1-inner-page-navigation",
    "relation": "sibling"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-home-page-navigation",
-   "ref_name": "system/Selected device",
-   "ref_node_id": "231:26268",
-   "external_location": "page: 04 Icons",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-home-page-navigation",
-   "ref_name": "system/Device option 1",
-   "ref_node_id": "231:26277",
-   "external_location": "page: 04 Icons",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-home-page-navigation",
-   "ref_name": "system/Device adder",
-   "ref_node_id": "231:26218",
-   "external_location": "page: 04 Icons",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-home-page-navigation",
-   "ref_name": "system/Downloading Success",
-   "ref_node_id": "231:26254",
-   "external_location": "page: 04 Icons",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-home-page-navigation",
-   "ref_name": "system/Store",
-   "ref_node_id": "231:26234",
-   "external_location": "page: 04 Icons",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
   },
   {
    "type": "structural",
@@ -504,15 +414,6 @@
    "relation": "counterpart"
   },
   {
-   "type": "dangling",
-   "source": "modal-card",
-   "ref_name": "Actionables",
-   "ref_node_id": "329:2095",
-   "external_location": "page: AI Metdata",
-   "same_named_library_component": "actionables",
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
    "type": "structural",
    "source": "action-card",
    "target": "action-sheet",
@@ -535,42 +436,6 @@
    "source": "action-sheet",
    "target": "status-bar",
    "relation": "renders-on-top"
-  },
-  {
-   "type": "dangling",
-   "source": "action-sheet",
-   "ref_name": "Status bar",
-   "ref_node_id": "374:7867",
-   "external_location": "page: AI Metdata",
-   "same_named_library_component": "status-bar",
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "action-sheet",
-   "ref_name": "Action Sheet",
-   "ref_node_id": "420:1299",
-   "external_location": "page: 06 Building Blocks",
-   "same_named_library_component": "action-sheet",
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "action-sheet",
-   "ref_name": "Home Indicator",
-   "ref_node_id": "386:1835",
-   "external_location": "page: 06 Building Blocks",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "image-asset-placeholder",
-   "ref_name": "Profile icon",
-   "ref_node_id": "460:985",
-   "external_location": "page: 06 Building Blocks",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
   },
   {
    "type": "structural",
@@ -609,33 +474,6 @@
    "relation": "renders-on-top"
   },
   {
-   "type": "dangling",
-   "source": "modal-sheet",
-   "ref_name": "Status bar",
-   "ref_node_id": "374:7867",
-   "external_location": "page: AI Metdata",
-   "same_named_library_component": "status-bar",
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "modal-sheet",
-   "ref_name": "Modal",
-   "ref_node_id": "786:4487",
-   "external_location": "page: 06 Building Blocks",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "modal-sheet",
-   "ref_name": "Home Indicator",
-   "ref_node_id": "386:1835",
-   "external_location": "page: 06 Building Blocks",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
    "type": "behavioral",
    "source": "card-heading",
    "target": "heading-content-component",
@@ -672,15 +510,6 @@
    "relation": "uses"
   },
   {
-   "type": "dangling",
-   "source": "text-field",
-   "ref_name": "Actionables",
-   "ref_node_id": "329:2095",
-   "external_location": "page: AI Metdata",
-   "same_named_library_component": "actionables",
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
    "type": "structural",
    "source": "actionables",
    "target": "master-card",
@@ -691,24 +520,6 @@
    "source": "heading-content-component",
    "target": "master-card",
    "meaning": "master-card is built from heading-content-component"
-  },
-  {
-   "type": "dangling",
-   "source": "master-card",
-   "ref_name": "Circled icon",
-   "ref_node_id": "301:20193",
-   "external_location": "page: 06 Building Blocks",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "master-card",
-   "ref_name": "Actionables",
-   "ref_node_id": "329:2095",
-   "external_location": "page: AI Metdata",
-   "same_named_library_component": "actionables",
-   "status": "dangling \u2014 instance points outside the ingested page"
   },
   {
    "type": "structural",
@@ -727,33 +538,6 @@
    "source": "heading-content-component",
    "target": "checkbox-card",
    "meaning": "checkbox-card is built from heading-content-component"
-  },
-  {
-   "type": "dangling",
-   "source": "checkbox-card",
-   "ref_name": "Actionables",
-   "ref_node_id": "2031:437",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": "actionables",
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "checkbox-card",
-   "ref_name": "Heading-content component ",
-   "ref_node_id": "2031:372",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": "heading-content-component",
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "checkbox-card",
-   "ref_name": "Cross",
-   "ref_node_id": "2031:416",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": "cross",
-   "status": "dangling \u2014 instance points outside the ingested page"
   },
   {
    "type": "structural",
@@ -778,51 +562,6 @@
    "source": "l1-inner-page-navigation",
    "target": "status-bar",
    "relation": "shares-scroll-state"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-inner-page-navigation",
-   "ref_name": "system/Chevron",
-   "ref_node_id": "2007:379",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": "chevron",
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-inner-page-navigation",
-   "ref_name": "system/Restart",
-   "ref_node_id": "2007:405",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-inner-page-navigation",
-   "ref_name": "system/Downloading Success",
-   "ref_node_id": "2007:399",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-inner-page-navigation",
-   "ref_name": "Transcribe time chips ",
-   "ref_node_id": "2007:416",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "l1-inner-page-navigation",
-   "ref_name": "system/cross",
-   "ref_node_id": "2007:411",
-   "external_location": "orphaned (detached from any page)",
-   "same_named_library_component": "cross",
-   "status": "dangling \u2014 instance points outside the ingested page"
   },
   {
    "type": "structural",
@@ -865,33 +604,6 @@
    "source": "action-card",
    "target": "modal-card",
    "relation": "counterpart"
-  },
-  {
-   "type": "dangling",
-   "source": "action-card",
-   "ref_name": "Bottomsheet heading",
-   "ref_node_id": "414:3175",
-   "external_location": "page: 06 Building Blocks",
-   "same_named_library_component": null,
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "action-card",
-   "ref_name": "Radio Button",
-   "ref_node_id": "395:636",
-   "external_location": "page: AI Metdata",
-   "same_named_library_component": "radio-button",
-   "status": "dangling \u2014 instance points outside the ingested page"
-  },
-  {
-   "type": "dangling",
-   "source": "action-card",
-   "ref_name": "Actionables",
-   "ref_node_id": "329:2095",
-   "external_location": "page: AI Metdata",
-   "same_named_library_component": "actionables",
-   "status": "dangling \u2014 instance points outside the ingested page"
   }
  ]
 }

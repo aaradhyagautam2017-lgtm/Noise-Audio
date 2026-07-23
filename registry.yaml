@@ -9,11 +9,9 @@ registry:
     figma_url: https://www.figma.com/design/QjVyM5bRXgIOZn8PO1e0eK/?node-id=2025-148
   conventions:
     id: canonical component id, taken from the authored YAML metadata (component.id)
-    structural_edges: is-built-from relations declared in authored metadata (used_atoms / used_molecules
-      / used_cta / used_organisms / contains), resolved to target ids
+    structural_edges: is-built-from relations declared in authored metadata (used_atoms / used_molecules / used_cta / used_organisms / contains), resolved to target ids
     behavioral_edges: relationships declared in authored metadata, resolved to target ids
-    figma_instance_edges: raw Figma instance wiring observed in the node tree; resolved=false means the
-      instance's main component lives outside the ingested page (see INGESTION_REPORT.md)
+    figma_instance_edges: raw Figma instance wiring observed in the node tree; resolved=false means the instance's main component lives outside the ingested page (see INGESTION_REPORT.md)
     usage_count: number of library components whose metadata references this component (structural + behavioral)
   counts:
     atoms: 16
@@ -26,8 +24,7 @@ registry:
     node_id: 2036:3057
     figma_fingerprint: d4fbe273fc59cae9687828f129ceabac812c7309
     file: tokens/spacing.yaml
-    note: Figma component whose description carries the authored spacing/radius/padding token YAML; it
-      is a token catalog, not a UI component.
+    note: Figma component whose description carries the authored spacing/radius/padding token YAML; it is a token catalog, not a UI component.
   components:
   - id: primary-cta-button
     name: Primary cta
@@ -101,34 +98,34 @@ registry:
     figma_instance_edges:
     - references: Chevron
       ref_node_id: 2031:379
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: orphaned (detached from any page)
-      same_named_library_component: chevron
+      resolved: true
+      target_id: chevron
+      rewired_from_node_id: 2031:379
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     - references: Toggle
       ref_node_id: 2031:392
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: orphaned (detached from any page)
-      same_named_library_component: toggle
+      resolved: true
+      target_id: toggle
+      rewired_from_node_id: 2031:392
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     - references: Checkbox
       ref_node_id: 2031:406
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: orphaned (detached from any page)
-      same_named_library_component: checkbox
+      resolved: true
+      target_id: checkbox
+      rewired_from_node_id: 2031:406
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     - references: Cross
       ref_node_id: 2031:416
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: orphaned (detached from any page)
-      same_named_library_component: cross
+      resolved: true
+      target_id: cross
+      rewired_from_node_id: 2031:416
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     - references: Radio Button
       ref_node_id: 2031:426
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: orphaned (detached from any page)
-      same_named_library_component: radio-button
+      resolved: true
+      target_id: radio-button
+      rewired_from_node_id: 2031:426
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     usage_count: 3
   - id: chevron
     name: Chevron
@@ -232,26 +229,41 @@ registry:
       resolved: false
       status: dangling — instance points outside the ingested page
       external_location: 'page: 04 Icons'
+      excluded: true
+      excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+      excluded_at: '2026-07-22'
     - references: system/Device option 1
       ref_node_id: 231:26277
       resolved: false
       status: dangling — instance points outside the ingested page
       external_location: 'page: 04 Icons'
+      excluded: true
+      excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+      excluded_at: '2026-07-22'
     - references: system/Device adder
       ref_node_id: 231:26218
       resolved: false
       status: dangling — instance points outside the ingested page
       external_location: 'page: 04 Icons'
+      excluded: true
+      excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+      excluded_at: '2026-07-22'
     - references: system/Downloading Success
       ref_node_id: 231:26254
       resolved: false
       status: dangling — instance points outside the ingested page
       external_location: 'page: 04 Icons'
+      excluded: true
+      excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+      excluded_at: '2026-07-22'
     - references: system/Store
       ref_node_id: 231:26234
       resolved: false
       status: dangling — instance points outside the ingested page
       external_location: 'page: 04 Icons'
+      excluded: true
+      excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+      excluded_at: '2026-07-22'
     usage_count: 0
   - id: modal-card
     name: Modal card
@@ -276,10 +288,10 @@ registry:
     figma_instance_edges:
     - references: Actionables
       ref_node_id: 329:2095
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: 'page: AI Metdata'
-      same_named_library_component: actionables
+      resolved: true
+      target_id: actionables
+      rewired_from_node_id: 329:2095
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     - references: Primary cta
       ref_node_id: 248:4940
       resolved: true
@@ -312,21 +324,27 @@ registry:
     figma_instance_edges:
     - references: Status bar
       ref_node_id: 374:7867
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: 'page: AI Metdata'
-      same_named_library_component: status-bar
+      resolved: true
+      target_id: status-bar
+      rewired_from_node_id: 374:7867
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     - references: Action Sheet
       ref_node_id: 420:1299
       resolved: false
       status: dangling — instance points outside the ingested page
       external_location: 'page: 06 Building Blocks'
       same_named_library_component: action-sheet
+      excluded: true
+      excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+      excluded_at: '2026-07-22'
     - references: Home Indicator
       ref_node_id: 386:1835
       resolved: false
       status: dangling — instance points outside the ingested page
       external_location: 'page: 06 Building Blocks'
+      excluded: true
+      excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+      excluded_at: '2026-07-22'
     usage_count: 2
   - id: image-asset-placeholder
     name: Image, asset placeholder
@@ -348,6 +366,9 @@ registry:
       resolved: false
       status: dangling — instance points outside the ingested page
       external_location: 'page: 06 Building Blocks'
+      excluded: true
+      excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+      excluded_at: '2026-07-22'
     usage_count: 2
   - id: modal-sheet
     name: Modal Sheet
@@ -375,20 +396,26 @@ registry:
     figma_instance_edges:
     - references: Status bar
       ref_node_id: 374:7867
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: 'page: AI Metdata'
-      same_named_library_component: status-bar
+      resolved: true
+      target_id: status-bar
+      rewired_from_node_id: 374:7867
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     - references: Modal
       ref_node_id: 786:4487
       resolved: false
       status: dangling — instance points outside the ingested page
       external_location: 'page: 06 Building Blocks'
+      excluded: true
+      excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+      excluded_at: '2026-07-22'
     - references: Home Indicator
       ref_node_id: 386:1835
       resolved: false
       status: dangling — instance points outside the ingested page
       external_location: 'page: 06 Building Blocks'
+      excluded: true
+      excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+      excluded_at: '2026-07-22'
     - references: Image, asset placeholder
       ref_node_id: 458:8952
       resolved: true
@@ -441,10 +468,10 @@ registry:
     figma_instance_edges:
     - references: Actionables
       ref_node_id: 329:2095
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: 'page: AI Metdata'
-      same_named_library_component: actionables
+      resolved: true
+      target_id: actionables
+      rewired_from_node_id: 329:2095
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     - references: 'Heading-content component '
       ref_node_id: 301:20202
       resolved: true
@@ -480,16 +507,19 @@ registry:
       resolved: false
       status: dangling — instance points outside the ingested page
       external_location: 'page: 06 Building Blocks'
+      excluded: true
+      excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+      excluded_at: '2026-07-22'
     - references: 'Heading-content component '
       ref_node_id: 301:20202
       resolved: true
       target_id: heading-content-component
     - references: Actionables
       ref_node_id: 329:2095
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: 'page: AI Metdata'
-      same_named_library_component: actionables
+      resolved: true
+      target_id: actionables
+      rewired_from_node_id: 329:2095
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     usage_count: 0
   - id: checkbox-card
     name: Checkbox card
@@ -509,22 +539,22 @@ registry:
     figma_instance_edges:
     - references: Actionables
       ref_node_id: 2031:437
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: orphaned (detached from any page)
-      same_named_library_component: actionables
+      resolved: true
+      target_id: actionables
+      rewired_from_node_id: 2031:437
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     - references: 'Heading-content component '
       ref_node_id: 2031:372
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: orphaned (detached from any page)
-      same_named_library_component: heading-content-component
+      resolved: true
+      target_id: heading-content-component
+      rewired_from_node_id: 2031:372
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     - references: Cross
       ref_node_id: 2031:416
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: orphaned (detached from any page)
-      same_named_library_component: cross
+      resolved: true
+      target_id: cross
+      rewired_from_node_id: 2031:416
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     usage_count: 0
   - id: l1-inner-page-navigation
     name: L1 Inner page navigation
@@ -552,31 +582,40 @@ registry:
     figma_instance_edges:
     - references: system/Chevron
       ref_node_id: 2007:379
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: orphaned (detached from any page)
-      same_named_library_component: chevron
+      resolved: true
+      target_id: chevron
+      rewired_from_node_id: 2007:379
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     - references: system/Restart
       ref_node_id: 2007:405
       resolved: false
       status: dangling — instance points outside the ingested page
       external_location: orphaned (detached from any page)
+      excluded: true
+      excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+      excluded_at: '2026-07-22'
     - references: system/Downloading Success
       ref_node_id: 2007:399
       resolved: false
       status: dangling — instance points outside the ingested page
       external_location: orphaned (detached from any page)
+      excluded: true
+      excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+      excluded_at: '2026-07-22'
     - references: 'Transcribe time chips '
       ref_node_id: 2007:416
       resolved: false
       status: dangling — instance points outside the ingested page
       external_location: orphaned (detached from any page)
+      excluded: true
+      excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+      excluded_at: '2026-07-22'
     - references: system/cross
       ref_node_id: 2007:411
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: orphaned (detached from any page)
-      same_named_library_component: cross
+      resolved: true
+      target_id: cross
+      rewired_from_node_id: 2007:411
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     usage_count: 3
   - id: action-card
     name: Action card
@@ -612,18 +651,21 @@ registry:
       resolved: false
       status: dangling — instance points outside the ingested page
       external_location: 'page: 06 Building Blocks'
+      excluded: true
+      excluded_reason: confirmed by designer — not a real library dependency; artifact of incomplete metadata authoring (only a subset of components were authored) combined with off-page Figma drift
+      excluded_at: '2026-07-22'
     - references: Radio Button
       ref_node_id: 395:636
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: 'page: AI Metdata'
-      same_named_library_component: radio-button
+      resolved: true
+      target_id: radio-button
+      rewired_from_node_id: 395:636
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     - references: Actionables
       ref_node_id: 329:2095
-      resolved: false
-      status: dangling — instance points outside the ingested page
-      external_location: 'page: AI Metdata'
-      same_named_library_component: actionables
+      resolved: true
+      target_id: actionables
+      rewired_from_node_id: 329:2095
+      note: rewired to in-page twin (off-page copy replaced; designer-confirmed)
     - references: Primary cta
       ref_node_id: 248:4940
       resolved: true
@@ -640,6 +682,6 @@ registry:
     components_missing_fingerprint: 0
     metadata_missing: 0
     unresolved_metadata_edges: 0
-    dangling_figma_instance_edges: 32
-    note: Dangling Figma instance edges are catalogued per component under figma_instance_edges and analysed
-      in INGESTION_REPORT.md.
+    dangling_figma_instance_edges: 0
+    note: Dangling Figma instance edges are catalogued per component under figma_instance_edges and analysed in INGESTION_REPORT.md.
+    excluded_figma_instance_edges: 15
