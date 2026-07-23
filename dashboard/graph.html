@@ -65,7 +65,7 @@
 .og-node.dimmed{opacity:.15}
 .og-dot{stroke:#fff;stroke-width:2;transition:opacity .12s}
 .og-dot-ghost{fill:#fff7e8;stroke:#c42e2e;stroke-dasharray:2 2;r:5}
-.og-label{font-size:11px;fill:var(--ink);opacity:var(--og-label-op,1);transition:opacity .15s;pointer-events:none}
+.og-label{font-size:11px;fill:var(--ink);opacity:var(--og-label-op,1);transition:opacity .15s,font-size .15s;pointer-events:none}
 .og-label-ghost{fill:#9e1e1e;font-size:10px}
 .og-edge{stroke-width:1.3;transition:opacity .12s,stroke-width .12s}
 .og-e-structural{stroke:#8a8a8a;opacity:.55}
@@ -234,7 +234,7 @@
     return { el: line, edge: e };
   });
 
-  var nodeEls = {};
+  var nodeEls = {}, labelEls = [];
   nodes.forEach(function (n) {
     var g = el('g', { class: 'og-node' + (n.ghost ? ' og-ghost' : ''), 'data-key': n.id }, nodeLayer);
     if (n.ghost) {
@@ -243,6 +243,7 @@
       lbl.textContent = '✕ ' + n.name;
       el('title', {}, g).textContent = n.name + ' — ' + (n.external_location || 'outside library') +
         (n.same_named_library_component ? '; same-named library component: ' + n.same_named_library_component : '');
+      labelEls.push({ el: lbl, ghost: true });
     } else {
       el('circle', { r: n.r, class: 'og-dot', fill: TYPE_COLOR[n.type] }, g);
       var lbl2 = el('text', { class: 'og-label', x: n.r + 6, y: 4 }, g);
@@ -250,6 +251,7 @@
       el('title', {}, g).textContent = n.id + '\ntype: ' + n.type + ' · usage count: ' + n.usage_count +
         '\nnode_id: ' + n.node_id + '\nfingerprint: ' + n.figma_fingerprint + '\nfile: ' + n.file;
       g.style.cursor = 'pointer';
+      labelEls.push({ el: lbl2, ghost: false });
     }
     nodeEls[n.id] = g;
   });
@@ -283,10 +285,23 @@
 
   // ---------------------------------------------------------------- zoom / pan
   var view = { x: 0, y: 0, scale: 1 };
+  // Labels live inside the same scaled group as the nodes, so a plain font-size would grow
+  // linearly with zoom forever (unreadable at high zoom, all-or-nothing at low zoom). Instead
+  // labels are invisible below LABEL_ZOOM_MIN, fade + grow in screen-space size between MIN and
+  // MAX, then hold a fixed on-screen size beyond MAX — done by counter-dividing the local
+  // font-size by view.scale so the RENDERED pixel size is the thing being controlled, not the
+  // local SVG unit size.
+  var LABEL_ZOOM_MIN = 0.55, LABEL_ZOOM_MAX = 1.6;
+  var LABEL_PX_MIN = 7, LABEL_PX_MAX = 13, GHOST_PX_RATIO = 0.85;
   function applyView() {
     viewport.setAttribute('transform', 'translate(' + view.x + ',' + view.y + ') scale(' + view.scale + ')');
-    var labelOp = Math.max(0, Math.min(1, (view.scale - 0.42) / 0.5));
-    nodeLayer.style.setProperty('--og-label-op', labelOp);
+    var t = Math.max(0, Math.min(1, (view.scale - LABEL_ZOOM_MIN) / (LABEL_ZOOM_MAX - LABEL_ZOOM_MIN)));
+    var screenPx = LABEL_PX_MIN + t * (LABEL_PX_MAX - LABEL_PX_MIN);
+    var localPx = screenPx / view.scale;
+    nodeLayer.style.setProperty('--og-label-op', t);
+    labelEls.forEach(function (l) {
+      l.el.style.fontSize = (localPx * (l.ghost ? GHOST_PX_RATIO : 1)).toFixed(2) + 'px';
+    });
   }
   function fitView() { view.x = 0; view.y = 0; view.scale = 1; applyView(); }
   fitView();
@@ -304,7 +319,8 @@
     ev.preventDefault();
     var p = localPoint(ev.clientX, ev.clientY);
     var world = { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
-    var factor = Math.exp(-ev.deltaY * 0.0016);
+    var dy = Math.max(-120, Math.min(120, ev.deltaY)); // clamp stray large-delta spikes (some trackpads/mice)
+    var factor = Math.exp(-dy * 0.0055);
     var newScale = Math.min(4, Math.max(0.15, view.scale * factor));
     view.x = p.x - world.x * newScale;
     view.y = p.y - world.y * newScale;
