@@ -333,16 +333,27 @@ GRAPH_JS = r"""
     return { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
   }
 
+  // Trackpads report both gestures through the same 'wheel' event: a pinch arrives with
+  // ctrlKey set (the browser's own convention for synthesizing pinch-to-zoom on trackpads,
+  // independent of OS), a two-finger scroll arrives without it. So: pinch (or Ctrl/⌘+scroll,
+  // for mouse users) zooms; a plain two-finger scroll pans — no click-and-hold required for
+  // either, matching Figma's own canvas since that's exactly what this graph mirrors.
   svg.addEventListener('wheel', function (ev) {
     ev.preventDefault();
-    var p = localPoint(ev.clientX, ev.clientY);
-    var world = { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
-    var dy = Math.max(-120, Math.min(120, ev.deltaY)); // clamp stray large-delta spikes (some trackpads/mice)
-    var factor = Math.exp(-dy * 0.0055);
-    var newScale = Math.min(4, Math.max(0.15, view.scale * factor));
-    view.x = p.x - world.x * newScale;
-    view.y = p.y - world.y * newScale;
-    view.scale = newScale;
+    if (ev.ctrlKey || ev.metaKey) {
+      var p = localPoint(ev.clientX, ev.clientY);
+      var world = { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
+      var dy = Math.max(-120, Math.min(120, ev.deltaY)); // clamp stray large-delta spikes (some trackpads/mice)
+      var factor = Math.exp(-dy * 0.0055);
+      var newScale = Math.min(4, Math.max(0.15, view.scale * factor));
+      view.x = p.x - world.x * newScale;
+      view.y = p.y - world.y * newScale;
+      view.scale = newScale;
+    } else {
+      var scaleX = W / svg.getBoundingClientRect().width;
+      view.x -= ev.deltaX * scaleX;
+      view.y -= ev.deltaY * scaleX;
+    }
     applyView();
   }, { passive: false });
 
@@ -498,7 +509,7 @@ def main():
           <button type="button" data-zoom="out" title="Zoom out">−</button>
           <button type="button" data-zoom="reset" title="Reset view">⤢</button>
         </div>
-        <div class="og-hint">Scroll to zoom · drag canvas to pan · drag a node to reposition</div>
+        <div class="og-hint">Two-finger scroll to pan · pinch (or Ctrl/⌘+scroll) to zoom · drag a node to reposition</div>
       </div>
       <aside class="legend graph-legend">
         <span class="legend-title">Legend</span>
@@ -516,7 +527,8 @@ def main():
     live by a force simulation — atoms cluster at the center, molecules and organisms grow outward as they
     compose from what's inside them, exactly like the underlying <code>used_atoms</code>/<code>used_molecules</code>
     relationships. Hover a component to spotlight everything it is wired to; drag a node to reposition it;
-    scroll or use the controls to zoom; click a node to open its dashboard page. The identical data is queryable
+    two-finger scroll (or drag the canvas) to pan, pinch or Ctrl/⌘+scroll to zoom; click a node to open its
+    dashboard page. The identical data is queryable
     by the agent at <code>graph/graph.json</code> (and embedded in this page), with every node exposing
     <code>id</code>, <code>node_id</code> and <code>figma_fingerprint</code>.</p>
     {dangling_note}
