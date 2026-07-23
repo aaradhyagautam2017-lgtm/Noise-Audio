@@ -231,7 +231,12 @@ GRAPH_JS = r"""
 
   var viewport = el('g', { id: 'og-viewport' });
   var edgeLayer = el('g', { class: 'og-edges' }, viewport);
-  var nodeLayer = el('g', { class: 'og-nodes' }, viewport);
+  // dots and labels are separate layers, labels drawn LAST, so a label can never be painted
+  // over by some other node's circle just because that node happened to be created later —
+  // paint order previously followed per-node creation order, not proximity, which cut labels
+  // off behind neighboring dots. All labels now sit above all dots, always.
+  var dotLayer = el('g', { class: 'og-dots' }, viewport);
+  var labelLayer = el('g', { class: 'og-labels' }, viewport);
 
   var edgeEls = edges.map(function (e) {
     var cls = e.type === 'structural' ? 'og-e-structural' : e.type === 'behavioral' ? 'og-e-behavioral' : 'og-e-dangling';
@@ -243,29 +248,35 @@ GRAPH_JS = r"""
 
   var nodeEls = {}, labelEls = [];
   nodes.forEach(function (n) {
-    var g = el('g', { class: 'og-node' + (n.ghost ? ' og-ghost' : ''), 'data-key': n.id }, nodeLayer);
+    var dg = el('g', { class: 'og-node' + (n.ghost ? ' og-ghost' : ''), 'data-key': n.id }, dotLayer);
+    var lg = el('g', { class: 'og-node' + (n.ghost ? ' og-ghost' : ''), 'data-key': n.id }, labelLayer);
+    var title;
     if (n.ghost) {
-      el('circle', { r: n.r, class: 'og-dot og-dot-ghost' }, g);
-      var lbl = el('text', { class: 'og-label og-label-ghost', x: n.r + 6, y: 4 }, g);
+      el('circle', { r: n.r, class: 'og-dot og-dot-ghost' }, dg);
+      var lbl = el('text', { class: 'og-label og-label-ghost', x: n.r + 6, y: 4 }, lg);
       lbl.textContent = '✕ ' + n.name;
-      el('title', {}, g).textContent = n.name + ' — ' + (n.external_location || 'outside library') +
+      title = n.name + ' — ' + (n.external_location || 'outside library') +
         (n.same_named_library_component ? '; same-named library component: ' + n.same_named_library_component : '');
       labelEls.push({ el: lbl, ghost: true });
     } else {
-      el('circle', { r: n.r, class: 'og-dot', fill: TYPE_COLOR[n.type] }, g);
-      var lbl2 = el('text', { class: 'og-label', x: n.r + 6, y: 4 }, g);
+      el('circle', { r: n.r, class: 'og-dot', fill: TYPE_COLOR[n.type] }, dg);
+      var lbl2 = el('text', { class: 'og-label', x: n.r + 6, y: 4 }, lg);
       lbl2.textContent = n.name;
-      el('title', {}, g).textContent = n.id + '\ntype: ' + n.type + ' · usage count: ' + n.usage_count +
+      title = n.id + '\ntype: ' + n.type + ' · usage count: ' + n.usage_count +
         '\nnode_id: ' + n.node_id + '\nfingerprint: ' + n.figma_fingerprint + '\nfile: ' + n.file;
-      g.style.cursor = 'pointer';
+      dg.style.cursor = 'pointer'; lg.style.cursor = 'pointer';
       labelEls.push({ el: lbl2, ghost: false });
     }
-    nodeEls[n.id] = g;
+    el('title', {}, dg).textContent = title;
+    el('title', {}, lg).textContent = title;
+    nodeEls[n.id] = { dot: dg, label: lg };
   });
 
   function render() {
     nodes.forEach(function (n) {
-      nodeEls[n.id].setAttribute('transform', 'translate(' + n.x.toFixed(1) + ',' + n.y.toFixed(1) + ')');
+      var t = 'translate(' + n.x.toFixed(1) + ',' + n.y.toFixed(1) + ')';
+      nodeEls[n.id].dot.setAttribute('transform', t);
+      nodeEls[n.id].label.setAttribute('transform', t);
     });
     edgeEls.forEach(function (e) {
       var a = e.edge.a, b = e.edge.b;
@@ -299,13 +310,13 @@ GRAPH_JS = r"""
   // font-size by view.scale so the RENDERED pixel size is the thing being controlled, not the
   // local SVG unit size.
   var LABEL_ZOOM_MIN = 0.55, LABEL_ZOOM_MAX = 1.6;
-  var LABEL_PX_MIN = 7, LABEL_PX_MAX = 13, GHOST_PX_RATIO = 0.85;
+  var LABEL_PX_MIN = 7, LABEL_PX_MAX = 17, GHOST_PX_RATIO = 0.85;
   function applyView() {
     viewport.setAttribute('transform', 'translate(' + view.x + ',' + view.y + ') scale(' + view.scale + ')');
     var t = Math.max(0, Math.min(1, (view.scale - LABEL_ZOOM_MIN) / (LABEL_ZOOM_MAX - LABEL_ZOOM_MIN)));
     var screenPx = LABEL_PX_MIN + t * (LABEL_PX_MAX - LABEL_PX_MIN);
     var localPx = screenPx / view.scale;
-    nodeLayer.style.setProperty('--og-label-op', t);
+    labelLayer.style.setProperty('--og-label-op', t);
     labelEls.forEach(function (l) {
       l.el.style.fontSize = (localPx * (l.ghost ? GHOST_PX_RATIO : 1)).toFixed(2) + 'px';
     });
@@ -399,7 +410,11 @@ GRAPH_JS = r"""
   function spotlight(key) {
     var keep = {}; keep[key] = 1;
     for (var k in (adj[key] || {})) keep[k] = 1;
-    for (var id in nodeEls) nodeEls[id].classList.toggle('dimmed', !keep[id]);
+    for (var id in nodeEls) {
+      var on = !keep[id];
+      nodeEls[id].dot.classList.toggle('dimmed', on);
+      nodeEls[id].label.classList.toggle('dimmed', on);
+    }
     edgeEls.forEach(function (e) {
       var on = e.edge.a.id === key || e.edge.b.id === key;
       e.el.classList.toggle('dimmed', !on);
@@ -407,13 +422,16 @@ GRAPH_JS = r"""
     });
   }
   function clearSpotlight() {
-    for (var id in nodeEls) nodeEls[id].classList.remove('dimmed');
+    for (var id in nodeEls) {
+      nodeEls[id].dot.classList.remove('dimmed');
+      nodeEls[id].label.classList.remove('dimmed');
+    }
     edgeEls.forEach(function (e) { e.el.classList.remove('dimmed', 'hot'); });
   }
-  nodeLayer.addEventListener('pointerover', function (ev) {
+  viewport.addEventListener('pointerover', function (ev) {
     var g = ev.target.closest('.og-node'); if (g) spotlight(g.getAttribute('data-key'));
   });
-  nodeLayer.addEventListener('pointerout', function (ev) {
+  viewport.addEventListener('pointerout', function (ev) {
     var g = ev.target.closest('.og-node'); if (g) clearSpotlight();
   });
 })();
