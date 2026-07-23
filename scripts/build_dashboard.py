@@ -647,7 +647,7 @@ ul.rules li{margin:5px 0}
 .barviz{display:inline-block;height:12px;background:var(--accent);border-radius:3px;vertical-align:middle}
 .radviz{display:inline-block;width:36px;height:36px;border:2px solid var(--accent);vertical-align:middle}
 /* graph */
-.graphwrap{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:10px;overflow:auto}
+.graphwrap{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:10px;overflow:hidden;position:relative;height:min(78vh,760px)}
 .graph{width:100%;min-width:900px}
 .g-col{font-family:'Saira';font-size:14px;font-weight:600;fill:var(--ink2)}
 .g-node{fill:#fff;stroke:var(--line)}

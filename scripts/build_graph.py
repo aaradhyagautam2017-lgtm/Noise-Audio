@@ -12,9 +12,13 @@ Reads ONLY registry.yaml and generates, in one pass:
                           never diverge from the data.
 
 It renders only nodes and edges that exist in the registry. Edges the registry
-flags as dangling (resolved: false) are drawn as red broken edges to ghost
-markers — shown, never dropped or repaired. Layout is deterministic (tiered by
-type, registry order); this is the canonical wiring, not a force reshuffle.
+flags as dangling (resolved: false, excluded: false) are drawn as red broken
+edges to ghost markers — shown, never dropped or repaired. Layout is a live
+force simulation (Obsidian-style): atoms seed near the center, molecules and
+organisms grow outward in concentric bands, node position settles from
+repulsion + structural/behavioral spring edges + a gentle per-band radial
+pull. Nodes are draggable; the canvas pans and zooms. The underlying wiring
+(nodes, edges, ids) is exactly the registry — only the layout is simulated.
 
 Usage:  python3 scripts/build_graph.py
 """
@@ -94,150 +98,329 @@ GRAPH_JS = r"""
   // when this page is bundled into the single-file dashboard, route via hashes
   var bundled = !!document.querySelector('[data-page]');
   var link = function (n) { return bundled ? '#/components/' + n.id : n.dashboard; };
+  var goTo = function (n) { if (bundled) { location.hash = link(n); } else { location.href = link(n); } };
 
   var TYPE_COLOR = { atom: '#1c8a4c', molecule: '#b6732b', organism: '#c42e2e', 'complex-organism': '#7a1616' };
-  var tiers = ['atoms', 'molecules', 'organisms'];
-  var X = { atoms: 150, molecules: 480, organisms: 810 }, GX = 1120;
-  var ROW = 52, TOP = 86;
+  // concentric bands, atoms innermost growing out to molecules then organisms — like Obsidian's
+  // force graph, but biased into layers so the taxonomy stays legible at a glance.
+  var BAND = { atoms: [0, 165], molecules: [165, 280], organisms: [280, 410] };
+  var W = 1400, H = 900, CX = W / 2, CY = H / 2;
 
+  var radius = function (n) { return 8 + 2.6 * Math.min(n.usage_count, 8); };
+
+  // ---------------------------------------------------------------- seed node positions
   var byTier = { atoms: [], molecules: [], organisms: [] };
   data.nodes.forEach(function (n) { byTier[n.tier].push(n); });
-  var pos = {};
-  tiers.forEach(function (t) {
-    byTier[t].forEach(function (n, i) { pos[n.id] = { x: X[t], y: TOP + i * ROW }; });
-  });
-  // ghost markers for dangling references, deduped by ref_node_id (registry data, not invented)
+  var nodes = [], nodeById = {};
+  function seed(list, band) {
+    var n = list.length;
+    list.forEach(function (src, i) {
+      var a = (i / Math.max(n, 1)) * Math.PI * 2 + Math.random() * 0.4;
+      var r = (band[0] + band[1]) / 2 + (Math.random() - 0.5) * (band[1] - band[0]) * 0.6;
+      var node = {
+        id: src.id, name: src.name, type: src.type, tier: src.tier,
+        node_id: src.node_id, figma_fingerprint: src.figma_fingerprint,
+        usage_count: src.usage_count, file: src.file, dashboard: src.dashboard,
+        x: CX + Math.cos(a) * r, y: CY + Math.sin(a) * r, vx: 0, vy: 0,
+        band: band, r: radius(src), ghost: false,
+      };
+      nodes.push(node); nodeById[node.id] = node;
+    });
+  }
+  seed(byTier.atoms, BAND.atoms);
+  seed(byTier.molecules, BAND.molecules);
+  seed(byTier.organisms, BAND.organisms);
+
+  // ghost nodes: dangling references, deduped by ref_node_id (registry data, not invented).
+  // Placed on their own outer ring, static (no physics) — broken, shown, never repaired.
   var ghosts = {}, ghostOrder = [];
   data.edges.forEach(function (e) {
     if (e.type !== 'dangling') return;
     if (!ghosts[e.ref_node_id]) { ghosts[e.ref_node_id] = e; ghostOrder.push(e.ref_node_id); }
   });
-  var gpos = {};
-  ghostOrder.forEach(function (gid, i) { gpos[gid] = { x: GX, y: TOP + i * 34 }; });
+  var GR = 470;
+  ghostOrder.forEach(function (gid, i) {
+    var e = ghosts[gid];
+    var a = (i / Math.max(ghostOrder.length, 1)) * Math.PI * 2;
+    var node = {
+      id: 'ghost:' + gid, name: e.ref_name, type: 'ghost', ghost: true, static: true,
+      x: CX + Math.cos(a) * GR, y: CY + Math.sin(a) * GR, vx: 0, vy: 0, r: 5,
+      external_location: e.external_location, same_named_library_component: e.same_named_library_component,
+    };
+    nodes.push(node); nodeById[node.id] = node;
+  });
 
-  var H = Math.max(TOP + byTier.atoms.length * ROW, TOP + ghostOrder.length * 34) + 40;
+  // ---------------------------------------------------------------- edges + adjacency
+  var edges = [], adj = {};
+  function addAdj(a, b) { (adj[a] = adj[a] || {})[b] = 1; (adj[b] = adj[b] || {})[a] = 1; }
+  data.edges.forEach(function (e) {
+    var aId = e.source, bId = e.type === 'dangling' ? 'ghost:' + e.ref_node_id : e.target;
+    var a = nodeById[aId], b = nodeById[bId];
+    if (!a || !b) return;
+    edges.push({
+      a: a, b: b, type: e.type,
+      title: e.type === 'structural' ? e.meaning
+        : e.type === 'behavioral' ? e.source + ' —[' + e.relation + ']→ ' + e.target
+        : e.source + ' → ' + e.ref_name + ' (' + (e.external_location || 'outside library') + ') — dangling reference',
+    });
+    addAdj(aId, bId);
+  });
+  var IDEAL = { structural: 95, behavioral: 160, dangling: 140 };
+  var SPRING = { structural: 0.018, behavioral: 0.01, dangling: 0.008 };
+
+  // ---------------------------------------------------------------- physics (n-body, spring, radial band)
+  var REPULSE = 2400, CROSS_TIER_REPULSE = 0.3, DAMPING = 0.82, BAND_PULL = 0.28;
+  var live = nodes.filter(function (n) { return !n.static; });
+  var dragging = null, panning = false, rafId = null, asleep = false;
+
+  function physicsStep() {
+    for (var i = 0; i < live.length; i++) {
+      for (var j = i + 1; j < live.length; j++) {
+        var A = live[i], B = live[j];
+        var dx = B.x - A.x, dy = B.y - A.y, d2 = dx * dx + dy * dy; if (d2 < 4) d2 = 4;
+        // repulsion is much weaker across tiers than within one: cross-tier separation is the
+        // radial band constraint's job below, not this force's — letting repulsion push evenly
+        // across tiers is what drags atoms/organisms into the same radius band.
+        var sameTier = A.tier === B.tier;
+        var f = (REPULSE * (sameTier ? 1 : CROSS_TIER_REPULSE)) / d2;
+        var d = Math.sqrt(d2), fx = dx / d * f, fy = dy / d * f;
+        A.vx -= fx; A.vy -= fy; B.vx += fx; B.vy += fy;
+      }
+    }
+    edges.forEach(function (e) {
+      var A = e.a, B = e.b;
+      if (A.static && B.static) return;
+      var dx = B.x - A.x, dy = B.y - A.y, d = Math.sqrt(dx * dx + dy * dy) || 1;
+      var k = SPRING[e.type] || 0.01, ideal = IDEAL[e.type] || 110;
+      var f = k * (d - ideal), fx = dx / d * f, fy = dy / d * f;
+      if (!A.static) { A.vx += fx; A.vy += fy; }
+      if (!B.static) { B.vx -= fx; B.vy -= fy; }
+    });
+    var ke = 0;
+    live.forEach(function (n) {
+      if (n === dragging) { n.vx = 0; n.vy = 0; return; }
+      n.vx *= DAMPING; n.vy *= DAMPING;
+      n.x += n.vx; n.y += n.vy;
+      // hard radial constraint, applied AFTER integration so it always wins over the spring/
+      // repulsion tug-of-war: pull this frame's distance-from-center a fixed fraction toward the
+      // tier's band midpoint. Angular position (and so which neighbors cluster together) is left
+      // entirely to the forces above — only the ring the node sits on is enforced.
+      var dx = n.x - CX, dy = n.y - CY, d = Math.sqrt(dx * dx + dy * dy) || 0.001;
+      var mid = (n.band[0] + n.band[1]) / 2;
+      var newD = d + (mid - d) * BAND_PULL;
+      n.x = CX + dx / d * newD; n.y = CY + dy / d * newD;
+      ke += n.vx * n.vx + n.vy * n.vy;
+    });
+    return ke;
+  }
+
+  // ---------------------------------------------------------------- SVG scaffold
   var svg = document.createElementNS(svgNS, 'svg');
-  svg.setAttribute('viewBox', '0 0 1330 ' + H);
-  svg.setAttribute('class', 'cgraph');
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.setAttribute('class', 'ograph');
+  svg.setAttribute('tabindex', '0');
   mount.appendChild(svg);
-
   function el(tag, attrs, parent) {
     var e = document.createElementNS(svgNS, tag);
     for (var k in attrs) e.setAttribute(k, attrs[k]);
     (parent || svg).appendChild(e); return e;
   }
-  // arrowhead for structural edges (part -> whole)
   var defs = el('defs', {});
-  var m = el('marker', { id: 'arrow', viewBox: '0 0 8 8', refX: 7, refY: 4, markerWidth: 6, markerHeight: 6, orient: 'auto' }, defs);
-  el('path', { d: 'M0,0 L8,4 L0,8 z', fill: '#8a8a8a' }, m);
+  var arrow = el('marker', { id: 'og-arrow', viewBox: '0 0 8 8', refX: 7, refY: 4, markerWidth: 6, markerHeight: 6, orient: 'auto' }, defs);
+  el('path', { d: 'M0,0 L8,4 L0,8 z', fill: '#8a8a8a' }, arrow);
 
-  // tier headers with counts
-  var tierCounts = { atoms: data.counts.atoms, molecules: data.counts.molecules, organisms: data.counts.organisms };
-  tiers.forEach(function (t) {
-    el('text', { x: X[t], y: 34, class: 'g-col' }).textContent =
-      t.charAt(0).toUpperCase() + t.slice(1) + ' — ' + tierCounts[t];
-    el('text', { x: X[t], y: 52, class: 'g-colsub' }).textContent =
-      { atoms: 'raw parts', molecules: 'combinations', organisms: 'complete patterns' }[t];
+  var viewport = el('g', { id: 'og-viewport' });
+  var edgeLayer = el('g', { class: 'og-edges' }, viewport);
+  var nodeLayer = el('g', { class: 'og-nodes' }, viewport);
+
+  var edgeEls = edges.map(function (e) {
+    var cls = e.type === 'structural' ? 'og-e-structural' : e.type === 'behavioral' ? 'og-e-behavioral' : 'og-e-dangling';
+    var line = el('line', { class: 'og-edge ' + cls }, edgeLayer);
+    if (e.type === 'structural') line.setAttribute('marker-end', 'url(#og-arrow)');
+    el('title', {}, line).textContent = e.title;
+    return { el: line, edge: e };
   });
-  if (ghostOrder.length) {
-    el('text', { x: GX, y: 34, class: 'g-col g-broken' }).textContent = 'Outside the library — ' + ghostOrder.length;
-    el('text', { x: GX, y: 52, class: 'g-colsub' }).textContent = 'dangling references (registry-flagged)';
+
+  var nodeEls = {};
+  nodes.forEach(function (n) {
+    var g = el('g', { class: 'og-node' + (n.ghost ? ' og-ghost' : ''), 'data-key': n.id }, nodeLayer);
+    if (n.ghost) {
+      el('circle', { r: n.r, class: 'og-dot og-dot-ghost' }, g);
+      var lbl = el('text', { class: 'og-label og-label-ghost', x: n.r + 6, y: 4 }, g);
+      lbl.textContent = '✕ ' + n.name;
+      el('title', {}, g).textContent = n.name + ' — ' + (n.external_location || 'outside library') +
+        (n.same_named_library_component ? '; same-named library component: ' + n.same_named_library_component : '');
+    } else {
+      el('circle', { r: n.r, class: 'og-dot', fill: TYPE_COLOR[n.type] }, g);
+      var lbl2 = el('text', { class: 'og-label', x: n.r + 6, y: 4 }, g);
+      lbl2.textContent = n.name;
+      el('title', {}, g).textContent = n.id + '\ntype: ' + n.type + ' · usage count: ' + n.usage_count +
+        '\nnode_id: ' + n.node_id + '\nfingerprint: ' + n.figma_fingerprint + '\nfile: ' + n.file;
+      g.style.cursor = 'pointer';
+    }
+    nodeEls[n.id] = g;
+  });
+
+  function render() {
+    nodes.forEach(function (n) {
+      nodeEls[n.id].setAttribute('transform', 'translate(' + n.x.toFixed(1) + ',' + n.y.toFixed(1) + ')');
+    });
+    edgeEls.forEach(function (e) {
+      var a = e.edge.a, b = e.edge.b;
+      e.el.setAttribute('x1', a.x); e.el.setAttribute('y1', a.y);
+      e.el.setAttribute('x2', b.x); e.el.setAttribute('y2', b.y);
+    });
   }
 
-  var radius = function (n) { return 9 + 2.5 * Math.min(n.usage_count, 8); };
-  var edgeEls = [], nodeEls = {}, adj = {};
-  function addAdj(a, b) { (adj[a] = adj[a] || {})[b] = 1; (adj[b] = adj[b] || {})[a] = 1; }
+  // ---------------------------------------------------------------- run/settle loop
+  var frame = 0;
+  var MIN_SETTLE_FRAMES = 260; // the radial band-pull is a slow exponential correction (not
+  // reflected in velocity/KE) — isolated nodes can go velocity-quiet in ~10 frames while still
+  // far outside their tier's ring, so sleep must not trigger on KE alone until it's had time to converge.
+  function tick() {
+    var ke = physicsStep();
+    render();
+    frame++;
+    if (ke < 0.6 && frame > MIN_SETTLE_FRAMES && !dragging) { asleep = true; rafId = null; return; }
+    rafId = requestAnimationFrame(tick);
+  }
+  function wake() { if (rafId == null) { asleep = false; frame = 0; rafId = requestAnimationFrame(tick); } }
+  render();
+  wake();
 
-  var eg = el('g', { class: 'edges' });
-  data.edges.forEach(function (e, idx) {
-    var a, b, cls;
-    if (e.type === 'dangling') { a = pos[e.source]; b = gpos[e.ref_node_id]; cls = 'e-dangling'; }
-    else { a = pos[e.source]; b = pos[e.target]; cls = e.type === 'structural' ? 'e-structural' : 'e-behavioral'; }
-    if (!a || !b) return;
-    var ra = e.type === 'dangling' ? 0 : radius(data.nodes.find(function (n) { return n.id === e.source; }));
-    var x1 = a.x + (b.x > a.x ? ra : -ra), x2 = b.x - (b.x > a.x ? 12 : -12);
-    if (e.type === 'behavioral' && a.x === b.x) { x1 = a.x + ra; x2 = b.x + 12; }
-    var mx = (x1 + x2) / 2;
-    var p = el('path', { class: 'g-edge ' + cls,
-      d: 'M' + x1 + ',' + a.y + ' C' + mx + ',' + a.y + ' ' + mx + ',' + b.y + ' ' + x2 + ',' + b.y }, eg);
-    if (e.type === 'structural') p.setAttribute('marker-end', 'url(#arrow)');
-    var t = el('title', {}, p);
-    t.textContent = e.type === 'structural' ? e.meaning
-      : e.type === 'behavioral' ? e.source + ' —[' + e.relation + ']→ ' + e.target
-      : e.source + ' → ' + e.ref_name + ' (' + (e.external_location || 'outside library') + ') — dangling reference';
-    var key = e.type === 'dangling' ? 'ghost:' + e.ref_node_id : e.target;
-    edgeEls.push({ el: p, a: e.source, b: key });
-    addAdj(e.source, key);
+  // ---------------------------------------------------------------- zoom / pan
+  var view = { x: 0, y: 0, scale: 1 };
+  function applyView() {
+    viewport.setAttribute('transform', 'translate(' + view.x + ',' + view.y + ') scale(' + view.scale + ')');
+    var labelOp = Math.max(0, Math.min(1, (view.scale - 0.42) / 0.5));
+    nodeLayer.style.setProperty('--og-label-op', labelOp);
+  }
+  function fitView() { view.x = 0; view.y = 0; view.scale = 1; applyView(); }
+  fitView();
+
+  function localPoint(clientX, clientY) {
+    var rect = svg.getBoundingClientRect();
+    return { x: (clientX - rect.left) * (W / rect.width), y: (clientY - rect.top) * (H / rect.height) };
+  }
+  function toWorld(clientX, clientY) {
+    var p = localPoint(clientX, clientY);
+    return { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
+  }
+
+  svg.addEventListener('wheel', function (ev) {
+    ev.preventDefault();
+    var p = localPoint(ev.clientX, ev.clientY);
+    var world = { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
+    var factor = Math.exp(-ev.deltaY * 0.0016);
+    var newScale = Math.min(4, Math.max(0.15, view.scale * factor));
+    view.x = p.x - world.x * newScale;
+    view.y = p.y - world.y * newScale;
+    view.scale = newScale;
+    applyView();
+  }, { passive: false });
+
+  var dragKey = null, dragMoved = false, dragPointerId = null, panStart = null, panViewStart = null;
+  var CLICK_SLOP = 4;
+
+  svg.addEventListener('pointerdown', function (ev) {
+    var g = ev.target.closest('.og-node');
+    dragPointerId = ev.pointerId;
+    svg.setPointerCapture(ev.pointerId);
+    if (g && !g.classList.contains('og-ghost')) {
+      dragKey = g.getAttribute('data-key'); dragMoved = false;
+      dragging = nodeById[dragKey];
+      wake();
+    } else {
+      panning = true; panStart = { x: ev.clientX, y: ev.clientY }; panViewStart = { x: view.x, y: view.y };
+    }
   });
-
-  // ghost nodes (broken-reference targets named in the registry)
-  ghostOrder.forEach(function (gid) {
-    var e = ghosts[gid], p = gpos[gid];
-    var g = el('g', { class: 'g-ghost', 'data-key': 'ghost:' + gid });
-    el('rect', { x: p.x - 12, y: p.y - 11, width: 200, height: 22, rx: 6 }, g);
-    el('text', { x: p.x + 2, y: p.y + 4, class: 'g-ghostlabel' }, g).textContent = '✕ ' + e.ref_name;
-    var t = el('title', {}, g);
-    t.textContent = e.ref_name + ' (' + gid + ') — ' + (e.external_location || 'outside library') +
-      (e.same_named_library_component ? '; same-named library component: ' + e.same_named_library_component : '');
-    nodeEls['ghost:' + gid] = g;
+  svg.addEventListener('pointermove', function (ev) {
+    if (dragKey) {
+      var w = toWorld(ev.clientX, ev.clientY);
+      var n = nodeById[dragKey];
+      var moved = Math.abs(w.x - n.x) > CLICK_SLOP || Math.abs(w.y - n.y) > CLICK_SLOP;
+      if (moved) dragMoved = true;
+      n.x = w.x; n.y = w.y; n.vx = 0; n.vy = 0;
+      render();
+    } else if (panning) {
+      var scaleX = W / svg.getBoundingClientRect().width;
+      view.x = panViewStart.x + (ev.clientX - panStart.x) * scaleX;
+      view.y = panViewStart.y + (ev.clientY - panStart.y) * scaleX;
+      applyView();
+    }
   });
+  function endPointer(ev) {
+    if (dragKey) {
+      if (!dragMoved) goTo(nodeById[dragKey]);
+      dragging = null; dragKey = null; dragMoved = false;
+      wake();
+    }
+    panning = false;
+    if (dragPointerId != null) { try { svg.releasePointerCapture(dragPointerId); } catch (e) {} dragPointerId = null; }
+  }
+  svg.addEventListener('pointerup', endPointer);
+  svg.addEventListener('pointercancel', endPointer);
+  svg.style.cursor = 'grab';
+  svg.addEventListener('pointerdown', function (ev) { if (!ev.target.closest('.og-node')) svg.style.cursor = 'grabbing'; });
+  window.addEventListener('pointerup', function () { svg.style.cursor = 'grab'; });
 
-  // component nodes
-  data.nodes.forEach(function (n) {
-    var p = pos[n.id], r = radius(n);
-    var a = document.createElementNS(svgNS, 'a');
-    a.setAttribute('href', link(n));
-    a.setAttribute('class', 'g-nodegroup');
-    a.setAttribute('data-key', n.id);
-    svg.appendChild(a);
-    el('circle', { cx: p.x, cy: p.y, r: r, class: 'g-dot', fill: TYPE_COLOR[n.type] }, a);
-    el('text', { x: p.x + r + 7, y: p.y + 4, class: 'g-name' }, a).textContent = n.name;
-    var t = el('title', {}, a);
-    t.textContent = n.id + '\ntype: ' + n.type + ' · usage count: ' + n.usage_count +
-      '\nnode_id: ' + n.node_id + '\nfingerprint: ' + n.figma_fingerprint + '\nfile: ' + n.file;
-    nodeEls[n.id] = a;
-  });
+  // zoom toolbar
+  var toolbar = mount.parentElement.querySelector('.og-toolbar');
+  if (toolbar) {
+    toolbar.querySelector('[data-zoom=in]').addEventListener('click', function () { zoomBy(1.3); });
+    toolbar.querySelector('[data-zoom=out]').addEventListener('click', function () { zoomBy(1 / 1.3); });
+    toolbar.querySelector('[data-zoom=reset]').addEventListener('click', fitView);
+  }
+  function zoomBy(factor) {
+    var p = { x: W / 2, y: H / 2 };
+    var world = { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
+    view.scale = Math.min(4, Math.max(0.15, view.scale * factor));
+    view.x = p.x - world.x * view.scale; view.y = p.y - world.y * view.scale;
+    applyView();
+  }
 
-  // hover spotlight: highlight the node's whole neighborhood, dim the rest
+  // ---------------------------------------------------------------- hover spotlight
   function spotlight(key) {
-    var keep = { }; keep[key] = 1;
+    var keep = {}; keep[key] = 1;
     for (var k in (adj[key] || {})) keep[k] = 1;
     for (var id in nodeEls) nodeEls[id].classList.toggle('dimmed', !keep[id]);
     edgeEls.forEach(function (e) {
-      var on = e.a === key || e.b === key;
+      var on = e.edge.a.id === key || e.edge.b.id === key;
       e.el.classList.toggle('dimmed', !on);
       e.el.classList.toggle('hot', on);
     });
   }
-  function clear() {
+  function clearSpotlight() {
     for (var id in nodeEls) nodeEls[id].classList.remove('dimmed');
     edgeEls.forEach(function (e) { e.el.classList.remove('dimmed', 'hot'); });
   }
-  for (var id in nodeEls) {
-    (function (key) {
-      nodeEls[key].addEventListener('mouseenter', function () { spotlight(key); });
-      nodeEls[key].addEventListener('mouseleave', clear);
-    })(id);
-  }
+  nodeLayer.addEventListener('pointerover', function (ev) {
+    var g = ev.target.closest('.og-node'); if (g) spotlight(g.getAttribute('data-key'));
+  });
+  nodeLayer.addEventListener('pointerout', function (ev) {
+    var g = ev.target.closest('.og-node'); if (g) clearSpotlight();
+  });
 })();
 """
 
 GRAPH_CSS = """
-.cgraph{width:100%;min-width:1200px}
-.g-colsub{font-size:10.5px;fill:#919191}
-.g-broken{fill:#c42e2e}
-.g-dot{stroke:#fff;stroke-width:2}
-.g-nodegroup{cursor:pointer}
-.g-nodegroup.dimmed,.g-ghost.dimmed{opacity:.14}
-.g-name{font-size:11.5px;fill:#171717}
-.g-edge{fill:none;stroke-width:1.3;transition:opacity .12s}
-.e-structural{stroke:#8a8a8a;opacity:.65}
-.e-behavioral{stroke:#8a38f5;stroke-dasharray:5 4;opacity:.5}
-.e-dangling{stroke:#c42e2e;stroke-dasharray:2 4;stroke-width:1.6;opacity:.75}
-.g-edge.dimmed{opacity:.05}
-.g-edge.hot{opacity:1;stroke-width:2.2}
-.g-ghost rect{fill:#fff7e8;stroke:#c42e2e;stroke-dasharray:3 3}
-.g-ghostlabel{font-size:10.5px;fill:#9e1e1e}
+.ograph{width:100%;height:100%;display:block;touch-action:none;user-select:none}
+.og-toolbar{position:absolute;top:20px;right:20px;display:flex;flex-direction:column;gap:6px;z-index:2}
+.og-toolbar button{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.og-toolbar button:hover{border-color:var(--ink3)}
+.og-hint{position:absolute;left:20px;bottom:16px;font-size:11.5px;color:var(--ink3);background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:4px 12px;z-index:2}
+.og-node{cursor:pointer}
+.og-node.dimmed{opacity:.15}
+.og-dot{stroke:#fff;stroke-width:2;transition:opacity .12s}
+.og-dot-ghost{fill:#fff7e8;stroke:#c42e2e;stroke-dasharray:2 2;r:5}
+.og-label{font-size:11px;fill:var(--ink);opacity:var(--og-label-op,1);transition:opacity .15s;pointer-events:none}
+.og-label-ghost{fill:#9e1e1e;font-size:10px}
+.og-edge{stroke-width:1.3;transition:opacity .12s,stroke-width .12s}
+.og-e-structural{stroke:#8a8a8a;opacity:.55}
+.og-e-behavioral{stroke:#8a38f5;stroke-dasharray:5 4;opacity:.4}
+.og-e-dangling{stroke:#c42e2e;stroke-dasharray:2 4;stroke-width:1.6;opacity:.6}
+.og-edge.dimmed{opacity:.04}
+.og-edge.hot{opacity:1;stroke-width:2.2}
 .legend{display:flex;gap:18px;flex-wrap:wrap;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin:12px 0;font-size:12.5px}
 .legend .sw{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-2px;margin-right:5px}
 .legend .ln{display:inline-block;width:26px;height:0;border-top:2px solid #8a8a8a;vertical-align:3px;margin-right:5px}
@@ -257,14 +440,20 @@ def main():
 
     payload = json.dumps(data).replace("</", "<\\/")
     n_dangling = sum(1 for e in data["edges"] if e["type"] == "dangling")
+    dangling_legend = (f'<span><span class="ln bad"></span>red = dangling reference '
+                       f'({n_dangling}, registry-flagged)</span>') if n_dangling else ""
+    dangling_note = ("""<p class="dim">Dangling references sit on their own outer ring, drawn as broken red
+    edges to ghost markers — components the registry says exist outside the ingested library page.
+    They are shown as broken, never repaired (details: INGESTION_REPORT.md §5).</p>""") if n_dangling else ""
     body = f"""
     <header class="pagehead"><h1>Component graph</h1></header>
-    <p class="dim">The canonical wiring of the library, generated from <code>registry.yaml</code> in one pass —
-    it renders only nodes and edges that exist there, at fixed, deterministic positions (registry order,
-    tiered by type). Hover a component to spotlight everything it is wired to; click it to open its
-    dashboard page. The identical data is queryable by the agent at <code>graph/graph.json</code>
-    (and embedded in this page), with every node exposing <code>id</code>, <code>node_id</code> and
-    <code>figma_fingerprint</code>.</p>
+    <p class="dim">The canonical wiring of the library, generated from <code>registry.yaml</code> and laid out
+    live by a force simulation — atoms cluster at the center, molecules and organisms grow outward as they
+    compose from what's inside them, exactly like the underlying <code>used_atoms</code>/<code>used_molecules</code>
+    relationships. Hover a component to spotlight everything it is wired to; drag a node to reposition it;
+    scroll or use the controls to zoom; click a node to open its dashboard page. The identical data is queryable
+    by the agent at <code>graph/graph.json</code> (and embedded in this page), with every node exposing
+    <code>id</code>, <code>node_id</code> and <code>figma_fingerprint</code>.</p>
     <div class="legend">
       <span><b>Legend</b></span>
       <span><span class="sw" style="background:#1c8a4c"></span>atom</span>
@@ -273,13 +462,19 @@ def main():
       <span><span class="sw" style="background:#7a1616"></span>complex-organism</span>
       <span><span class="ln"></span>solid = is built from (part → whole)</span>
       <span><span class="ln dash"></span>dashed = behavioral relationship</span>
-      <span><span class="ln bad"></span>red = dangling reference ({n_dangling}, registry-flagged)</span>
+      {dangling_legend}
       <span class="grow"><span class="g1"></span><span class="g2"></span> size = usage count</span>
     </div>
-    <div class="graphwrap"><div id="graph-mount"></div></div>
-    <p class="dim">Dangling references are drawn to ghost markers on the right — components the registry
-    says exist outside the ingested library page. They are shown as broken, never repaired
-    (details: INGESTION_REPORT.md §5).</p>
+    <div class="graphwrap">
+      <div id="graph-mount"></div>
+      <div class="og-toolbar">
+        <button type="button" data-zoom="in" title="Zoom in">+</button>
+        <button type="button" data-zoom="out" title="Zoom out">−</button>
+        <button type="button" data-zoom="reset" title="Reset view">⤢</button>
+      </div>
+      <div class="og-hint">Scroll to zoom · drag canvas to pan · drag a node to reposition</div>
+    </div>
+    {dangling_note}
     <style>{GRAPH_CSS}</style>
     <script type="application/json" id="graph-data">{payload}</script>
     <script>{GRAPH_JS}</script>
