@@ -68,6 +68,30 @@ code{font-family:var(--font-mono);font-size:.92em}
 .pagehead h1{font-size:26px}
 .landing h1{font-size:40px;letter-spacing:-0.03em;line-height:1.1}
 .tagline{color:var(--ink2);max-width:620px;font-size:15px;margin:14px 0 0}
+/* designer-authored front-page copy */
+.lede{max-width:660px;margin:16px 0 0}
+.lede p{color:var(--ink2);font-size:15.5px;line-height:1.6;margin:0}
+.overviewdoc{margin:22px 0 0;max-width:760px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-lg)}
+.overviewdoc summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;
+  padding:14px 18px;font-size:13.5px;font-weight:500;color:var(--ink2);border-radius:var(--r-lg);
+  transition:color .14s,background .14s}
+.overviewdoc summary::-webkit-details-marker{display:none}
+.overviewdoc summary:hover{color:var(--ink);background:var(--surface-2)}
+.ovchev{width:0;height:0;flex:none;border-left:5px solid currentColor;
+  border-top:4px solid transparent;border-bottom:4px solid transparent;transition:transform .18s}
+.overviewdoc[open] summary{color:var(--ink);border-bottom:1px solid var(--line);
+  border-radius:var(--r-lg) var(--r-lg) 0 0}
+.overviewdoc[open] .ovchev{transform:rotate(90deg)}
+.overviewdoc-body{padding:6px 18px 20px;max-height:min(58vh,560px);overflow-y:auto}
+.ovsec{padding:16px 0;border-bottom:1px solid var(--line-soft)}
+.ovsec:last-child{border-bottom:none;padding-bottom:2px}
+.ovsec h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin:0 0 8px}
+.ovsec p{color:var(--ink2);font-size:14px;line-height:1.65;margin:0 0 10px;max-width:64ch}
+.ovsec p:last-child{margin-bottom:0}
+.ovsec strong{color:var(--ink);font-weight:600}
+.ovsec code{background:var(--surface-2);border-radius:4px;padding:1px 5px;font-size:12px;color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.ovchev{transition:none}}
 .subtle{color:var(--ink3);font-size:12.5px;margin:6px 0 0}
 .dim{color:var(--ink3);font-size:12.5px;font-weight:400}
 .rel{color:var(--ink3);font-size:12px}

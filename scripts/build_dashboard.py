@@ -30,6 +30,13 @@ tokens_colors = load_yaml("tokens/colors.yaml")
 tokens_typo = load_yaml("tokens/typography.yaml")
 tokens_spacing = load_yaml("tokens/spacing.yaml")
 
+# Overview copy is designer-authored and lives outside this script, so it can be edited
+# without touching Python. Absent file degrades to an empty overview rather than failing.
+try:
+    overview_copy = load_yaml("overview.yaml")["overview"]
+except (FileNotFoundError, KeyError, TypeError):
+    overview_copy = {}
+
 components = {}          # id -> parsed component file
 for entry in registry["components"]:
     components[entry["id"]] = load_yaml(entry["file"])
@@ -591,6 +598,28 @@ def spacing_page():
     """
     return page("Spacing & radius", "spacing", body)
 
+def render_prose(text):
+    """Designer-authored prose -> HTML.
+
+    Escapes everything first, then applies a deliberately tiny markup vocabulary on top:
+    a blank line starts a paragraph, `backticks` set monospace, **stars** set bold. Because
+    escaping happens before any of that, authored copy can never inject markup into the page.
+    YAML folded scalars (`>`) collapse wrapped lines and leave a single newline where the
+    author left a blank line, so paragraphs split on runs of newlines.
+    """
+    if not text:
+        return ""
+    out = []
+    for block in re.split(r"\n+", str(text).strip()):
+        block = block.strip()
+        if not block:
+            continue
+        block = E(block)
+        block = re.sub(r"`([^`]+)`", r"<code>\1</code>", block)
+        block = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", block)
+        out.append(f"<p>{block}</p>")
+    return "".join(out)
+
 def doc_badge(cid):
     filled, total, err = doc_status[cid]
     if err:
@@ -657,21 +686,22 @@ def overview_page():
                       f'<div class="ov-legend"><span><span class="ov-sw" style="background:var(--ink3)"></span>Structural (built from) <b>{total_structural}</b></span>'
                       f'<span><span class="ov-sw" style="background:var(--plum)"></span>Behavioral <b>{total_behavioral}</b></span></div>')
 
+    # Front-page copy comes from overview.yaml so the designer owns it. The detail panel is
+    # a plain <details>, so it expands with no JS and stays usable however long the copy grows.
+    ov_sections = "".join(
+        f'<section class="ovsec"><h3>{E(s.get("heading", ""))}</h3>{render_prose(s.get("body"))}</section>'
+        for s in (overview_copy.get("sections") or []) if s.get("heading") or s.get("body"))
+    ov_expand = ""
+    if ov_sections:
+        label = overview_copy.get("expand_label") or "How this system works, and the rules for using it"
+        ov_expand = (f'<details class="overviewdoc"><summary><span class="ovchev" aria-hidden="true"></span>'
+                     f'{E(label)}</summary><div class="overviewdoc-body">{ov_sections}</div></details>')
+
     body = f"""
     <header class="landing">
-      <h1>{E(registry["app"])} <span class="dim">Design Language System</span></h1>
-      <p class="tagline">The machine-navigable mirror of the Noise Audio Design Language System — ingested from Figma; this dashboard is a rendered view of the repository and never a second source of truth.</p>
-      <div class="quicklinks">
-        <a class="btn" href="graph.html">Component graph</a>
-        <a class="btn" href="foundations-colors.html">Foundations</a>
-        <a class="btn" href="../registry.yaml">registry.yaml</a>
-        <a class="btn" href="../INGESTION_REPORT.md">Ingestion report</a>
-        <a class="btn" href="{E(registry["source"]["figma_url"])}">Figma source ↗</a>
-      </div>
-      <div class="pills">
-        <span class="pill">{counts["token_sources"]} token source</span>
-        <span class="pill">ingested {E(registry["generated"])}</span>
-      </div>
+      <h1>{E(overview_copy.get("title") or "Design System")}</h1>
+      {f'<div class="lede">{render_prose(overview_copy.get("lede"))}</div>' if overview_copy.get("lede") else ""}
+      {ov_expand}
     </header>
     {''.join(warns)}
 
@@ -681,30 +711,6 @@ def overview_page():
       <div class="kpirow">{kpi_html}</div>
       <div class="propbar">{propbar_html}</div>
       <div class="ov-legend">{legend_html}</div>
-    </section>
-
-    <section class="metasection">
-      <h3>How this library works</h3>
-      <p>Figma is the only source of truth. This repository (<code>registry.yaml</code> + <code>components/**.yaml</code>) is
-      an ingested, versioned mirror of it, and this dashboard is a rendered view of the repository — never a second source
-      of truth in either direction. To change a component, change it in Figma and re-run the ingestion; do not hand-edit
-      the generated HTML.</p>
-      <p><b>When to use what:</b> browse this dashboard to look up a component's Figma variants, rules and anti-patterns
-      before building a screen with it; read <a href="../registry.yaml">registry.yaml</a> or
-      <a href="graph.html">graph/graph.json</a> when you need the whole library's structure at once (composition,
-      usage counts, relationships); read a component's own <code>components/&lt;tier&gt;/&lt;id&gt;.yaml</code> for its
-      full authored governance.</p>
-      <p class="dim">Quickstart for an agent consuming this library programmatically:</p>
-      <pre class="codeblock">registry = yaml.safe_load(open("registry.yaml"))["registry"]
-component = yaml.safe_load(open(registry["components"][i]["file"]))
-# every component exposes: id, node_id (Figma in-file locator),
-# figma_fingerprint (stable component key), structural_edges.uses,
-# behavioral_edges, authored_metadata (usage / design_intent / rules / anti_patterns)</pre>
-      <div class="quicklinks">
-        <a class="btn" href="../AGENT.md">AGENT.md</a>
-        <a class="btn" href="../CONTROL_PANEL.md">CONTROL_PANEL.md</a>
-        <a class="btn" href="../INGESTION_REPORT.md">INGESTION_REPORT.md</a>
-      </div>
     </section>
 
     <section class="metasection">
@@ -812,6 +818,30 @@ code{font-family:var(--font-mono);font-size:.92em}
 .pagehead h1{font-size:26px}
 .landing h1{font-size:40px;letter-spacing:-0.03em;line-height:1.1}
 .tagline{color:var(--ink2);max-width:620px;font-size:15px;margin:14px 0 0}
+/* designer-authored front-page copy */
+.lede{max-width:660px;margin:16px 0 0}
+.lede p{color:var(--ink2);font-size:15.5px;line-height:1.6;margin:0}
+.overviewdoc{margin:22px 0 0;max-width:760px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-lg)}
+.overviewdoc summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;
+  padding:14px 18px;font-size:13.5px;font-weight:500;color:var(--ink2);border-radius:var(--r-lg);
+  transition:color .14s,background .14s}
+.overviewdoc summary::-webkit-details-marker{display:none}
+.overviewdoc summary:hover{color:var(--ink);background:var(--surface-2)}
+.ovchev{width:0;height:0;flex:none;border-left:5px solid currentColor;
+  border-top:4px solid transparent;border-bottom:4px solid transparent;transition:transform .18s}
+.overviewdoc[open] summary{color:var(--ink);border-bottom:1px solid var(--line);
+  border-radius:var(--r-lg) var(--r-lg) 0 0}
+.overviewdoc[open] .ovchev{transform:rotate(90deg)}
+.overviewdoc-body{padding:6px 18px 20px;max-height:min(58vh,560px);overflow-y:auto}
+.ovsec{padding:16px 0;border-bottom:1px solid var(--line-soft)}
+.ovsec:last-child{border-bottom:none;padding-bottom:2px}
+.ovsec h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin:0 0 8px}
+.ovsec p{color:var(--ink2);font-size:14px;line-height:1.65;margin:0 0 10px;max-width:64ch}
+.ovsec p:last-child{margin-bottom:0}
+.ovsec strong{color:var(--ink);font-weight:600}
+.ovsec code{background:var(--surface-2);border-radius:4px;padding:1px 5px;font-size:12px;color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.ovchev{transition:none}}
 .subtle{color:var(--ink3);font-size:12.5px;margin:6px 0 0}
 .dim{color:var(--ink3);font-size:12.5px;font-weight:400}
 .rel{color:var(--ink3);font-size:12px}

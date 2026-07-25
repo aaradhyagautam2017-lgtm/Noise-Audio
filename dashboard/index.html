@@ -28,19 +28,9 @@
 <main class="main">
 
     <header class="landing">
-      <h1>Noise Audio <span class="dim">Design Language System</span></h1>
-      <p class="tagline">The machine-navigable mirror of the Noise Audio Design Language System — ingested from Figma; this dashboard is a rendered view of the repository and never a second source of truth.</p>
-      <div class="quicklinks">
-        <a class="btn" href="graph.html">Component graph</a>
-        <a class="btn" href="foundations-colors.html">Foundations</a>
-        <a class="btn" href="../registry.yaml">registry.yaml</a>
-        <a class="btn" href="../INGESTION_REPORT.md">Ingestion report</a>
-        <a class="btn" href="https://www.figma.com/design/QjVyM5bRXgIOZn8PO1e0eK/?node-id=2025-148">Figma source ↗</a>
-      </div>
-      <div class="pills">
-        <span class="pill">1 token source</span>
-        <span class="pill">ingested 2026-07-10</span>
-      </div>
+      <h1>Design System</h1>
+      <div class="lede"><p>A single, governed source of truth for how Noise Audio looks and behaves — authored in Figma, mirrored here as machine-readable files that both designers and AI agents read from. Everything on this dashboard is generated from those files, so what you see is what the system actually contains.</p></div>
+      <details class="overviewdoc"><summary><span class="ovchev" aria-hidden="true"></span>How this system works, and the rules for using it</summary><div class="overviewdoc-body"><section class="ovsec"><h3>How it works</h3><p>The library is drawn and maintained in Figma. An ingestion pass reads one nominated library page and writes what it finds into this repository: <code>registry.yaml</code> holds the index of every component, and one file per component under <code>components/</code> records its identity, variants, composition and authored governance.</p><p>This dashboard is then generated from those files. The flow runs one way only — Figma to repository to dashboard. Nothing here is authored by hand, and nothing here feeds back into Figma.</p></section><section class="ovsec"><h3>How to use it</h3><p>If you are designing or building a screen, open the component you are about to use and read its rules and anti-patterns before you place it. The variant axes tell you which combinations legitimately exist; the composition panel tells you what it is built from and what breaks if you change it.</p><p>If you are an agent consuming this library, read <code>registry.yaml</code> for the whole index, <code>graph/graph.json</code> for the relationship graph, and a component&#x27;s own YAML file for its full authored governance. Every component exposes a <code>node_id</code> and a <code>figma_fingerprint</code> so you can locate the exact source object in Figma.</p></section><section class="ovsec"><h3>Rules</h3><p><strong>Figma is the only source of truth.</strong> To change a component, change it in Figma and re-run the ingestion. Never hand-edit the generated HTML — it is overwritten on every build.</p><p><strong>Only the ingested library page counts.</strong> A component referenced from any other Figma page is not a dependency of this system, even if it renders correctly. Those references are recorded and excluded deliberately, not by oversight.</p><p><strong>Authored metadata is binding.</strong> The rules and anti-patterns on a component page are constraints, not suggestions. If a rule is wrong, correct it at the source rather than working around it.</p><p><strong>Do not invent variants.</strong> The declared variant axes are the complete permitted set. If a needed combination does not exist, it has to be added in Figma and re-ingested before it can be used.</p></section></div></details>
     </header>
     <div class="warning">⚠ <b>1 component(s) have authored_metadata that fails to parse as YAML</b> — shown raw on their page instead of rendered sections.</div>
 
@@ -50,30 +40,6 @@
       <div class="kpirow"><div class="kpi"><div class="kpi-value">16</div><div class="kpi-label">Atoms</div></div><div class="kpi"><div class="kpi-value">2</div><div class="kpi-label">Molecules</div></div><div class="kpi"><div class="kpi-value">6</div><div class="kpi-label">Organisms</div></div><div class="kpi"><div class="kpi-value">2</div><div class="kpi-label">Complex organisms</div></div></div>
       <div class="propbar"><div class="propbar-seg" style="flex:16;background:var(--atom)" title="Atoms — 16 (62%)"></div><div class="propbar-seg" style="flex:2;background:var(--molecule)" title="Molecules — 2 (8%)"></div><div class="propbar-seg" style="flex:6;background:var(--organism)" title="Organisms — 6 (23%)"></div><div class="propbar-seg" style="flex:2;background:var(--complex)" title="Complex organisms — 2 (8%)"></div></div>
       <div class="ov-legend"><span><span class="ov-sw" style="background:var(--atom)"></span>Atoms <b>16</b></span><span><span class="ov-sw" style="background:var(--molecule)"></span>Molecules <b>2</b></span><span><span class="ov-sw" style="background:var(--organism)"></span>Organisms <b>6</b></span><span><span class="ov-sw" style="background:var(--complex)"></span>Complex organisms <b>2</b></span></div>
-    </section>
-
-    <section class="metasection">
-      <h3>How this library works</h3>
-      <p>Figma is the only source of truth. This repository (<code>registry.yaml</code> + <code>components/**.yaml</code>) is
-      an ingested, versioned mirror of it, and this dashboard is a rendered view of the repository — never a second source
-      of truth in either direction. To change a component, change it in Figma and re-run the ingestion; do not hand-edit
-      the generated HTML.</p>
-      <p><b>When to use what:</b> browse this dashboard to look up a component's Figma variants, rules and anti-patterns
-      before building a screen with it; read <a href="../registry.yaml">registry.yaml</a> or
-      <a href="graph.html">graph/graph.json</a> when you need the whole library's structure at once (composition,
-      usage counts, relationships); read a component's own <code>components/&lt;tier&gt;/&lt;id&gt;.yaml</code> for its
-      full authored governance.</p>
-      <p class="dim">Quickstart for an agent consuming this library programmatically:</p>
-      <pre class="codeblock">registry = yaml.safe_load(open("registry.yaml"))["registry"]
-component = yaml.safe_load(open(registry["components"][i]["file"]))
-# every component exposes: id, node_id (Figma in-file locator),
-# figma_fingerprint (stable component key), structural_edges.uses,
-# behavioral_edges, authored_metadata (usage / design_intent / rules / anti_patterns)</pre>
-      <div class="quicklinks">
-        <a class="btn" href="../AGENT.md">AGENT.md</a>
-        <a class="btn" href="../CONTROL_PANEL.md">CONTROL_PANEL.md</a>
-        <a class="btn" href="../INGESTION_REPORT.md">INGESTION_REPORT.md</a>
-      </div>
     </section>
 
     <section class="metasection">
