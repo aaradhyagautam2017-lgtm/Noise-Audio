@@ -1,112 +1,92 @@
 <!DOCTYPE html>
 <html lang="en"><head>
-<script>(function(){try{var t=localStorage.getItem('theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Component graph — Noise Audio DLS</title>
+<script>(function(){try{var t=localStorage.getItem('na-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 </head><body>
 <div class="layout">
 
     <aside class="sidebar">
-      <div class="appswitcher">
+      <div class="brand">
         <span class="applogo">N</span>
-        <select onchange="void 0" title="App switcher">
-          <option selected>Noise Audio</option>
-        </select>
-        <button type="button" class="themebtn" id="theme-toggle" title="Toggle color theme" aria-label="Toggle color theme">
-          <span class="theme-ico theme-ico-sun">☀</span><span class="theme-ico theme-ico-moon">☾</span>
-        </button>
+        <span class="brandname">Noise Audio</span>
+        <button class="themetoggle" type="button" id="themetoggle" title="Toggle light / dark"
+                aria-label="Toggle light or dark theme"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-width="1.4"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
       </div>
       <nav>
-        <div class="navgroup">Overview</div>
-        <a class="navitem " href="index.html">Overview</a>
-        <a class="navitem active" href="graph.html">Component graph</a>
+        <a class="navitem" href="index.html"><span class="navlabel">Overview</span></a>
+        <a class="navitem active" href="graph.html"><span class="navlabel">Component graph</span></a>
         <div class="navgroup">Foundations <span class="count">3</span></div>
-        <a class="navitem " href="foundations-colors.html">Colors &amp; tokens</a>
-        <a class="navitem " href="foundations-typography.html">Typography</a>
-        <a class="navitem " href="foundations-spacing.html">Spacing &amp; radius</a>
-    <div class="navgroup">Atoms <span class="count">16</span></div><a class="navitem " href="components/primary-cta-button.html">Primary cta</a><a class="navitem " href="components/secondary-cta-button.html">Secondary cta</a><a class="navitem " href="components/link-cta.html">Link cta</a><a class="navitem " href="components/chevron.html">Chevron</a><a class="navitem " href="components/checkbox.html">Checkbox</a><a class="navitem " href="components/radio-button.html">Radio Button</a><a class="navitem " href="components/toggle.html">Toggle</a><a class="navitem " href="components/cross.html">Cross</a><a class="navitem " href="components/heading-content-component.html">Heading-content component</a><a class="navitem " href="components/status-bar.html">Status bar</a><a class="navitem " href="components/image-asset-placeholder.html">Image, asset placeholder</a><a class="navitem " href="components/card-heading.html">Card heading</a><a class="navitem " href="components/description.html">Description</a><a class="navitem " href="components/text-field.html">Text field</a><a class="navitem " href="components/privacy-policy-tab.html">Privacy policy tab</a><a class="navitem " href="components/progress-bar.html">Progress bar</a><div class="navgroup">Molecules <span class="count">2</span></div><a class="navitem " href="components/actionables.html">Actionables</a><a class="navitem " href="components/l2-inner-pages-heading.html">L2/Inner pages Heading</a><div class="navgroup">Organisms <span class="count">8</span></div><a class="navitem " href="components/l1-home-page-navigation.html">L1/Home page</a><a class="navitem " href="components/modal-card.html">Modal card</a><a class="navitem " href="components/master-card.html">Master card</a><a class="navitem " href="components/checkbox-card.html">Checkbox card</a><a class="navitem " href="components/l1-inner-page-navigation.html">L1 Inner page navigation</a><a class="navitem " href="components/action-card.html">Action card</a><a class="navitem " href="components/action-sheet.html">Action sheet</a><a class="navitem " href="components/modal-sheet.html">Modal Sheet</a></nav></aside>
+        <a class="navitem" href="foundations-colors.html"><span class="navlabel">Colors &amp; tokens</span></a>
+        <a class="navitem" href="foundations-typography.html"><span class="navlabel">Typography</span></a>
+        <a class="navitem" href="foundations-spacing.html"><span class="navlabel">Spacing &amp; radius</span></a>
+    <div class="navgroup">Atoms <span class="count">16</span></div><a class="navitem pill" href="components/primary-cta-button.html"><span class="navdot d-atom"></span><span class="navlabel">Primary cta</span></a><a class="navitem pill" href="components/secondary-cta-button.html"><span class="navdot d-atom"></span><span class="navlabel">Secondary cta</span></a><a class="navitem pill" href="components/link-cta.html"><span class="navdot d-atom"></span><span class="navlabel">Link cta</span></a><a class="navitem pill" href="components/chevron.html"><span class="navdot d-atom"></span><span class="navlabel">Chevron</span></a><a class="navitem pill" href="components/checkbox.html"><span class="navdot d-atom"></span><span class="navlabel">Checkbox</span></a><a class="navitem pill" href="components/radio-button.html"><span class="navdot d-atom"></span><span class="navlabel">Radio Button</span></a><a class="navitem pill" href="components/toggle.html"><span class="navdot d-atom"></span><span class="navlabel">Toggle</span></a><a class="navitem pill" href="components/cross.html"><span class="navdot d-atom"></span><span class="navlabel">Cross</span></a><a class="navitem pill" href="components/heading-content-component.html"><span class="navdot d-atom"></span><span class="navlabel">Heading-content component</span></a><a class="navitem pill" href="components/status-bar.html"><span class="navdot d-atom"></span><span class="navlabel">Status bar</span></a><a class="navitem pill" href="components/image-asset-placeholder.html"><span class="navdot d-atom"></span><span class="navlabel">Image, asset placeholder</span></a><a class="navitem pill" href="components/card-heading.html"><span class="navdot d-atom"></span><span class="navlabel">Card heading</span></a><a class="navitem pill" href="components/description.html"><span class="navdot d-atom"></span><span class="navlabel">Description</span></a><a class="navitem pill" href="components/text-field.html"><span class="navdot d-atom"></span><span class="navlabel">Text field</span></a><a class="navitem pill" href="components/privacy-policy-tab.html"><span class="navdot d-atom"></span><span class="navlabel">Privacy policy tab</span></a><a class="navitem pill" href="components/progress-bar.html"><span class="navdot d-atom"></span><span class="navlabel">Progress bar</span></a><div class="navgroup">Molecules <span class="count">2</span></div><a class="navitem pill" href="components/actionables.html"><span class="navdot d-molecule"></span><span class="navlabel">Actionables</span></a><a class="navitem pill" href="components/l2-inner-pages-heading.html"><span class="navdot d-molecule"></span><span class="navlabel">L2/Inner pages Heading</span></a><div class="navgroup">Organisms <span class="count">8</span></div><a class="navitem pill" href="components/l1-home-page-navigation.html"><span class="navdot d-organism"></span><span class="navlabel">L1/Home page</span></a><a class="navitem pill" href="components/modal-card.html"><span class="navdot d-organism"></span><span class="navlabel">Modal card</span></a><a class="navitem pill" href="components/master-card.html"><span class="navdot d-organism"></span><span class="navlabel">Master card</span></a><a class="navitem pill" href="components/checkbox-card.html"><span class="navdot d-organism"></span><span class="navlabel">Checkbox card</span></a><a class="navitem pill" href="components/l1-inner-page-navigation.html"><span class="navdot d-organism"></span><span class="navlabel">L1 Inner page navigation</span></a><a class="navitem pill" href="components/action-card.html"><span class="navdot d-organism"></span><span class="navlabel">Action card</span></a><a class="navitem pill" href="components/action-sheet.html"><span class="navdot d-complex-organism"></span><span class="navlabel">Action sheet</span></a><a class="navitem pill" href="components/modal-sheet.html"><span class="navdot d-complex-organism"></span><span class="navlabel">Modal Sheet</span></a></nav></aside>
 <main class="main">
 
     <header class="pagehead"><h1>Component graph</h1></header>
-    <div class="graphwrap">
-      <div class="graphstage">
-        <div id="graph-mount"></div>
-        <div class="og-toolbar">
-          <button type="button" data-zoom="in" title="Zoom in">+</button>
-          <button type="button" data-zoom="out" title="Zoom out">−</button>
-          <button type="button" data-zoom="reset" title="Reset view">⤢</button>
-          <button type="button" class="og-settings-btn" title="Settings" aria-expanded="false" aria-controls="og-settings">⚙</button>
-        </div>
-        <div class="og-settings-panel" id="og-settings" hidden>
-          <div class="og-settings-title">Categories</div>
-          <label class="og-settings-row"><input type="checkbox" checked data-filter-type="atom"><span class="sw" style="background:var(--atom)"></span>Atoms<span class="count dim">16</span></label>
-          <label class="og-settings-row"><input type="checkbox" checked data-filter-type="molecule"><span class="sw" style="background:var(--molecule)"></span>Molecules<span class="count dim">2</span></label>
-          <label class="og-settings-row"><input type="checkbox" checked data-filter-type="organism"><span class="sw" style="background:var(--organism)"></span>Organisms<span class="count dim">6</span></label>
-          <label class="og-settings-row"><input type="checkbox" checked data-filter-type="complex-organism"><span class="sw" style="background:var(--complex)"></span>Complex organisms<span class="count dim">2</span></label>
-          <div class="og-settings-title">Edges</div>
-          <label class="og-settings-row"><input type="checkbox" checked data-filter-edge="structural"><span class="ln"></span>Structural</label>
-          <label class="og-settings-row"><input type="checkbox" checked data-filter-edge="behavioral"><span class="ln dash"></span>Behavioral</label>
-          
-          <div class="og-settings-title">Display</div>
-          <label class="og-settings-row"><input type="checkbox" id="og-force-labels">Always show labels</label>
-          <label class="og-settings-row"><input type="checkbox" id="og-size-usage" checked>Size by usage count</label>
-        </div>
-        <div class="og-hint">Two-finger scroll to pan · pinch (or Ctrl/⌘+scroll) to zoom · drag a node to reposition</div>
-      </div>
-    </div>
-    <p class="dim graph-desc">The canonical wiring of the library, generated from <code>registry.yaml</code> and laid out
+    <p class="dim">The canonical wiring of the library, generated from <code>registry.yaml</code> and laid out
     live by a force simulation — atoms cluster at the center, molecules and organisms grow outward as they
     compose from what's inside them, exactly like the underlying <code>used_atoms</code>/<code>used_molecules</code>
     relationships. Hover a component to spotlight everything it is wired to; drag a node to reposition it;
-    two-finger scroll (or drag the canvas) to pan, pinch or Ctrl/⌘+scroll to zoom; click a node to open its
-    dashboard page; use the settings (⚙) to filter categories and edge types. The identical data is queryable
+    scroll or use the controls to zoom; click a node to open its dashboard page. The identical data is queryable
     by the agent at <code>graph/graph.json</code> (and embedded in this page), with every node exposing
     <code>id</code>, <code>node_id</code> and <code>figma_fingerprint</code>.</p>
+    <div class="legend">
+      <span><b>Legend</b></span>
+      <span><span class="sw" style="background:var(--atom)"></span>atom</span>
+      <span><span class="sw" style="background:var(--molecule)"></span>molecule</span>
+      <span><span class="sw" style="background:var(--organism)"></span>organism</span>
+      <span><span class="sw" style="background:var(--complex)"></span>complex-organism</span>
+      <span><span class="ln"></span>solid = is built from (part → whole)</span>
+      <span><span class="ln dash"></span>dashed = behavioral relationship</span>
+      
+      <span class="grow"><span class="g1"></span><span class="g2"></span> size = usage count</span>
+    </div>
+    <div class="graphwrap">
+      <div id="graph-mount"></div>
+      <div class="og-toolbar">
+        <button type="button" data-zoom="in" title="Zoom in">+</button>
+        <button type="button" data-zoom="out" title="Zoom out">−</button>
+        <button type="button" data-zoom="reset" title="Reset view">⤢</button>
+      </div>
+      <div class="og-hint">Scroll to zoom · drag canvas to pan · drag a node to reposition</div>
+    </div>
     
     <style>
-.graphwrap{display:flex;align-items:stretch;gap:0}
-.graphstage{flex:1;min-width:0;position:relative;height:100%}
-#graph-mount{width:100%;height:100%}
 .ograph{width:100%;height:100%;display:block;touch-action:none;user-select:none}
-.og-toolbar{position:absolute;top:20px;right:20px;display:flex;flex-direction:column;gap:6px;z-index:2}
-.og-toolbar button{width:30px;height:30px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.06);transition:border-color .15s,transform .1s}
-.og-toolbar button:hover{border-color:var(--blue);color:var(--blue)}
+.og-toolbar{position:absolute;top:18px;right:18px;display:flex;flex-direction:column;gap:6px;z-index:2}
+.og-toolbar button{width:30px;height:30px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--surface-2);color:var(--ink2);font-size:15px;cursor:pointer;transition:color .15s,border-color .15s,transform .1s}
+.og-toolbar button:hover{border-color:var(--line-2);color:var(--ink)}
 .og-toolbar button:active{transform:scale(.9)}
-.og-hint{position:absolute;left:20px;bottom:16px;font-size:11.5px;color:var(--ink3);background:var(--panel);border:1px solid var(--line);border-radius:var(--r-pill);padding:4px 12px;z-index:2;font-family:var(--font-text)}
+.og-hint{position:absolute;left:18px;bottom:14px;font-size:11px;color:var(--ink3);background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);padding:5px 13px;z-index:2}
 .og-node{cursor:pointer}
-.og-node.dimmed{opacity:.15}
-.og-dot{stroke:var(--panel);stroke-width:2;transition:opacity .12s}
-.og-dot.t-atom{fill:var(--atom)}.og-dot.t-molecule{fill:var(--molecule)}.og-dot.t-organism{fill:var(--organism)}.og-dot.t-complex-organism{fill:var(--complex)}
+.og-node.dimmed{opacity:.13}
+.og-dot{stroke:var(--surface);stroke-width:2;transition:opacity .12s}
+.og-dot.k-atom{fill:var(--atom)}
+.og-dot.k-molecule{fill:var(--molecule)}
+.og-dot.k-organism{fill:var(--organism)}
+.og-dot.k-complex{fill:var(--complex)}
 .og-dot-ghost{fill:var(--warn-bg);stroke:var(--organism);stroke-dasharray:2 2;r:5}
-.og-label{font-size:11px;fill:var(--ink);opacity:var(--og-label-op,1);transition:opacity .15s,font-size .15s;pointer-events:none;font-family:var(--font-text)}
+.og-label{font-size:11px;fill:var(--ink);opacity:var(--og-label-op,1);transition:opacity .15s,font-size .15s;pointer-events:none;font-family:var(--font)}
 .og-label-ghost{fill:var(--organism);font-size:10px}
 .og-edge{stroke-width:1.3;transition:opacity .12s,stroke-width .12s}
-.og-e-structural{stroke:var(--ink3);opacity:.5}
-.og-e-behavioral{stroke:var(--plum);stroke-dasharray:5 4;opacity:.4}
+.og-e-structural{stroke:var(--line-2);opacity:.9}
+.og-e-behavioral{stroke:var(--plum);stroke-dasharray:5 4;opacity:.45}
 .og-e-dangling{stroke:var(--organism);stroke-dasharray:2 4;stroke-width:1.6;opacity:.6}
-.og-edge.dimmed{opacity:.04}
+.og-edge.dimmed{opacity:.05}
 .og-edge.hot{opacity:1;stroke-width:2.2}
-.og-settings-btn{font-size:14px}
-.og-settings-btn[aria-expanded="true"]{border-color:var(--blue);color:var(--blue)}
-.og-settings-panel{position:absolute;top:166px;right:20px;width:210px;max-height:calc(100% - 186px);overflow-y:auto;scrollbar-width:none;
-  background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;
-  box-shadow:0 6px 20px rgba(0,0,0,.16);z-index:3;font-size:12.5px}
-.og-settings-panel::-webkit-scrollbar{display:none}
-.og-settings-panel[hidden]{display:none}
-.og-settings-title{font-family:var(--font-display);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);margin:14px 0 6px}
-.og-settings-title:first-child{margin-top:0}
-.og-settings-row{display:flex;align-items:center;gap:7px;padding:4px 0;cursor:pointer;color:var(--ink2);user-select:none}
-.og-settings-row input{margin:0;accent-color:var(--blue);flex:none}
-.og-settings-row .count{margin-left:auto}
-.sw{display:inline-block;width:10px;height:10px;border-radius:50%;flex:none}
-.ln{display:inline-block;width:22px;height:0;border-top:2px solid var(--ink3);flex:none}
-.ln.dash{border-top-style:dashed;border-color:var(--plum)}
-.ln.bad{border-top-style:dotted;border-color:var(--organism)}
-.og-node.filtered,.og-edge.filtered{display:none}
-.graph-desc{margin:14px 2px 0}
+.legend{display:flex;gap:18px;flex-wrap:wrap;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:11px 16px;margin:18px 0;font-size:12.5px;color:var(--ink2)}
+.legend .sw{display:inline-block;width:8px;height:8px;border-radius:50%;vertical-align:1px;margin-right:7px}
+.legend .ln{display:inline-block;width:24px;height:0;border-top:1.5px solid var(--line-2);vertical-align:4px;margin-right:7px}
+.legend .ln.dash{border-top-style:dashed;border-color:var(--plum)}
+.legend .ln.bad{border-top-style:dotted;border-color:var(--organism)}
+.legend .grow{display:inline-flex;align-items:center;gap:4px}
+.legend .g1{width:7px;height:7px;border-radius:50%;background:var(--ink3)}
+.legend .g2{width:13px;height:13px;border-radius:50%;background:var(--ink3)}
 </style>
     <script type="application/json" id="graph-data">{"app": "Noise Audio", "generated_from": "registry.yaml", "generated": "2026-07-10", "source": {"figma_file_key": "QjVyM5bRXgIOZn8PO1e0eK", "figma_page": "Test pilot run", "figma_page_node_id": "2025:148", "figma_url": "https://www.figma.com/design/QjVyM5bRXgIOZn8PO1e0eK/?node-id=2025-148"}, "traversal": {"top_down": "Start at nodes with tier=organisms. A component C's parts are the sources of structural edges whose target == C. Recurse into molecules, then atoms.", "lateral": "Behavioral edges are directional as declared in the authored metadata (source declares the relation toward target).", "upward": "A component C's consumers ('used by') are the targets of structural edges whose source == C.", "identity": "Every node exposes id (repo file components/<tier>/<id>.yaml), node_id (Figma in-file locator) and figma_fingerprint (stable component key).", "dangling": "Edges with type=dangling are broken references flagged by the registry: the component's Figma instance points outside the ingested library page. They are rendered as broken, never repaired."}, "legend": {"node_color": "component type", "node_size": "usage count", "solid_edge": "structural \u2014 is built from (drawn part \u2192 whole)", "dashed_edge": "behavioral relationship", "red_edge": "dangling reference flagged in the registry"}, "counts": {"atoms": 16, "molecules": 2, "organisms": 8, "token_sources": 1}, "nodes": [{"id": "primary-cta-button", "name": "Primary cta", "type": "atom", "tier": "atoms", "node_id": "248:4940", "figma_fingerprint": "13d9bcf56d34b8f5859397f76b4787da65b4f6f8", "usage_count": 4, "file": "components/atoms/primary-cta-button.yaml", "dashboard": "components/primary-cta-button.html"}, {"id": "secondary-cta-button", "name": "Secondary cta", "type": "atom", "tier": "atoms", "node_id": "250:4953", "figma_fingerprint": "496c1152f7812e427b173dfadf82190e3ca7c3c0", "usage_count": 3, "file": "components/atoms/secondary-cta-button.yaml", "dashboard": "components/secondary-cta-button.html"}, {"id": "link-cta", "name": "Link cta", "type": "atom", "tier": "atoms", "node_id": "463:1380", "figma_fingerprint": "c8690c419dcc5e5873b064217a90ab827caf16e9", "usage_count": 2, "file": "components/atoms/link-cta.yaml", "dashboard": "components/link-cta.html"}, {"id": "actionables", "name": "Actionables", "type": "molecule", "tier": "molecules", "node_id": "2031:1132", "figma_fingerprint": "319c48cae4ec45084ee2296b6d0e0460d0d27a40", "usage_count": 3, "file": "components/molecules/actionables.yaml", "dashboard": "components/actionables.html"}, {"id": "chevron", "name": "Chevron", "type": "atom", "tier": "atoms", "node_id": "2031:1154", "figma_fingerprint": "01dc1aeeb4cb8263bbcdf477e7be617bb160ed27", "usage_count": 4, "file": "components/atoms/chevron.yaml", "dashboard": "components/chevron.html"}, {"id": "checkbox", "name": "Checkbox", "type": "atom", "tier": "atoms", "node_id": "2031:1168", "figma_fingerprint": "5d813fa76c98d5e979b8e58f3097ee481b6974bc", "usage_count": 1, "file": "components/atoms/checkbox.yaml", "dashboard": "components/checkbox.html"}, {"id": "radio-button", "name": "Radio Button", "type": "atom", "tier": "atoms", "node_id": "2031:1178", "figma_fingerprint": "5aaf9ca2a4ce74111f0f3c1f26e495c980cec34e", "usage_count": 1, "file": "components/atoms/radio-button.yaml", "dashboard": "components/radio-button.html"}, {"id": "toggle", "name": "Toggle", "type": "atom", "tier": "atoms", "node_id": "2031:1190", "figma_fingerprint": "5671f20fe570cab72796a90ebac8b77ca42e0621", "usage_count": 1, "file": "components/atoms/toggle.yaml", "dashboard": "components/toggle.html"}, {"id": "cross", "name": "Cross", "type": "atom", "tier": "atoms", "node_id": "2031:1201", "figma_fingerprint": "4630976d22073248745eb76ebe8a4c2e55d2c1ef", "usage_count": 4, "file": "components/atoms/cross.yaml", "dashboard": "components/cross.html"}, {"id": "heading-content-component", "name": "Heading-content component", "type": "atom", "tier": "atoms", "node_id": "301:20202", "figma_fingerprint": "18df4dd5982a7e913f345ea9459801fb472a255b", "usage_count": 4, "file": "components/atoms/heading-content-component.yaml", "dashboard": "components/heading-content-component.html"}, {"id": "l2-inner-pages-heading", "name": "L2/Inner pages Heading", "type": "molecule", "tier": "molecules", "node_id": "244:133", "figma_fingerprint": "b315ce3a53f3c7c83388272cb7b77659f4e07c50", "usage_count": 1, "file": "components/molecules/l2-inner-pages-heading.yaml", "dashboard": "components/l2-inner-pages-heading.html"}, {"id": "status-bar", "name": "Status bar", "type": "atom", "tier": "atoms", "node_id": "2007:775", "figma_fingerprint": "0642c8e04f3d5b41411530a951699e5567e63f29", "usage_count": 3, "file": "components/atoms/status-bar.yaml", "dashboard": "components/status-bar.html"}, {"id": "l1-home-page-navigation", "name": "L1/Home page", "type": "organism", "tier": "organisms", "node_id": "243:6378", "figma_fingerprint": "948135f671d61083862a0d646e005015301c3beb", "usage_count": 0, "file": "components/organisms/l1-home-page-navigation.yaml", "dashboard": "components/l1-home-page-navigation.html"}, {"id": "modal-card", "name": "Modal card", "type": "organism", "tier": "organisms", "node_id": "2097:1930", "figma_fingerprint": "21d9c86623d946fdffe7c9489dcf24ef5699f576", "usage_count": 3, "file": "components/organisms/modal-card.yaml", "dashboard": "components/modal-card.html"}, {"id": "action-sheet", "name": "Action sheet", "type": "complex-organism", "tier": "organisms", "node_id": "418:965", "figma_fingerprint": "32faaefa1091152dce02bc7f3330092f25545cf5", "usage_count": 2, "file": "components/organisms/action-sheet.yaml", "dashboard": "components/action-sheet.html"}, {"id": "image-asset-placeholder", "name": "Image, asset placeholder", "type": "atom", "tier": "atoms", "node_id": "458:8952", "figma_fingerprint": "aeb5091d768aa1acd45c5220bcddd658abbcf259", "usage_count": 2, "file": "components/atoms/image-asset-placeholder.yaml", "dashboard": "components/image-asset-placeholder.html"}, {"id": "modal-sheet", "name": "Modal Sheet", "type": "complex-organism", "tier": "organisms", "node_id": "611:1378", "figma_fingerprint": "1ff5504fa0229284b6ae328723679fb94b0ab477", "usage_count": 2, "file": "components/organisms/modal-sheet.yaml", "dashboard": "components/modal-sheet.html"}, {"id": "card-heading", "name": "Card heading", "type": "atom", "tier": "atoms", "node_id": "340:11254", "figma_fingerprint": "1cf5d7102660483fa53fe58ba6462229a449e45c", "usage_count": 2, "file": "components/atoms/card-heading.yaml", "dashboard": "components/card-heading.html"}, {"id": "description", "name": "Description", "type": "atom", "tier": "atoms", "node_id": "445:8616", "figma_fingerprint": "e429f00b447a3f8e74485cff0ebb08049999600a", "usage_count": 0, "file": "components/atoms/description.yaml", "dashboard": "components/description.html"}, {"id": "text-field", "name": "Text field", "type": "atom", "tier": "atoms", "node_id": "445:8434", "figma_fingerprint": "c32a11ab5b2fcac3c6c92f4a3723f63c390027fc", "usage_count": 0, "file": "components/atoms/text-field.yaml", "dashboard": "components/text-field.html"}, {"id": "privacy-policy-tab", "name": "Privacy policy tab", "type": "atom", "tier": "atoms", "node_id": "450:8770", "figma_fingerprint": "b9945fc2df7c786e4dddeba14021e7f232c580af", "usage_count": 0, "file": "components/atoms/privacy-policy-tab.yaml", "dashboard": "components/privacy-policy-tab.html"}, {"id": "progress-bar", "name": "Progress bar", "type": "atom", "tier": "atoms", "node_id": "489:2133", "figma_fingerprint": "f92b7ef136d4b0b6c9618e26f856f0d6537d346e", "usage_count": 0, "file": "components/atoms/progress-bar.yaml", "dashboard": "components/progress-bar.html"}, {"id": "master-card", "name": "Master card", "type": "organism", "tier": "organisms", "node_id": "396:728", "figma_fingerprint": "2a70e23d69359d2c963b4663448e7b7de1f923bb", "usage_count": 0, "file": "components/organisms/master-card.yaml", "dashboard": "components/master-card.html"}, {"id": "checkbox-card", "name": "Checkbox card", "type": "organism", "tier": "organisms", "node_id": "2032:1265", "figma_fingerprint": "63123afdabcda90456472d6efa03baaae5bfae51", "usage_count": 0, "file": "components/organisms/checkbox-card.yaml", "dashboard": "components/checkbox-card.html"}, {"id": "l1-inner-page-navigation", "name": "L1 Inner page navigation", "type": "organism", "tier": "organisms", "node_id": "2007:1007", "figma_fingerprint": "bbd24c7b7a648836ba325942f634a414386375d6", "usage_count": 3, "file": "components/organisms/l1-inner-page-navigation.yaml", "dashboard": "components/l1-inner-page-navigation.html"}, {"id": "action-card", "name": "Action card", "type": "organism", "tier": "organisms", "node_id": "2096:1434", "figma_fingerprint": "f21a114bbd31c9be808ce2265358902b7aeefbc4", "usage_count": 3, "file": "components/organisms/action-card.yaml", "dashboard": "components/action-card.html"}], "edges": [{"type": "behavioral", "source": "secondary-cta-button", "target": "primary-cta-button", "relation": "emphasis-counterpart"}, {"type": "behavioral", "source": "link-cta", "target": "primary-cta-button", "relation": "emphasis-family"}, {"type": "behavioral", "source": "link-cta", "target": "secondary-cta-button", "relation": "emphasis-family"}, {"type": "structural", "source": "chevron", "target": "actionables", "meaning": "actionables is built from chevron"}, {"type": "structural", "source": "toggle", "target": "actionables", "meaning": "actionables is built from toggle"}, {"type": "structural", "source": "checkbox", "target": "actionables", "meaning": "actionables is built from checkbox"}, {"type": "structural", "source": "cross", "target": "actionables", "meaning": "actionables is built from cross"}, {"type": "structural", "source": "radio-button", "target": "actionables", "meaning": "actionables is built from radio-button"}, {"type": "behavioral", "source": "l2-inner-pages-heading", "target": "l1-inner-page-navigation", "relation": "heading-destination"}, {"type": "behavioral", "source": "status-bar", "target": "l1-inner-page-navigation", "relation": "shares-scroll-state"}, {"type": "behavioral", "source": "l1-home-page-navigation", "target": "l1-inner-page-navigation", "relation": "sibling"}, {"type": "structural", "source": "primary-cta-button", "target": "modal-card", "meaning": "modal-card is built from primary-cta-button"}, {"type": "structural", "source": "secondary-cta-button", "target": "modal-card", "meaning": "modal-card is built from secondary-cta-button"}, {"type": "structural", "source": "link-cta", "target": "modal-card", "meaning": "modal-card is built from link-cta"}, {"type": "behavioral", "source": "modal-card", "target": "modal-sheet", "relation": "content-of"}, {"type": "behavioral", "source": "modal-card", "target": "action-card", "relation": "counterpart"}, {"type": "structural", "source": "action-card", "target": "action-sheet", "meaning": "action-sheet is built from action-card"}, {"type": "behavioral", "source": "action-sheet", "target": "action-card", "relation": "contains"}, {"type": "behavioral", "source": "action-sheet", "target": "modal-sheet", "relation": "counterpart"}, {"type": "behavioral", "source": "action-sheet", "target": "status-bar", "relation": "renders-on-top"}, {"type": "structural", "source": "modal-card", "target": "modal-sheet", "meaning": "modal-sheet is built from modal-card"}, {"type": "structural", "source": "image-asset-placeholder", "target": "modal-sheet", "meaning": "modal-sheet is built from image-asset-placeholder"}, {"type": "behavioral", "source": "modal-sheet", "target": "modal-card", "relation": "contains"}, {"type": "behavioral", "source": "modal-sheet", "target": "image-asset-placeholder", "relation": "contains"}, {"type": "behavioral", "source": "modal-sheet", "target": "action-sheet", "relation": "counterpart"}, {"type": "behavioral", "source": "modal-sheet", "target": "status-bar", "relation": "renders-on-top"}, {"type": "behavioral", "source": "card-heading", "target": "heading-content-component", "relation": "distinct-sibling"}, {"type": "behavioral", "source": "description", "target": "heading-content-component", "relation": "distinct"}, {"type": "behavioral", "source": "description", "target": "card-heading", "relation": "distinct"}, {"type": "structural", "source": "chevron", "target": "text-field", "meaning": "text-field is built from chevron"}, {"type": "behavioral", "source": "text-field", "target": "card-heading", "relation": "paired-with"}, {"type": "behavioral", "source": "text-field", "target": "chevron", "relation": "uses"}, {"type": "structural", "source": "actionables", "target": "master-card", "meaning": "master-card is built from actionables"}, {"type": "structural", "source": "heading-content-component", "target": "master-card", "meaning": "master-card is built from heading-content-component"}, {"type": "structural", "source": "actionables", "target": "checkbox-card", "meaning": "checkbox-card is built from actionables"}, {"type": "structural", "source": "cross", "target": "checkbox-card", "meaning": "checkbox-card is built from cross"}, {"type": "structural", "source": "heading-content-component", "target": "checkbox-card", "meaning": "checkbox-card is built from heading-content-component"}, {"type": "structural", "source": "chevron", "target": "l1-inner-page-navigation", "meaning": "l1-inner-page-navigation is built from chevron"}, {"type": "structural", "source": "cross", "target": "l1-inner-page-navigation", "meaning": "l1-inner-page-navigation is built from cross"}, {"type": "behavioral", "source": "l1-inner-page-navigation", "target": "l2-inner-pages-heading", "relation": "heading-source"}, {"type": "behavioral", "source": "l1-inner-page-navigation", "target": "status-bar", "relation": "shares-scroll-state"}, {"type": "structural", "source": "cross", "target": "action-card", "meaning": "action-card is built from cross"}, {"type": "structural", "source": "actionables", "target": "action-card", "meaning": "action-card is built from actionables"}, {"type": "structural", "source": "primary-cta-button", "target": "action-card", "meaning": "action-card is built from primary-cta-button"}, {"type": "structural", "source": "secondary-cta-button", "target": "action-card", "meaning": "action-card is built from secondary-cta-button"}, {"type": "structural", "source": "link-cta", "target": "action-card", "meaning": "action-card is built from link-cta"}, {"type": "behavioral", "source": "action-card", "target": "action-sheet", "relation": "content-of"}, {"type": "behavioral", "source": "action-card", "target": "modal-card", "relation": "counterpart"}]}</script>
     <script>
@@ -119,8 +99,9 @@
   var link = function (n) { return bundled ? '#/components/' + n.id : n.dashboard; };
   var goTo = function (n) { if (bundled) { location.hash = link(n); } else { location.href = link(n); } };
 
-  // node fill color comes from the t-<type> CSS class (see GRAPH_CSS), not an inline hex —
-  // that way node colors re-theme for free when data-theme flips, no re-render needed.
+  // Node fill comes from a CSS class rather than a literal, so the taxonomy colours follow
+  // the active theme's tokens (and the light/dark toggle) without any JS re-painting.
+  var TYPE_CLASS = { atom: 'k-atom', molecule: 'k-molecule', organism: 'k-organism', 'complex-organism': 'k-complex' };
   // concentric bands, atoms innermost growing out to molecules then organisms — like Obsidian's
   // force graph, but biased into layers so the taxonomy stays legible at a glance.
   var BAND = { atoms: [0, 165], molecules: [165, 280], organisms: [280, 410] };
@@ -279,7 +260,7 @@
         (n.same_named_library_component ? '; same-named library component: ' + n.same_named_library_component : '');
       labelEls.push({ el: lbl, ghost: true });
     } else {
-      el('circle', { r: n.r, class: 'og-dot t-' + n.type }, dg);
+      el('circle', { r: n.r, class: 'og-dot ' + (TYPE_CLASS[n.type] || '') }, dg);
       var lbl2 = el('text', { class: 'og-label', x: n.r + 6, y: 4 }, lg);
       lbl2.textContent = n.name;
       title = n.id + '\ntype: ' + n.type + ' · usage count: ' + n.usage_count +
@@ -331,10 +312,9 @@
   // local SVG unit size.
   var LABEL_ZOOM_MIN = 0.55, LABEL_ZOOM_MAX = 1.6;
   var LABEL_PX_MIN = 7, LABEL_PX_MAX = 17, GHOST_PX_RATIO = 0.85;
-  var forceLabels = false; // settings-drawer override: always show labels regardless of zoom
   function applyView() {
     viewport.setAttribute('transform', 'translate(' + view.x + ',' + view.y + ') scale(' + view.scale + ')');
-    var t = forceLabels ? 1 : Math.max(0, Math.min(1, (view.scale - LABEL_ZOOM_MIN) / (LABEL_ZOOM_MAX - LABEL_ZOOM_MIN)));
+    var t = Math.max(0, Math.min(1, (view.scale - LABEL_ZOOM_MIN) / (LABEL_ZOOM_MAX - LABEL_ZOOM_MIN)));
     var screenPx = LABEL_PX_MIN + t * (LABEL_PX_MAX - LABEL_PX_MIN);
     var localPx = screenPx / view.scale;
     labelLayer.style.setProperty('--og-label-op', t);
@@ -354,27 +334,16 @@
     return { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
   }
 
-  // Trackpads report both gestures through the same 'wheel' event: a pinch arrives with
-  // ctrlKey set (the browser's own convention for synthesizing pinch-to-zoom on trackpads,
-  // independent of OS), a two-finger scroll arrives without it. So: pinch (or Ctrl/⌘+scroll,
-  // for mouse users) zooms; a plain two-finger scroll pans — no click-and-hold required for
-  // either, matching Figma's own canvas since that's exactly what this graph mirrors.
   svg.addEventListener('wheel', function (ev) {
     ev.preventDefault();
-    if (ev.ctrlKey || ev.metaKey) {
-      var p = localPoint(ev.clientX, ev.clientY);
-      var world = { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
-      var dy = Math.max(-120, Math.min(120, ev.deltaY)); // clamp stray large-delta spikes (some trackpads/mice)
-      var factor = Math.exp(-dy * 0.0055);
-      var newScale = Math.min(4, Math.max(0.15, view.scale * factor));
-      view.x = p.x - world.x * newScale;
-      view.y = p.y - world.y * newScale;
-      view.scale = newScale;
-    } else {
-      var scaleX = W / svg.getBoundingClientRect().width;
-      view.x -= ev.deltaX * scaleX;
-      view.y -= ev.deltaY * scaleX;
-    }
+    var p = localPoint(ev.clientX, ev.clientY);
+    var world = { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
+    var dy = Math.max(-120, Math.min(120, ev.deltaY)); // clamp stray large-delta spikes (some trackpads/mice)
+    var factor = Math.exp(-dy * 0.0055);
+    var newScale = Math.min(4, Math.max(0.15, view.scale * factor));
+    view.x = p.x - world.x * newScale;
+    view.y = p.y - world.y * newScale;
+    view.scale = newScale;
     applyView();
   }, { passive: false });
 
@@ -436,77 +405,6 @@
     view.scale = Math.min(4, Math.max(0.15, view.scale * factor));
     view.x = p.x - world.x * view.scale; view.y = p.y - world.y * view.scale;
     applyView();
-  }
-
-  // ---------------------------------------------------------------- settings drawer
-  var stage = mount.parentElement;
-  var settingsBtn = stage.querySelector('.og-settings-btn');
-  var settingsPanel = stage.querySelector('#og-settings');
-  if (settingsBtn && settingsPanel) {
-    settingsBtn.addEventListener('click', function (ev) {
-      ev.stopPropagation();
-      var opening = settingsPanel.hasAttribute('hidden');
-      if (opening) settingsPanel.removeAttribute('hidden'); else settingsPanel.setAttribute('hidden', '');
-      settingsBtn.setAttribute('aria-expanded', opening ? 'true' : 'false');
-    });
-    document.addEventListener('click', function (ev) {
-      if (settingsPanel.hasAttribute('hidden')) return;
-      if (ev.target.closest('#og-settings') || ev.target.closest('.og-settings-btn')) return;
-      settingsPanel.setAttribute('hidden', '');
-      settingsBtn.setAttribute('aria-expanded', 'false');
-    });
-  }
-
-  var hiddenTypes = {}, hiddenEdgeTypes = {}, sizeByUsage = true;
-  function applyFilters() {
-    nodes.forEach(function (n) {
-      var els = nodeEls[n.id];
-      if (!els) return;
-      var hide = n.ghost ? !!hiddenEdgeTypes.dangling : !!hiddenTypes[n.type];
-      els.dot.classList.toggle('filtered', hide);
-      els.label.classList.toggle('filtered', hide);
-    });
-    edgeEls.forEach(function (e) {
-      var a = e.edge.a, b = e.edge.b;
-      var hide = !!hiddenEdgeTypes[e.edge.type] ||
-        (!a.ghost && !!hiddenTypes[a.type]) || (!b.ghost && !!hiddenTypes[b.type]);
-      e.el.classList.toggle('filtered', hide);
-    });
-  }
-  if (settingsPanel) {
-    settingsPanel.querySelectorAll('[data-filter-type]').forEach(function (cb) {
-      cb.addEventListener('change', function () {
-        hiddenTypes[cb.dataset.filterType] = !cb.checked;
-        applyFilters();
-      });
-    });
-    settingsPanel.querySelectorAll('[data-filter-edge]').forEach(function (cb) {
-      cb.addEventListener('change', function () {
-        hiddenEdgeTypes[cb.dataset.filterEdge] = !cb.checked;
-        applyFilters();
-      });
-    });
-    var forceLabelsBox = settingsPanel.querySelector('#og-force-labels');
-    if (forceLabelsBox) forceLabelsBox.addEventListener('change', function () {
-      forceLabels = forceLabelsBox.checked;
-      applyView();
-    });
-    var sizeUsageBox = settingsPanel.querySelector('#og-size-usage');
-    if (sizeUsageBox) sizeUsageBox.addEventListener('change', function () {
-      sizeByUsage = sizeUsageBox.checked;
-      nodes.forEach(function (n) {
-        if (n.ghost) return;
-        n.r = sizeByUsage ? radius(n) : 10;
-        var els = nodeEls[n.id];
-        if (!els) return;
-        // els.dot/els.label are the wrapper <g>s (see nodeEls assignment above) — the r/x
-        // attributes live on the <circle>/<text> children, not the group.
-        var circleEl = els.dot.querySelector('circle');
-        var textEl = els.label.querySelector('text');
-        if (circleEl) circleEl.setAttribute('r', n.r);
-        if (textEl) textEl.setAttribute('x', n.r + 6);
-      });
-    });
   }
 
   // ---------------------------------------------------------------- hover spotlight

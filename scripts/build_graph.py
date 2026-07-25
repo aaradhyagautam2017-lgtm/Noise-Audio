@@ -100,8 +100,9 @@ GRAPH_JS = r"""
   var link = function (n) { return bundled ? '#/components/' + n.id : n.dashboard; };
   var goTo = function (n) { if (bundled) { location.hash = link(n); } else { location.href = link(n); } };
 
-  // node fill color comes from the t-<type> CSS class (see GRAPH_CSS), not an inline hex —
-  // that way node colors re-theme for free when data-theme flips, no re-render needed.
+  // Node fill comes from a CSS class rather than a literal, so the taxonomy colours follow
+  // the active theme's tokens (and the light/dark toggle) without any JS re-painting.
+  var TYPE_CLASS = { atom: 'k-atom', molecule: 'k-molecule', organism: 'k-organism', 'complex-organism': 'k-complex' };
   // concentric bands, atoms innermost growing out to molecules then organisms — like Obsidian's
   // force graph, but biased into layers so the taxonomy stays legible at a glance.
   var BAND = { atoms: [0, 165], molecules: [165, 280], organisms: [280, 410] };
@@ -260,7 +261,7 @@ GRAPH_JS = r"""
         (n.same_named_library_component ? '; same-named library component: ' + n.same_named_library_component : '');
       labelEls.push({ el: lbl, ghost: true });
     } else {
-      el('circle', { r: n.r, class: 'og-dot t-' + n.type }, dg);
+      el('circle', { r: n.r, class: 'og-dot ' + (TYPE_CLASS[n.type] || '') }, dg);
       var lbl2 = el('text', { class: 'og-label', x: n.r + 6, y: 4 }, lg);
       lbl2.textContent = n.name;
       title = n.id + '\ntype: ' + n.type + ' · usage count: ' + n.usage_count +
@@ -312,10 +313,9 @@ GRAPH_JS = r"""
   // local SVG unit size.
   var LABEL_ZOOM_MIN = 0.55, LABEL_ZOOM_MAX = 1.6;
   var LABEL_PX_MIN = 7, LABEL_PX_MAX = 17, GHOST_PX_RATIO = 0.85;
-  var forceLabels = false; // settings-drawer override: always show labels regardless of zoom
   function applyView() {
     viewport.setAttribute('transform', 'translate(' + view.x + ',' + view.y + ') scale(' + view.scale + ')');
-    var t = forceLabels ? 1 : Math.max(0, Math.min(1, (view.scale - LABEL_ZOOM_MIN) / (LABEL_ZOOM_MAX - LABEL_ZOOM_MIN)));
+    var t = Math.max(0, Math.min(1, (view.scale - LABEL_ZOOM_MIN) / (LABEL_ZOOM_MAX - LABEL_ZOOM_MIN)));
     var screenPx = LABEL_PX_MIN + t * (LABEL_PX_MAX - LABEL_PX_MIN);
     var localPx = screenPx / view.scale;
     labelLayer.style.setProperty('--og-label-op', t);
@@ -335,27 +335,16 @@ GRAPH_JS = r"""
     return { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
   }
 
-  // Trackpads report both gestures through the same 'wheel' event: a pinch arrives with
-  // ctrlKey set (the browser's own convention for synthesizing pinch-to-zoom on trackpads,
-  // independent of OS), a two-finger scroll arrives without it. So: pinch (or Ctrl/⌘+scroll,
-  // for mouse users) zooms; a plain two-finger scroll pans — no click-and-hold required for
-  // either, matching Figma's own canvas since that's exactly what this graph mirrors.
   svg.addEventListener('wheel', function (ev) {
     ev.preventDefault();
-    if (ev.ctrlKey || ev.metaKey) {
-      var p = localPoint(ev.clientX, ev.clientY);
-      var world = { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
-      var dy = Math.max(-120, Math.min(120, ev.deltaY)); // clamp stray large-delta spikes (some trackpads/mice)
-      var factor = Math.exp(-dy * 0.0055);
-      var newScale = Math.min(4, Math.max(0.15, view.scale * factor));
-      view.x = p.x - world.x * newScale;
-      view.y = p.y - world.y * newScale;
-      view.scale = newScale;
-    } else {
-      var scaleX = W / svg.getBoundingClientRect().width;
-      view.x -= ev.deltaX * scaleX;
-      view.y -= ev.deltaY * scaleX;
-    }
+    var p = localPoint(ev.clientX, ev.clientY);
+    var world = { x: (p.x - view.x) / view.scale, y: (p.y - view.y) / view.scale };
+    var dy = Math.max(-120, Math.min(120, ev.deltaY)); // clamp stray large-delta spikes (some trackpads/mice)
+    var factor = Math.exp(-dy * 0.0055);
+    var newScale = Math.min(4, Math.max(0.15, view.scale * factor));
+    view.x = p.x - world.x * newScale;
+    view.y = p.y - world.y * newScale;
+    view.scale = newScale;
     applyView();
   }, { passive: false });
 
@@ -419,77 +408,6 @@ GRAPH_JS = r"""
     applyView();
   }
 
-  // ---------------------------------------------------------------- settings drawer
-  var stage = mount.parentElement;
-  var settingsBtn = stage.querySelector('.og-settings-btn');
-  var settingsPanel = stage.querySelector('#og-settings');
-  if (settingsBtn && settingsPanel) {
-    settingsBtn.addEventListener('click', function (ev) {
-      ev.stopPropagation();
-      var opening = settingsPanel.hasAttribute('hidden');
-      if (opening) settingsPanel.removeAttribute('hidden'); else settingsPanel.setAttribute('hidden', '');
-      settingsBtn.setAttribute('aria-expanded', opening ? 'true' : 'false');
-    });
-    document.addEventListener('click', function (ev) {
-      if (settingsPanel.hasAttribute('hidden')) return;
-      if (ev.target.closest('#og-settings') || ev.target.closest('.og-settings-btn')) return;
-      settingsPanel.setAttribute('hidden', '');
-      settingsBtn.setAttribute('aria-expanded', 'false');
-    });
-  }
-
-  var hiddenTypes = {}, hiddenEdgeTypes = {}, sizeByUsage = true;
-  function applyFilters() {
-    nodes.forEach(function (n) {
-      var els = nodeEls[n.id];
-      if (!els) return;
-      var hide = n.ghost ? !!hiddenEdgeTypes.dangling : !!hiddenTypes[n.type];
-      els.dot.classList.toggle('filtered', hide);
-      els.label.classList.toggle('filtered', hide);
-    });
-    edgeEls.forEach(function (e) {
-      var a = e.edge.a, b = e.edge.b;
-      var hide = !!hiddenEdgeTypes[e.edge.type] ||
-        (!a.ghost && !!hiddenTypes[a.type]) || (!b.ghost && !!hiddenTypes[b.type]);
-      e.el.classList.toggle('filtered', hide);
-    });
-  }
-  if (settingsPanel) {
-    settingsPanel.querySelectorAll('[data-filter-type]').forEach(function (cb) {
-      cb.addEventListener('change', function () {
-        hiddenTypes[cb.dataset.filterType] = !cb.checked;
-        applyFilters();
-      });
-    });
-    settingsPanel.querySelectorAll('[data-filter-edge]').forEach(function (cb) {
-      cb.addEventListener('change', function () {
-        hiddenEdgeTypes[cb.dataset.filterEdge] = !cb.checked;
-        applyFilters();
-      });
-    });
-    var forceLabelsBox = settingsPanel.querySelector('#og-force-labels');
-    if (forceLabelsBox) forceLabelsBox.addEventListener('change', function () {
-      forceLabels = forceLabelsBox.checked;
-      applyView();
-    });
-    var sizeUsageBox = settingsPanel.querySelector('#og-size-usage');
-    if (sizeUsageBox) sizeUsageBox.addEventListener('change', function () {
-      sizeByUsage = sizeUsageBox.checked;
-      nodes.forEach(function (n) {
-        if (n.ghost) return;
-        n.r = sizeByUsage ? radius(n) : 10;
-        var els = nodeEls[n.id];
-        if (!els) return;
-        // els.dot/els.label are the wrapper <g>s (see nodeEls assignment above) — the r/x
-        // attributes live on the <circle>/<text> children, not the group.
-        var circleEl = els.dot.querySelector('circle');
-        var textEl = els.label.querySelector('text');
-        if (circleEl) circleEl.setAttribute('r', n.r);
-        if (textEl) textEl.setAttribute('x', n.r + 6);
-      });
-    });
-  }
-
   // ---------------------------------------------------------------- hover spotlight
   function spotlight(key) {
     var keep = {}; keep[key] = 1;
@@ -522,46 +440,36 @@ GRAPH_JS = r"""
 """
 
 GRAPH_CSS = """
-.graphwrap{display:flex;align-items:stretch;gap:0}
-.graphstage{flex:1;min-width:0;position:relative;height:100%}
-#graph-mount{width:100%;height:100%}
 .ograph{width:100%;height:100%;display:block;touch-action:none;user-select:none}
-.og-toolbar{position:absolute;top:20px;right:20px;display:flex;flex-direction:column;gap:6px;z-index:2}
-.og-toolbar button{width:30px;height:30px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:15px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.06);transition:border-color .15s,transform .1s}
-.og-toolbar button:hover{border-color:var(--blue);color:var(--blue)}
+.og-toolbar{position:absolute;top:18px;right:18px;display:flex;flex-direction:column;gap:6px;z-index:2}
+.og-toolbar button{width:30px;height:30px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--surface-2);color:var(--ink2);font-size:15px;cursor:pointer;transition:color .15s,border-color .15s,transform .1s}
+.og-toolbar button:hover{border-color:var(--line-2);color:var(--ink)}
 .og-toolbar button:active{transform:scale(.9)}
-.og-hint{position:absolute;left:20px;bottom:16px;font-size:11.5px;color:var(--ink3);background:var(--panel);border:1px solid var(--line);border-radius:var(--r-pill);padding:4px 12px;z-index:2;font-family:var(--font-text)}
+.og-hint{position:absolute;left:18px;bottom:14px;font-size:11px;color:var(--ink3);background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);padding:5px 13px;z-index:2}
 .og-node{cursor:pointer}
-.og-node.dimmed{opacity:.15}
-.og-dot{stroke:var(--panel);stroke-width:2;transition:opacity .12s}
-.og-dot.t-atom{fill:var(--atom)}.og-dot.t-molecule{fill:var(--molecule)}.og-dot.t-organism{fill:var(--organism)}.og-dot.t-complex-organism{fill:var(--complex)}
+.og-node.dimmed{opacity:.13}
+.og-dot{stroke:var(--surface);stroke-width:2;transition:opacity .12s}
+.og-dot.k-atom{fill:var(--atom)}
+.og-dot.k-molecule{fill:var(--molecule)}
+.og-dot.k-organism{fill:var(--organism)}
+.og-dot.k-complex{fill:var(--complex)}
 .og-dot-ghost{fill:var(--warn-bg);stroke:var(--organism);stroke-dasharray:2 2;r:5}
-.og-label{font-size:11px;fill:var(--ink);opacity:var(--og-label-op,1);transition:opacity .15s,font-size .15s;pointer-events:none;font-family:var(--font-text)}
+.og-label{font-size:11px;fill:var(--ink);opacity:var(--og-label-op,1);transition:opacity .15s,font-size .15s;pointer-events:none;font-family:var(--font)}
 .og-label-ghost{fill:var(--organism);font-size:10px}
 .og-edge{stroke-width:1.3;transition:opacity .12s,stroke-width .12s}
-.og-e-structural{stroke:var(--ink3);opacity:.5}
-.og-e-behavioral{stroke:var(--plum);stroke-dasharray:5 4;opacity:.4}
+.og-e-structural{stroke:var(--line-2);opacity:.9}
+.og-e-behavioral{stroke:var(--plum);stroke-dasharray:5 4;opacity:.45}
 .og-e-dangling{stroke:var(--organism);stroke-dasharray:2 4;stroke-width:1.6;opacity:.6}
-.og-edge.dimmed{opacity:.04}
+.og-edge.dimmed{opacity:.05}
 .og-edge.hot{opacity:1;stroke-width:2.2}
-.og-settings-btn{font-size:14px}
-.og-settings-btn[aria-expanded="true"]{border-color:var(--blue);color:var(--blue)}
-.og-settings-panel{position:absolute;top:166px;right:20px;width:210px;max-height:calc(100% - 186px);overflow-y:auto;scrollbar-width:none;
-  background:var(--panel);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 14px;
-  box-shadow:0 6px 20px rgba(0,0,0,.16);z-index:3;font-size:12.5px}
-.og-settings-panel::-webkit-scrollbar{display:none}
-.og-settings-panel[hidden]{display:none}
-.og-settings-title{font-family:var(--font-display);font-weight:600;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);margin:14px 0 6px}
-.og-settings-title:first-child{margin-top:0}
-.og-settings-row{display:flex;align-items:center;gap:7px;padding:4px 0;cursor:pointer;color:var(--ink2);user-select:none}
-.og-settings-row input{margin:0;accent-color:var(--blue);flex:none}
-.og-settings-row .count{margin-left:auto}
-.sw{display:inline-block;width:10px;height:10px;border-radius:50%;flex:none}
-.ln{display:inline-block;width:22px;height:0;border-top:2px solid var(--ink3);flex:none}
-.ln.dash{border-top-style:dashed;border-color:var(--plum)}
-.ln.bad{border-top-style:dotted;border-color:var(--organism)}
-.og-node.filtered,.og-edge.filtered{display:none}
-.graph-desc{margin:14px 2px 0}
+.legend{display:flex;gap:18px;flex-wrap:wrap;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:11px 16px;margin:18px 0;font-size:12.5px;color:var(--ink2)}
+.legend .sw{display:inline-block;width:8px;height:8px;border-radius:50%;vertical-align:1px;margin-right:7px}
+.legend .ln{display:inline-block;width:24px;height:0;border-top:1.5px solid var(--line-2);vertical-align:4px;margin-right:7px}
+.legend .ln.dash{border-top-style:dashed;border-color:var(--plum)}
+.legend .ln.bad{border-top-style:dotted;border-color:var(--organism)}
+.legend .grow{display:inline-flex;align-items:center;gap:4px}
+.legend .g1{width:7px;height:7px;border-radius:50%;background:var(--ink3)}
+.legend .g2{width:13px;height:13px;border-radius:50%;background:var(--ink3)}
 """
 
 def main():
@@ -573,50 +481,40 @@ def main():
 
     payload = json.dumps(data).replace("</", "<\\/")
     n_dangling = sum(1 for e in data["edges"] if e["type"] == "dangling")
-    type_counts = {}
-    for n in data["nodes"]:
-        type_counts[n["type"]] = type_counts.get(n["type"], 0) + 1
-    dangling_row = (f'<label class="og-settings-row"><input type="checkbox" checked data-filter-edge="dangling">'
-                    f'<span class="ln bad"></span>Dangling<span class="count dim">{n_dangling}</span></label>') if n_dangling else ""
+    dangling_legend = (f'<span><span class="ln bad"></span>red = dangling reference '
+                       f'({n_dangling}, registry-flagged)</span>') if n_dangling else ""
     dangling_note = ("""<p class="dim">Dangling references sit on their own outer ring, drawn as broken red
     edges to ghost markers — components the registry says exist outside the ingested library page.
     They are shown as broken, never repaired (details: INGESTION_REPORT.md §5).</p>""") if n_dangling else ""
     body = f"""
     <header class="pagehead"><h1>Component graph</h1></header>
-    <div class="graphwrap">
-      <div class="graphstage">
-        <div id="graph-mount"></div>
-        <div class="og-toolbar">
-          <button type="button" data-zoom="in" title="Zoom in">+</button>
-          <button type="button" data-zoom="out" title="Zoom out">−</button>
-          <button type="button" data-zoom="reset" title="Reset view">⤢</button>
-          <button type="button" class="og-settings-btn" title="Settings" aria-expanded="false" aria-controls="og-settings">⚙</button>
-        </div>
-        <div class="og-settings-panel" id="og-settings" hidden>
-          <div class="og-settings-title">Categories</div>
-          <label class="og-settings-row"><input type="checkbox" checked data-filter-type="atom"><span class="sw" style="background:var(--atom)"></span>Atoms<span class="count dim">{type_counts.get("atom", 0)}</span></label>
-          <label class="og-settings-row"><input type="checkbox" checked data-filter-type="molecule"><span class="sw" style="background:var(--molecule)"></span>Molecules<span class="count dim">{type_counts.get("molecule", 0)}</span></label>
-          <label class="og-settings-row"><input type="checkbox" checked data-filter-type="organism"><span class="sw" style="background:var(--organism)"></span>Organisms<span class="count dim">{type_counts.get("organism", 0)}</span></label>
-          <label class="og-settings-row"><input type="checkbox" checked data-filter-type="complex-organism"><span class="sw" style="background:var(--complex)"></span>Complex organisms<span class="count dim">{type_counts.get("complex-organism", 0)}</span></label>
-          <div class="og-settings-title">Edges</div>
-          <label class="og-settings-row"><input type="checkbox" checked data-filter-edge="structural"><span class="ln"></span>Structural</label>
-          <label class="og-settings-row"><input type="checkbox" checked data-filter-edge="behavioral"><span class="ln dash"></span>Behavioral</label>
-          {dangling_row}
-          <div class="og-settings-title">Display</div>
-          <label class="og-settings-row"><input type="checkbox" id="og-force-labels">Always show labels</label>
-          <label class="og-settings-row"><input type="checkbox" id="og-size-usage" checked>Size by usage count</label>
-        </div>
-        <div class="og-hint">Two-finger scroll to pan · pinch (or Ctrl/⌘+scroll) to zoom · drag a node to reposition</div>
-      </div>
-    </div>
-    <p class="dim graph-desc">The canonical wiring of the library, generated from <code>registry.yaml</code> and laid out
+    <p class="dim">The canonical wiring of the library, generated from <code>registry.yaml</code> and laid out
     live by a force simulation — atoms cluster at the center, molecules and organisms grow outward as they
     compose from what's inside them, exactly like the underlying <code>used_atoms</code>/<code>used_molecules</code>
     relationships. Hover a component to spotlight everything it is wired to; drag a node to reposition it;
-    two-finger scroll (or drag the canvas) to pan, pinch or Ctrl/⌘+scroll to zoom; click a node to open its
-    dashboard page; use the settings (⚙) to filter categories and edge types. The identical data is queryable
+    scroll or use the controls to zoom; click a node to open its dashboard page. The identical data is queryable
     by the agent at <code>graph/graph.json</code> (and embedded in this page), with every node exposing
     <code>id</code>, <code>node_id</code> and <code>figma_fingerprint</code>.</p>
+    <div class="legend">
+      <span><b>Legend</b></span>
+      <span><span class="sw" style="background:var(--atom)"></span>atom</span>
+      <span><span class="sw" style="background:var(--molecule)"></span>molecule</span>
+      <span><span class="sw" style="background:var(--organism)"></span>organism</span>
+      <span><span class="sw" style="background:var(--complex)"></span>complex-organism</span>
+      <span><span class="ln"></span>solid = is built from (part → whole)</span>
+      <span><span class="ln dash"></span>dashed = behavioral relationship</span>
+      {dangling_legend}
+      <span class="grow"><span class="g1"></span><span class="g2"></span> size = usage count</span>
+    </div>
+    <div class="graphwrap">
+      <div id="graph-mount"></div>
+      <div class="og-toolbar">
+        <button type="button" data-zoom="in" title="Zoom in">+</button>
+        <button type="button" data-zoom="out" title="Zoom out">−</button>
+        <button type="button" data-zoom="reset" title="Reset view">⤢</button>
+      </div>
+      <div class="og-hint">Scroll to zoom · drag canvas to pan · drag a node to reposition</div>
+    </div>
     {dangling_note}
     <style>{GRAPH_CSS}</style>
     <script type="application/json" id="graph-data">{payload}</script>
