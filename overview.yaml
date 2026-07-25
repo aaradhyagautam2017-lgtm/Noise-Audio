@@ -1,0 +1,64 @@
+# Overview page copy — authored by the designer, rendered on the dashboard's front page.
+#
+# This file is the ONLY place this copy lives. Edit it here and re-run
+# `python3 scripts/build_dashboard.py`; never edit the generated HTML.
+#
+# - `title` is the page heading.
+# - `lede` is the short paragraph that is always visible under the heading.
+# - `sections` sit inside the expandable panel, in the order given here. Add as many
+#   as you need — the panel scrolls and stays collapsed by default, so length is free.
+# - Blank lines inside a `body` start a new paragraph. Wrap `code`, filenames and
+#   Figma terms in backticks to have them set in monospace.
+
+overview:
+  title: Design System
+
+  lede: >
+    A single, governed source of truth for how Noise Audio looks and behaves — authored in
+    Figma, mirrored here as machine-readable files that both designers and AI agents read
+    from. Everything on this dashboard is generated from those files, so what you see is
+    what the system actually contains.
+
+  expand_label: How this system works, and the rules for using it
+
+  sections:
+    - heading: How it works
+      body: >
+        The library is drawn and maintained in Figma. An ingestion pass reads one nominated
+        library page and writes what it finds into this repository: `registry.yaml` holds
+        the index of every component, and one file per component under `components/`
+        records its identity, variants, composition and authored governance.
+
+        This dashboard is then generated from those files. The flow runs one way only —
+        Figma to repository to dashboard. Nothing here is authored by hand, and nothing
+        here feeds back into Figma.
+
+    - heading: How to use it
+      body: >
+        If you are designing or building a screen, open the component you are about to use
+        and read its rules and anti-patterns before you place it. The variant axes tell you
+        which combinations legitimately exist; the composition panel tells you what it is
+        built from and what breaks if you change it.
+
+        If you are an agent consuming this library, read `registry.yaml` for the whole index,
+        `graph/graph.json` for the relationship graph, and a component's own YAML file for its
+        full authored governance. Every component exposes a `node_id` and a `figma_fingerprint`
+        so you can locate the exact source object in Figma.
+
+    - heading: Rules
+      body: >
+        **Figma is the only source of truth.** To change a component, change it in Figma and
+        re-run the ingestion. Never hand-edit the generated HTML — it is overwritten on every
+        build.
+
+        **Only the ingested library page counts.** A component referenced from any other Figma
+        page is not a dependency of this system, even if it renders correctly. Those references
+        are recorded and excluded deliberately, not by oversight.
+
+        **Authored metadata is binding.** The rules and anti-patterns on a component page are
+        constraints, not suggestions. If a rule is wrong, correct it at the source rather than
+        working around it.
+
+        **Do not invent variants.** The declared variant axes are the complete permitted set.
+        If a needed combination does not exist, it has to be added in Figma and re-ingested
+        before it can be used.
