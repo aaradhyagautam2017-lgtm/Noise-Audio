@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Actionables — Purpose — Noise Audio DLS</title>
+<script>(function(){try{var t=localStorage.getItem('na-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head><body>
+<div class="layout">
+
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="applogo">N</span>
+        <span class="brandname">Noise Audio</span>
+        <button class="themetoggle" type="button" id="themetoggle" title="Toggle light / dark"
+                aria-label="Toggle light or dark theme"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-width="1.4"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
+      </div>
+      <nav>
+        <a class="navitem" href="../index.html"><span class="navlabel">Overview</span></a>
+        <a class="navitem" href="../graph.html"><span class="navlabel">Component graph</span></a>
+        <a class="navitem active" href="../fill-gaps.html"><span class="navlabel">Fill the gaps</span></a>
+        <div class="navgroup">Foundations <span class="count">3</span></div>
+        <a class="navitem" href="../foundations-colors.html"><span class="navlabel">Colors &amp; tokens</span></a>
+        <a class="navitem" href="../foundations-typography.html"><span class="navlabel">Typography</span></a>
+        <a class="navitem" href="../foundations-spacing.html"><span class="navlabel">Spacing &amp; radius</span></a>
+    <div class="navgroup">Atoms <span class="count">16</span></div><a class="navitem pill" href="../components/primary-cta-button.html"><span class="navdot d-atom"></span><span class="navlabel">Primary cta</span></a><a class="navitem pill" href="../components/secondary-cta-button.html"><span class="navdot d-atom"></span><span class="navlabel">Secondary cta</span></a><a class="navitem pill" href="../components/link-cta.html"><span class="navdot d-atom"></span><span class="navlabel">Link cta</span></a><a class="navitem pill" href="../components/chevron.html"><span class="navdot d-atom"></span><span class="navlabel">Chevron</span></a><a class="navitem pill" href="../components/checkbox.html"><span class="navdot d-atom"></span><span class="navlabel">Checkbox</span></a><a class="navitem pill" href="../components/radio-button.html"><span class="navdot d-atom"></span><span class="navlabel">Radio Button</span></a><a class="navitem pill" href="../components/toggle.html"><span class="navdot d-atom"></span><span class="navlabel">Toggle</span></a><a class="navitem pill" href="../components/cross.html"><span class="navdot d-atom"></span><span class="navlabel">Cross</span></a><a class="navitem pill" href="../components/heading-content-component.html"><span class="navdot d-atom"></span><span class="navlabel">Heading-content component</span></a><a class="navitem pill" href="../components/status-bar.html"><span class="navdot d-atom"></span><span class="navlabel">Status bar</span></a><a class="navitem pill" href="../components/image-asset-placeholder.html"><span class="navdot d-atom"></span><span class="navlabel">Image, asset placeholder</span></a><a class="navitem pill" href="../components/card-heading.html"><span class="navdot d-atom"></span><span class="navlabel">Card heading</span></a><a class="navitem pill" href="../components/description.html"><span class="navdot d-atom"></span><span class="navlabel">Description</span></a><a class="navitem pill" href="../components/text-field.html"><span class="navdot d-atom"></span><span class="navlabel">Text field</span></a><a class="navitem pill" href="../components/privacy-policy-tab.html"><span class="navdot d-atom"></span><span class="navlabel">Privacy policy tab</span></a><a class="navitem pill" href="../components/progress-bar.html"><span class="navdot d-atom"></span><span class="navlabel">Progress bar</span></a><div class="navgroup">Molecules <span class="count">2</span></div><a class="navitem pill" href="../components/actionables.html"><span class="navdot d-molecule"></span><span class="navlabel">Actionables</span></a><a class="navitem pill" href="../components/l2-inner-pages-heading.html"><span class="navdot d-molecule"></span><span class="navlabel">L2/Inner pages Heading</span></a><div class="navgroup">Organisms <span class="count">8</span></div><a class="navitem pill" href="../components/l1-home-page-navigation.html"><span class="navdot d-organism"></span><span class="navlabel">L1/Home page</span></a><a class="navitem pill" href="../components/modal-card.html"><span class="navdot d-organism"></span><span class="navlabel">Modal card</span></a><a class="navitem pill" href="../components/master-card.html"><span class="navdot d-organism"></span><span class="navlabel">Master card</span></a><a class="navitem pill" href="../components/checkbox-card.html"><span class="navdot d-organism"></span><span class="navlabel">Checkbox card</span></a><a class="navitem pill" href="../components/l1-inner-page-navigation.html"><span class="navdot d-organism"></span><span class="navlabel">L1 Inner page navigation</span></a><a class="navitem pill" href="../components/action-card.html"><span class="navdot d-organism"></span><span class="navlabel">Action card</span></a><a class="navitem pill" href="../components/action-sheet.html"><span class="navdot d-complex-organism"></span><span class="navlabel">Action sheet</span></a><a class="navitem pill" href="../components/modal-sheet.html"><span class="navdot d-complex-organism"></span><span class="navlabel">Modal Sheet</span></a></nav></aside>
+<main class="main">
+
+    <div class="crumb"><a href="../fill-gaps.html">Fill the gaps</a> / Purpose</div>
+    <header class="pagehead"><h1>Actionables</h1><span class="dim">Purpose is missing</span></header>
+    <p class="dim">This is a static site with no backend: nothing typed below saves by itself. Write the
+    purpose, then copy the entry or download an updated <code>learnings.jsonl</code> — replace the
+    repo's copy and commit it. It's logged as <code>proposed</code> until a designer confirms it or folds it
+    into Figma directly (see <a href="../../AGENT.md">AGENT.md §6</a>). This never changes the Documentation
+    coverage numbers on the overview; those measure the Figma-authored spec specifically.</p>
+    <div class="stagecard"><p class="pv-caption">Preview rendered from the extracted visual values in this file (schematic: positions inside non-auto-layout groups are approximate; hidden layers omitted; nested component instances render as linked chips — each child governs itself).</p><div class="pv-block"><div class="pv-variantname">Action=Chevron <span class="dim">node 2031:1133</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:36px"><div class="pv-frame" title="Action=Chevron · 2031:1133" style="width:36px;height:36px;position:relative" data-stack="1"><span class="pv-instance" title="Chevron · 2031:1134" style="width:24px;height:24px;position:relative"><span class="pv-instance-label"><a href="../components/chevron.html">Chevron</a></span></span></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">Action=Toggle <span class="dim">node 2031:1135</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:36px"><div class="pv-frame" title="Action=Toggle · 2031:1135" style="width:36px;height:36px;position:relative" data-stack="1"><span class="pv-instance" title="Toggle · 2031:1136" style="width:36px;height:19px;position:relative"><span class="pv-instance-label"><a href="../components/toggle.html">Toggle</a></span></span></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">Action=Checkbox <span class="dim">node 2031:1137</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:36px"><div class="pv-frame" title="Action=Checkbox · 2031:1137" style="width:36px;height:36px;position:relative" data-stack="1"><span class="pv-instance" title="Checkbox · 2031:1138" style="width:24px;height:24px;position:relative"><span class="pv-instance-label"><a href="../components/checkbox.html">Checkbox</a></span></span></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">Action=Cross <span class="dim">node 2031:1139</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:36px"><div class="pv-frame" title="Action=Cross · 2031:1139" style="width:36px;height:36px;position:relative" data-stack="1"><span class="pv-instance" title="Cross · 2031:1140" style="width:24px;height:24px;position:relative"><span class="pv-instance-label"><a href="../components/cross.html">Cross</a></span></span></div></div></div>
+        </div><div class="pv-block"><div class="pv-variantname">Action=Radio button <span class="dim">node 2031:1141</span></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale(1.0);width:36px"><div class="pv-frame" title="Action=Radio button · 2031:1141" style="width:36px;height:36px;position:relative" data-stack="1"><span class="pv-instance" title="Radio Button · 2031:1142" style="width:20px;height:20px;position:relative"><span class="pv-instance-label"><a href="../components/radio-button.html">Radio Button</a></span></span></div></div></div>
+        </div></div>
+    <section class="metasection">
+      <h3>Purpose</h3>
+      <textarea id="gap-text" rows="5" placeholder="Write the purpose for Actionables…"></textarea>
+      <div class="quicklinks">
+        <button type="button" id="copy-entry" class="gapcopybtn" disabled>copy entry</button>
+        <button type="button" id="download-ledger" class="btn btn-primary" disabled>Download learnings.jsonl</button>
+        <span id="download-status" class="dim"></span>
+      </div>
+    </section>
+    <div class="quicklinks"><a class="btn" href="../components/actionables.html">Open Actionables's full page →</a></div>
+    <script>
+(function () {
+  var CURRENT_LEDGER = "";
+  var CID = "actionables";
+  var FIELD = "purpose";
+  function buildEntry(text) {
+    return JSON.stringify({
+      id: 'learn-fill-' + CID + '-' + FIELD + '-' + Date.now(),
+      logged_at: new Date().toISOString(),
+      kind: 'field_contribution',
+      source: 'manual-fill',
+      components: [CID],
+      field: FIELD,
+      contributed_text: text,
+      status: 'proposed',
+      reviewed_by: null,
+      reviewed_at: null
+    });
+  }
+  var ta = document.getElementById('gap-text');
+  function currentText() { return ta.value.trim(); }
+  function update() {
+    var has = currentText().length > 0;
+    var dl = document.getElementById('download-ledger');
+    var cp = document.getElementById('copy-entry');
+    dl.disabled = !has; cp.disabled = !has;
+  }
+  ta.addEventListener('input', update);
+  document.getElementById('copy-entry').addEventListener('click', function () {
+    var text = currentText();
+    if (!text) return;
+    var btn = this;
+    navigator.clipboard.writeText(buildEntry(text)).then(function () {
+      var t = btn.textContent; btn.textContent = '✓ copied'; btn.classList.add('copied');
+      setTimeout(function () { btn.textContent = t; btn.classList.remove('copied'); }, 1200);
+    });
+  });
+  document.getElementById('download-ledger').addEventListener('click', function () {
+    var text = currentText();
+    var status = document.getElementById('download-status');
+    if (!text) { status.textContent = 'Write something first.'; return; }
+    var lines = CURRENT_LEDGER ? CURRENT_LEDGER.split('\n').filter(function (l) { return l.trim().length; }) : [];
+    lines.push(buildEntry(text));
+    var blob = new Blob([lines.join('\n') + '\n'], { type: 'application/x-ndjson' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'learnings.jsonl';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    status.textContent = 'Downloaded, with this entry appended to the existing ledger. Replace learnings.jsonl in the repo with this file and commit — nothing here saves on its own.';
+  });
+  update();
+})();
+</script>
+    
+<footer class="footer">Generated from the repository — single source of truth. Regenerate with <code>python3 scripts/build_dashboard.py</code>. Source: Figma file <code>QjVyM5bRXgIOZn8PO1e0eK</code>, page “Test pilot run”, ingested 2026-07-10.</footer>
+</main>
+</div>
+<script src="../assets/app.js"></script>
+</body></html>

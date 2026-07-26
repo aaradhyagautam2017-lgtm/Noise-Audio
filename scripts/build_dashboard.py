@@ -381,7 +381,7 @@ def text_style(n):
     s.append("white-space:pre-line")
     return ";".join(s)
 
-def render_node(n, depth=0):
+def render_node(n, depth=0, link_prefix=""):
     if n.get("visible") is False:
         return ""  # hidden in Figma; present in the data, not in the render
     t = n.get("type")
@@ -396,7 +396,7 @@ def render_node(n, depth=0):
         elif ref.get("id") in node_map:
             target = node_map[ref["id"]]
         label = (ref.get("set") or {}).get("name") or ref.get("name") or "instance"
-        inner = (f'<a href="{target}.html">{E(label)}</a>' if target
+        inner = (f'<a href="{link_prefix}{target}.html">{E(label)}</a>' if target
                  else f'<span class="pv-unresolved" title="main component is outside the ingested page">{E(label)} ⚠</span>')
         return (f'<span class="pv-instance" title="{tip}" style="{node_style(n)}">'
                 f'<span class="pv-instance-label">{inner}</span></span>')
@@ -405,13 +405,13 @@ def render_node(n, depth=0):
     kids = n.get("children")
     if isinstance(kids, dict):
         kids = list(kids.values())
-    inner = "".join(render_node(c, depth + 1) for c in (kids or []))
+    inner = "".join(render_node(c, depth + 1, link_prefix) for c in (kids or []))
     if not kids and n.get("childCount"):
         inner = f'<span class="pv-note">{n["childCount"]} children — {E(n.get("note","summarized in visual_values"))}</span>'
     abspos = "" if n.get("layout") else ' data-stack="1"'
     return f'<div class="pv-frame" title="{tip}" style="{node_style(n)}"{abspos}>{inner}</div>'
 
-def render_preview(comp):
+def render_preview(comp, link_prefix=""):
     tree = comp.get("visual_values", {}).get("tree")
     if not isinstance(tree, dict):
         return warn("No extracted visual tree stored for this component — preview unavailable.")
@@ -431,7 +431,7 @@ def render_preview(comp):
         scale = min(1.0, 620.0 / max(w, 1))
         label = f'<div class="pv-variantname">{E(name)} <span class="dim">node {E(vt.get("id",""))}</span></div>' if name else ""
         out.append(f'''<div class="pv-block">{label}
-          <div class="pv-stage"><div class="pv-scale" style="transform:scale({scale});width:{w}px">{render_node(vt)}</div></div>
+          <div class="pv-stage"><div class="pv-scale" style="transform:scale({scale});width:{w}px">{render_node(vt, 0, link_prefix)}</div></div>
         </div>''')
     return "".join(out)
 
@@ -656,80 +656,99 @@ def spacing_page():
 # processing corrupt them before the browser ever sees this (the exact bug class documented
 # elsewhere in this session's history). The one dynamic value (the ledger's current contents)
 # is spliced in afterward via .replace() on a plain marker token, never via {} interpolation.
-FILL_GAPS_JS = r"""
+FILL_GAP_JS = r"""
 (function () {
   var CURRENT_LEDGER = __CURRENT_LEDGER_JSON__;
-  function buildEntry(cid, field, text) {
+  var CID = __CID_JSON__;
+  var FIELD = __FIELD_JSON__;
+  function buildEntry(text) {
     return JSON.stringify({
-      id: 'learn-fill-' + cid + '-' + field + '-' + Date.now(),
+      id: 'learn-fill-' + CID + '-' + FIELD + '-' + Date.now(),
       logged_at: new Date().toISOString(),
       kind: 'field_contribution',
       source: 'manual-fill',
-      components: [cid],
-      field: field,
+      components: [CID],
+      field: FIELD,
       contributed_text: text,
       status: 'proposed',
       reviewed_by: null,
       reviewed_at: null
     });
   }
-  function rows() { return Array.prototype.slice.call(document.querySelectorAll('.gaprow')); }
-  document.addEventListener('input', function (ev) {
-    var ta = ev.target.closest('textarea[data-field]');
-    if (!ta) return;
-    var row = ta.closest('.gaprow');
-    row.classList.toggle('gaprow-filled', ta.value.trim().length > 0);
-    updateCount();
-  });
-  function updateCount() {
-    var n = rows().filter(function (r) { return r.classList.contains('gaprow-filled'); }).length;
-    var btn = document.getElementById('download-ledger');
-    btn.textContent = n ? 'Download learnings.jsonl with ' + n + ' new entr' + (n === 1 ? 'y' : 'ies') : 'Download learnings.jsonl';
-    btn.disabled = n === 0;
+  var ta = document.getElementById('gap-text');
+  function currentText() { return ta.value.trim(); }
+  function update() {
+    var has = currentText().length > 0;
+    var dl = document.getElementById('download-ledger');
+    var cp = document.getElementById('copy-entry');
+    dl.disabled = !has; cp.disabled = !has;
   }
-  document.addEventListener('click', function (ev) {
-    var copyBtn = ev.target.closest('[data-copy-entry]');
-    if (copyBtn) {
-      var row = copyBtn.closest('.gaprow');
-      var text = row.querySelector('textarea').value.trim();
-      if (!text) return;
-      navigator.clipboard.writeText(buildEntry(row.dataset.cid, row.dataset.field, text)).then(function () {
-        var t = copyBtn.textContent; copyBtn.textContent = '✓ copied'; copyBtn.classList.add('copied');
-        setTimeout(function () { copyBtn.textContent = t; copyBtn.classList.remove('copied'); }, 1200);
-      });
-      return;
-    }
-    if (ev.target.closest('#download-ledger')) {
-      var lines = CURRENT_LEDGER ? CURRENT_LEDGER.split('\n').filter(function (l) { return l.trim().length; }) : [];
-      var added = 0;
-      rows().forEach(function (row) {
-        var text = row.querySelector('textarea').value.trim();
-        if (!text) return;
-        lines.push(buildEntry(row.dataset.cid, row.dataset.field, text));
-        added++;
-      });
-      var status = document.getElementById('download-status');
-      if (!added) { status.textContent = 'Nothing typed yet — fill in at least one field first.'; return; }
-      var blob = new Blob([lines.join('\n') + '\n'], { type: 'application/x-ndjson' });
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url; a.download = 'learnings.jsonl';
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      status.textContent = 'Downloaded, ' + added + ' new entr' + (added === 1 ? 'y' : 'ies') + ' appended to the existing ledger. Replace learnings.jsonl in the repo with this file and commit — nothing here saves on its own.';
-    }
+  ta.addEventListener('input', update);
+  document.getElementById('copy-entry').addEventListener('click', function () {
+    var text = currentText();
+    if (!text) return;
+    var btn = this;
+    navigator.clipboard.writeText(buildEntry(text)).then(function () {
+      var t = btn.textContent; btn.textContent = '✓ copied'; btn.classList.add('copied');
+      setTimeout(function () { btn.textContent = t; btn.classList.remove('copied'); }, 1200);
+    });
   });
-  updateCount();
+  document.getElementById('download-ledger').addEventListener('click', function () {
+    var text = currentText();
+    var status = document.getElementById('download-status');
+    if (!text) { status.textContent = 'Write something first.'; return; }
+    var lines = CURRENT_LEDGER ? CURRENT_LEDGER.split('\n').filter(function (l) { return l.trim().length; }) : [];
+    lines.push(buildEntry(text));
+    var blob = new Blob([lines.join('\n') + '\n'], { type: 'application/x-ndjson' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'learnings.jsonl';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    status.textContent = 'Downloaded, with this entry appended to the existing ledger. Replace learnings.jsonl in the repo with this file and commit — nothing here saves on its own.';
+  });
+  update();
 })();
 """
 
-def fill_gaps_page():
+def fill_gap_page(cid, key, label):
+    """One dedicated page per (component, missing field) gap — the actual entry point, showing
+    the component's real rendered preview above the text field so the gap is filled with the
+    thing in view, not from memory. Lives in fill-gaps/, so it needs the same "../" prefix and
+    the same render_preview link_prefix component pages already use for sibling instance links."""
+    comp = components[cid]
+    name = comp["name"].strip()
     ledger_raw = ""
     if os.path.exists(learnings_path):
         with open(learnings_path) as f:
             ledger_raw = f.read()
-    js = FILL_GAPS_JS.replace("__CURRENT_LEDGER_JSON__", json.dumps(ledger_raw))
+    js = (FILL_GAP_JS.replace("__CURRENT_LEDGER_JSON__", json.dumps(ledger_raw))
+                     .replace("__CID_JSON__", json.dumps(cid))
+                     .replace("__FIELD_JSON__", json.dumps(key)))
+    body = f"""
+    <div class="crumb"><a href="../fill-gaps.html">Fill the gaps</a> / {E(label)}</div>
+    <header class="pagehead"><h1>{E(name)}</h1><span class="dim">{E(label)} is missing</span></header>
+    <p class="dim">This is a static site with no backend: nothing typed below saves by itself. Write the
+    {E(label.lower())}, then copy the entry or download an updated <code>learnings.jsonl</code> — replace the
+    repo's copy and commit it. It's logged as <code>proposed</code> until a designer confirms it or folds it
+    into Figma directly (see <a href="../../AGENT.md">AGENT.md §6</a>). This never changes the Documentation
+    coverage numbers on the overview; those measure the Figma-authored spec specifically.</p>
+    <div class="stagecard">{render_preview(comp, "../components/")}</div>
+    <section class="metasection">
+      <h3>{E(label)}</h3>
+      <textarea id="gap-text" rows="5" placeholder="Write the {E(label.lower())} for {E(name)}…"></textarea>
+      <div class="quicklinks">
+        <button type="button" id="copy-entry" class="gapcopybtn" disabled>copy entry</button>
+        <button type="button" id="download-ledger" class="btn btn-primary" disabled>Download learnings.jsonl</button>
+        <span id="download-status" class="dim"></span>
+      </div>
+    </section>
+    <div class="quicklinks"><a class="btn" href="../components/{cid}.html">Open {E(name)}'s full page →</a></div>
+    <script>{js}</script>
+    """
+    return page(f"{name} — {label}", "fill-gaps", body, prefix="../")
 
+def fill_gaps_page():
     sections = []
     total_gaps = 0
     for key, label in CORE_DOC_FIELDS:
@@ -737,15 +756,11 @@ def fill_gaps_page():
         if not missing:
             continue
         total_gaps += len(missing)
-        rows = "".join(f'''
-          <div class="gaprow" data-cid="{E(cid)}" data-field="{E(key)}">
-            <div class="gaprow-head">
-              <a href="components/{cid}.html">{E(components[cid]["name"].strip())}</a>
-              <span class="dim">{E(cid)}</span>
-            </div>
-            <textarea data-field="{E(key)}" rows="3" placeholder="Write the {E(label.lower())} for this component…"></textarea>
-            <button type="button" class="gapcopybtn small" data-copy-entry>copy entry</button>
-          </div>''' for cid in missing)
+        rows = "".join(
+            f'<a class="gaprow gaprow-link" href="fill-gaps/{cid}--{E(key)}.html">'
+            f'<span class="gaprow-name">{E(components[cid]["name"].strip())}</span>'
+            f'<span class="dim">{E(cid)}</span><span class="gaprow-arrow">→</span></a>'
+            for cid in missing)
         sections.append(f'''
         <section class="metasection" id="gap-{E(key)}">
           <h3>{E(label)} <span class="count">{len(missing)} missing</span></h3>
@@ -754,19 +769,10 @@ def fill_gaps_page():
 
     body = f"""
     <header class="pagehead"><h1>Fill the gaps</h1></header>
-    <p class="dim">{total_gaps} missing documentation field(s) across the library — one row per component per
-    field. This is a static site with no backend: nothing you type here saves by itself. Write the text, then
-    either copy one entry at a time or download an updated <code>learnings.jsonl</code> below, replace the
-    repo's copy, and commit it. Every entry is logged as <code>proposed</code> — a designer confirms it or
-    folds it into Figma directly before it counts as real guidance (see <a href="../AGENT.md">AGENT.md §6</a>).
-    Filling a gap here never changes the Documentation coverage numbers on the overview; those measure the
-    Figma-authored spec specifically, not this ledger.</p>
-    <div class="quicklinks">
-      <button type="button" id="download-ledger" class="btn btn-primary" disabled>Download learnings.jsonl</button>
-      <span id="download-status" class="dim"></span>
-    </div>
+    <p class="dim">{total_gaps} missing documentation field(s) across the library. Each one is its own page,
+    with the component's real preview shown above the text field. This is a static site with no backend —
+    nothing saves automatically anywhere in here; see any gap's own page for how to actually contribute it.</p>
     {''.join(sections) if sections else '<p class="dim">No missing fields — every component has all five documentation fields authored.</p>'}
-    <script>{js}</script>
     """
     return page("Fill the gaps", "fill-gaps", body)
 
@@ -1162,14 +1168,16 @@ h2 .count{color:var(--ink3);font-size:12.5px;font-weight:400;font-variant-numeri
 .gaprow{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-md);
   padding:14px 16px;margin:0 0 10px;transition:border-color .15s}
 .gaprow:last-child{margin-bottom:0}
-.gaprow-filled{border-color:var(--accent)}
-.gaprow-head{display:flex;align-items:baseline;gap:9px;margin-bottom:9px;font-size:13.5px;font-weight:500}
-.gaprow-head a{color:var(--accent)}
-.gaprow textarea{width:100%;background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--r-sm);padding:9px 11px;font:inherit;font-size:13px;color:var(--ink);
+/* the fill-gaps index: each gap is a plain link row out to its own dedicated page */
+.gaprow-link{display:flex;align-items:baseline;gap:10px;text-decoration:none;cursor:pointer}
+.gaprow-link:hover{border-color:var(--accent);background:var(--surface-3)}
+.gaprow-name{font-size:13.5px;font-weight:500;color:var(--ink)}
+.gaprow-arrow{margin-left:auto;color:var(--accent);flex:none}
+/* the standalone entry field on a gap's own page */
+textarea#gap-text{width:100%;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:11px 13px;font:inherit;font-size:13.5px;color:var(--ink);
   resize:vertical;box-sizing:border-box}
-.gaprow textarea:focus{outline:none;border-color:var(--accent)}
-.gaprow .gapcopybtn{margin-top:8px}
+textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .pills{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
 .pill{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);
   padding:4px 11px;font-size:12px;color:var(--ink2)}
@@ -1399,6 +1407,7 @@ def main():
         shutil.rmtree(OUT)
     os.makedirs(os.path.join(OUT, "components"))
     os.makedirs(os.path.join(OUT, "assets"))
+    os.makedirs(os.path.join(OUT, "fill-gaps"), exist_ok=True)
     with open(os.path.join(OUT, "assets", "style.css"), "w") as f:
         f.write(STYLE)
     with open(os.path.join(OUT, "assets", "app.js"), "w") as f:
@@ -1416,7 +1425,14 @@ def main():
     for cid in order:
         with open(os.path.join(OUT, "components", f"{cid}.html"), "w") as f:
             f.write(component_page(cid))
-    print(f"dashboard generated: {len(pages)} shell pages + {len(order)} component pages -> dashboard/")
+    n_gap_pages = 0
+    for key, label in CORE_DOC_FIELDS:
+        for cid in missing_by_field[key]:
+            with open(os.path.join(OUT, "fill-gaps", f"{cid}--{key}.html"), "w") as f:
+                f.write(fill_gap_page(cid, key, label))
+            n_gap_pages += 1
+    print(f"dashboard generated: {len(pages)} shell pages + {len(order)} component pages + "
+          f"{n_gap_pages} fill-gap pages -> dashboard/")
     import build_graph  # Phase 3 — regenerates dashboard/graph.html + graph/graph.json
     build_graph.main()
 

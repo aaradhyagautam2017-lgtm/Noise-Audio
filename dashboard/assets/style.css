@@ -159,14 +159,16 @@ h2 .count{color:var(--ink3);font-size:12.5px;font-weight:400;font-variant-numeri
 .gaprow{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-md);
   padding:14px 16px;margin:0 0 10px;transition:border-color .15s}
 .gaprow:last-child{margin-bottom:0}
-.gaprow-filled{border-color:var(--accent)}
-.gaprow-head{display:flex;align-items:baseline;gap:9px;margin-bottom:9px;font-size:13.5px;font-weight:500}
-.gaprow-head a{color:var(--accent)}
-.gaprow textarea{width:100%;background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--r-sm);padding:9px 11px;font:inherit;font-size:13px;color:var(--ink);
+/* the fill-gaps index: each gap is a plain link row out to its own dedicated page */
+.gaprow-link{display:flex;align-items:baseline;gap:10px;text-decoration:none;cursor:pointer}
+.gaprow-link:hover{border-color:var(--accent);background:var(--surface-3)}
+.gaprow-name{font-size:13.5px;font-weight:500;color:var(--ink)}
+.gaprow-arrow{margin-left:auto;color:var(--accent);flex:none}
+/* the standalone entry field on a gap's own page */
+textarea#gap-text{width:100%;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:11px 13px;font:inherit;font-size:13.5px;color:var(--ink);
   resize:vertical;box-sizing:border-box}
-.gaprow textarea:focus{outline:none;border-color:var(--accent)}
-.gaprow .gapcopybtn{margin-top:8px}
+textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .pills{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
 .pill{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);
   padding:4px 11px;font-size:12px;color:var(--ink2)}
