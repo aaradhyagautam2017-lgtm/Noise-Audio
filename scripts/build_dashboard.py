@@ -641,14 +641,25 @@ def overview_page():
                  {doc_badge(cid)}</div>
                </a>''' for cid in ids)
         cards.append(f'<h2>{gname} <span class="count">{len(ids)}</span></h2><div class="cardgrid">{items}</div>')
-    warns = []
+    # Every open problem in the library, each carrying the place it lives so the card can
+    # point straight at it. Collected per component so nothing is reported without a location.
+    issues = []
     if control_panel_missing:
-        warns.append(warn("<b>CONTROL_PANEL.md is missing from the repo root.</b> It is designer-provided and was not supplied in Phase 1 (see INGESTION_REPORT.md §4)."))
-    de = validation.get("dangling_figma_instance_edges", 0)
-    if de:
-        warns.append(warn(f"<b>{de} dangling Figma instance references</b> across the library — instances whose main component lives outside the ingested page. Flagged on each affected component page and catalogued in INGESTION_REPORT.md §5."))
-    if doc_parse_errors:
-        warns.append(warn(f"<b>{doc_parse_errors} component(s) have authored_metadata that fails to parse as YAML</b> — shown raw on their page instead of rendered sections."))
+        issues.append({"where": "Repository root", "href": None,
+                       "title": "CONTROL_PANEL.md is missing",
+                       "detail": "The screen-state panel rulebook is designer-provided and has not been supplied (INGESTION_REPORT.md §4)."})
+    for cid in order:
+        cname = components[cid]["name"].strip()
+        href = f"components/{cid}.html"
+        if doc_status[cid][2]:
+            issues.append({"where": cname, "href": href,
+                           "title": "Authored metadata does not parse as YAML",
+                           "detail": "The stored metadata is shown raw on the component page instead of rendered sections."})
+        for e in (reg_by_id[cid].get("figma_instance_edges") or []):
+            if not e.get("resolved") and not e.get("excluded"):
+                issues.append({"where": cname, "href": href,
+                               "title": "Figma reference points outside the ingested library page",
+                               "detail": f'References {e.get("references", "an unnamed component")} in {e.get("external_location", "another page")}.'})
 
     n_atoms, n_molecules = len(by_type.get("atom", [])), len(by_type.get("molecule", []))
     n_organisms, n_complex = len(by_type.get("organism", [])), len(by_type.get("complex-organism", []))
@@ -686,24 +697,45 @@ def overview_page():
                       f'<div class="ov-legend"><span><span class="ov-sw" style="background:var(--ink3)"></span>Structural (built from) <b>{total_structural}</b></span>'
                       f'<span><span class="ov-sw" style="background:var(--plum)"></span>Behavioral <b>{total_behavioral}</b></span></div>')
 
-    # Front-page copy comes from overview.yaml so the designer owns it. The detail panel is
-    # a plain <details>, so it expands with no JS and stays usable however long the copy grows.
+    # Two peer cards sitting side by side. Both are plain <details>, so they open with no JS;
+    # an open card takes the whole row (grid-column:1/-1) so its contents get the full width.
     ov_sections = "".join(
         f'<section class="ovsec"><h3>{E(s.get("heading", ""))}</h3>{render_prose(s.get("body"))}</section>'
         for s in (overview_copy.get("sections") or []) if s.get("heading") or s.get("body"))
-    ov_expand = ""
+    doc_card = ""
     if ov_sections:
-        label = overview_copy.get("expand_label") or "How this system works, and the rules for using it"
-        ov_expand = (f'<details class="overviewdoc"><summary><span class="ovchev" aria-hidden="true"></span>'
-                     f'{E(label)}</summary><div class="overviewdoc-body">{ov_sections}</div></details>')
+        label = overview_copy.get("expand_label") or "How this system works"
+        doc_card = (f'<details class="ovcard"><summary><span class="ovcard-head">'
+                    f'<span class="ovcard-title">{E(label)}</span>'
+                    f'<span class="ovcard-sub">Rules and usage for the library</span></span>'
+                    f'<span class="ovchev" aria-hidden="true"></span></summary>'
+                    f'<div class="ovcard-body">{ov_sections}</div></details>')
+
+    n_issues = len(issues)
+    issue_word = "error" if n_issues == 1 else "errors"
+    if n_issues:
+        rows = "".join(
+            f'<li class="issue"><div class="issue-main"><div class="issue-title">{E(i["title"])}</div>'
+            f'<div class="issue-detail">{E(i["detail"])}</div></div>'
+            + (f'<a class="issue-where" href="{i["href"]}">{E(i["where"])}</a>'
+               if i["href"] else f'<span class="issue-where">{E(i["where"])}</span>')
+            + '</li>' for i in issues)
+        issue_card = (f'<details class="ovcard ovcard-issue"><summary><span class="ovcard-head">'
+                      f'<span class="ovcard-title">{n_issues} {issue_word}</span>'
+                      f'<span class="ovcard-sub">Open problems, and where each one lives</span></span>'
+                      f'<span class="ovchev" aria-hidden="true"></span></summary>'
+                      f'<div class="ovcard-body"><ul class="issuelist">{rows}</ul></div></details>')
+    else:
+        issue_card = ('<div class="ovcard ovcard-clean"><div class="ovcard-head">'
+                      '<span class="ovcard-title">0 errors</span>'
+                      '<span class="ovcard-sub">Every component parses and every reference resolves</span>'
+                      '</div></div>')
 
     body = f"""
     <header class="landing">
       <h1>{E(overview_copy.get("title") or "Design System")}</h1>
-      {f'<div class="lede">{render_prose(overview_copy.get("lede"))}</div>' if overview_copy.get("lede") else ""}
-      {ov_expand}
+      <div class="ovcards">{doc_card}{issue_card}</div>
     </header>
-    {''.join(warns)}
 
     <section class="metasection">
       <h3>Library at a glance</h3>
@@ -786,9 +818,14 @@ code{font-family:var(--font-mono);font-size:.92em}
 /* ---------------------------------------------------------------- shell */
 .layout{display:flex;min-height:100vh}
 .sidebar{width:262px;flex:none;background:var(--surface);border-right:1px solid var(--line);
-  padding:16px 12px 32px;position:sticky;top:0;height:100vh;overflow-y:auto;scrollbar-width:thin}
-.sidebar::-webkit-scrollbar{width:8px}
-.sidebar::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px}
+  padding:16px 12px 32px;position:sticky;top:0;height:100vh;overflow-y:auto}
+/* No visible scrollbars anywhere inside the app. These containers still scroll — the bar
+   itself is just never painted, so panels never grow a track down their edge. */
+.sidebar,.ovcard-body,.pv-stage,.codeblock,.graphwrap,.rawyaml pre,.overviewdoc-body{
+  scrollbar-width:none;-ms-overflow-style:none}
+.sidebar::-webkit-scrollbar,.ovcard-body::-webkit-scrollbar,.pv-stage::-webkit-scrollbar,
+.codeblock::-webkit-scrollbar,.graphwrap::-webkit-scrollbar,.rawyaml pre::-webkit-scrollbar{
+  width:0;height:0;display:none}
 .brand{display:flex;gap:10px;align-items:center;margin:2px 4px 20px}
 .applogo{width:30px;height:30px;flex:none;border-radius:var(--r-sm);background:var(--ink);color:var(--canvas);
   display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
@@ -818,22 +855,41 @@ code{font-family:var(--font-mono);font-size:.92em}
 .pagehead h1{font-size:26px}
 .landing h1{font-size:40px;letter-spacing:-0.03em;line-height:1.1}
 .tagline{color:var(--ink2);max-width:620px;font-size:15px;margin:14px 0 0}
-/* designer-authored front-page copy */
-.lede{max-width:660px;margin:16px 0 0}
-.lede p{color:var(--ink2);font-size:15.5px;line-height:1.6;margin:0}
-.overviewdoc{margin:22px 0 0;max-width:760px;background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--r-lg)}
-.overviewdoc summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;
-  padding:14px 18px;font-size:13.5px;font-weight:500;color:var(--ink2);border-radius:var(--r-lg);
-  transition:color .14s,background .14s}
-.overviewdoc summary::-webkit-details-marker{display:none}
-.overviewdoc summary:hover{color:var(--ink);background:var(--surface-2)}
-.ovchev{width:0;height:0;flex:none;border-left:5px solid currentColor;
+/* Designer-authored front-page cards: two peers side by side, each the full width of a
+   column. Opening one gives it the whole row, and :has() collapses the grid to one column
+   so the sibling matches its width instead of being left as a stranded half-card. */
+.ovcards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:28px 0 0}
+.ovcards:has(.ovcard[open]){grid-template-columns:minmax(0,1fr)}
+@media (max-width:900px){.ovcards{grid-template-columns:minmax(0,1fr)}}
+.ovcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  transition:border-color .15s}
+.ovcard:hover,.ovcard[open]{border-color:var(--line-2)}
+.ovcard[open]{grid-column:1/-1}
+.ovcard>summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:14px;
+  padding:22px;border-radius:var(--r-lg);transition:background .14s}
+.ovcard>summary::-webkit-details-marker{display:none}
+.ovcard>summary:hover{background:var(--surface-2)}
+.ovcard-head{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.ovcard-title{font-size:16px;font-weight:600;letter-spacing:-0.01em;color:var(--ink)}
+.ovcard-sub{font-size:12.5px;color:var(--ink3);line-height:1.45}
+.ovchev{width:0;height:0;flex:none;border-left:5px solid var(--ink3);
   border-top:4px solid transparent;border-bottom:4px solid transparent;transition:transform .18s}
-.overviewdoc[open] summary{color:var(--ink);border-bottom:1px solid var(--line);
-  border-radius:var(--r-lg) var(--r-lg) 0 0}
-.overviewdoc[open] .ovchev{transform:rotate(90deg)}
-.overviewdoc-body{padding:6px 18px 20px;max-height:min(58vh,560px);overflow-y:auto}
+.ovcard[open]>summary{border-bottom:1px solid var(--line);border-radius:var(--r-lg) var(--r-lg) 0 0}
+.ovcard[open]>summary .ovchev{transform:rotate(90deg)}
+.ovcard-body{padding:4px 22px 22px}
+.ovcard-clean{padding:22px}
+.ovcard-issue .ovcard-title{color:var(--warn-ink)}
+.issuelist{list-style:none;padding:0;margin:0}
+.issue{display:flex;gap:18px;align-items:baseline;justify-content:space-between;
+  padding:15px 0;border-bottom:1px solid var(--line-soft)}
+.issue:last-child{border-bottom:none;padding-bottom:2px}
+.issue-main{min-width:0}
+.issue-title{font-size:13.5px;font-weight:500;color:var(--ink)}
+.issue-detail{font-size:12.5px;color:var(--ink3);margin-top:3px;line-height:1.5}
+.issue-where{flex:none;font-size:11.5px;font-family:var(--font-mono);color:var(--ink2);
+  background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);padding:4px 12px}
+a.issue-where{color:var(--accent)}
+a.issue-where:hover{border-color:var(--accent)}
 .ovsec{padding:16px 0;border-bottom:1px solid var(--line-soft)}
 .ovsec:last-child{border-bottom:none;padding-bottom:2px}
 .ovsec h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin:0 0 8px}

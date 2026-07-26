@@ -4,26 +4,25 @@
 # `python3 scripts/build_dashboard.py`; never edit the generated HTML.
 #
 # - `title` is the page heading.
-# - `lede` is the short paragraph that is always visible under the heading.
-# - `sections` sit inside the expandable panel, in the order given here. Add as many
-#   as you need — the panel scrolls and stays collapsed by default, so length is free.
+# - `expand_label` is the title shown on the collapsed card.
+# - `sections` sit inside the card, in the order given here. Add as many as you need —
+#   the card stays collapsed by default and grows to fit, so length is free.
 # - Blank lines inside a `body` start a new paragraph. Wrap `code`, filenames and
-#   Figma terms in backticks to have them set in monospace.
+#   Figma terms in backticks to have them set in monospace, and **stars** for bold.
 
 overview:
   title: Design System
 
-  lede: >
-    A single, governed source of truth for how Noise Audio looks and behaves — authored in
-    Figma, mirrored here as machine-readable files that both designers and AI agents read
-    from. Everything on this dashboard is generated from those files, so what you see is
-    what the system actually contains.
-
-  expand_label: How this system works, and the rules for using it
+  expand_label: How this system works
 
   sections:
     - heading: How it works
       body: >
+        This is a single, governed source of truth for how Noise Audio looks and behaves —
+        authored in Figma, mirrored here as machine-readable files that both designers and
+        AI agents read from. Everything on this dashboard is generated from those files, so
+        what you see is what the system actually contains.
+
         The library is drawn and maintained in Figma. An ingestion pass reads one nominated
         library page and writes what it finds into this repository: `registry.yaml` holds
         the index of every component, and one file per component under `components/`
