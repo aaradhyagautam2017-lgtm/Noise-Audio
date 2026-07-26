@@ -96,17 +96,21 @@ code{font-family:var(--font-mono);font-size:.92em}
 .ovcard[open]>summary .ovchev{transform:rotate(90deg)}
 .ovcard-clean{padding:22px}
 .ovcard-issue .ovcard-title{color:var(--warn-ink)}
-.issuelist{list-style:none;padding:0;margin:0;grid-column:1/-1}
-.issue{display:flex;gap:18px;align-items:baseline;justify-content:space-between;
+.entrylist{list-style:none;padding:0;margin:0;grid-column:1/-1}
+.entrylist-empty{color:var(--ink3);font-size:13px;margin:4px 0 0;grid-column:1/-1}
+.entry{display:flex;gap:18px;align-items:baseline;justify-content:space-between;
   padding:15px 0;border-bottom:1px solid var(--line-soft)}
-.issue:last-child{border-bottom:none;padding-bottom:2px}
-.issue-main{min-width:0}
-.issue-title{font-size:13.5px;font-weight:500;color:var(--ink)}
-.issue-detail{font-size:12.5px;color:var(--ink3);margin-top:3px;line-height:1.5}
-.issue-where{flex:none;font-size:11.5px;font-family:var(--font-mono);color:var(--ink2);
+.entry:last-child{border-bottom:none;padding-bottom:2px}
+.entry-main{min-width:0}
+.entry-title{font-size:13.5px;font-weight:500;color:var(--ink)}
+.entry-detail{font-size:12.5px;color:var(--ink3);margin-top:3px;line-height:1.5}
+.entry-chips{flex:none;display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;max-width:40%}
+.entry-where{font-size:11.5px;font-family:var(--font-mono);color:var(--ink2);
   background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);padding:4px 12px}
-a.issue-where{color:var(--accent)}
-a.issue-where:hover{border-color:var(--accent)}
+a.entry-where{color:var(--accent)}
+a.entry-where:hover{border-color:var(--accent)}
+.entry-learned .entry-title::before{content:"! ";color:var(--accent);font-weight:700}
+.entry-pending .entry-title::before{content:"○ ";color:var(--ink3)}
 /* Sections lay out as whole blocks in a grid, not a single edge-to-edge column: at this
    card's width a full-bleed paragraph would run 150+ characters per line, which is
    established to hurt reading comprehension well before it gets that wide (the

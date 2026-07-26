@@ -73,6 +73,36 @@ for c in registry["components"]:
 validation = registry.get("validation", {})
 control_panel_missing = not os.path.exists(os.path.join(ROOT, "CONTROL_PANEL.md"))
 
+# Agent learning ledger (see AGENT.md §6) — append-only, one JSON object per line. Missing
+# or empty is a valid, honest state (nothing has been logged yet), not an error.
+learnings = []
+learnings_path = os.path.join(ROOT, "learnings.jsonl")
+if os.path.exists(learnings_path):
+    with open(learnings_path) as f:
+        for lineno, line in enumerate(f, 1):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                learnings.append(json.loads(line))
+            except json.JSONDecodeError as e:
+                print(f"warning: learnings.jsonl line {lineno} is not valid JSON, skipped ({e})", file=sys.stderr)
+
+# Reverse-indexed by component, same pattern as used_by above: scan every entry's
+# `components` list and group into per-status buckets keyed by component id.
+learnings_by_component = {cid: {"confirmed": [], "pending": [], "rejected": []} for cid in order}
+learnings_confirmed, learnings_pending, learnings_rejected = [], [], []
+STATUS_BUCKET = {"confirmed": "confirmed", "proposed": "pending", "rejected": "rejected"}
+for entry in learnings:
+    bucket = STATUS_BUCKET.get(entry.get("status"))
+    if bucket is None:  # "superseded", or an unrecognized status — not shown as live guidance
+        continue
+    (learnings_confirmed if bucket == "confirmed" else
+     learnings_pending if bucket == "pending" else learnings_rejected).append(entry)
+    for cid in entry.get("components") or []:
+        if cid in learnings_by_component:
+            learnings_by_component[cid][bucket].append(entry)
+
 E = lambda s: html.escape(str(s), quote=True)
 
 # ----------------------------------------------------------------- library-health stats
@@ -477,6 +507,23 @@ def component_page(cid):
                           f'<table class="table"><thead><tr><th>Figma variant</th><th>Node id</th>'
                           f'<th>Fingerprint</th><th>Size</th></tr></thead><tbody>{rows}</tbody></table></section>')
 
+    # Learned guidance (AGENT.md §6) — only rendered when this component actually has entries,
+    # so the vast majority of pages (nothing logged yet) stay exactly as they were.
+    lc = learnings_by_component.get(cid, {"confirmed": [], "pending": []})
+    learned_block = ""
+    if lc["confirmed"] or lc["pending"]:
+        parts = [f'<section class="metasection"><h3>Learned</h3>'
+                 f'<p class="dim">Guidance the agent has picked up from corrections, kept separate from the '
+                 f'Figma-authored rules above until a designer promotes it (see AGENT.md §6).</p>']
+        if lc["confirmed"]:
+            parts.append('<div class="subhead">Confirmed</div>' +
+                        render_entry_list([learning_entry(e, cid) for e in lc["confirmed"]], "", "entry-learned"))
+        if lc["pending"]:
+            parts.append('<div class="subhead">Pending review</div>' +
+                        render_entry_list([learning_entry(e, cid) for e in lc["pending"]], "", "entry-pending"))
+        parts.append('</section>')
+        learned_block = "".join(parts)
+
     body = f"""
     <header class="pagehead">
       <h1>{E(name)}</h1>
@@ -490,6 +537,7 @@ def component_page(cid):
       <aside class="rail">{axes_card}{ids_card}{rel_card}</aside>
     </div>
     {variants_block}
+    {learned_block}
     <h2 class="metaheader">Metadata <span class="count">rendered from the stored authored YAML</span></h2>
     {render_metadata(comp)}
     """
@@ -620,25 +668,56 @@ def render_prose(text):
         out.append(f"<p>{block}</p>")
     return "".join(out)
 
+def render_chip(c):
+    tag = "a" if c.get("href") else "span"
+    href_attr = f' href="{c["href"]}"' if c.get("href") else ""
+    return f'<{tag} class="entry-where"{href_attr}>{E(c["label"])}</{tag}>'
+
+def render_entry_list(items, empty_msg, marker_cls=""):
+    """A titled/detailed row with 0+ linked location chips on the right — the shape shared by
+    the error list and both learning lists. `items` are dicts with title, detail, and chips
+    (a list of {label, href}; href None renders a bare span, for a place with nowhere to link)."""
+    if not items:
+        return f'<p class="entrylist-empty">{E(empty_msg)}</p>'
+    cls = "entry" + (f" {marker_cls}" if marker_cls else "")
+    rows = "".join(
+        f'<li class="{cls}"><div class="entry-main">'
+        f'<div class="entry-title">{E(i["title"])}</div><div class="entry-detail">{E(i["detail"])}</div></div>'
+        f'<div class="entry-chips">{"".join(render_chip(c) for c in i.get("chips", []))}</div>'
+        '</li>' for i in items)
+    return f'<ul class="entrylist">{rows}</ul>'
+
+def learning_entry(entry, cid=None):
+    """A ledger entry -> the dict render_entry_list expects. On the overview every component a
+    learning touches is a chip, so the reader can see the connection at a glance. On a
+    component's own page the current component is dropped from its own chip row — the page
+    already says which component this is — leaving only the *other* components it connects to,
+    if any (a learning that spans two components shows the other one right there as the link)."""
+    comps = [c for c in (entry.get("components") or []) if c != cid]
+    chips = [{"label": components.get(c, {}).get("name", c).strip() if c in components else c,
+              "href": f"components/{c}.html" if cid is None else f"{c}.html"} for c in comps]
+    return {"title": entry.get("proposed_rule") or entry.get("user_correction") or "(no rule text logged)",
+            "detail": entry.get("user_correction") or "", "chips": chips}
+
 # ----------------------------------------------------------------- overview + graph
 def overview_page():
     # Every open problem in the library, each carrying the place it lives so the card can
     # point straight at it. Collected per component so nothing is reported without a location.
     issues = []
     if control_panel_missing:
-        issues.append({"where": "Repository root", "href": None,
+        issues.append({"chips": [{"label": "Repository root", "href": None}],
                        "title": "CONTROL_PANEL.md is missing",
                        "detail": "The screen-state panel rulebook is designer-provided and has not been supplied (INGESTION_REPORT.md §4)."})
     for cid in order:
         cname = components[cid]["name"].strip()
         href = f"components/{cid}.html"
         if doc_status[cid][2]:
-            issues.append({"where": cname, "href": href,
+            issues.append({"chips": [{"label": cname, "href": href}],
                            "title": "Authored metadata does not parse as YAML",
                            "detail": "The stored metadata is shown raw on the component page instead of rendered sections."})
         for e in (reg_by_id[cid].get("figma_instance_edges") or []):
             if not e.get("resolved") and not e.get("excluded"):
-                issues.append({"where": cname, "href": href,
+                issues.append({"chips": [{"label": cname, "href": href}],
                                "title": "Figma reference points outside the ingested library page",
                                "detail": f'References {e.get("references", "an unnamed component")} in {e.get("external_location", "another page")}.'})
 
@@ -689,20 +768,32 @@ def overview_page():
                     f'<span class="ovchev" aria-hidden="true"></span></summary>'
                     f'<div class="ovcard-body">{ov_sections}</div></details>')
 
+    # Agent learnings — see AGENT.md §6. Confirmed entries are guidance the agent now applies;
+    # pending ones are unvalidated corrections a designer hasn't reviewed yet. Both are shown —
+    # this section is the audit trail for what the agent has actually learned, not a score.
+    n_confirmed, n_pending, n_rejected = len(learnings_confirmed), len(learnings_pending), len(learnings_rejected)
+    pending_tile_cls = "kpi kpi-warn" if n_pending else "kpi"
+    learnings_section = f'''
+      <h4 class="subhead">Agent learnings <span class="dim">— corrections the agent has absorbed, and what is still pending review</span></h4>
+      <div class="kpirow">
+        <div class="kpi"><div class="kpi-value">{n_confirmed}</div><div class="kpi-label">Confirmed — applied as guidance</div></div>
+        <div class="kpi"><div class="kpi-value">{n_rejected}</div><div class="kpi-label">Reviewed and rejected</div></div>
+        <div class="{pending_tile_cls}"><div class="kpi-value">{n_pending}</div><div class="kpi-label">Pending review</div></div>
+      </div>
+      <div class="subhead" style="margin:22px 0 10px">Confirmed</div>
+      {render_entry_list([learning_entry(e) for e in learnings_confirmed], "No learnings confirmed yet.", "entry-learned")}
+      <div class="subhead" style="margin:22px 0 10px">Pending review</div>
+      {render_entry_list([learning_entry(e) for e in learnings_pending], "Nothing awaiting review.", "entry-pending")}
+    '''
+
     n_issues = len(issues)
     issue_word = "error" if n_issues == 1 else "errors"
     if n_issues:
-        rows = "".join(
-            f'<li class="issue"><div class="issue-main"><div class="issue-title">{E(i["title"])}</div>'
-            f'<div class="issue-detail">{E(i["detail"])}</div></div>'
-            + (f'<a class="issue-where" href="{i["href"]}">{E(i["where"])}</a>'
-               if i["href"] else f'<span class="issue-where">{E(i["where"])}</span>')
-            + '</li>' for i in issues)
         issue_card = (f'<details class="ovcard ovcard-issue"><summary><span class="ovcard-head">'
                       f'<span class="ovcard-title">{n_issues} {issue_word}</span>'
                       f'<span class="ovcard-sub">Open problems, and where each one lives</span></span>'
                       f'<span class="ovchev" aria-hidden="true"></span></summary>'
-                      f'<div class="ovcard-body"><ul class="issuelist">{rows}</ul></div></details>')
+                      f'<div class="ovcard-body">{render_entry_list(issues, "")}</div></details>')
     else:
         issue_card = ('<div class="ovcard ovcard-clean"><div class="ovcard-head">'
                       '<span class="ovcard-title">0 errors</span>'
@@ -746,6 +837,8 @@ def overview_page():
       </div>
       {split_html}
       <div class="quicklinks"><a class="btn" href="graph.html">Open the component graph →</a></div>
+
+      {learnings_section}
     </section>
 
     """
@@ -854,17 +947,21 @@ code{font-family:var(--font-mono);font-size:.92em}
 .ovcard[open]>summary .ovchev{transform:rotate(90deg)}
 .ovcard-clean{padding:22px}
 .ovcard-issue .ovcard-title{color:var(--warn-ink)}
-.issuelist{list-style:none;padding:0;margin:0;grid-column:1/-1}
-.issue{display:flex;gap:18px;align-items:baseline;justify-content:space-between;
+.entrylist{list-style:none;padding:0;margin:0;grid-column:1/-1}
+.entrylist-empty{color:var(--ink3);font-size:13px;margin:4px 0 0;grid-column:1/-1}
+.entry{display:flex;gap:18px;align-items:baseline;justify-content:space-between;
   padding:15px 0;border-bottom:1px solid var(--line-soft)}
-.issue:last-child{border-bottom:none;padding-bottom:2px}
-.issue-main{min-width:0}
-.issue-title{font-size:13.5px;font-weight:500;color:var(--ink)}
-.issue-detail{font-size:12.5px;color:var(--ink3);margin-top:3px;line-height:1.5}
-.issue-where{flex:none;font-size:11.5px;font-family:var(--font-mono);color:var(--ink2);
+.entry:last-child{border-bottom:none;padding-bottom:2px}
+.entry-main{min-width:0}
+.entry-title{font-size:13.5px;font-weight:500;color:var(--ink)}
+.entry-detail{font-size:12.5px;color:var(--ink3);margin-top:3px;line-height:1.5}
+.entry-chips{flex:none;display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;max-width:40%}
+.entry-where{font-size:11.5px;font-family:var(--font-mono);color:var(--ink2);
   background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);padding:4px 12px}
-a.issue-where{color:var(--accent)}
-a.issue-where:hover{border-color:var(--accent)}
+a.entry-where{color:var(--accent)}
+a.entry-where:hover{border-color:var(--accent)}
+.entry-learned .entry-title::before{content:"! ";color:var(--accent);font-weight:700}
+.entry-pending .entry-title::before{content:"○ ";color:var(--ink3)}
 /* Sections lay out as whole blocks in a grid, not a single edge-to-edge column: at this
    card's width a full-bleed paragraph would run 150+ characters per line, which is
    established to hurt reading comprehension well before it gets that wide (the

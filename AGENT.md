@@ -45,3 +45,29 @@ If any of these fail and cannot be satisfied from the repository, the correct ou
 5. THE ONE-LINE TEST, BEFORE YOU EMIT ANYTHING
 Ask: "Can I point to the exact place in this repository that justifies every component, every value, and every rule in this output — and can I show that I broke none of them; and is the output an interactive HTML file, rendered inside the device frame, with no visible scrollbar and nothing spilling outside the screen?"
 If yes, emit. If no, stop and report the gap. A truthful "I can't build this from the library as it stands" protects the system. A confident guess corrupts it.
+
+6. LEARNING FROM CORRECTIONS — learnings.jsonl
+When a human corrects you — during composition, or in conversation — that correction is real signal, but it is not yet a rule. This section governs how you read and write it. It is an extension of Law 1: `learnings.jsonl` is part of your universe, on the same footing as any other repository file, but it carries a different kind of authority than `authored_metadata` and must never be confused with it.
+
+What it is: an append-only, line-delimited JSON ledger at the repository root. One line per correction. Never rewritten, only appended to or (by a human) edited in place to change a `status` field.
+
+Schema, one JSON object per line:
+```
+{
+  "id": "learn-<date>-<seq>",
+  "logged_at": "<ISO 8601 timestamp>",
+  "source": "screen-generation" | "chat-correction" | "manual",
+  "screen_id": "<id of the generation this came from, or null>",
+  "components": ["<component id>", "..."],
+  "agent_action": "<what you did>",
+  "user_correction": "<what the human told you>",
+  "proposed_rule": "<the rule you infer from the correction>",
+  "status": "proposed" | "confirmed" | "rejected" | "superseded",
+  "reviewed_by": "<who reviewed it, or null>",
+  "reviewed_at": "<ISO 8601 timestamp, or null>"
+}
+```
+
+Reading it (Step 0, after component selection): once you have fixed which components a request needs, filter `learnings.jsonl` for entries whose `components` intersect that set AND whose `status` is `confirmed`. Apply those as binding guidance, exactly like an anti-pattern from `authored_metadata` (Law 3). Do not read the whole ledger up front, and do not apply `proposed`, `rejected`, or `superseded` entries as guidance — `proposed` is an unvalidated claim (possibly your own uncorrected mistake) and must not be allowed to reinforce itself before a human confirms it.
+
+Writing to it: when a human corrects you, append one new entry with `status: "proposed"`. Do not edit any component's `authored_metadata` — ever, for any reason, no matter how confident you are the correction is right. That field is sourced from Figma; this repository never writes back to it, and neither do you. A `proposed` entry only becomes binding when a human flips it to `confirmed` (or discards it as `rejected`) — that promotion is a human decision, not yours to make, mirroring Law 5's designer-decides principle. `superseded` marks a confirmed entry that has since been folded into Figma directly and re-ingested, at which point the authored rule itself supersedes the ledger entry.
