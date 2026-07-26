@@ -140,6 +140,7 @@ h2 .count{color:var(--ink3);font-size:12.5px;font-weight:400;font-variant-numeri
 .panel,.metasection,.idsblock{background:var(--surface);border:1px solid var(--line);
   border-radius:var(--r-lg);padding:20px 22px;margin:14px 0}
 .panel h3,.metasection h3,.idsblock h3{font-size:14px;margin:0 0 14px;letter-spacing:-0.005em}
+.metasection h3.sec-title{font-size:19px;letter-spacing:-0.01em;margin-bottom:16px}
 .metaheader{margin-top:40px}
 
 /* ---------------------------------------------------------------- controls */
