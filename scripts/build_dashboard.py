@@ -127,16 +127,19 @@ def parse_authored_body(cid):
 
 doc_status = {}                                    # cid -> (filled, total, parse_error)
 field_coverage = {k: 0 for k, _ in CORE_DOC_FIELDS}
+missing_by_field = {k: [] for k, _ in CORE_DOC_FIELDS}   # field -> [cid, ...] that lack it
 for cid in order:
     body, err = parse_authored_body(cid)
     if err:
         doc_status[cid] = (0, len(CORE_DOC_FIELDS), True)
-        continue
+        continue  # unparseable metadata has no reliable per-field state — see the error card
     filled = 0
     for key, _ in CORE_DOC_FIELDS:
         if body.get(key):
             filled += 1
             field_coverage[key] += 1
+        else:
+            missing_by_field[key].append(cid)
     doc_status[cid] = (filled, len(CORE_DOC_FIELDS), False)
 doc_parse_errors = sum(1 for _, _, err in doc_status.values() if err)
 
@@ -183,6 +186,7 @@ def sidebar(prefix, active):
       <nav>
         {item("index.html", "Overview", "overview")}
         {item("graph.html", "Component graph", "graph")}
+        {item("fill-gaps.html", "Fill the gaps", "fill-gaps")}
         <div class="navgroup">Foundations <span class="count">3</span></div>
         {item("foundations-colors.html", "Colors & tokens", "colors")}
         {item("foundations-typography.html", "Typography", "typography")}
@@ -646,6 +650,126 @@ def spacing_page():
     """
     return page("Spacing & radius", "spacing", body)
 
+# Client-side only: this is a static site with no backend, so nothing typed on this page can
+# save itself. Raw string (r"""), not an f-string — it contains plenty of JS literal braces
+# and \n sequences that must survive as-is; a non-raw string would have Python's own escape
+# processing corrupt them before the browser ever sees this (the exact bug class documented
+# elsewhere in this session's history). The one dynamic value (the ledger's current contents)
+# is spliced in afterward via .replace() on a plain marker token, never via {} interpolation.
+FILL_GAPS_JS = r"""
+(function () {
+  var CURRENT_LEDGER = __CURRENT_LEDGER_JSON__;
+  function buildEntry(cid, field, text) {
+    return JSON.stringify({
+      id: 'learn-fill-' + cid + '-' + field + '-' + Date.now(),
+      logged_at: new Date().toISOString(),
+      kind: 'field_contribution',
+      source: 'manual-fill',
+      components: [cid],
+      field: field,
+      contributed_text: text,
+      status: 'proposed',
+      reviewed_by: null,
+      reviewed_at: null
+    });
+  }
+  function rows() { return Array.prototype.slice.call(document.querySelectorAll('.gaprow')); }
+  document.addEventListener('input', function (ev) {
+    var ta = ev.target.closest('textarea[data-field]');
+    if (!ta) return;
+    var row = ta.closest('.gaprow');
+    row.classList.toggle('gaprow-filled', ta.value.trim().length > 0);
+    updateCount();
+  });
+  function updateCount() {
+    var n = rows().filter(function (r) { return r.classList.contains('gaprow-filled'); }).length;
+    var btn = document.getElementById('download-ledger');
+    btn.textContent = n ? 'Download learnings.jsonl with ' + n + ' new entr' + (n === 1 ? 'y' : 'ies') : 'Download learnings.jsonl';
+    btn.disabled = n === 0;
+  }
+  document.addEventListener('click', function (ev) {
+    var copyBtn = ev.target.closest('[data-copy-entry]');
+    if (copyBtn) {
+      var row = copyBtn.closest('.gaprow');
+      var text = row.querySelector('textarea').value.trim();
+      if (!text) return;
+      navigator.clipboard.writeText(buildEntry(row.dataset.cid, row.dataset.field, text)).then(function () {
+        var t = copyBtn.textContent; copyBtn.textContent = '✓ copied'; copyBtn.classList.add('copied');
+        setTimeout(function () { copyBtn.textContent = t; copyBtn.classList.remove('copied'); }, 1200);
+      });
+      return;
+    }
+    if (ev.target.closest('#download-ledger')) {
+      var lines = CURRENT_LEDGER ? CURRENT_LEDGER.split('\n').filter(function (l) { return l.trim().length; }) : [];
+      var added = 0;
+      rows().forEach(function (row) {
+        var text = row.querySelector('textarea').value.trim();
+        if (!text) return;
+        lines.push(buildEntry(row.dataset.cid, row.dataset.field, text));
+        added++;
+      });
+      var status = document.getElementById('download-status');
+      if (!added) { status.textContent = 'Nothing typed yet — fill in at least one field first.'; return; }
+      var blob = new Blob([lines.join('\n') + '\n'], { type: 'application/x-ndjson' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'learnings.jsonl';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      status.textContent = 'Downloaded, ' + added + ' new entr' + (added === 1 ? 'y' : 'ies') + ' appended to the existing ledger. Replace learnings.jsonl in the repo with this file and commit — nothing here saves on its own.';
+    }
+  });
+  updateCount();
+})();
+"""
+
+def fill_gaps_page():
+    ledger_raw = ""
+    if os.path.exists(learnings_path):
+        with open(learnings_path) as f:
+            ledger_raw = f.read()
+    js = FILL_GAPS_JS.replace("__CURRENT_LEDGER_JSON__", json.dumps(ledger_raw))
+
+    sections = []
+    total_gaps = 0
+    for key, label in CORE_DOC_FIELDS:
+        missing = missing_by_field[key]
+        if not missing:
+            continue
+        total_gaps += len(missing)
+        rows = "".join(f'''
+          <div class="gaprow" data-cid="{E(cid)}" data-field="{E(key)}">
+            <div class="gaprow-head">
+              <a href="components/{cid}.html">{E(components[cid]["name"].strip())}</a>
+              <span class="dim">{E(cid)}</span>
+            </div>
+            <textarea data-field="{E(key)}" rows="3" placeholder="Write the {E(label.lower())} for this component…"></textarea>
+            <button type="button" class="gapcopybtn small" data-copy-entry>copy entry</button>
+          </div>''' for cid in missing)
+        sections.append(f'''
+        <section class="metasection">
+          <h3>{E(label)} <span class="count">{len(missing)} missing</span></h3>
+          {rows}
+        </section>''')
+
+    body = f"""
+    <header class="pagehead"><h1>Fill the gaps</h1></header>
+    <p class="dim">{total_gaps} missing documentation field(s) across the library — one row per component per
+    field. This is a static site with no backend: nothing you type here saves by itself. Write the text, then
+    either copy one entry at a time or download an updated <code>learnings.jsonl</code> below, replace the
+    repo's copy, and commit it. Every entry is logged as <code>proposed</code> — a designer confirms it or
+    folds it into Figma directly before it counts as real guidance (see <a href="../AGENT.md">AGENT.md §6</a>).
+    Filling a gap here never changes the Documentation coverage numbers on the overview; those measure the
+    Figma-authored spec specifically, not this ledger.</p>
+    <div class="quicklinks">
+      <button type="button" id="download-ledger" class="btn btn-primary" disabled>Download learnings.jsonl</button>
+      <span id="download-status" class="dim"></span>
+    </div>
+    {''.join(sections) if sections else '<p class="dim">No missing fields — every component has all five documentation fields authored.</p>'}
+    <script>{js}</script>
+    """
+    return page("Fill the gaps", "fill-gaps", body)
+
 def render_prose(text):
     """Designer-authored prose -> HTML.
 
@@ -687,6 +811,8 @@ def render_entry_list(items, empty_msg, marker_cls=""):
         '</li>' for i in items)
     return f'<ul class="entrylist">{rows}</ul>'
 
+FIELD_LABEL = dict(CORE_DOC_FIELDS)
+
 def learning_entry(entry, cid=None):
     """A ledger entry -> the dict render_entry_list expects. On the overview every component a
     learning touches is a chip, so the reader can see the connection at a glance. On a
@@ -696,6 +822,9 @@ def learning_entry(entry, cid=None):
     comps = [c for c in (entry.get("components") or []) if c != cid]
     chips = [{"label": components.get(c, {}).get("name", c).strip() if c in components else c,
               "href": f"components/{c}.html" if cid is None else f"{c}.html"} for c in comps]
+    if entry.get("kind") == "field_contribution":
+        field_label = FIELD_LABEL.get(entry.get("field"), entry.get("field", "a field"))
+        return {"title": f'{field_label} — contributed', "detail": entry.get("contributed_text") or "", "chips": chips}
     return {"title": entry.get("proposed_rule") or entry.get("user_correction") or "(no rule text logged)",
             "detail": entry.get("user_correction") or "", "chips": chips}
 
@@ -819,6 +948,7 @@ def overview_page():
       build, not a fixed score.</p>
 
       {meters_html}
+      {f'<p class="dim"><a href="fill-gaps.html">{sum(len(v) for v in missing_by_field.values())} field(s) missing — fill the gaps →</a></p>' if any(missing_by_field.values()) else ''}
 
       <h4 class="subhead">Reference integrity <span class="dim">— every Figma instance reference, reviewed</span></h4>
       <div class="kpirow">
@@ -997,21 +1127,34 @@ h2 .count{color:var(--ink3);font-size:12.5px;font-weight:400;font-variant-numeri
 .quicklinks{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 0}
 .btn{display:inline-flex;align-items:center;gap:7px;background:var(--surface-2);
   border:1px solid var(--line);border-radius:var(--r-pill);padding:8px 16px;font-size:13px;
-  color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
+  color:var(--ink2);font-family:inherit;cursor:pointer;transition:color .14s,border-color .14s,background .14s}
 .btn:hover{color:var(--ink);border-color:var(--line-2);background:var(--surface-3)}
 .btn:active{transform:scale(.975)}
 .btn-primary{background:var(--ink);color:var(--canvas);border-color:var(--ink)}
 .btn-primary:hover{background:var(--ink);color:var(--canvas);opacity:.88}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn:disabled:hover{background:var(--ink);border-color:var(--ink);color:var(--canvas)}
+.gaprow{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:14px 16px;margin:0 0 10px;transition:border-color .15s}
+.gaprow:last-child{margin-bottom:0}
+.gaprow-filled{border-color:var(--accent)}
+.gaprow-head{display:flex;align-items:baseline;gap:9px;margin-bottom:9px;font-size:13.5px;font-weight:500}
+.gaprow-head a{color:var(--accent)}
+.gaprow textarea{width:100%;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:9px 11px;font:inherit;font-size:13px;color:var(--ink);
+  resize:vertical;box-sizing:border-box}
+.gaprow textarea:focus{outline:none;border-color:var(--accent)}
+.gaprow .gapcopybtn{margin-top:8px}
 .pills{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
 .pill{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);
   padding:4px 11px;font-size:12px;color:var(--ink2)}
-.copybtn{border:1px solid var(--line);background:var(--surface-2);color:var(--ink3);
+.copybtn,.gapcopybtn{border:1px solid var(--line);background:var(--surface-2);color:var(--ink3);
   border-radius:var(--r-xs);padding:3px 8px;cursor:pointer;font:inherit;font-size:11px;
   transition:color .14s,border-color .14s}
-.copybtn:hover{color:var(--ink);border-color:var(--line-2)}
-.copybtn:active{transform:scale(.94)}
-.copybtn.copied{background:var(--accent);color:#fff;border-color:var(--accent)}
-.copybtn.small{padding:2px 6px}
+.copybtn:hover,.gapcopybtn:hover{color:var(--ink);border-color:var(--line-2)}
+.copybtn:active,.gapcopybtn:active{transform:scale(.94)}
+.copybtn.copied,.gapcopybtn.copied{background:var(--accent);color:#fff;border-color:var(--accent)}
+.copybtn.small,.gapcopybtn.small{padding:2px 6px}
 
 /* ---------------------------------------------------------------- taxonomy */
 .typebadge{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-pill);
@@ -1220,6 +1363,7 @@ def main():
         f.write(APPJS)
     pages = {
         "index.html": overview_page(),
+        "fill-gaps.html": fill_gaps_page(),
         "foundations-colors.html": colors_page(),
         "foundations-typography.html": typography_page(),
         "foundations-spacing.html": spacing_page(),

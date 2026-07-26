@@ -49,13 +49,14 @@ If yes, emit. If no, stop and report the gap. A truthful "I can't build this fro
 6. LEARNING FROM CORRECTIONS — learnings.jsonl
 When a human corrects you — during composition, or in conversation — that correction is real signal, but it is not yet a rule. This section governs how you read and write it. It is an extension of Law 1: `learnings.jsonl` is part of your universe, on the same footing as any other repository file, but it carries a different kind of authority than `authored_metadata` and must never be confused with it.
 
-What it is: an append-only, line-delimited JSON ledger at the repository root. One line per correction. Never rewritten, only appended to or (by a human) edited in place to change a `status` field.
+What it is: an append-only, line-delimited JSON ledger at the repository root. One line per entry. Never rewritten, only appended to or (by a human) edited in place to change a `status` field. It holds two kinds of entry, distinguished by `kind`:
 
-Schema, one JSON object per line:
+`kind: "correction"` — the agent did something, a human corrected it:
 ```
 {
   "id": "learn-<date>-<seq>",
   "logged_at": "<ISO 8601 timestamp>",
+  "kind": "correction",
   "source": "screen-generation" | "chat-correction" | "manual",
   "screen_id": "<id of the generation this came from, or null>",
   "components": ["<component id>", "..."],
@@ -68,6 +69,23 @@ Schema, one JSON object per line:
 }
 ```
 
-Reading it (Step 0, after component selection): once you have fixed which components a request needs, filter `learnings.jsonl` for entries whose `components` intersect that set AND whose `status` is `confirmed`. Apply those as binding guidance, exactly like an anti-pattern from `authored_metadata` (Law 3). Do not read the whole ledger up front, and do not apply `proposed`, `rejected`, or `superseded` entries as guidance — `proposed` is an unvalidated claim (possibly your own uncorrected mistake) and must not be allowed to reinforce itself before a human confirms it.
+`kind: "field_contribution"` — a human supplies text for a documentation field a component doesn't have yet (produced by the dashboard's "Fill the gaps" page):
+```
+{
+  "id": "learn-<date>-<seq>",
+  "logged_at": "<ISO 8601 timestamp>",
+  "kind": "field_contribution",
+  "source": "manual-fill",
+  "components": ["<component id>"],
+  "field": "purpose" | "usage" | "design_intent" | "anti_patterns" | "rules",
+  "contributed_text": "<what the human wrote>",
+  "status": "proposed" | "confirmed" | "rejected" | "superseded",
+  "reviewed_by": "<who reviewed it, or null>",
+  "reviewed_at": "<ISO 8601 timestamp, or null>"
+}
+```
+A `field_contribution` is not a correction to something you did — it is stopgap documentation for a gap that exists because Figma itself doesn't have that field filled in yet. It carries the same authority rules as a correction: never counted toward the Documentation coverage meters (those measure the Figma-authored spec specifically, not this ledger), never treated as equivalent to `authored_metadata` until a designer takes it back into Figma and re-ingests.
 
-Writing to it: when a human corrects you, append one new entry with `status: "proposed"`. Do not edit any component's `authored_metadata` — ever, for any reason, no matter how confident you are the correction is right. That field is sourced from Figma; this repository never writes back to it, and neither do you. A `proposed` entry only becomes binding when a human flips it to `confirmed` (or discards it as `rejected`) — that promotion is a human decision, not yours to make, mirroring Law 5's designer-decides principle. `superseded` marks a confirmed entry that has since been folded into Figma directly and re-ingested, at which point the authored rule itself supersedes the ledger entry.
+Reading it (Step 0, after component selection): once you have fixed which components a request needs, filter `learnings.jsonl` for entries whose `components` intersect that set AND whose `status` is `confirmed`, of either `kind`. Apply `correction` entries as binding guidance, exactly like an anti-pattern from `authored_metadata` (Law 3). Treat a confirmed `field_contribution` as you would the authored field it fills, for reasoning purposes, while remembering it is still human-supplied, not Figma-sourced. Do not read the whole ledger up front, and do not apply `proposed`, `rejected`, or `superseded` entries — `proposed` is unvalidated (possibly your own uncorrected mistake, or a human's draft text nobody's checked yet) and must not be allowed to reinforce itself before a human confirms it.
+
+Writing to it: when a human corrects you, append one new `correction` entry with `status: "proposed"`. Do not edit any component's `authored_metadata` — ever, for any reason, no matter how confident you are the correction is right. That field is sourced from Figma; this repository never writes back to it, and neither do you. A `proposed` entry only becomes binding when a human flips it to `confirmed` (or discards it as `rejected`) — that promotion is a human decision, not yours to make, mirroring Law 5's designer-decides principle. `superseded` marks a confirmed entry that has since been folded into Figma directly and re-ingested, at which point the authored rule (or field) itself supersedes the ledger entry.

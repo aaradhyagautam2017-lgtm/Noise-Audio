@@ -147,21 +147,34 @@ h2 .count{color:var(--ink3);font-size:12.5px;font-weight:400;font-variant-numeri
 .quicklinks{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 0}
 .btn{display:inline-flex;align-items:center;gap:7px;background:var(--surface-2);
   border:1px solid var(--line);border-radius:var(--r-pill);padding:8px 16px;font-size:13px;
-  color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
+  color:var(--ink2);font-family:inherit;cursor:pointer;transition:color .14s,border-color .14s,background .14s}
 .btn:hover{color:var(--ink);border-color:var(--line-2);background:var(--surface-3)}
 .btn:active{transform:scale(.975)}
 .btn-primary{background:var(--ink);color:var(--canvas);border-color:var(--ink)}
 .btn-primary:hover{background:var(--ink);color:var(--canvas);opacity:.88}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn:disabled:hover{background:var(--ink);border-color:var(--ink);color:var(--canvas)}
+.gaprow{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:14px 16px;margin:0 0 10px;transition:border-color .15s}
+.gaprow:last-child{margin-bottom:0}
+.gaprow-filled{border-color:var(--accent)}
+.gaprow-head{display:flex;align-items:baseline;gap:9px;margin-bottom:9px;font-size:13.5px;font-weight:500}
+.gaprow-head a{color:var(--accent)}
+.gaprow textarea{width:100%;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:9px 11px;font:inherit;font-size:13px;color:var(--ink);
+  resize:vertical;box-sizing:border-box}
+.gaprow textarea:focus{outline:none;border-color:var(--accent)}
+.gaprow .gapcopybtn{margin-top:8px}
 .pills{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
 .pill{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);
   padding:4px 11px;font-size:12px;color:var(--ink2)}
-.copybtn{border:1px solid var(--line);background:var(--surface-2);color:var(--ink3);
+.copybtn,.gapcopybtn{border:1px solid var(--line);background:var(--surface-2);color:var(--ink3);
   border-radius:var(--r-xs);padding:3px 8px;cursor:pointer;font:inherit;font-size:11px;
   transition:color .14s,border-color .14s}
-.copybtn:hover{color:var(--ink);border-color:var(--line-2)}
-.copybtn:active{transform:scale(.94)}
-.copybtn.copied{background:var(--accent);color:#fff;border-color:var(--accent)}
-.copybtn.small{padding:2px 6px}
+.copybtn:hover,.gapcopybtn:hover{color:var(--ink);border-color:var(--line-2)}
+.copybtn:active,.gapcopybtn:active{transform:scale(.94)}
+.copybtn.copied,.gapcopybtn.copied{background:var(--accent);color:#fff;border-color:var(--accent)}
+.copybtn.small,.gapcopybtn.small{padding:2px 6px}
 
 /* ---------------------------------------------------------------- taxonomy */
 .typebadge{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-pill);
