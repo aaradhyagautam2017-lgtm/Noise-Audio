@@ -747,7 +747,7 @@ def fill_gaps_page():
             <button type="button" class="gapcopybtn small" data-copy-entry>copy entry</button>
           </div>''' for cid in missing)
         sections.append(f'''
-        <section class="metasection">
+        <section class="metasection" id="gap-{E(key)}">
           <h3>{E(label)} <span class="count">{len(missing)} missing</span></h3>
           {rows}
         </section>''')
@@ -863,13 +863,37 @@ def overview_page():
         f'title="{E(label)} — {v} ({(v/n_total*100 if n_total else 0):.0f}%)"></div>'
         for label, v, color in breakdown if v)
 
-    meter_rows = sorted(((label, field_coverage[key], len(order)) for key, label in CORE_DOC_FIELDS),
-                        key=lambda r: -r[1])
-    meters_html = "".join(f'''
-      <div class="meterrow">
-        <div class="meterrow-top"><span class="meterrow-label">{E(label)}</span><span class="meterrow-frac">{n}/{total}</span></div>
-        <div class="meter"><div class="meter-fill" style="width:{(n/total*100 if total else 0):.1f}%"></div></div>
-      </div>''' for label, n, total in meter_rows)
+    FIELD_ICON = ('<svg viewBox="0 0 16 16" fill="none" aria-hidden="true">'
+                  '<rect x="2.5" y="1.5" width="11" height="13" rx="2" stroke="currentColor" stroke-width="1.3"/>'
+                  '<path d="M5 5.5h6M5 8h6M5 10.5h3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>')
+    CHECK_ICON = ('<svg viewBox="0 0 14 14" fill="none" aria-hidden="true">'
+                  '<path d="M3 7.3l2.6 2.6L11 4.5" stroke="currentColor" stroke-width="1.6" '
+                  'stroke-linecap="round" stroke-linejoin="round"/></svg>')
+    WARN_ICON = ('<svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.5" '
+                'stroke="currentColor" stroke-width="1.3"/><path d="M7 4.2v3.4" stroke="currentColor" '
+                'stroke-width="1.3" stroke-linecap="round"/><circle cx="7" cy="9.6" r=".75" fill="currentColor"/></svg>')
+    PENCIL_ICON = ('<svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M9.5 2.5l2 2-6.5 6.5-2.4.4.4-2.4z" '
+                   'stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>')
+
+    field_rows = sorted(((key, label, field_coverage[key], len(order)) for key, label in CORE_DOC_FIELDS),
+                        key=lambda r: -r[2])
+    def field_row_html(key, label, n, total):
+        gap = missing_by_field[key]
+        if gap:
+            status = f'<span class="fieldstatus fieldstatus-incomplete">Incomplete {WARN_ICON}</span>'
+            action = f'<a class="fieldedit" href="fill-gaps.html#gap-{E(key)}">Edit {PENCIL_ICON}</a>'
+        else:
+            status = f'<span class="fieldstatus fieldstatus-complete">Complete {CHECK_ICON}</span>'
+            action = '<span class="fielddash">—</span>'
+        return f'''
+      <div class="fieldrow">
+        <span class="fieldicon">{FIELD_ICON}</span>
+        <span class="fieldlabel">{E(label)}</span>
+        <span class="fieldfrac">{n} / {total}</span>
+        {status}
+        <span class="fieldaction">{action}</span>
+      </div>'''
+    meters_html = f'<div class="fieldlist">{"".join(field_row_html(key, label, n, total) for key, label, n, total in field_rows)}</div>'
 
     ref_pct = (ref_resolved / ref_total * 100) if ref_total else 100
     dangling_tile_cls = "kpi kpi-warn" if ref_dangling else "kpi"
@@ -947,7 +971,6 @@ def overview_page():
       <p class="dim">What the library actually knows about itself right now — computed fresh from the repo on every
       build, not a fixed score.</p>
 
-      {f'<p class="dim"><a href="fill-gaps.html">{sum(len(v) for v in missing_by_field.values())} field(s) missing — fill the gaps →</a></p>' if any(missing_by_field.values()) else ''}
       {meters_html}
 
       <h4 class="subhead">Reference integrity <span class="dim">— every Figma instance reference, reviewed</span></h4>
@@ -991,6 +1014,7 @@ STYLE = """
   --stage:#e9e9ec; --stage-grid:#dededf;
   --atom:#35c97f; --molecule:#d6a23c; --organism:#e0604c; --complex:#a8443a; --plum:#a78bfa;
   --warn-bg:#26200f; --warn-line:#5c4a1c; --warn-ink:#e0b341;
+  --good-bg:#122a1c; --good-line:#1f5c39; --good-ink:#4ade80;
   --font:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
   --font-mono:'Roboto Mono',ui-monospace,'SF Mono',monospace;
   --r-xs:6px; --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-pill:9999px;
@@ -1003,6 +1027,7 @@ html[data-theme=light]{
   --stage:#f4f4f6; --stage-grid:#e8e8ea;
   --atom:#1c7a45; --molecule:#9c6a1f; --organism:#b3261e; --complex:#6b1414; --plum:#6d4aff;
   --warn-bg:#fff9ec; --warn-line:#e3cb96; --warn-ink:#8a6414;
+  --good-bg:#eafbf1; --good-line:#a8dfc0; --good-ink:#1c7a45;
 }
 *{box-sizing:border-box}
 html{background:var(--canvas)}
@@ -1203,12 +1228,29 @@ h2 .count{color:var(--ink3);font-size:12.5px;font-weight:400;font-variant-numeri
 .ov-legend .ov-sw{display:inline-block;width:7px;height:7px;border-radius:50%;
   vertical-align:1px;margin-right:7px}
 .ov-legend b{color:var(--ink);font-weight:600;margin-left:4px;font-variant-numeric:tabular-nums}
-.meterrow{margin:13px 0}
-.meterrow-top{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:6px}
-.meterrow-label{color:var(--ink2)}
-.meterrow-frac{color:var(--ink3);font-variant-numeric:tabular-nums;font-family:var(--font-mono);font-size:11.5px}
-.meter{height:4px;border-radius:var(--r-pill);background:var(--surface-3);overflow:hidden}
-.meter-fill{height:100%;background:var(--accent);border-radius:var(--r-pill)}
+.fieldlist{border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.fieldrow{display:grid;grid-template-columns:22px 1fr 72px 128px 76px;align-items:center;
+  gap:14px;padding:11px 14px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.fieldrow:last-child{border-bottom:none}
+.fieldicon{width:22px;height:22px;border-radius:var(--r-xs);background:var(--accent-soft);
+  color:var(--accent);display:flex;align-items:center;justify-content:center;flex:none}
+.fieldicon svg{width:13px;height:13px}
+.fieldlabel{font-size:13px;color:var(--ink);font-weight:500}
+.fieldfrac{font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums;
+  font-family:var(--font-mono);text-align:center}
+.fieldstatus{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;
+  border-radius:var(--r-pill);padding:4px 11px;width:fit-content}
+.fieldstatus svg{width:11px;height:11px}
+.fieldstatus-complete{background:var(--good-bg);color:var(--good-ink)}
+.fieldstatus-incomplete{background:var(--warn-bg);color:var(--warn-ink)}
+.fieldaction{text-align:right}
+.fielddash{color:var(--ink3)}
+.fieldedit{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--accent);
+  border:1px solid var(--line-2);border-radius:var(--r-pill);padding:4px 12px;transition:border-color .14s,background .14s}
+.fieldedit:hover{border-color:var(--accent);background:var(--accent-soft)}
+.fieldedit svg{width:10px;height:10px}
+@media (max-width:640px){.fieldrow{grid-template-columns:22px 1fr auto;row-gap:8px}
+  .fieldstatus,.fieldaction{grid-column:2/4}}
 .codeblock{background:var(--canvas);border:1px solid var(--line);border-radius:var(--r-md);
   padding:14px 16px;font-family:var(--font-mono);font-size:11.5px;line-height:1.7;
   overflow-x:auto;white-space:pre;margin:10px 0 0;color:var(--ink2)}
