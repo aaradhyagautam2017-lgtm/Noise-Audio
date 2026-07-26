@@ -94,10 +94,9 @@ code{font-family:var(--font-mono);font-size:.92em}
   border-top:4px solid transparent;border-bottom:4px solid transparent;transition:transform .18s}
 .ovcard[open]>summary{border-bottom:1px solid var(--line);border-radius:var(--r-lg) var(--r-lg) 0 0}
 .ovcard[open]>summary .ovchev{transform:rotate(90deg)}
-.ovcard-body{padding:4px 22px 22px}
 .ovcard-clean{padding:22px}
 .ovcard-issue .ovcard-title{color:var(--warn-ink)}
-.issuelist{list-style:none;padding:0;margin:0}
+.issuelist{list-style:none;padding:0;margin:0;grid-column:1/-1}
 .issue{display:flex;gap:18px;align-items:baseline;justify-content:space-between;
   padding:15px 0;border-bottom:1px solid var(--line-soft)}
 .issue:last-child{border-bottom:none;padding-bottom:2px}
@@ -108,10 +107,17 @@ code{font-family:var(--font-mono);font-size:.92em}
   background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);padding:4px 12px}
 a.issue-where{color:var(--accent)}
 a.issue-where:hover{border-color:var(--accent)}
+/* Sections lay out as whole blocks in a grid, not a single edge-to-edge column: at this
+   card's width a full-bleed paragraph would run 150+ characters per line, which is
+   established to hurt reading comprehension well before it gets that wide (the
+   comfortable range is roughly 60-90 characters). A multi-column grid of sections uses
+   the width the wide card actually has without stretching any one paragraph past that. */
+.ovcard-body{padding:4px 22px 22px;display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:4px 48px;align-items:start}
 .ovsec{padding:16px 0;border-bottom:1px solid var(--line-soft)}
 .ovsec:last-child{border-bottom:none;padding-bottom:2px}
 .ovsec h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin:0 0 8px}
-.ovsec p{color:var(--ink2);font-size:14px;line-height:1.65;margin:0 0 10px;max-width:64ch}
+.ovsec p{color:var(--ink2);font-size:14px;line-height:1.65;margin:0 0 10px}
 .ovsec p:last-child{margin-bottom:0}
 .ovsec strong{color:var(--ink);font-weight:600}
 .ovsec code{background:var(--surface-2);border-radius:4px;padding:1px 5px;font-size:12px;color:var(--ink)}

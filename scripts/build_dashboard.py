@@ -620,27 +620,8 @@ def render_prose(text):
         out.append(f"<p>{block}</p>")
     return "".join(out)
 
-def doc_badge(cid):
-    filled, total, err = doc_status[cid]
-    if err:
-        return '<span class="docbadge docbadge-low" title="authored_metadata did not parse as YAML">⚠ unparsed</span>'
-    cls = "docbadge" if filled >= 4 else "docbadge docbadge-low"
-    return f'<span class="{cls}" title="{filled} of {total} documentation fields present">{filled}/{total} docs</span>'
-
 # ----------------------------------------------------------------- overview + graph
 def overview_page():
-    counts = registry["counts"]
-    cards = []
-    for gname, ids in group_defs:
-        items = "".join(
-            f'''<a class="card" href="components/{cid}.html">
-                 <div class="cardname">{E(components[cid]["name"].strip())}</div>
-                 <div class="dim">{E(cid)}</div>
-                 <div class="cardmeta"><span class="typebadge t-{E(reg_by_id[cid]["type"])}">{E(TYPE_BADGE.get(reg_by_id[cid]["type"]))}</span>
-                 {"<span class=warnbadge title=dangling-references>" + str(sum(1 for e in reg_by_id[cid].get("figma_instance_edges",[]) or [] if not e["resolved"] and not e.get("excluded"))) + "</span>" if any(not e["resolved"] and not e.get("excluded") for e in reg_by_id[cid].get("figma_instance_edges",[]) or []) else ""}
-                 {doc_badge(cid)}</div>
-               </a>''' for cid in ids)
-        cards.append(f'<h2>{gname} <span class="count">{len(ids)}</span></h2><div class="cardgrid">{items}</div>')
     # Every open problem in the library, each carrying the place it lives so the card can
     # point straight at it. Collected per component so nothing is reported without a location.
     issues = []
@@ -672,9 +653,6 @@ def overview_page():
     propbar_html = "".join(
         f'<div class="propbar-seg" style="flex:{max(v,1)};background:{color}" '
         f'title="{E(label)} — {v} ({(v/n_total*100 if n_total else 0):.0f}%)"></div>'
-        for label, v, color in breakdown if v)
-    legend_html = "".join(
-        f'<span><span class="ov-sw" style="background:{color}"></span>{E(label)} <b>{v}</b></span>'
         for label, v, color in breakdown if v)
 
     meter_rows = sorted(((label, field_coverage[key], len(order)) for key, label in CORE_DOC_FIELDS),
@@ -742,7 +720,6 @@ def overview_page():
       <div class="hero"><div class="hero-value">{n_total}</div><div class="hero-label">components in the library</div></div>
       <div class="kpirow">{kpi_html}</div>
       <div class="propbar">{propbar_html}</div>
-      <div class="ov-legend">{legend_html}</div>
     </section>
 
     <section class="metasection">
@@ -771,7 +748,6 @@ def overview_page():
       <div class="quicklinks"><a class="btn" href="graph.html">Open the component graph →</a></div>
     </section>
 
-    {''.join(cards)}
     """
     return page("Overview", "overview", body)
 
@@ -876,10 +852,9 @@ code{font-family:var(--font-mono);font-size:.92em}
   border-top:4px solid transparent;border-bottom:4px solid transparent;transition:transform .18s}
 .ovcard[open]>summary{border-bottom:1px solid var(--line);border-radius:var(--r-lg) var(--r-lg) 0 0}
 .ovcard[open]>summary .ovchev{transform:rotate(90deg)}
-.ovcard-body{padding:4px 22px 22px}
 .ovcard-clean{padding:22px}
 .ovcard-issue .ovcard-title{color:var(--warn-ink)}
-.issuelist{list-style:none;padding:0;margin:0}
+.issuelist{list-style:none;padding:0;margin:0;grid-column:1/-1}
 .issue{display:flex;gap:18px;align-items:baseline;justify-content:space-between;
   padding:15px 0;border-bottom:1px solid var(--line-soft)}
 .issue:last-child{border-bottom:none;padding-bottom:2px}
@@ -890,10 +865,17 @@ code{font-family:var(--font-mono);font-size:.92em}
   background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);padding:4px 12px}
 a.issue-where{color:var(--accent)}
 a.issue-where:hover{border-color:var(--accent)}
+/* Sections lay out as whole blocks in a grid, not a single edge-to-edge column: at this
+   card's width a full-bleed paragraph would run 150+ characters per line, which is
+   established to hurt reading comprehension well before it gets that wide (the
+   comfortable range is roughly 60-90 characters). A multi-column grid of sections uses
+   the width the wide card actually has without stretching any one paragraph past that. */
+.ovcard-body{padding:4px 22px 22px;display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:4px 48px;align-items:start}
 .ovsec{padding:16px 0;border-bottom:1px solid var(--line-soft)}
 .ovsec:last-child{border-bottom:none;padding-bottom:2px}
 .ovsec h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);margin:0 0 8px}
-.ovsec p{color:var(--ink2);font-size:14px;line-height:1.65;margin:0 0 10px;max-width:64ch}
+.ovsec p{color:var(--ink2);font-size:14px;line-height:1.65;margin:0 0 10px}
 .ovsec p:last-child{margin-bottom:0}
 .ovsec strong{color:var(--ink);font-weight:600}
 .ovsec code{background:var(--surface-2);border-radius:4px;padding:1px 5px;font-size:12px;color:var(--ink)}
