@@ -947,8 +947,8 @@ def overview_page():
       <p class="dim">What the library actually knows about itself right now — computed fresh from the repo on every
       build, not a fixed score.</p>
 
-      {meters_html}
       {f'<p class="dim"><a href="fill-gaps.html">{sum(len(v) for v in missing_by_field.values())} field(s) missing — fill the gaps →</a></p>' if any(missing_by_field.values()) else ''}
+      {meters_html}
 
       <h4 class="subhead">Reference integrity <span class="dim">— every Figma instance reference, reviewed</span></h4>
       <div class="kpirow">
