@@ -126,12 +126,17 @@ def parse_authored_body(cid):
     return (body, False) if isinstance(body, dict) else (None, True)
 
 doc_status = {}                                    # cid -> (filled, total, parse_error)
+field_coverage = {k: 0 for k, _ in CORE_DOC_FIELDS}
 for cid in order:
     body, err = parse_authored_body(cid)
     if err:
         doc_status[cid] = (0, len(CORE_DOC_FIELDS), True)
         continue
-    filled = sum(1 for key, _ in CORE_DOC_FIELDS if body.get(key))
+    filled = 0
+    for key, _ in CORE_DOC_FIELDS:
+        if body.get(key):
+            filled += 1
+            field_coverage[key] += 1
     doc_status[cid] = (filled, len(CORE_DOC_FIELDS), False)
 doc_parse_errors = sum(1 for _, _, err in doc_status.values() if err)
 
@@ -729,6 +734,14 @@ def overview_page():
         f'title="{E(label)} — {v} ({(v/n_total*100 if n_total else 0):.0f}%)"></div>'
         for label, v, color in breakdown if v)
 
+    meter_rows = sorted(((label, field_coverage[key], len(order)) for key, label in CORE_DOC_FIELDS),
+                        key=lambda r: -r[1])
+    meters_html = "".join(f'''
+      <div class="meterrow">
+        <div class="meterrow-top"><span class="meterrow-label">{E(label)}</span><span class="meterrow-frac">{n}/{total}</span></div>
+        <div class="meter"><div class="meter-fill" style="width:{(n/total*100 if total else 0):.1f}%"></div></div>
+      </div>''' for label, n, total in meter_rows)
+
     ref_pct = (ref_resolved / ref_total * 100) if ref_total else 100
     dangling_tile_cls = "kpi kpi-warn" if ref_dangling else "kpi"
     split_html = ""
@@ -804,6 +817,8 @@ def overview_page():
       <h3 class="sec-title">System understanding</h3>
       <p class="dim">What the library actually knows about itself right now — computed fresh from the repo on every
       build, not a fixed score.</p>
+
+      {meters_html}
 
       <h4 class="subhead">Reference integrity <span class="dim">— every Figma instance reference, reviewed</span></h4>
       <div class="kpirow">
