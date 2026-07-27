@@ -78,9 +78,16 @@ authored_metadata: |
 visual_values:
   source: figma_mcp
   extracted_at: '2026-07-10'
+  position_corrected_at: '2026-07-27'
   note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
     time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+    governs itself. The Selected-state Vector (2031:1170) is a real Figma-exported checkmark asset, not a
+    solid-fill shape -- confirmed 2026-07-27 via Figma MCP get_design_context, which returned it as an
+    exported image, same as any other icon-type vector (see INGESTION_REPORT.md: "icon vector art ...
+    still renders as schematic placeholders pending real SVGs"). The real asset could not be downloaded
+    into this repo (this session''s network egress policy blocks direct figma.com asset fetches); the
+    dashboard renders a hand-authored placeholder checkmark (flagged via placeholder_icon below) until
+    the designer supplies the real export, same as chevron/cross.'
   tree:
     id: 2031:1168
     name: Checkbox
@@ -108,6 +115,7 @@ visual_values:
         type: VECTOR
         w: 24
         h: 24
+        placeholder_icon: checkbox-check
         fills:
         - type: SOLID
           color: '#171717'

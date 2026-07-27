@@ -216,7 +216,20 @@ excluded (2026-07-22, §5d) — **`dangling_figma_instance_edges: 0`**), `AGENT.
 **Open items for the designer:** ~~provide `CONTROL_PANEL.md`~~ (added 2026-07-22);
 ~~relink organism internals to the library copies (§5a)~~ (done 2026-07-22, §5c);
 ~~review the 15 off-page references (§5b)~~ (confirmed non-dependencies and excluded,
-2026-07-22, §5d); confirm the `image-asset-placeholder` n/L naming; icon vector art (chevron,
-cross, checkbox/radio glyphs) still renders as schematic placeholders pending real SVGs — the
-designer will supply these directly; review the `status-bar` duplicate `rules:` keys and the
-`button/secondary/pressed` dark value.
+2026-07-22, §5d); confirm the `image-asset-placeholder` n/L naming; review the `status-bar`
+duplicate `rules:` keys and the `button/secondary/pressed` dark value.
+
+**Update — position re-extraction, 2026-07-27.** The original 2026-07-10 pass captured w/h/fill/
+stroke for every node but never child x/y position, which silently broke any composition made of
+freely-placed (non-auto-layout) overlapping shapes: `toggle`'s track+thumb and `radio-button`'s
+ring+dot both rendered with the thumb/dot escaping their container instead of sitting inset/
+centered. Re-pulled via Figma MCP `get_design_context` against the same node ids on the file the
+designer shared (`7IldXjVSULTHMfjbNMxOXC`, page `2025:148` — a copy of the original
+`QjVyM5bRXgIOZn8PO1e0eK`, verified same node ids/structure); `toggle.yaml` and `radio-button.yaml`
+now carry real x/y and render correctly. `checkbox.yaml`'s Selected-state checkmark was
+re-examined the same way and turned out to be a real Figma-exported vector asset, not a solid-fill
+shape as assumed — same category as chevron/cross. Its real asset could not be downloaded into
+this repo (session network policy blocks direct `figma.com` asset fetches); the dashboard renders
+a hand-authored placeholder checkmark (`placeholder_icon: checkbox-check` in `checkbox.yaml`)
+until the designer supplies the real export. **Icon vector art still pending real assets: chevron,
+cross, checkbox's checked-state glyph** — everything else in this section is resolved.

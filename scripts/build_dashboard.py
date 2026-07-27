@@ -334,6 +334,12 @@ def node_style(n):
         s.append(f"justify-content:{ALIGN.get(prim,'flex-start')}")
         s.append(f"align-items:{ALIGN.get(cnt,'flex-start')}")
         s.append("box-sizing:border-box")
+    elif "x" in n and "y" in n:
+        # explicit position within its parent (freely-placed / overlapping layers outside
+        # auto-layout, e.g. a toggle thumb or a radio button's inner dot) -- position:absolute
+        # here, inline, so it actually wins; a stylesheet rule can't out-specificity an inline
+        # style, which is what silently broke this case before (see git history).
+        s.append(f'position:absolute;left:{n["x"]}px;top:{n["y"]}px')
     else:
         s.append("position:relative")
     r = n.get("radius")
@@ -381,6 +387,19 @@ def text_style(n):
     s.append("white-space:pre-line")
     return ";".join(s)
 
+# Hand-authored stand-ins for the small set of icon glyphs the ingested visual_values can't
+# reproduce (Figma exports these as flattened image/SVG assets, never as CSS-representable
+# shape data -- see INGESTION_REPORT.md). Each is flagged in its component YAML via
+# `placeholder_icon` so it's traceable as a placeholder, not presented as the real Figma asset.
+PLACEHOLDER_ICONS = {
+    "checkbox-check": lambda n, w, h, color: (
+        f'<svg viewBox="0 0 {w} {h}" width="{w}" height="{h}" aria-hidden="true">'
+        f'<rect width="{w}" height="{h}" rx="4.5" fill="{color}"/>'
+        f'<path d="M{w*0.27} {h*0.52}l{w*0.14} {h*0.14} {w*0.29}-{h*0.32}" fill="none" '
+        f'stroke="#f7f7f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    ),
+}
+
 def render_node(n, depth=0, link_prefix=""):
     if n.get("visible") is False:
         return ""  # hidden in Figma; present in the data, not in the render
@@ -401,6 +420,11 @@ def render_node(n, depth=0, link_prefix=""):
         return (f'<span class="pv-instance" title="{tip}" style="{node_style(n)}">'
                 f'<span class="pv-instance-label">{inner}</span></span>')
     if t in ("VECTOR", "LINE", "ELLIPSE", "BOOLEAN_OPERATION"):
+        icon = PLACEHOLDER_ICONS.get(n.get("placeholder_icon"))
+        if icon:
+            color = (first_visible_solid(n.get("fills")) or {}).get("color", "#171717")
+            svg = icon(n, n.get("w", 24), n.get("h", 24), color)
+            return f'<span class="pv-icon-placeholder" title="{tip} · placeholder, pending real Figma asset">{svg}</span>'
         return f'<span class="pv-shape" title="{tip}" style="{node_style(n)}"></span>'
     kids = n.get("children")
     if isinstance(kids, dict):
@@ -1299,6 +1323,8 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .pv-frame[data-stack="1"]>*{position:absolute}
 .pv-text{display:block;flex:none;overflow:hidden}
 .pv-shape{display:block;flex:none;min-width:2px;min-height:2px}
+.pv-icon-placeholder{display:block;flex:none;line-height:0}
+.pv-icon-placeholder svg{display:block}
 .pv-shape:not([style*="background"]):not([style*="border"]){background:#d4d4d8;border-radius:2px}
 .pv-instance{display:flex;flex:none;align-items:center;justify-content:center;
   outline:1px dashed #9c87d6;outline-offset:-1px;border-radius:5px;overflow:hidden}

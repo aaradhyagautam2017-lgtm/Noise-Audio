@@ -81,9 +81,13 @@ authored_metadata: |
 visual_values:
   source: figma_mcp
   extracted_at: '2026-07-10'
+  position_corrected_at: '2026-07-27'
   note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
     time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+    governs itself. x/y on the track/thumb children were added 2026-07-27, re-pulled via Figma MCP
+    get_design_context on the same node ids (thumb insets were 5.26%/2.78% of the 19x36 track, converted
+    to px) -- the original 2026-07-10 pass captured w/h/fill but never child position, which silently
+    broke this track+thumb overlap (a non-auto-layout composition).'
   tree:
     id: 2031:1190
     name: Toggle
@@ -107,6 +111,8 @@ visual_values:
         type: RECTANGLE
         w: 36
         h: 19
+        x: 0
+        y: 0
         radius: 40
         fills:
         - type: SOLID
@@ -117,6 +123,8 @@ visual_values:
         type: RECTANGLE
         w: 17
         h: 17
+        x: 18
+        y: 1
         radius: 40
         fills:
         - type: SOLID
@@ -133,6 +141,8 @@ visual_values:
         type: RECTANGLE
         w: 36
         h: 19
+        x: 0
+        y: 0
         radius: 40
         fills:
         - type: SOLID
@@ -143,6 +153,8 @@ visual_values:
         type: RECTANGLE
         w: 17
         h: 17
+        x: 1
+        y: 1
         radius: 40
         fills:
         - type: SOLID
@@ -159,6 +171,8 @@ visual_values:
         type: RECTANGLE
         w: 36
         h: 19
+        x: 0
+        y: 0
         radius: 40
         fills:
         - type: SOLID
@@ -169,6 +183,8 @@ visual_values:
         type: RECTANGLE
         w: 17
         h: 17
+        x: 1
+        y: 1
         radius: 40
         fills:
         - type: SOLID

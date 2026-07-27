@@ -290,6 +290,8 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .pv-frame[data-stack="1"]>*{position:absolute}
 .pv-text{display:block;flex:none;overflow:hidden}
 .pv-shape{display:block;flex:none;min-width:2px;min-height:2px}
+.pv-icon-placeholder{display:block;flex:none;line-height:0}
+.pv-icon-placeholder svg{display:block}
 .pv-shape:not([style*="background"]):not([style*="border"]){background:#d4d4d8;border-radius:2px}
 .pv-instance{display:flex;flex:none;align-items:center;justify-content:center;
   outline:1px dashed #9c87d6;outline-offset:-1px;border-radius:5px;overflow:hidden}

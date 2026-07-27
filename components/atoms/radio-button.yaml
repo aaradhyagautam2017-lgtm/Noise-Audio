@@ -78,9 +78,12 @@ authored_metadata: |
 visual_values:
   source: figma_mcp
   extracted_at: '2026-07-10'
+  position_corrected_at: '2026-07-27'
   note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
     time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+    governs itself. x/y on the Selected-state children were added 2026-07-27, re-pulled via Figma MCP
+    get_design_context on the same node ids -- the original 2026-07-10 pass captured w/h/fill/stroke but
+    never child position, which silently broke overlapping (non-auto-layout) compositions like this ring+dot.'
   tree:
     id: 2031:1178
     name: Radio Button
@@ -110,6 +113,8 @@ visual_values:
           type: RECTANGLE
           w: 20
           h: 20
+          x: 0
+          y: 0
           radius: 32.787498474121094
           fills:
           - type: SOLID
@@ -120,6 +125,8 @@ visual_values:
           type: RECTANGLE
           w: 11
           h: 11
+          x: 4.5
+          y: 4.5
           radius: 32.787498474121094
           fills:
           - type: SOLID
