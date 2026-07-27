@@ -310,8 +310,11 @@ GRAPH_JS = r"""
   // labels are invisible below LABEL_ZOOM_MIN, fade + grow in screen-space size between MIN and
   // MAX, then hold a fixed on-screen size beyond MAX — done by counter-dividing the local
   // font-size by view.scale so the RENDERED pixel size is the thing being controlled, not the
-  // local SVG unit size.
-  var LABEL_ZOOM_MIN = 0.55, LABEL_ZOOM_MAX = 1.6;
+  // local SVG unit size. The default load view sits at scale 1 (fitView below), so MIN is set
+  // above that: with a couple dozen nodes and every structural/behavioral edge drawn, labelling
+  // everything at the fully-zoomed-out view is unreadable clutter -- labels should only start
+  // earning their keep once the person has zoomed in enough to actually read them.
+  var LABEL_ZOOM_MIN = 1.15, LABEL_ZOOM_MAX = 2.3;
   var LABEL_PX_MIN = 7, LABEL_PX_MAX = 17, GHOST_PX_RATIO = 0.85;
   var forceLabels = false; // settings-drawer override: always show labels regardless of zoom
   function applyView() {
