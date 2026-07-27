@@ -379,7 +379,11 @@ def text_style(n):
         s.append(f'font-size:{n["fontSize"]}px')
     lh = n.get("lineHeight")
     if lh:
-        s.append(f"line-height:{lh}")
+        # Figma stores line-height either as a bare px number or a "110%" string. CSS treats
+        # a *unitless* number as a multiplier of font-size (22 == 2200%), not px, so a bare
+        # number must get an explicit unit or it silently blows up the line box (and, combined
+        # with .pv-text{overflow:hidden}, clips the glyph out of view entirely).
+        s.append(f"line-height:{lh}px" if isinstance(lh, (int, float)) else f"line-height:{lh}")
     ta = (n.get("textAlign") or "LEFT").lower()
     s.append(f"text-align:{ta}")
     if n.get("decoration") == "UNDERLINE":
@@ -400,7 +404,33 @@ PLACEHOLDER_ICONS = {
     ),
 }
 
-def render_node(n, depth=0, link_prefix=""):
+def resolve_variant_node(target_tree, target_comp, props):
+    """An instance's `props` records the actual Figma variant it was set to (e.g.
+    {"Action": "Chevron"}). If the target is a variant set, find the matching variant
+    child so the preview shows the real selected form, not an arbitrary/default one.
+    Plain (non-set) components have nothing to select and are returned as-is."""
+    if target_tree.get("type") != "COMPONENT_SET":
+        return target_tree
+    # Boolean/instance-swap component properties (Figma keys like "Heading#395:0") are not
+    # variant axes and never appear on their own on a real variant set in this library.
+    axis_props = {k: v for k, v in (props or {}).items() if not re.search(r"#\d", str(k))}
+    if axis_props:
+        for v in target_comp.get("variants") or []:
+            axes = {}
+            for part in (v.get("name") or "").split(","):
+                if "=" in part:
+                    k, _, val = part.strip().partition("=")
+                    axes[k.strip().lower()] = val.strip().lower()
+            if all(axes.get(str(k).strip().lower()) == str(val).strip().lower() for k, val in axis_props.items()):
+                for c in target_tree.get("children") or []:
+                    if c.get("id") == v.get("node_id"):
+                        return c
+    children = target_tree.get("children") or []
+    return children[0] if children else target_tree
+
+MAX_INSTANCE_DEPTH = 6  # guards against a cyclic instance reference; never expected in practice
+
+def render_node(n, depth=0, link_prefix="", instance_chain=()):
     if n.get("visible") is False:
         return ""  # hidden in Figma; present in the data, not in the render
     t = n.get("type")
@@ -415,6 +445,15 @@ def render_node(n, depth=0, link_prefix=""):
         elif ref.get("id") in node_map:
             target = node_map[ref["id"]]
         label = (ref.get("set") or {}).get("name") or ref.get("name") or "instance"
+        # Resolve into the target component's own visual_values and render its actual
+        # content in place, instead of stopping at a name+link chip. This is what makes a
+        # composed organism (a card built from Actionables/Heading-content instances, say)
+        # look like the real Figma design rather than a row of unlabeled placeholders. Each
+        # child still "governs itself" — we're just inlining what it already governs.
+        target_tree = components.get(target, {}).get("visual_values", {}).get("tree") if target else None
+        if target and isinstance(target_tree, dict) and target not in instance_chain and len(instance_chain) < MAX_INSTANCE_DEPTH:
+            variant_node = resolve_variant_node(target_tree, components[target], n.get("props") or {})
+            return render_node(variant_node, depth + 1, link_prefix, instance_chain + (target,))
         inner = (f'<a href="{link_prefix}{target}.html">{E(label)}</a>' if target
                  else f'<span class="pv-unresolved" title="main component is outside the ingested page">{E(label)} ⚠</span>')
         return (f'<span class="pv-instance" title="{tip}" style="{node_style(n)}">'
@@ -429,7 +468,7 @@ def render_node(n, depth=0, link_prefix=""):
     kids = n.get("children")
     if isinstance(kids, dict):
         kids = list(kids.values())
-    inner = "".join(render_node(c, depth + 1, link_prefix) for c in (kids or []))
+    inner = "".join(render_node(c, depth + 1, link_prefix, instance_chain) for c in (kids or []))
     if not kids and n.get("childCount"):
         inner = f'<span class="pv-note">{n["childCount"]} children — {E(n.get("note","summarized in visual_values"))}</span>'
     abspos = "" if n.get("layout") else ' data-stack="1"'
@@ -441,7 +480,8 @@ def render_preview(comp, link_prefix=""):
         return warn("No extracted visual tree stored for this component — preview unavailable.")
     out = ['<p class="pv-caption">Preview rendered from the extracted visual values in this file '
            '(schematic: positions inside non-auto-layout groups are approximate; hidden layers omitted; '
-           'nested component instances render as linked chips — each child governs itself).</p>']
+           'nested component instances render inline from their own component\'s data — each child still '
+           'governs itself; an instance this dashboard can\'t resolve falls back to a linked reference chip).</p>']
     variants = []
     if tree.get("type") == "COMPONENT_SET":
         kids = tree.get("children")
