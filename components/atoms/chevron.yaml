@@ -121,6 +121,7 @@ visual_values:
           type: VECTOR
           w: 7
           h: 14
+          placeholder_icon: chevron-back
           strokes:
           - type: SOLID
             color: '#454545'
@@ -147,6 +148,7 @@ visual_values:
           type: VECTOR
           w: 7
           h: 14
+          placeholder_icon: chevron-forward
           strokes:
           - type: SOLID
             color: '#919191'
@@ -173,6 +175,7 @@ visual_values:
           type: VECTOR
           w: 7
           h: 14
+          placeholder_icon: chevron-up
           strokes:
           - type: SOLID
             color: '#919191'
@@ -199,6 +202,7 @@ visual_values:
           type: VECTOR
           w: 7
           h: 14
+          placeholder_icon: chevron-down
           strokes:
           - type: SOLID
             color: '#919191'

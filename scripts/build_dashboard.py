@@ -321,7 +321,14 @@ def first_visible_solid(fills):
 def node_style(n):
     s = []
     if "w" in n:
-        s.append(f'width:{n["w"]}px'); s.append(f'height:{n["h"]}px')
+        s.append(f'width:{n["w"]}px')
+        # A TEXT node's captured height is a snapshot of how tall Figma's own renderer made
+        # the wrapped text; ours doesn't always agree (missing/approximated line-height, a
+        # different font stack), so pinning it can crop a wrapped line right off -- e.g.
+        # link-cta's 3-line label was cut down to under two. Width still constrains wrapping
+        # (that's what has to match Figma); height is left intrinsic so it always fits.
+        if n.get("type") != "TEXT":
+            s.append(f'height:{n["h"]}px')
     lay = n.get("layout")
     if lay:
         s.append("display:flex")
@@ -395,6 +402,36 @@ def text_style(n):
 # reproduce (Figma exports these as flattened image/SVG assets, never as CSS-representable
 # shape data -- see INGESTION_REPORT.md). Each is flagged in its component YAML via
 # `placeholder_icon` so it's traceable as a placeholder, not presented as the real Figma asset.
+def _chevron_svg(dx, dy):
+    """A chevron is one continuous two-segment stroke path; dx/dy give the direction it
+    points in (unit vector), so all four rotations share one path shape."""
+    def draw(n, w, h, color):
+        cx, cy = w / 2, h / 2
+        r = min(w, h) * 0.32
+        # perpendicular unit vector, to place the two ends of the "V" either side of the point
+        px, py = -dy, dx
+        tipx, tipy = cx + dx * r, cy + dy * r
+        e1x, e1y = cx - dx * r + px * r, cy - dy * r + py * r
+        e2x, e2y = cx - dx * r - px * r, cy - dy * r - py * r
+        return (f'<svg viewBox="0 0 {w} {h}" width="{w}" height="{h}" aria-hidden="true">'
+                f'<path d="M{e1x:.1f} {e1y:.1f}L{tipx:.1f} {tipy:.1f}L{e2x:.1f} {e2y:.1f}" fill="none" '
+                f'stroke="{color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+    return draw
+
+def _cross_diag_svg(flip):
+    """Cross is two overlapping diagonal strokes; each instance draws one, and the existing
+    data-stack centering (see .pv-frame[data-stack="1"]) overlays them into one X."""
+    def draw(n, w, h, color):
+        x1, x2 = (w - 1, 1) if flip else (1, w - 1)
+        return (f'<svg viewBox="0 0 {w} {h}" width="{w}" height="{h}" aria-hidden="true">'
+                f'<line x1="{x1}" y1="1" x2="{x2}" y2="{h-1}" stroke="{color}" stroke-width="1.5" '
+                f'stroke-linecap="round"/></svg>')
+    return draw
+
+# Hand-authored stand-ins for the small set of icon glyphs the ingested visual_values can't
+# reproduce (Figma exports these as flattened image/SVG assets, never as CSS-representable
+# shape data -- see INGESTION_REPORT.md). Each is flagged in its component YAML via
+# `placeholder_icon` so it's traceable as a placeholder, not presented as the real Figma asset.
 PLACEHOLDER_ICONS = {
     "checkbox-check": lambda n, w, h, color: (
         f'<svg viewBox="0 0 {w} {h}" width="{w}" height="{h}" aria-hidden="true">'
@@ -402,6 +439,12 @@ PLACEHOLDER_ICONS = {
         f'<path d="M{w*0.27} {h*0.52}l{w*0.14} {h*0.14} {w*0.29}-{h*0.32}" fill="none" '
         f'stroke="#f7f7f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     ),
+    "chevron-back": _chevron_svg(-1, 0),
+    "chevron-forward": _chevron_svg(1, 0),
+    "chevron-up": _chevron_svg(0, -1),
+    "chevron-down": _chevron_svg(0, 1),
+    "cross-diag-1": _cross_diag_svg(False),
+    "cross-diag-2": _cross_diag_svg(True),
 }
 
 def resolve_variant_node(target_tree, target_comp, props):
@@ -461,7 +504,9 @@ def render_node(n, depth=0, link_prefix="", instance_chain=()):
     if t in ("VECTOR", "LINE", "ELLIPSE", "BOOLEAN_OPERATION"):
         icon = PLACEHOLDER_ICONS.get(n.get("placeholder_icon"))
         if icon:
-            color = (first_visible_solid(n.get("fills")) or {}).get("color", "#171717")
+            # chevron/cross are stroke-only vectors (no fill at all) -- checking fills alone
+            # always missed them and silently fell back to a hardcoded near-black.
+            color = (first_visible_solid(n.get("fills")) or first_visible_solid(n.get("strokes")) or {}).get("color", "#171717")
             svg = icon(n, n.get("w", 24), n.get("h", 24), color)
             return f'<span class="pv-icon-placeholder" title="{tip} · placeholder, pending real Figma asset">{svg}</span>'
         return f'<span class="pv-shape" title="{tip}" style="{node_style(n)}"></span>'

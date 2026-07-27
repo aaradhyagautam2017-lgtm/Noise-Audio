@@ -97,6 +97,7 @@ visual_values:
         type: VECTOR
         w: 12
         h: 12
+        placeholder_icon: cross-diag-1
         strokes:
         - type: SOLID
           color: '#919191'
@@ -107,6 +108,7 @@ visual_values:
         type: VECTOR
         w: 12
         h: 12
+        placeholder_icon: cross-diag-2
         strokes:
         - type: SOLID
           color: '#919191'
@@ -123,6 +125,7 @@ visual_values:
         type: VECTOR
         w: 12
         h: 12
+        placeholder_icon: cross-diag-1
         strokes:
         - type: SOLID
           color: '#ededed'
@@ -133,6 +136,7 @@ visual_values:
         type: VECTOR
         w: 12
         h: 12
+        placeholder_icon: cross-diag-2
         strokes:
         - type: SOLID
           color: '#ededed'
