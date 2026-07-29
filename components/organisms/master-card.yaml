@@ -144,14 +144,17 @@ authored_metadata: |
         They are read live from Figma via MCP at consumption time.
 visual_values:
   source: figma_mcp
-  extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
+  schema: v2-layout-model
+  extracted_at: '2026-07-29'
+  note: 'Layout MODEL (not a pixel snapshot). size = per-child resize (fill/hug/fixed px); abs = child
+    pinned out of auto-layout flow to parent edges; clip = frame clips overflow. Text verbatim; line-heights
+    are unitless ratios. Default render (icon + heading-content + chevron; no separator/chin). Leading
+    circled app-icon is a Figma image asset not fetchable here (asset: missing), shown as a grey circle.
+    heading-content & actionables resolve to their v2 components.'
   tree:
     id: 396:728
     name: Master card
-    type: COMPONENT
-    w: 358
-    h: 86
+    type: FRAME
     layout:
       mode: VERTICAL
       padding:
@@ -159,14 +162,13 @@ visual_values:
       - 0
       - 0
       - 0
-      gap: -18
+      gap: 0
       align: MIN/MIN
+    w: 358
     children:
     - id: 396:689
       name: Frame 2147227754
       type: FRAME
-      w: 358
-      h: 86
       layout:
         mode: HORIZONTAL
         padding:
@@ -176,16 +178,13 @@ visual_values:
         - 16
         gap: 8
         align: MIN/CENTER
-      tokens:
-        itemSpacing: Gaps/smaller gap
-        paddingLeft: Padding/Card Side Padding
-        paddingTop: Padding/Card Top, bottom Padding
+      size:
+        w: fill
+        h: hug
       children:
       - id: 396:688
         name: Frame 2147227753
         type: FRAME
-        w: 40
-        h: 70
         layout:
           mode: HORIZONTAL
           padding:
@@ -193,25 +192,29 @@ visual_values:
           - 0
           - 12
           - 0
-          gap: 10
+          gap: 0
           align: MIN/CENTER
+        size:
+          h: fill
+        clip: true
         children:
-        - id: 396:680
+        - id: 301:20193
           name: Circled icon
-          type: INSTANCE
+          type: FRAME
           w: 40
           h: 40
+          size:
+            w: 40
+            h: 40
           radius: 100
-          instance_of:
-            id: 301:20193
-            name: Circled icon
-            key: 3f75da4032522d0fd24cdc6a863b275bb7ccf56d
-          props: {}
+          fills:
+          - type: SOLID
+            color: '#e0e0e0'
+          children: []
+          asset: missing
       - id: 396:679
         name: Frame 2147227752
         type: FRAME
-        w: 294
-        h: 70
         layout:
           mode: VERTICAL
           padding:
@@ -221,12 +224,13 @@ visual_values:
           - 0
           gap: 0
           align: MAX/MAX
+        size:
+          w: fill
+          h: hug
         children:
         - id: 396:677
           name: Frame 2147227751
           type: FRAME
-          w: 294
-          h: 70
           layout:
             mode: HORIZONTAL
             padding:
@@ -236,113 +240,37 @@ visual_values:
             - 0
             gap: 12
             align: MIN/CENTER
-          tokens:
-            itemSpacing: M
-            paddingRight: L
+          size:
+            w: fill
+            h: hug
           children:
           - id: 396:656
             name: 'Heading-content component '
             type: INSTANCE
-            w: 230
-            h: 54
-            layout:
-              mode: VERTICAL
-              padding:
-              - 0
-              - 0
-              - 0
-              - 0
-              gap: 4
-              align: MIN/MIN
             instance_of:
               id: 301:20202
               name: 'Heading-content component '
-              key: 18df4dd5982a7e913f345ea9459801fb472a255b
+              set:
+                id: 301:20202
+                name: 'Heading-content component '
             props:
               Heading#395:0: true
               content#301:0: true
+            size:
+              w: fill
+              h: hug
           - id: 396:662
             name: Actionables
             type: INSTANCE
-            w: 36
-            h: 36
             instance_of:
               id: 2031:1132
               name: Actionables
-              key: 319c48cae4ec45084ee2296b6d0e0460d0d27a40
               set:
                 id: 2031:1132
                 name: Actionables
-              rewired_from: 329:2095
             props:
               Action: Chevron
-        - id: 396:678
-          name: Line 53
-          type: LINE
-          w: 294
-          h: 0
-          visible: false
-          strokes:
-          - type: SOLID
-            color: '#ededed'
-            token: border/separator line
-          strokeWeight: 1
-    - id: 396:690
-      name: Frame 2147227755
-      type: FRAME
-      w: 358
-      h: 42
-      visible: false
-      layout:
-        mode: HORIZONTAL
-        padding:
-        - 4
-        - 48
-        - 4
-        - 48
-        gap: 10
-        align: MIN/MAX
-      children:
-      - id: 396:691
-        name: Exclude
-        type: BOOLEAN_OPERATION
-        w: 358
-        h: 42
-        fills:
-        - type: SOLID
-          color: '#454545'
-          token: background/surface/raised+6
-        children:
-        - id: 396:692
-          name: Rectangle 34628910
-          type: RECTANGLE
-          w: 358
-          h: 92
-          radius: 18
-          fills:
-          - type: SOLID
-            color: '#ffffff'
-        - id: 396:693
-          name: Rectangle 34628911
-          type: RECTANGLE
-          w: 358
-          h: 116
-          radius: 18
-          fills:
-          - type: SOLID
-            color: '#ffa9a9'
-      - id: 396:694
-        name: Please disable ANC to experience Spatial Audio
-        type: TEXT
-        w: 261
-        h: 16
-        fills:
-        - type: SOLID
-          color: '#f7f7f7'
-          token: text/inverted
-        chars: Please disable ANC to experience Spatial Audio
-        textStyle: Content/Small
-        font: Geist Regular
-        fontSize: 12
-        lineHeight: 130%
-        textAlign: LEFT
+            size:
+              w: hug
+              h: hug
+            clip: true
