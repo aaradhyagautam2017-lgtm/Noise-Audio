@@ -38,15 +38,15 @@ code{font-family:var(--font-mono);font-size:.92em}
 /* ---------------------------------------------------------------- shell */
 .layout{display:flex;min-height:100vh}
 .sidebar{width:262px;flex:none;background:var(--surface);border-right:1px solid var(--line);
-  padding:16px 12px 32px;position:sticky;top:0;height:100vh;overflow-y:auto}
+  padding:16px 12px 0;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
 /* No visible scrollbars anywhere inside the app. These containers still scroll — the bar
    itself is just never painted, so panels never grow a track down their edge. */
-.sidebar,.ovcard-body,.pv-stage,.codeblock,.graphwrap,.rawyaml pre,.overviewdoc-body{
+.navscroll,.ovcard-body,.pv-stage,.codeblock,.graphwrap,.rawyaml pre,.overviewdoc-body{
   scrollbar-width:none;-ms-overflow-style:none}
-.sidebar::-webkit-scrollbar,.ovcard-body::-webkit-scrollbar,.pv-stage::-webkit-scrollbar,
+.navscroll::-webkit-scrollbar,.ovcard-body::-webkit-scrollbar,.pv-stage::-webkit-scrollbar,
 .codeblock::-webkit-scrollbar,.graphwrap::-webkit-scrollbar,.rawyaml pre::-webkit-scrollbar{
   width:0;height:0;display:none}
-.brand{display:flex;gap:10px;align-items:center;margin:2px 4px 20px}
+.brand{display:flex;gap:10px;align-items:center;margin:2px 4px 16px;flex:none}
 .applogo{width:30px;height:30px;flex:none;border-radius:var(--r-sm);background:var(--ink);color:var(--canvas);
   display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
 .brandname{flex:1;font-weight:600;font-size:13.5px;letter-spacing:-0.01em}
@@ -55,19 +55,64 @@ code{font-family:var(--font-mono);font-size:.92em}
   justify-content:center;padding:0;transition:color .15s,border-color .15s}
 .themetoggle:hover{color:var(--ink);border-color:var(--line-2)}
 .themetoggle svg{width:15px;height:15px}
-.navgroup{margin:20px 8px 7px;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--ink3);font-weight:600;display:flex;align-items:center;gap:7px}
-.navgroup .count{background:none;color:var(--ink3);padding:0;font-size:10.5px;opacity:.75}
+.navtop{display:flex;flex-direction:column;gap:2px;flex:none;margin-bottom:14px}
+/* ---- collapsible sections (Foundations / Atoms / Molecules / Organisms) ---- */
+.navscroll{flex:1;min-height:0;overflow-y:auto;padding-bottom:12px}
+.navsection{margin-bottom:2px}
+.navsection>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:var(--r-sm);color:var(--ink2);font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;font-weight:600;transition:background .13s,color .13s;user-select:none}
+.navsection>summary::-webkit-details-marker{display:none}
+.navsection>summary::marker{content:""}
+.navsection>summary:hover{background:var(--surface-2);color:var(--ink)}
+.navsection[open]>summary{color:var(--ink)}
+.navsecicon{width:16px;height:16px;flex:none;display:flex}
+.navsecicon svg{width:100%;height:100%}
+.navseclabel{flex:1}
+.navsection .count{background:var(--surface-2);color:var(--ink2);border-radius:var(--r-sm);
+  padding:1px 7px;font-size:10.5px;font-weight:600;font-variant-numeric:tabular-nums}
+.navchevron{width:14px;height:14px;flex:none;color:var(--ink3);transition:transform .16s}
+.navchevron svg{width:100%;height:100%}
+.navsection[open] .navchevron{transform:rotate(180deg)}
+.navsectionbody{display:flex;flex-direction:column;gap:1px;padding:2px 0 6px 4px}
+/* ---- nav items (both top-level and inside a section) ---- */
 .navitem{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:var(--r-sm);
   color:var(--ink2);font-size:13px;transition:background .13s,color .13s}
 .navitem:hover{background:var(--surface-2);color:var(--ink)}
-.navitem.active{background:var(--surface-3);color:var(--ink);font-weight:500}
+.navitem.active{background:var(--accent);color:#fff;font-weight:500}
+.navitem.active .count,.navitem.active .warnbadge{color:#fff;opacity:.85}
 .navitem.pill{background:var(--surface-2);margin-bottom:3px}
 .navitem.pill:hover{background:var(--surface-3)}
-.navitem.pill.active{background:var(--surface-3);box-shadow:inset 0 0 0 1px var(--line-2)}
+.navitem.pill.active{background:var(--accent);box-shadow:none}
+.navicon{width:16px;height:16px;flex:none;display:flex}
+.navicon svg{width:100%;height:100%}
 .navdot{width:6px;height:6px;flex:none;border-radius:50%;background:var(--ink3)}
+.navitem.active .navdot{background:#fff}
 .navitem .count{margin-left:auto;color:var(--ink3);font-size:11px;font-variant-numeric:tabular-nums}
 .navlabel{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* ---- search ---- */
+.navsearch{flex:none;position:relative;margin:0 -12px;padding:14px 12px 16px;
+  border-top:1px solid var(--line);background:var(--surface)}
+.navsearch-box{display:flex;align-items:center;gap:8px;background:var(--surface-2);
+  border:1px solid var(--line);border-radius:var(--r-sm);padding:7px 10px;color:var(--ink3)}
+.navsearch-icon{width:15px;height:15px;flex:none;display:flex}
+.navsearch-icon svg{width:100%;height:100%}
+.navsearch-box input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--ink);
+  font-size:13px;font-family:inherit}
+.navsearch-box input::placeholder{color:var(--ink3)}
+.navsearch-box kbd{font-family:var(--font-mono);font-size:10.5px;color:var(--ink3);
+  background:var(--surface-3);border:1px solid var(--line-2);border-radius:4px;padding:2px 5px;flex:none}
+.navsearch-results{position:absolute;left:12px;right:12px;bottom:calc(100% + 6px);
+  background:var(--surface-2);border:1px solid var(--line-2);border-radius:var(--r-md);
+  box-shadow:0 12px 28px rgba(0,0,0,.35);max-height:min(50vh,360px);overflow-y:auto;
+  padding:6px;z-index:20;scrollbar-width:none}
+.navsearch-results::-webkit-scrollbar{width:0;height:0;display:none}
+.navsearch-results[hidden]{display:none}
+.navsearch-result{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:var(--r-sm);
+  color:var(--ink2);font-size:12.5px}
+.navsearch-result:hover,.navsearch-result.sel{background:var(--surface-3);color:var(--ink)}
+.navsearch-result .grp{margin-left:auto;color:var(--ink3);font-size:10.5px}
+.navsearch-empty{padding:10px;color:var(--ink3);font-size:12.5px;text-align:center}
 .main{flex:1;min-width:0;padding:36px 44px 64px;max-width:1180px}
 
 /* ---------------------------------------------------------------- headers */

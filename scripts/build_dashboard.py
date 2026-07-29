@@ -53,6 +53,23 @@ group_defs = [
     ("Organisms", by_type.get("organism", []) + by_type.get("complex-organism", [])),
 ]
 
+# Which collapsible sidebar section a given "active" key lives in, so that section
+# renders pre-expanded on load -- you should never land on a component's own page and
+# find its section collapsed. Root-relative hrefs here; sidebar() prefixes them per page.
+SECTION_OF_ACTIVE = {"colors": "foundations", "typography": "foundations", "spacing": "foundations"}
+SEARCH_ENTRIES = [
+    {"n": "Overview", "h": "index.html", "g": "Nav"},
+    {"n": "Component graph", "h": "graph.html", "g": "Nav"},
+    {"n": "Fill the gaps", "h": "fill-gaps.html", "g": "Nav"},
+    {"n": "Colors & tokens", "h": "foundations-colors.html", "g": "Foundations"},
+    {"n": "Typography", "h": "foundations-typography.html", "g": "Foundations"},
+    {"n": "Spacing & radius", "h": "foundations-spacing.html", "g": "Foundations"},
+]
+for _gname, _ids in group_defs:
+    for _cid in _ids:
+        SECTION_OF_ACTIVE[f"c-{_cid}"] = _gname.lower()
+        SEARCH_ENTRIES.append({"n": components[_cid]["name"].strip(), "h": f"components/{_cid}.html", "g": _gname})
+
 # node id -> component id (top level + every variant) for resolving preview instances
 node_map = {}
 for cid, comp in components.items():
@@ -165,16 +182,60 @@ THEME_ICON = ('<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle c
               'stroke="currentColor" stroke-width="1.4"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" '
               'fill="currentColor"/></svg>')
 
+def _navsvg(inner, vb=24):
+    return (f'<svg viewBox="0 0 {vb} {vb}" fill="none" stroke="currentColor" stroke-width="1.7" '
+            f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{inner}</svg>')
+
+# Hand-drawn line icons for the sidebar's top-level items and collapsible-section
+# headers -- monochrome, sized/coloured entirely via CSS so they follow the same
+# hover/active states as the text next to them.
+NAV_ICONS = {
+    "home": _navsvg('<path d="M4 10.5 12 4l8 6.5"/><path d="M6 9v9.5a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1V9"/>'),
+    "graph": _navsvg('<circle cx="6" cy="6" r="2.3"/><circle cx="18" cy="6" r="2.3"/><circle cx="12" cy="18" r="2.3"/>'
+                      '<path d="M8 7.3 10.6 15.5M16 7.3 13.4 15.5M8.3 6h7.4"/>'),
+    "puzzle": _navsvg('<path d="M9.5 4.5h3a.9.9 0 0 1 .9 1v.9a1.5 1.5 0 1 0 0 3v3.1a.9.9 0 0 1-.9 1h-3.1a1.5 1.5 0 1 0-3 0H5.5a.9.9 0 0 1-.9-1v-3a1.5 1.5 0 1 0 0-3v-3a.9.9 0 0 1 .9-1h.9a1.5 1.5 0 1 0 3-1z"/>'),
+    "grid": _navsvg('<rect x="4" y="4" width="7" height="7" rx="1.3"/><rect x="13" y="4" width="7" height="7" rx="1.3"/>'
+                     '<rect x="4" y="13" width="7" height="7" rx="1.3"/><rect x="13" y="13" width="7" height="7" rx="1.3"/>'),
+    "atom": _navsvg('<circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/>'
+                     '<ellipse cx="12" cy="12" rx="9" ry="3.6"/>'
+                     '<ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/>'
+                     '<ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/>'),
+    "hexagon": _navsvg('<path d="M12 3.5 19.5 8v8L12 20.5 4.5 16V8z"/>'),
+    "cube": _navsvg('<path d="M12 3.5 20 8v8l-8 4.5-8-4.5V8z"/><path d="M4 8l8 4.5L20 8M12 12.5V21"/>'),
+    "search": _navsvg('<circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/>'),
+    "chevron": _navsvg('<path d="m5 8.5 7 6.5 7-6.5"/>'),
+}
+
 def sidebar(prefix, active):
-    def item(href, label, key, count=None, warn=0, dot=None):
+    def item(href, label, key, count=None, warn=0, dot=None, icon=None):
         cls = "navitem pill" if dot else "navitem"
         if key == active:
             cls += " active"
-        marker = f'<span class="navdot d-{dot}"></span>' if dot else ""
+        if dot:
+            marker = f'<span class="navdot d-{dot}"></span>'
+        elif icon:
+            marker = f'<span class="navicon">{icon}</span>'
+        else:
+            marker = ""
         badge = f'<span class="count">{count}</span>' if count is not None else ""
         wbadge = f'<span class="warnbadge" title="dangling Figma references">{warn}</span>' if warn else ""
         return (f'<a class="{cls}" href="{prefix}{href}">{marker}'
                 f'<span class="navlabel">{E(label)}</span>{badge}{wbadge}</a>')
+
+    def section(key, label, icon, items):
+        # Pre-expanded only when it contains the active page, so you're never dropped
+        # onto a component's page with its own section collapsed. app.js restores any
+        # other section the visitor had previously left open, and never re-collapses
+        # this one regardless of that stored preference (see the "forced" flag).
+        forced_open = SECTION_OF_ACTIVE.get(active) == key
+        openattr = " open" if forced_open else ""
+        return (f'<details class="navsection" data-key="{key}" data-forced="{"1" if forced_open else "0"}"{openattr}>'
+                f'<summary><span class="navsecicon">{icon}</span>'
+                f'<span class="navseclabel">{E(label)}</span>'
+                f'<span class="count">{len(items)}</span>'
+                f'<span class="navchevron">{NAV_ICONS["chevron"]}</span></summary>'
+                f'<div class="navsectionbody">{"".join(items)}</div></details>')
+
     parts = [f'''
     <aside class="sidebar">
       <div class="brand">
@@ -183,28 +244,46 @@ def sidebar(prefix, active):
         <button class="themetoggle" type="button" id="themetoggle" title="Toggle light / dark"
                 aria-label="Toggle light or dark theme">{THEME_ICON}</button>
       </div>
-      <nav>
-        {item("index.html", "Overview", "overview")}
-        {item("graph.html", "Component graph", "graph")}
-        {item("fill-gaps.html", "Fill the gaps", "fill-gaps")}
-        <div class="navgroup">Foundations <span class="count">3</span></div>
-        {item("foundations-colors.html", "Colors & tokens", "colors")}
-        {item("foundations-typography.html", "Typography", "typography")}
-        {item("foundations-spacing.html", "Spacing & radius", "spacing")}
+      <nav class="navtop">
+        {item("index.html", "Overview", "overview", icon=NAV_ICONS["home"])}
+        {item("graph.html", "Component graph", "graph", icon=NAV_ICONS["graph"])}
+        {item("fill-gaps.html", "Fill the gaps", "fill-gaps", icon=NAV_ICONS["puzzle"])}
+      </nav>
+      <div class="navscroll">
     ''']
+    parts.append(section("foundations", "Foundations", NAV_ICONS["grid"], [
+        item("foundations-colors.html", "Colors & tokens", "colors"),
+        item("foundations-typography.html", "Typography", "typography"),
+        item("foundations-spacing.html", "Spacing & radius", "spacing"),
+    ]))
+    group_icon = {"Atoms": NAV_ICONS["atom"], "Molecules": NAV_ICONS["hexagon"], "Organisms": NAV_ICONS["cube"]}
     for gname, ids in group_defs:
-        parts.append(f'<div class="navgroup">{gname} <span class="count">{len(ids)}</span></div>')
+        entries = []
         for cid in ids:
             dangling = sum(1 for e in reg_by_id[cid].get("figma_instance_edges", []) or [] if not e["resolved"] and not e.get("excluded"))
-            parts.append(item(f"components/{cid}.html", components[cid]["name"].strip(), f"c-{cid}",
-                              warn=dangling, dot=reg_by_id[cid]["type"]))
-    parts.append("</nav></aside>")
+            entries.append(item(f"components/{cid}.html", components[cid]["name"].strip(), f"c-{cid}",
+                                 warn=dangling, dot=reg_by_id[cid]["type"]))
+        parts.append(section(gname.lower(), gname, group_icon[gname], entries))
+    parts.append('</div>')  # /navscroll
+    search_entries = [{**e, "h": prefix + e["h"]} for e in SEARCH_ENTRIES]
+    parts.append(f'''
+      <div class="navsearch">
+        <div class="navsearch-box">
+          <span class="navsearch-icon">{NAV_ICONS["search"]}</span>
+          <input type="search" id="navsearch-input" placeholder="Search…" autocomplete="off" spellcheck="false">
+          <kbd>⌘K</kbd>
+        </div>
+        <div class="navsearch-results" id="navsearch-results" hidden></div>
+      </div>
+    </aside>
+    <script>window.NA_SEARCH_INDEX = {json.dumps(search_entries)};</script>
+    ''')
     # Every nav click is a full page load (this is a static multi-page site, not an
-    # SPA), so without this the sidebar silently resets to the top on every click --
-    # scroll down to "Text field", click it, and you're back at "Primary cta" next
-    # time. Restored inline (before app.js, before first paint) so there's no visible
-    # jump, mirroring the theme-flash-prevention script in <head>.
-    parts.append('<script>(function(){try{var e=document.querySelector(".sidebar"),'
+    # SPA), so without this .navscroll silently resets to the top on every click --
+    # scroll down to "Text field", click it, and you're back at the top next time.
+    # Restored inline (before app.js, before first paint) so there's no visible jump,
+    # mirroring the theme-flash-prevention script in <head>.
+    parts.append('<script>(function(){try{var e=document.querySelector(".navscroll"),'
                   'y=sessionStorage.getItem("na-sidebar-scroll");if(e&&y)e.scrollTop=+y;}'
                   'catch(e){}})();</script>')
     return "".join(parts)
@@ -1202,15 +1281,15 @@ code{font-family:var(--font-mono);font-size:.92em}
 /* ---------------------------------------------------------------- shell */
 .layout{display:flex;min-height:100vh}
 .sidebar{width:262px;flex:none;background:var(--surface);border-right:1px solid var(--line);
-  padding:16px 12px 32px;position:sticky;top:0;height:100vh;overflow-y:auto}
+  padding:16px 12px 0;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
 /* No visible scrollbars anywhere inside the app. These containers still scroll — the bar
    itself is just never painted, so panels never grow a track down their edge. */
-.sidebar,.ovcard-body,.pv-stage,.codeblock,.graphwrap,.rawyaml pre,.overviewdoc-body{
+.navscroll,.ovcard-body,.pv-stage,.codeblock,.graphwrap,.rawyaml pre,.overviewdoc-body{
   scrollbar-width:none;-ms-overflow-style:none}
-.sidebar::-webkit-scrollbar,.ovcard-body::-webkit-scrollbar,.pv-stage::-webkit-scrollbar,
+.navscroll::-webkit-scrollbar,.ovcard-body::-webkit-scrollbar,.pv-stage::-webkit-scrollbar,
 .codeblock::-webkit-scrollbar,.graphwrap::-webkit-scrollbar,.rawyaml pre::-webkit-scrollbar{
   width:0;height:0;display:none}
-.brand{display:flex;gap:10px;align-items:center;margin:2px 4px 20px}
+.brand{display:flex;gap:10px;align-items:center;margin:2px 4px 16px;flex:none}
 .applogo{width:30px;height:30px;flex:none;border-radius:var(--r-sm);background:var(--ink);color:var(--canvas);
   display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
 .brandname{flex:1;font-weight:600;font-size:13.5px;letter-spacing:-0.01em}
@@ -1219,19 +1298,64 @@ code{font-family:var(--font-mono);font-size:.92em}
   justify-content:center;padding:0;transition:color .15s,border-color .15s}
 .themetoggle:hover{color:var(--ink);border-color:var(--line-2)}
 .themetoggle svg{width:15px;height:15px}
-.navgroup{margin:20px 8px 7px;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
-  color:var(--ink3);font-weight:600;display:flex;align-items:center;gap:7px}
-.navgroup .count{background:none;color:var(--ink3);padding:0;font-size:10.5px;opacity:.75}
+.navtop{display:flex;flex-direction:column;gap:2px;flex:none;margin-bottom:14px}
+/* ---- collapsible sections (Foundations / Atoms / Molecules / Organisms) ---- */
+.navscroll{flex:1;min-height:0;overflow-y:auto;padding-bottom:12px}
+.navsection{margin-bottom:2px}
+.navsection>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:var(--r-sm);color:var(--ink2);font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;font-weight:600;transition:background .13s,color .13s;user-select:none}
+.navsection>summary::-webkit-details-marker{display:none}
+.navsection>summary::marker{content:""}
+.navsection>summary:hover{background:var(--surface-2);color:var(--ink)}
+.navsection[open]>summary{color:var(--ink)}
+.navsecicon{width:16px;height:16px;flex:none;display:flex}
+.navsecicon svg{width:100%;height:100%}
+.navseclabel{flex:1}
+.navsection .count{background:var(--surface-2);color:var(--ink2);border-radius:var(--r-sm);
+  padding:1px 7px;font-size:10.5px;font-weight:600;font-variant-numeric:tabular-nums}
+.navchevron{width:14px;height:14px;flex:none;color:var(--ink3);transition:transform .16s}
+.navchevron svg{width:100%;height:100%}
+.navsection[open] .navchevron{transform:rotate(180deg)}
+.navsectionbody{display:flex;flex-direction:column;gap:1px;padding:2px 0 6px 4px}
+/* ---- nav items (both top-level and inside a section) ---- */
 .navitem{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:var(--r-sm);
   color:var(--ink2);font-size:13px;transition:background .13s,color .13s}
 .navitem:hover{background:var(--surface-2);color:var(--ink)}
-.navitem.active{background:var(--surface-3);color:var(--ink);font-weight:500}
+.navitem.active{background:var(--accent);color:#fff;font-weight:500}
+.navitem.active .count,.navitem.active .warnbadge{color:#fff;opacity:.85}
 .navitem.pill{background:var(--surface-2);margin-bottom:3px}
 .navitem.pill:hover{background:var(--surface-3)}
-.navitem.pill.active{background:var(--surface-3);box-shadow:inset 0 0 0 1px var(--line-2)}
+.navitem.pill.active{background:var(--accent);box-shadow:none}
+.navicon{width:16px;height:16px;flex:none;display:flex}
+.navicon svg{width:100%;height:100%}
 .navdot{width:6px;height:6px;flex:none;border-radius:50%;background:var(--ink3)}
+.navitem.active .navdot{background:#fff}
 .navitem .count{margin-left:auto;color:var(--ink3);font-size:11px;font-variant-numeric:tabular-nums}
 .navlabel{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* ---- search ---- */
+.navsearch{flex:none;position:relative;margin:0 -12px;padding:14px 12px 16px;
+  border-top:1px solid var(--line);background:var(--surface)}
+.navsearch-box{display:flex;align-items:center;gap:8px;background:var(--surface-2);
+  border:1px solid var(--line);border-radius:var(--r-sm);padding:7px 10px;color:var(--ink3)}
+.navsearch-icon{width:15px;height:15px;flex:none;display:flex}
+.navsearch-icon svg{width:100%;height:100%}
+.navsearch-box input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--ink);
+  font-size:13px;font-family:inherit}
+.navsearch-box input::placeholder{color:var(--ink3)}
+.navsearch-box kbd{font-family:var(--font-mono);font-size:10.5px;color:var(--ink3);
+  background:var(--surface-3);border:1px solid var(--line-2);border-radius:4px;padding:2px 5px;flex:none}
+.navsearch-results{position:absolute;left:12px;right:12px;bottom:calc(100% + 6px);
+  background:var(--surface-2);border:1px solid var(--line-2);border-radius:var(--r-md);
+  box-shadow:0 12px 28px rgba(0,0,0,.35);max-height:min(50vh,360px);overflow-y:auto;
+  padding:6px;z-index:20;scrollbar-width:none}
+.navsearch-results::-webkit-scrollbar{width:0;height:0;display:none}
+.navsearch-results[hidden]{display:none}
+.navsearch-result{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:var(--r-sm);
+  color:var(--ink2);font-size:12.5px}
+.navsearch-result:hover,.navsearch-result.sel{background:var(--surface-3);color:var(--ink)}
+.navsearch-result .grp{margin-left:auto;color:var(--ink3);font-size:10.5px}
+.navsearch-empty{padding:10px;color:var(--ink3);font-size:12.5px;text-align:center}
 .main{flex:1;min-width:0;padding:36px 44px 64px;max-width:1180px}
 
 /* ---------------------------------------------------------------- headers */
@@ -1557,15 +1681,84 @@ document.addEventListener('click', function (ev) {
   try { localStorage.setItem('na-theme', next); } catch (e) {}
 });
 
-// Persist the sidebar's scroll position across page loads -- the restore half of
-// this lives inline right after the sidebar markup (see sidebar() in
-// build_dashboard.py) so it runs before first paint with no visible jump.
+// Persist the nav's scroll position across page loads -- the restore half of this
+// lives inline right after the sidebar markup (see sidebar() in build_dashboard.py)
+// so it runs before first paint with no visible jump.
 (function () {
-  const sidebar = document.querySelector('.sidebar');
-  if (!sidebar) return;
-  sidebar.addEventListener('scroll', function () {
-    try { sessionStorage.setItem('na-sidebar-scroll', sidebar.scrollTop); } catch (e) {}
+  const nav = document.querySelector('.navscroll');
+  if (!nav) return;
+  nav.addEventListener('scroll', function () {
+    try { sessionStorage.setItem('na-sidebar-scroll', nav.scrollTop); } catch (e) {}
   }, { passive: true });
+})();
+
+// Collapsible sidebar sections (Foundations / Atoms / Molecules / Organisms): a
+// section the visitor previously opened stays open on the next page too, EXCEPT a
+// section is never force-collapsed if it contains the page you're currently on
+// (data-forced="1", set server-side) -- you should never land on a component's page
+// and find its own section collapsed.
+document.querySelectorAll('.navsection').forEach(function (sec) {
+  const key = 'na-navsec-' + sec.dataset.key;
+  if (sec.dataset.forced !== '1') {
+    const stored = localStorage.getItem(key);
+    if (stored === '1') sec.setAttribute('open', '');
+    else if (stored === '0') sec.removeAttribute('open');
+  }
+  sec.addEventListener('toggle', function () {
+    try { localStorage.setItem(key, sec.open ? '1' : '0'); } catch (e) {}
+  });
+});
+
+// Sidebar search: filters the baked-in NA_SEARCH_INDEX (every component + nav +
+// foundations page, with hrefs already resolved for this page's depth) as you type,
+// with arrow-key navigation and Cmd/Ctrl+K to jump to the box from anywhere.
+(function () {
+  const input = document.getElementById('navsearch-input');
+  const results = document.getElementById('navsearch-results');
+  const index = window.NA_SEARCH_INDEX;
+  if (!input || !results || !index) return;
+  let sel = -1;
+
+  function renderEmpty(msg) { results.innerHTML = '<div class="navsearch-empty">' + msg + '</div>'; }
+
+  function filter() {
+    const q = input.value.trim().toLowerCase();
+    sel = -1;
+    if (!q) { results.hidden = true; results.innerHTML = ''; return; }
+    const matches = index.filter(function (it) {
+      return it.n.toLowerCase().indexOf(q) !== -1 || it.g.toLowerCase().indexOf(q) !== -1;
+    }).slice(0, 20);
+    results.hidden = false;
+    if (!matches.length) { renderEmpty('No matches'); return; }
+    results.innerHTML = matches.map(function (it) {
+      return '<a class="navsearch-result" href="' + it.h + '">'
+           + '<span>' + it.n.replace(/</g, '&lt;') + '</span>'
+           + '<span class="grp">' + it.g.replace(/</g, '&lt;') + '</span></a>';
+    }).join('');
+  }
+
+  function applySelection(links) {
+    links.forEach(function (l, i) { l.classList.toggle('sel', i === sel); });
+    if (links[sel]) links[sel].scrollIntoView({ block: 'nearest' });
+  }
+
+  input.addEventListener('input', filter);
+  input.addEventListener('focus', function () { if (input.value.trim()) filter(); });
+  input.addEventListener('keydown', function (ev) {
+    const links = results.querySelectorAll('.navsearch-result');
+    if (ev.key === 'ArrowDown') { ev.preventDefault(); sel = Math.min(sel + 1, links.length - 1); applySelection(links); }
+    else if (ev.key === 'ArrowUp') { ev.preventDefault(); sel = Math.max(sel - 1, 0); applySelection(links); }
+    else if (ev.key === 'Enter') { const l = links[sel >= 0 ? sel : 0]; if (l) location.href = l.getAttribute('href'); }
+    else if (ev.key === 'Escape') { results.hidden = true; input.blur(); }
+  });
+  document.addEventListener('click', function (ev) {
+    if (!ev.target.closest('.navsearch')) { results.hidden = true; }
+  });
+  document.addEventListener('keydown', function (ev) {
+    if ((ev.metaKey || ev.ctrlKey) && ev.key.toLowerCase() === 'k') {
+      ev.preventDefault(); input.focus(); input.select();
+    }
+  });
 })();
 """
 
