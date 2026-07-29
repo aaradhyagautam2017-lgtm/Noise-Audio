@@ -154,126 +154,129 @@ authored_metadata: |
         They are read live from Figma via MCP at consumption time.
 visual_values:
   source: figma_mcp
-  extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
+  schema: v2-layout-model
+  extracted_at: '2026-07-29'
+  note: Layout MODEL (not a pixel snapshot). size = per-child resize (fill/hug/fixed px); abs = child
+    pinned out of auto-layout flow to parent edges; clip = frame clips overflow. Text verbatim; line-heights
+    are unitless ratios. Each 36x36 variant holds one icon instance pinned per Figma; instances resolve
+    to their atom components.
   tree:
     id: 2031:1132
     name: Actionables
     type: COMPONENT_SET
-    w: 76
-    h: 300
-    radius: 5
-    strokes:
-    - type: SOLID
-      color: '#8a38f5'
-    strokeWeight: 1
     children:
     - id: 2031:1133
       name: Action=Chevron
-      type: COMPONENT
+      type: FRAME
       w: 36
       h: 36
+      clip: true
       children:
       - id: 2031:1134
         name: Chevron
         type: INSTANCE
-        w: 24
-        h: 24
         instance_of:
           id: 2031:1154
           name: Chevron
-          key: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
           set:
             id: 2031:1154
             name: Chevron
-          rewired_from: 2031:379
         props:
           State: Chevron Forward
+        w: 24
+        h: 24
+        abs:
+          left: 12
+          top: 6
     - id: 2031:1135
       name: Action=Toggle
-      type: COMPONENT
+      type: FRAME
       w: 36
       h: 36
+      clip: true
       children:
       - id: 2031:1136
         name: Toggle
         type: INSTANCE
-        w: 36
-        h: 19
         instance_of:
           id: 2031:1190
           name: Toggle
-          key: 5671f20fe570cab72796a90ebac8b77ca42e0621
           set:
             id: 2031:1190
             name: Toggle
-          rewired_from: 2031:392
         props:
           State: On state
+        w: 36
+        h: 19
+        abs:
+          left: 0
+          top: 8.5
     - id: 2031:1137
       name: Action=Checkbox
-      type: COMPONENT
+      type: FRAME
       w: 36
       h: 36
+      clip: true
       children:
       - id: 2031:1138
         name: Checkbox
         type: INSTANCE
-        w: 24
-        h: 24
-        fills:
-        - type: SOLID
-          visible: false
-          color: '#ffffff'
         instance_of:
           id: 2031:1168
           name: Checkbox
-          key: 5d813fa76c98d5e979b8e58f3097ee481b6974bc
           set:
             id: 2031:1168
             name: Checkbox
-          rewired_from: 2031:406
         props:
           state: Selected
+        w: 24
+        h: 24
+        abs:
+          left: 6
+          top: 6
     - id: 2031:1139
       name: Action=Cross
-      type: COMPONENT
+      type: FRAME
       w: 36
       h: 36
+      clip: true
       children:
       - id: 2031:1140
         name: Cross
         type: INSTANCE
-        w: 24
-        h: 24
         instance_of:
           id: 2031:1201
           name: Cross
-          key: 4630976d22073248745eb76ebe8a4c2e55d2c1ef
           set:
             id: 2031:1201
             name: Cross
-          rewired_from: 2031:416
         props:
           Type: Default
+        w: 24
+        h: 24
+        abs:
+          left: 6
+          top: 6
     - id: 2031:1141
       name: Action=Radio button
-      type: COMPONENT
+      type: FRAME
       w: 36
       h: 36
+      clip: true
       children:
       - id: 2031:1142
         name: Radio Button
         type: INSTANCE
-        w: 20
-        h: 20
         instance_of:
           id: 2031:1178
           name: Radio Button
-          key: 5aaf9ca2a4ce74111f0f3c1f26e495c980cec34e
           set:
             id: 2031:1178
             name: Radio Button
-          rewired_from: 2031:426
         props:
           State: Selected
+        w: 20
+        h: 20
+        abs:
+          left: 8
+          top: 8
