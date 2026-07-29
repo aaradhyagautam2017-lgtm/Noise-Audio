@@ -199,6 +199,14 @@ def sidebar(prefix, active):
             parts.append(item(f"components/{cid}.html", components[cid]["name"].strip(), f"c-{cid}",
                               warn=dangling, dot=reg_by_id[cid]["type"]))
     parts.append("</nav></aside>")
+    # Every nav click is a full page load (this is a static multi-page site, not an
+    # SPA), so without this the sidebar silently resets to the top on every click --
+    # scroll down to "Text field", click it, and you're back at "Primary cta" next
+    # time. Restored inline (before app.js, before first paint) so there's no visible
+    # jump, mirroring the theme-flash-prevention script in <head>.
+    parts.append('<script>(function(){try{var e=document.querySelector(".sidebar"),'
+                  'y=sessionStorage.getItem("na-sidebar-scroll");if(e&&y)e.scrollTop=+y;}'
+                  'catch(e){}})();</script>')
     return "".join(parts)
 
 def page(title, active, body, prefix=""):
@@ -1548,6 +1556,17 @@ document.addEventListener('click', function (ev) {
   root.setAttribute('data-theme', next);
   try { localStorage.setItem('na-theme', next); } catch (e) {}
 });
+
+// Persist the sidebar's scroll position across page loads -- the restore half of
+// this lives inline right after the sidebar markup (see sidebar() in
+// build_dashboard.py) so it runs before first paint with no visible jump.
+(function () {
+  const sidebar = document.querySelector('.sidebar');
+  if (!sidebar) return;
+  sidebar.addEventListener('scroll', function () {
+    try { sessionStorage.setItem('na-sidebar-scroll', sidebar.scrollTop); } catch (e) {}
+  }, { passive: true });
+})();
 """
 
 # ----------------------------------------------------------------- emit

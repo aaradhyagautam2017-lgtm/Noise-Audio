@@ -18,3 +18,14 @@ document.addEventListener('click', function (ev) {
   root.setAttribute('data-theme', next);
   try { localStorage.setItem('na-theme', next); } catch (e) {}
 });
+
+// Persist the sidebar's scroll position across page loads -- the restore half of
+// this lives inline right after the sidebar markup (see sidebar() in
+// build_dashboard.py) so it runs before first paint with no visible jump.
+(function () {
+  const sidebar = document.querySelector('.sidebar');
+  if (!sidebar) return;
+  sidebar.addEventListener('scroll', function () {
+    try { sessionStorage.setItem('na-sidebar-scroll', sidebar.scrollTop); } catch (e) {}
+  }, { passive: true });
+})();
