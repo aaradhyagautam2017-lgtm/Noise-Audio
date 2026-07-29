@@ -149,6 +149,175 @@ authored_metadata: |
         time.
 visual_values:
   source: figma_mcp
-  extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
-  tree: see variants in visuals data
+  schema: v2-layout-model
+  extracted_at: '2026-07-29'
+  note: Layout MODEL (not a pixel snapshot). size = per-child resize (fill/hug/fixed px); abs = child
+    pinned out of auto-layout flow to parent edges; clip = frame clips overflow. Text verbatim; line-heights
+    are unitless ratios. Dark dimming overlay + white status bar + the action-card (Categorised variant)
+    anchored to the bottom + home indicator. The action-card resolves to its v2 component.
+  tree:
+    id: 418:965
+    name: Action sheet
+    type: FRAME
+    layout:
+      mode: VERTICAL
+      padding:
+      - 0
+      - 0
+      - 0
+      - 0
+      gap: 0
+      align: SPACE_BETWEEN/CENTER
+    w: 390
+    h: 844
+    fills:
+    - type: SOLID
+      color: '#00000099'
+    children:
+    - id: 418-sb
+      name: Status bar
+      type: FRAME
+      layout:
+        mode: HORIZONTAL
+        padding:
+        - 0
+        - 0
+        - 0
+        - 0
+        gap: 38
+        align: SPACE_BETWEEN/CENTER
+      w: 390
+      h: 59
+      children:
+      - id: 418-sb-t
+        name: Time
+        type: FRAME
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 6
+          - 0
+          - 16
+          gap: 10
+          align: CENTER/CENTER
+        size:
+          w: fill
+          h: hug
+        children:
+        - id: 418-time
+          name: '9:41'
+          type: TEXT
+          chars: '9:41'
+          font: SF Pro Semibold
+          fontSize: 17
+          lineHeight: 22px
+          textAlign: CENTER
+          fills:
+          - type: SOLID
+            color: '#ffffff'
+            token: default/status bar
+          size:
+            w: hug
+            h: hug
+      - id: 418-sp
+        name: Dynamic Island spacer
+        type: FRAME
+        w: 124
+        h: 10
+        children: []
+      - id: 418-lv
+        name: Levels
+        type: FRAME
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 6
+          gap: 7
+          align: CENTER/CENTER
+        size:
+          w: fill
+          h: hug
+        children:
+        - id: 418-c1
+          name: Cellular Connection
+          type: FRAME
+          w: 19.2
+          h: 12.2
+          radius: 2
+          fills:
+          - type: SOLID
+            color: '#ffffff'
+          children: []
+        - id: 418-c2
+          name: Wifi
+          type: FRAME
+          w: 17.1
+          h: 12.3
+          radius: 2
+          fills:
+          - type: SOLID
+            color: '#ffffff'
+          children: []
+        - id: 418-c3
+          name: Battery
+          type: FRAME
+          w: 27.3
+          h: 13
+          radius: 2
+          fills:
+          - type: SOLID
+            color: '#ffffff'
+          children: []
+    - id: 418:966
+      name: content
+      type: FRAME
+      layout:
+        mode: VERTICAL
+        padding:
+        - 0
+        - 0
+        - 0
+        - 0
+        gap: 0
+        align: CENTER/CENTER
+      size:
+        w: hug
+        h: hug
+      children:
+      - id: 420:1299
+        name: Action card
+        type: INSTANCE
+        instance_of:
+          id: 2096:1434
+          name: Action card
+          set:
+            id: 2096:1434
+            name: Action card
+        props:
+          state: Categorised
+        w: 366
+      - id: 418:970
+        name: Home Indicator
+        type: FRAME
+        w: 390
+        h: 26
+        clip: true
+        children:
+        - id: 418:970-bar
+          name: Home Indicator
+          type: FRAME
+          w: 144
+          h: 5
+          abs:
+            left: 123
+            bottom: 8
+          radius: 100
+          fills:
+          - type: SOLID
+            color: '#ffffff'
+            token: default/status bar
+          children: []
