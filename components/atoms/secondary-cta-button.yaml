@@ -144,36 +144,31 @@ authored_metadata: |
         from this file to guarantee a single source of truth and prevent drift.
 visual_values:
   source: figma_mcp
-  extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
-    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+  schema: v2-layout-model
+  extracted_at: '2026-07-29'
+  note: Layout MODEL (not a pixel snapshot). size = per-child resize (fill/hug/fixed px); abs = child
+    pinned out of auto-layout flow to parent edges; clip = frame clips overflow. Text verbatim; line-heights
+    are unitless ratios. Default label is "Forget this device"; real screens override it. Fixed 56px height;
+    nominal Figma vertical padding omitted in favour of center alignment.
   tree:
     id: 250:4953
     name: Secondary cta
     type: COMPONENT_SET
-    w: 826
-    h: 261
-    radius: 5
-    strokes:
-    - type: SOLID
-      color: '#8a38f5'
-    strokeWeight: 1
     children:
     - id: 250:4952
       name: State=Enabled, Usecase=L1 L2 screens
-      type: COMPONENT
-      w: 358
-      h: 56
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
-        - 35
+        - 0
         - 29
-        - 35
+        - 0
         - 29
         gap: 10
         align: CENTER/CENTER
+      w: 358
+      h: 56
       radius: 50
       fills:
       - type: SOLID
@@ -183,31 +178,32 @@ visual_values:
       - id: 250:4951
         name: Forget this device
         type: TEXT
-        w: 121
-        h: 18
+        chars: Forget this device
+        font: Geist SemiBold
+        fontSize: 14
+        lineHeight: normal
+        textAlign: CENTER
         fills:
         - type: SOLID
           color: '#171717'
           token: text/cta
-        chars: Forget this device
-        textStyle: Bold content/Big
-        font: Geist SemiBold
-        fontSize: 14
-        textAlign: CENTER
+        size:
+          w: hug
+          h: hug
     - id: 567:3853
       name: State=pressed, Usecase=L1 L2 screens
-      type: COMPONENT
-      w: 358
-      h: 56
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
-        - 35
+        - 0
         - 29
-        - 35
+        - 0
         - 29
         gap: 10
         align: CENTER/CENTER
+      w: 358
+      h: 56
       radius: 50
       fills:
       - type: SOLID
@@ -217,31 +213,32 @@ visual_values:
       - id: 567:3854
         name: Forget this device
         type: TEXT
-        w: 121
-        h: 18
+        chars: Forget this device
+        font: Geist SemiBold
+        fontSize: 14
+        lineHeight: normal
+        textAlign: CENTER
         fills:
         - type: SOLID
           color: '#f7f7f7'
           token: text/inverted
-        chars: Forget this device
-        textStyle: Bold content/Big
-        font: Geist SemiBold
-        fontSize: 14
-        textAlign: CENTER
+        size:
+          w: hug
+          h: hug
     - id: 463:1383
       name: State=Enabled, Usecase=Bottomsheet
-      type: COMPONENT
-      w: 334
-      h: 56
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
-        - 35
+        - 0
         - 29
-        - 35
+        - 0
         - 29
         gap: 10
         align: CENTER/CENTER
+      w: 334
+      h: 56
       radius: 50
       fills:
       - type: SOLID
@@ -251,31 +248,32 @@ visual_values:
       - id: 463:1384
         name: Forget this device
         type: TEXT
-        w: 121
-        h: 18
+        chars: Forget this device
+        font: Geist SemiBold
+        fontSize: 14
+        lineHeight: normal
+        textAlign: CENTER
         fills:
         - type: SOLID
           color: '#171717'
           token: text/cta
-        chars: Forget this device
-        textStyle: Bold content/Big
-        font: Geist SemiBold
-        fontSize: 14
-        textAlign: CENTER
+        size:
+          w: hug
+          h: hug
     - id: 567:3864
       name: State=pressed, Usecase=Bottomsheet
-      type: COMPONENT
-      w: 334
-      h: 56
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
-        - 35
+        - 0
         - 29
-        - 35
+        - 0
         - 29
         gap: 10
         align: CENTER/CENTER
+      w: 334
+      h: 56
       radius: 50
       fills:
       - type: SOLID
@@ -285,31 +283,32 @@ visual_values:
       - id: 567:3865
         name: Forget this device
         type: TEXT
-        w: 121
-        h: 18
+        chars: Forget this device
+        font: Geist SemiBold
+        fontSize: 14
+        lineHeight: normal
+        textAlign: CENTER
         fills:
         - type: SOLID
           color: '#f7f7f7'
           token: text/inverted
-        chars: Forget this device
-        textStyle: Bold content/Big
-        font: Geist SemiBold
-        fontSize: 14
-        textAlign: CENTER
+        size:
+          w: hug
+          h: hug
     - id: 253:4954
       name: State=Disabled, Usecase=L1 L2 screens
-      type: COMPONENT
-      w: 358
-      h: 56
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
-        - 35
+        - 0
         - 29
-        - 35
+        - 0
         - 29
         gap: 10
         align: CENTER/CENTER
+      w: 358
+      h: 56
       radius: 50
       fills:
       - type: SOLID
@@ -319,31 +318,32 @@ visual_values:
       - id: 253:4955
         name: Forget this device
         type: TEXT
-        w: 121
-        h: 18
+        chars: Forget this device
+        font: Geist SemiBold
+        fontSize: 14
+        lineHeight: normal
+        textAlign: CENTER
         fills:
         - type: SOLID
           color: '#d1d1d1'
           token: text/disabled
-        chars: Forget this device
-        textStyle: Bold content/Big
-        font: Geist SemiBold
-        fontSize: 14
-        textAlign: CENTER
+        size:
+          w: hug
+          h: hug
     - id: 463:1385
       name: State=Disabled, Usecase=Bottomsheet
-      type: COMPONENT
-      w: 334
-      h: 56
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
-        - 35
+        - 0
         - 29
-        - 35
+        - 0
         - 29
         gap: 10
         align: CENTER/CENTER
+      w: 334
+      h: 56
       radius: 50
       fills:
       - type: SOLID
@@ -353,14 +353,15 @@ visual_values:
       - id: 463:1386
         name: Forget this device
         type: TEXT
-        w: 121
-        h: 18
+        chars: Forget this device
+        font: Geist SemiBold
+        fontSize: 14
+        lineHeight: normal
+        textAlign: CENTER
         fills:
         - type: SOLID
           color: '#d1d1d1'
           token: text/disabled
-        chars: Forget this device
-        textStyle: Bold content/Big
-        font: Geist SemiBold
-        fontSize: 14
-        textAlign: CENTER
+        size:
+          w: hug
+          h: hug

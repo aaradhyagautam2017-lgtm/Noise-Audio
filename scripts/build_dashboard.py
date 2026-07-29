@@ -350,7 +350,7 @@ def node_style(n, parent_dir=None):
         # the wrapped text; ours doesn't always agree (missing/approximated line-height, a
         # different font stack), so pinning it can crop a wrapped line right off. Width still
         # constrains wrapping (that's what has to match Figma); height is left intrinsic.
-        if n.get("type") != "TEXT":
+        if n.get("type") != "TEXT" and "h" in n:
             s.append(f'height:{n["h"]}px')
     lay = n.get("layout")
     if lay:

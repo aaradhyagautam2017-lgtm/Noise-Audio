@@ -75,16 +75,15 @@ authored_metadata: |
         read live from Figma via MCP at consumption time.
 visual_values:
   source: figma_mcp
-  extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
-    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+  schema: v2-layout-model
+  extracted_at: '2026-07-29'
+  note: Layout MODEL (not a pixel snapshot). size = per-child resize (fill/hug/fixed px); abs = child
+    pinned out of auto-layout flow to parent edges; clip = frame clips overflow. Text verbatim; line-heights
+    are unitless ratios.
   tree:
     id: 445:8616
     name: Description
-    type: COMPONENT
-    w: 390
-    h: 32
+    type: FRAME
     layout:
       mode: HORIZONTAL
       padding:
@@ -92,24 +91,22 @@ visual_values:
       - 12
       - 0
       - 12
-      gap: 10
+      gap: 0
       align: CENTER/CENTER
-    tokens:
-      paddingLeft: M
-      paddingRight: M
+    w: 390
     children:
     - id: 445:8449
-      name: Upload up to 3 media files not exceeding 2 MB in the formats JPEG/JPG/PNG/HEIC/MP4
+      name: desc
       type: TEXT
-      w: 366
-      h: 32
+      chars: Upload up to 3 media files not exceeding 2 MB in the formats JPEG/JPG/PNG/HEIC/MP4
+      font: Geist Regular
+      fontSize: 12
+      lineHeight: '1.3'
+      textAlign: LEFT
       fills:
       - type: SOLID
         color: '#919191'
         token: text/secondary
-      chars: Upload up to 3 media files not exceeding 2 MB in the formats…
-      textStyle: Content/Small
-      font: Geist Regular
-      fontSize: 12
-      lineHeight: 130%
-      textAlign: LEFT
+      size:
+        w: fill
+        h: hug

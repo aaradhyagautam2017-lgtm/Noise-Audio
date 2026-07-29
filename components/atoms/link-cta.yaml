@@ -114,85 +114,82 @@ authored_metadata: |
         from this file to guarantee a single source of truth and prevent drift.
 visual_values:
   source: figma_mcp
-  extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
-    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+  schema: v2-layout-model
+  extracted_at: '2026-07-29'
+  note: Layout MODEL (not a pixel snapshot). size = per-child resize (fill/hug/fixed px); abs = child
+    pinned out of auto-layout flow to parent edges; clip = frame clips overflow. Text verbatim; line-heights
+    are unitless ratios. No container fill (text-only). Two underlined lines. Fixed 44px height; nominal
+    Figma vertical padding omitted in favour of center alignment.
   tree:
     id: 463:1380
     name: Link cta
     type: COMPONENT_SET
-    w: 768
-    h: 96
-    radius: 5
-    strokes:
-    - type: SOLID
-      color: '#8a38f5'
-    strokeWeight: 1
     children:
     - id: 428:1157
       name: Usecase=Screens
-      type: COMPONENT
-      w: 358
-      h: 44
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
-        - 35
+        - 0
         - 29
-        - 35
+        - 0
         - 29
         gap: 10
         align: CENTER/CENTER
+      w: 358
+      h: 44
       radius: 50
       children:
       - id: 428:1154
         name: For any other query Click here
         type: TEXT
-        w: 131
-        h: 36
+        chars: 'For any other query
+
+          Click here'
+        font: Geist SemiBold
+        fontSize: 14
+        lineHeight: normal
+        textAlign: CENTER
         fills:
         - type: SOLID
           color: '#454545'
           token: text/primary
-        chars: 'For any other query
-
-          Click here'
-        textStyle: Bold content/Big
-        font: Geist SemiBold
-        fontSize: 14
-        textAlign: CENTER
         decoration: UNDERLINE
+        size:
+          w: hug
+          h: hug
     - id: 463:1381
       name: Usecase=Bottomsheet
-      type: COMPONENT
-      w: 334
-      h: 44
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
-        - 35
+        - 0
         - 29
-        - 35
+        - 0
         - 29
         gap: 10
         align: CENTER/CENTER
+      w: 334
+      h: 44
       radius: 50
       children:
       - id: 463:1382
         name: For any other query Click here
         type: TEXT
-        w: 131
-        h: 36
+        chars: 'For any other query
+
+          Click here'
+        font: Geist SemiBold
+        fontSize: 14
+        lineHeight: normal
+        textAlign: CENTER
         fills:
         - type: SOLID
           color: '#454545'
           token: text/primary
-        chars: 'For any other query
-
-          Click here'
-        textStyle: Bold content/Big
-        font: Geist SemiBold
-        fontSize: 14
-        textAlign: CENTER
         decoration: UNDERLINE
+        size:
+          w: hug
+          h: hug
