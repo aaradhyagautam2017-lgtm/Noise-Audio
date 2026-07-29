@@ -142,14 +142,17 @@ authored_metadata: |
         stored here. They are read live from Figma via MCP at consumption time.
 visual_values:
   source: figma_mcp
-  extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
+  schema: v2-layout-model
+  extracted_at: '2026-07-29'
+  note: 'Layout MODEL (not a pixel snapshot). size = per-child resize (fill/hug/fixed px); abs = child
+    pinned out of auto-layout flow to parent edges; clip = frame clips overflow. Text verbatim; line-heights
+    are unitless ratios. Home nav bar: left device switcher (two device avatars + adder), right download
+    + store icons. All icons are Figma image assets not fetchable here (asset: missing), shown as grey
+    placeholders.'
   tree:
     id: 243:6378
     name: L1/Home page
-    type: COMPONENT
-    w: 390
-    h: 56
+    type: FRAME
     layout:
       mode: HORIZONTAL
       padding:
@@ -157,14 +160,14 @@ visual_values:
       - 12
       - 0
       - 12
-      gap: 46
+      gap: 0
       align: SPACE_BETWEEN/CENTER
+    w: 390
+    h: 56
     children:
     - id: 243:6381
-      name: Frame 2147240561
+      name: left
       type: FRAME
-      w: 112
-      h: 32
       layout:
         mode: HORIZONTAL
         padding:
@@ -174,42 +177,58 @@ visual_values:
         - 0
         gap: 12
         align: MIN/CENTER
+      size:
+        w: hug
+        h: hug
       children:
       - id: 243:6382
         name: system/Selected device
-        type: INSTANCE
+        type: FRAME
         w: 32
         h: 32
-        instance_of:
-          id: 231:26268
-          name: system/Selected device
-          key: 03ad1a0a6d577e5a1be225a336129abdd65011bb
-        props: {}
+        size:
+          w: 32
+          h: 32
+        radius: 16.0
+        fills:
+        - type: SOLID
+          color: '#ededed'
+          token: border/separator line
+        children: []
+        asset: missing
       - id: 243:6383
         name: system/Device option 1
-        type: INSTANCE
+        type: FRAME
         w: 32
         h: 32
-        instance_of:
-          id: 231:26277
-          name: system/Device option 1
-          key: 4d96fbeda6cf40fe9c7671ad1af3411514e99f66
-        props: {}
-      - id: 243:6418
+        size:
+          w: 32
+          h: 32
+        radius: 16.0
+        fills:
+        - type: SOLID
+          color: '#ededed'
+          token: border/separator line
+        children: []
+        asset: missing
+      - id: 243:6384
         name: system/Device adder
-        type: INSTANCE
+        type: FRAME
         w: 24
         h: 24
-        instance_of:
-          id: 231:26218
-          name: system/Device adder
-          key: 0dde9bc143e29224b01dfaeed0984a830f77b712
-        props: {}
+        size:
+          w: 24
+          h: 24
+        radius: 12.0
+        fills:
+        - type: SOLID
+          color: '#ededed'
+          token: border/separator line
+        children: []
+        asset: missing
     - id: 243:6427
-      name: Frame 2147240562
+      name: right
       type: FRAME
-      w: 60
-      h: 24
       layout:
         mode: HORIZONTAL
         padding:
@@ -219,24 +238,37 @@ visual_values:
         - 0
         gap: 12
         align: MIN/CENTER
+      size:
+        w: hug
+        h: hug
       children:
-      - id: 243:6379
+      - id: 231:26254
         name: system/Downloading Success
-        type: INSTANCE
+        type: FRAME
         w: 24
         h: 24
-        instance_of:
-          id: 231:26254
-          name: system/Downloading Success
-          key: 3d582057d55a75e85899e2bf444dd3e57235409f
-        props: {}
-      - id: 243:6422
+        size:
+          w: 24
+          h: 24
+        radius: 12.0
+        fills:
+        - type: SOLID
+          color: '#ededed'
+          token: border/separator line
+        children: []
+        asset: missing
+      - id: 231:26234
         name: system/Store
-        type: INSTANCE
+        type: FRAME
         w: 24
         h: 24
-        instance_of:
-          id: 231:26234
-          name: system/Store
-          key: 7e190f81d8f1cb9c677d288cf5696295b2af4416
-        props: {}
+        size:
+          w: 24
+          h: 24
+        radius: 12.0
+        fills:
+        - type: SOLID
+          color: '#ededed'
+          token: border/separator line
+        children: []
+        asset: missing

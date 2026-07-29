@@ -262,25 +262,21 @@ authored_metadata: |
         stored here. They are read live from Figma via MCP at consumption time.
 visual_values:
   source: figma_mcp
-  extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
+  schema: v2-layout-model
+  extracted_at: '2026-07-29'
+  note: 'Layout MODEL (not a pixel snapshot). size = per-child resize (fill/hug/fixed px); abs = child
+    pinned out of auto-layout flow to parent edges; clip = frame clips overflow. Text verbatim; line-heights
+    are unitless ratios. Six nav-bar states. Chevron/cross resolve to their atom components; restart/download/bolt
+    are system image assets not fetchable here (asset: missing), shown as grey placeholders. Heading state
+    shows the promoted centred page title.'
   tree:
     id: 2007:1007
-    name: L1 Inner page navigation
+    name: L1 inner page navigation
     type: COMPONENT_SET
-    w: 430
-    h: 436
-    radius: 5
-    strokes:
-    - type: SOLID
-      color: '#8a38f5'
-    strokeWeight: 1
     children:
     - id: 2007:1006
-      name: state=Clean-Only Chevron
-      type: COMPONENT
-      w: 390
-      h: 56
+      name: Clean-Only Chevron
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
@@ -288,29 +284,31 @@ visual_values:
         - 12
         - 0
         - 12
-        gap: 46
+        gap: 0
         align: MIN/CENTER
+      w: 390
+      h: 56
       children:
       - id: 2007:954
         name: system/Chevron
         type: INSTANCE
-        w: 24
-        h: 24
         instance_of:
           id: 2031:1154
           name: Chevron
-          key: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
           set:
             id: 2031:1154
             name: Chevron
-          rewired_from: 2007:379
         props:
           State: Chevron back
+        w: 24
+        h: 24
+        size:
+          w: 24
+          h: 24
+        clip: true
     - id: 2007:1005
-      name: state=One icon
-      type: COMPONENT
-      w: 390
-      h: 56
+      name: One icon
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
@@ -318,39 +316,46 @@ visual_values:
         - 12
         - 0
         - 12
-        gap: 46
+        gap: 0
         align: SPACE_BETWEEN/CENTER
+      w: 390
+      h: 56
       children:
       - id: 2007:941
         name: system/Chevron
         type: INSTANCE
-        w: 24
-        h: 24
         instance_of:
           id: 2031:1154
           name: Chevron
-          key: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
           set:
             id: 2031:1154
             name: Chevron
-          rewired_from: 2007:379
         props:
           State: Chevron back
-      - id: 2007:943
-        name: system/Restart
-        type: INSTANCE
         w: 24
         h: 24
-        instance_of:
-          id: 2007:405
-          name: system/Restart
-          key: d849ccc65bbbb17b5c6b86199354cd2267a8c2a1
-        props: {}
+        size:
+          w: 24
+          h: 24
+        clip: true
+      - id: 2007:943
+        name: system/Restart
+        type: FRAME
+        w: 24
+        h: 24
+        size:
+          w: 24
+          h: 24
+        radius: 12
+        fills:
+        - type: SOLID
+          color: '#ededed'
+          token: border/separator line
+        children: []
+        asset: missing
     - id: 2007:1003
-      name: state=two icon
-      type: COMPONENT
-      w: 390
-      h: 56
+      name: two icon
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
@@ -358,29 +363,31 @@ visual_values:
         - 12
         - 0
         - 12
-        gap: 46
+        gap: 0
         align: SPACE_BETWEEN/CENTER
+      w: 390
+      h: 56
       children:
       - id: 2007:935
         name: system/Chevron
         type: INSTANCE
-        w: 24
-        h: 24
         instance_of:
           id: 2031:1154
           name: Chevron
-          key: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
           set:
             id: 2031:1154
             name: Chevron
-          rewired_from: 2007:379
         props:
           State: Chevron back
+        w: 24
+        h: 24
+        size:
+          w: 24
+          h: 24
+        clip: true
       - id: 2007:937
         name: 2 Icon grouped
         type: FRAME
-        w: 60
-        h: 24
         layout:
           mode: HORIZONTAL
           padding:
@@ -390,32 +397,43 @@ visual_values:
           - 0
           gap: 12
           align: MAX/CENTER
+        size:
+          w: hug
+          h: hug
         children:
         - id: 2007:938
           name: system/Downloading Success
-          type: INSTANCE
+          type: FRAME
           w: 24
           h: 24
-          instance_of:
-            id: 2007:399
-            name: system/Downloading Success
-            key: 0c4bf18b77e38a794ff1d82c7d91d582f799a242
-          props: {}
+          size:
+            w: 24
+            h: 24
+          radius: 12
+          fills:
+          - type: SOLID
+            color: '#ededed'
+            token: border/separator line
+          children: []
+          asset: missing
         - id: 2007:939
           name: system/Restart
-          type: INSTANCE
+          type: FRAME
           w: 24
           h: 24
-          instance_of:
-            id: 2007:405
-            name: system/Restart
-            key: d849ccc65bbbb17b5c6b86199354cd2267a8c2a1
-          props: {}
+          size:
+            w: 24
+            h: 24
+          radius: 12
+          fills:
+          - type: SOLID
+            color: '#ededed'
+            token: border/separator line
+          children: []
+          asset: missing
     - id: 2007:1002
-      name: state=Heading
-      type: COMPONENT
-      w: 390
-      h: 56
+      name: Heading
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
@@ -423,55 +441,53 @@ visual_values:
         - 12
         - 0
         - 12
-        gap: 46
+        gap: 0
         align: SPACE_BETWEEN/CENTER
+      w: 390
+      h: 56
       children:
       - id: 2007:945
         name: system/Chevron
         type: INSTANCE
-        w: 24
-        h: 24
         instance_of:
           id: 2031:1154
           name: Chevron
-          key: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
           set:
             id: 2031:1154
             name: Chevron
-          rewired_from: 2007:379
         props:
           State: Chevron back
+        w: 24
+        h: 24
+        size:
+          w: 24
+          h: 24
+        clip: true
       - id: 2007:946
         name: PRODUCT TIPS
         type: TEXT
-        w: 318
-        h: 26
+        chars: PRODUCT TIPS
+        font: Saira SemiBold
+        fontSize: 24
+        lineHeight: '1.1'
+        textAlign: CENTER
         fills:
         - type: SOLID
           color: '#454545'
           token: text/primary
-        chars: PRODUCT TIPS
-        textStyle: 👄 Headings/Small
-        font: Saira SemiBold
-        fontSize: 24
-        lineHeight: 110%
-        textAlign: CENTER
+        size:
+          w: fill
+          h: hug
       - id: 2007:947
         name: Placeholder frame
-        type: INSTANCE
+        type: FRAME
         w: 24
         h: 24
+        children: []
         opacity: 0
-        instance_of:
-          id: 2007:405
-          name: system/Restart
-          key: d849ccc65bbbb17b5c6b86199354cd2267a8c2a1
-        props: {}
     - id: 2007:1004
-      name: state=AI Token Banner
-      type: COMPONENT
-      w: 390
-      h: 56
+      name: AI Token Banner
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
@@ -481,27 +497,29 @@ visual_values:
         - 12
         gap: 100
         align: CENTER/CENTER
+      w: 390
+      h: 56
       children:
       - id: 2007:958
         name: system/Chevron
         type: INSTANCE
-        w: 24
-        h: 24
         instance_of:
           id: 2031:1154
           name: Chevron
-          key: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
           set:
             id: 2031:1154
             name: Chevron
-          rewired_from: 2007:379
         props:
           State: Chevron back
-      - id: 2007:959
-        name: 'Transcribe time chips '
-        type: INSTANCE
-        w: 118
+        w: 24
         h: 24
+        size:
+          w: 24
+          h: 24
+        clip: true
+      - id: 2007:417
+        name: Transcribe time chips
+        type: FRAME
         layout:
           mode: HORIZONTAL
           padding:
@@ -511,6 +529,9 @@ visual_values:
           - 8
           gap: 4
           align: CENTER/CENTER
+        size:
+          w: hug
+          h: hug
         radius: 12
         fills:
         - type: SOLID
@@ -518,31 +539,54 @@ visual_values:
         strokes:
         - type: SOLID
           color: '#ade6a5'
-        strokeWeight: 1
-        instance_of:
-          id: 2007:417
-          name: Property 1=High
-          key: a6b94203a7811ed99ec43c8d15c593744e2b9d4f
-          set:
-            id: 2007:416
-            name: 'Transcribe time chips '
-        props:
-          Property 1: High
+        children:
+        - id: 2007:419
+          name: bolt
+          type: FRAME
+          w: 16
+          h: 16
+          size:
+            w: 16
+            h: 16
+          radius: 3
+          fills:
+          - type: SOLID
+            color: '#54a24b'
+          children: []
+          asset: missing
+        - id: 2007:422
+          name: 01:00:00 LEFT
+          type: TEXT
+          chars: 01:00:00 LEFT
+          font: Geist Regular
+          fontSize: 12
+          lineHeight: '1.3'
+          textAlign: CENTER
+          fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          size:
+            w: hug
+            h: hug
       - id: 2007:960
         name: system/Restart
-        type: INSTANCE
+        type: FRAME
         w: 24
         h: 24
-        instance_of:
-          id: 2007:405
-          name: system/Restart
-          key: d849ccc65bbbb17b5c6b86199354cd2267a8c2a1
-        props: {}
+        size:
+          w: 24
+          h: 24
+        radius: 12
+        fills:
+        - type: SOLID
+          color: '#ededed'
+          token: border/separator line
+        children: []
+        asset: missing
     - id: 2007:1001
-      name: state=Items Selected
-      type: COMPONENT
-      w: 390
-      h: 56
+      name: Items Selected
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
@@ -550,14 +594,14 @@ visual_values:
         - 12
         - 0
         - 12
-        gap: 46
+        gap: 0
         align: SPACE_BETWEEN/CENTER
+      w: 390
+      h: 56
       children:
       - id: 2007:928
         name: selected state
         type: FRAME
-        w: 128
-        h: 24
         layout:
           mode: HORIZONTAL
           padding:
@@ -567,39 +611,45 @@ visual_values:
           - 0
           gap: 8
           align: MIN/CENTER
-        tokens:
-          itemSpacing: Gaps/smaller gap
+        size:
+          w: hug
+          h: hug
         children:
         - id: 2007:929
           name: system/cross
           type: INSTANCE
-          w: 24
-          h: 24
           instance_of:
             id: 2031:1201
             name: Cross
-            key: 4630976d22073248745eb76ebe8a4c2e55d2c1ef
-            rewired_from: 2007:411
-          props: {}
+            set:
+              id: 2031:1201
+              name: Cross
+          props:
+            Type: Default
+          w: 24
+          h: 24
+          size:
+            w: 24
+            h: 24
+          clip: true
         - id: 2007:930
           name: 1 item selected
           type: TEXT
-          w: 96
-          h: 18
+          chars: 1 item selected
+          font: Geist Regular
+          fontSize: 14
+          lineHeight: normal
+          textAlign: LEFT
           fills:
           - type: SOLID
             color: '#454545'
             token: text/primary
-          chars: 1 item selected
-          textStyle: Content/Medium
-          font: Geist Regular
-          fontSize: 14
-          textAlign: LEFT
+          size:
+            w: hug
+            h: hug
       - id: 2007:931
         name: 2 Icon grouped
         type: FRAME
-        w: 60
-        h: 24
         layout:
           mode: HORIZONTAL
           padding:
@@ -609,24 +659,37 @@ visual_values:
           - 0
           gap: 12
           align: MAX/CENTER
+        size:
+          w: hug
+          h: hug
         children:
         - id: 2007:932
           name: system/Downloading Success
-          type: INSTANCE
+          type: FRAME
           w: 24
           h: 24
-          instance_of:
-            id: 2007:399
-            name: system/Downloading Success
-            key: 0c4bf18b77e38a794ff1d82c7d91d582f799a242
-          props: {}
+          size:
+            w: 24
+            h: 24
+          radius: 12
+          fills:
+          - type: SOLID
+            color: '#ededed'
+            token: border/separator line
+          children: []
+          asset: missing
         - id: 2007:933
           name: system/Restart
-          type: INSTANCE
+          type: FRAME
           w: 24
           h: 24
-          instance_of:
-            id: 2007:405
-            name: system/Restart
-            key: d849ccc65bbbb17b5c6b86199354cd2267a8c2a1
-          props: {}
+          size:
+            w: 24
+            h: 24
+          radius: 12
+          fills:
+          - type: SOLID
+            color: '#ededed'
+            token: border/separator line
+          children: []
+          asset: missing
