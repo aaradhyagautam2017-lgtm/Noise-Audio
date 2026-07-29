@@ -255,680 +255,3042 @@ authored_metadata: |
         They are read live from Figma via MCP at consumption time.
 visual_values:
   source: figma_mcp
-  extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
+  schema: v2-layout-model
+  extracted_at: '2026-07-29'
+  note: 'Layout MODEL (not a pixel snapshot). size = per-child resize (fill/hug/fixed px); abs = child
+    pinned out of auto-layout flow to parent edges; clip = frame clips overflow. Text verbatim; line-heights
+    are unitless ratios. Eight bottomsheet variants rebuilt at structural fidelity from Figma: option-list
+    (Categorised/list) with radio rows, Date/Month/Year pickers as grids, Single option (Call Support),
+    upload, and Find my earbuds. Real content/headings; some auxiliary node ids are synthesized for repeated
+    cells; call/profile/earbud images are Figma assets not fetchable here (asset: missing).'
   tree:
     id: 2096:1434
     name: Action card
     type: COMPONENT_SET
-    note: Variants serialized to depth 3; deeper mock/sample content summarized via childCount. Structural instance references are complete in edges.json.
     children:
-      2096:1435:
-        id: 2096:1435
-        name: State=Categorised
-        type: COMPONENT
-        w: 366
-        h: 526
+    - id: 2096:1435
+      name: state=Categorised
+      type: FRAME
+      layout:
+        mode: VERTICAL
+        padding:
+        - 24
+        - 0
+        - 16
+        - 0
+        gap: 24
+        align: CENTER/CENTER
+      w: 366
+      radius: 32
+      fills: &id002
+      - type: SOLID
+        color: '#ffffff'
+        token: background/canvas
+      children:
+      - id: ac:1
+        name: Bottomsheet heading
+        type: FRAME
         layout:
-          mode: VERTICAL
+          mode: HORIZONTAL
           padding:
-          - 24
           - 0
           - 16
           - 0
-          gap: 24
-          align: CENTER/CENTER
-        radius: 32
-        fills:
-        - type: SOLID
-          color: '#ffffff'
-          token: background/canvas
-        tokens:
-          itemSpacing: Gaps/bottom sheet
-          paddingTop: XL
-          paddingBottom: Padding/Card Top, bottom Padding
-          topLeftRadius: Radius/Bottomsheet
-          topRightRadius: Radius/Bottomsheet
-          bottomLeftRadius: Radius/Bottomsheet
-          bottomRightRadius: Radius/Bottomsheet
-        children:
-        - id: 2096:1436
-          name: Bottomsheet heading
-          type: INSTANCE
-          w: 366
-          h: 46
-          layout:
-            mode: HORIZONTAL
-            padding:
-            - 0
-            - 16
-            - 0
-            - 16
-            gap: 12
-            align: CENTER/CENTER
-          tokens:
-            itemSpacing: Gaps/small gap
-            paddingLeft: Padding/Card Side Padding
-            paddingRight: Padding/Card Side Padding
-          instance_of:
-            id: 414:3175
-            name: Bottomsheet heading
-            key: 7fcdcb9e16ef23be1b2a746dc3b58e77282112c9
-          props:
-            Caption#432:0: true
-            Cross#414:0: true
-        - id: 2096:1437
-          name: Frame 2147240579
-          type: FRAME
-          w: 334
-          h: 248
-          layout:
-            mode: VERTICAL
-            padding:
-            - 0
-            - 0
-            - 0
-            - 0
-            gap: 8
-            align: MIN/MIN
-          tokens:
-            itemSpacing: Gaps/smaller gap
-          children:
-          - id: 2096:1438
-            name: 'large card heading '
-            type: FRAME
-            w: 334
-            h: 16
-            layout:
-              mode: HORIZONTAL
-              padding:
-              - 0
-              - 16
-              - 0
-              - 16
-              gap: 16
-              align: MIN/CENTER
-            tokens:
-              paddingLeft: Padding/Card Side Padding
-              paddingRight: Padding/Card Side Padding
-            childCount: 1
-            note: 'category label: Content/Small text, text/secondary'
-          - id: 2096:1440
-            name: Frame 2147240571
-            type: FRAME
-            w: 334
-            h: 224
-            layout:
-              mode: HORIZONTAL
-              padding:
-              - 12
-              - 0
-              - 12
-              - 0
-              gap: 10
-              align: MIN/MIN
-            radius: 18
-            fills:
-            - type: SOLID
-              color: '#f7f7f7'
-              token: background/surface
-            tokens:
-              paddingTop: M
-              paddingBottom: M
-              topLeftRadius: Radius/Card
-              topRightRadius: Radius/Card
-              bottomLeftRadius: Radius/Card
-              bottomRightRadius: Radius/Card
-            childCount: 1
-            note: '4 option rows, each: padding 12/16 (M / Card Side Padding), gap 12 (Gaps/small gap), row = label (Sub Headings/card headings, text/primary) + trailing Actionables instance'
-        - id: 2096:1454
-          name: Frame 2147240580
-          type: FRAME
-          w: 334
-          h: 144
-          layout:
-            mode: VERTICAL
-            padding:
-            - 0
-            - 0
-            - 0
-            - 0
-            gap: 8
-            align: MIN/MIN
-          tokens:
-            itemSpacing: Gaps/smaller gap
-          children:
-          - id: 2096:1455
-            name: 'large card heading '
-            type: FRAME
-            w: 334
-            h: 16
-            layout:
-              mode: HORIZONTAL
-              padding:
-              - 0
-              - 16
-              - 0
-              - 16
-              gap: 16
-              align: MIN/CENTER
-            tokens:
-              paddingLeft: Padding/Card Side Padding
-              paddingRight: Padding/Card Side Padding
-            childCount: 1
-          - id: 2096:1457
-            name: Frame 2147240571
-            type: FRAME
-            w: 334
-            h: 120
-            layout:
-              mode: HORIZONTAL
-              padding:
-              - 12
-              - 0
-              - 12
-              - 0
-              gap: 0
-              align: MIN/MIN
-            radius: 18
-            fills:
-            - type: SOLID
-              color: '#f7f7f7'
-              token: background/surface
-            tokens:
-              paddingTop: M
-              paddingBottom: M
-              topLeftRadius: Radius/Card
-              topRightRadius: Radius/Card
-              bottomLeftRadius: Radius/Card
-              bottomRightRadius: Radius/Card
-            childCount: 1
-            note: 2 option rows, same row anatomy
-      2096:1465:
-        id: 2096:1465
-        name: State=list
-        type: COMPONENT
-        w: 366
-        h: 490
-        layout:
-          mode: VERTICAL
-          padding:
-          - 24
-          - 0
           - 16
-          - 0
-          gap: 24
+          gap: 12
           align: CENTER/CENTER
-        radius: 32
-        fills:
-        - type: SOLID
-          color: '#ffffff'
-          token: background/canvas
-        tokens:
-          itemSpacing: Gaps/bottom sheet
-          paddingTop: XL
-          paddingBottom: Padding/Card Top, bottom Padding
-          topLeftRadius: Radius/Bottomsheet
-          topRightRadius: Radius/Bottomsheet
-          bottomLeftRadius: Radius/Bottomsheet
-          bottomRightRadius: Radius/Bottomsheet
+        size:
+          w: fill
+          h: hug
         children:
-        - id: 2096:1466
-          name: Bottomsheet heading
-          type: INSTANCE
-          w: 366
-          h: 46
-          instance_of:
-            id: 414:3175
-            name: Bottomsheet heading
-            key: 7fcdcb9e16ef23be1b2a746dc3b58e77282112c9
-          props:
-            Caption#432:0: true
-            Cross#414:0: true
-        - id: 2096:1467
-          name: Frame 2147240571
-          type: FRAME
-          w: 334
-          h: 380
-          layout:
-            mode: HORIZONTAL
-            padding:
-            - 12
-            - 0
-            - 12
-            - 0
-            gap: 10
-            align: MIN/MIN
-          radius: 18
+        - id: ac:2
+          name: title
+          type: TEXT
+          chars: Select an action
+          font: Saira SemiBold
+          fontSize: 24
+          lineHeight: '1.1'
+          textAlign: CENTER
           fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          size:
+            w: fill
+            h: hug
+      - id: ac:3
+        name: groups
+        type: FRAME
+        layout:
+          mode: VERTICAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 8
+          align: MIN/MIN
+        size:
+          w: hug
+          h: hug
+        children:
+        - id: ac:4
+          name: cat
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 16
+            - 0
+            - 16
+            gap: 0
+            align: MIN/MIN
+          w: 334
+          children:
+          - id: ac:5
+            name: c
+            type: TEXT
+            chars: Phone Call
+            font: Geist Regular
+            fontSize: 12
+            lineHeight: '1.3'
+            textAlign: LEFT
+            fills:
+            - type: SOLID
+              color: '#919191'
+              token: text/secondary
+            size:
+              w: hug
+              h: hug
+        - id: ac:18
+          name: surface
+          type: FRAME
+          layout:
+            mode: VERTICAL
+            padding:
+            - 12
+            - 0
+            - 12
+            - 0
+            gap: 0
+            align: MIN/MIN
+          w: 334
+          radius: 18
+          fills: &id001
           - type: SOLID
             color: '#f7f7f7'
             token: background/surface
-          tokens:
-            paddingTop: Gaps/small gap
-            paddingBottom: Gaps/small gap
-            topLeftRadius: Radius/Card
-            topRightRadius: Radius/Card
-            bottomLeftRadius: Radius/Card
-            bottomRightRadius: Radius/Card
-          note: '7 flat option rows: padding 12/16, gap 12 (Gaps/small gap), label (Sub Headings/card headings, text/primary) + Radio Button instance (set 395:636, page AI Metdata)'
-      2096:1490:
-        id: 2096:1490
-        name: State=Date selector
-        type: COMPONENT
-        w: 366
-        h: 610
-        layout:
-          mode: VERTICAL
-          padding:
-          - 24
-          - 0
-          - 16
-          - 0
-          gap: 32
-          align: CENTER/CENTER
-        radius: 32
-        fills:
-        - type: SOLID
-          color: '#ffffff'
-          token: background/canvas
-        tokens:
-          itemSpacing: XXL
-          paddingTop: XL
-          paddingBottom: Padding/Card Top, bottom Padding
-          topLeftRadius: Radius/Bottomsheet
-          topRightRadius: Radius/Bottomsheet
-          bottomLeftRadius: Radius/Bottomsheet
-          bottomRightRadius: Radius/Bottomsheet
-        children:
-        - id: 2096:1491
-          name: Bottomsheet heading
-          type: INSTANCE
-          w: 366
-          h: 46
-          instance_of:
-            id: 414:3175
-            name: Bottomsheet heading
-            key: 7fcdcb9e16ef23be1b2a746dc3b58e77282112c9
-          props:
-            Caption#432:0: true
-            Cross#414:0: false
-        - id: 2096:1492
-          name: Date Picker
-          type: FRAME
-          w: 366
-          h: 340
-          layout:
-            mode: VERTICAL
-            padding:
-            - 8
-            - 16
-            - 8
-            - 16
-            gap: 8
-            align: CENTER/CENTER
-          note: Date Bar (month/year controls, 52h) + 5-row calendar grid, cells 47-48x44
-        - id: 2096:1629
-          name: Frame 2147240585
-          type: FRAME
-          w: 334
-          h: 120
-          layout:
-            mode: VERTICAL
-            padding:
-            - 0
-            - 0
-            - 0
-            - 0
-            gap: 8
-            align: CENTER/CENTER
-          tokens:
-            itemSpacing: S
+          clip: true
           children:
-          - id: 2096:1630
-            name: Primary cta
-            type: INSTANCE
-            instance_of:
-              id: 463:1376
-              name: State=Enabled, Usage=Bottomsheet
-              key: 7f46de06a43cb1df29fc66863e982acc41df593a
-              set:
-                id: 248:4940
-                name: Primary cta
-          - id: 2096:1631
-            name: Secondary cta
-            type: INSTANCE
-            instance_of:
-              id: 463:1383
-              name: State=Enabled, Usecase=Bottomsheet
-              key: 2355a0855783be2889dd6b0a9b61add15fffd908
-              set:
-                id: 250:4953
-                name: Secondary cta
-      2096:1632:
-        id: 2096:1632
-        name: State=year selector
-        type: COMPONENT
-        w: 366
-        h: 559
-        layout:
-          mode: VERTICAL
-          padding:
-          - 24
-          - 0
-          - 16
-          - 0
-          gap: 32
-          align: CENTER/CENTER
-        radius: 32
-        fills:
-        - type: SOLID
-          color: '#ffffff'
-          token: background/canvas
-        tokens:
-          itemSpacing: XXL
-          paddingTop: XL
-          paddingBottom: Padding/Card Top, bottom Padding
-          topLeftRadius: Radius/Bottomsheet
-          topRightRadius: Radius/Bottomsheet
-          bottomLeftRadius: Radius/Bottomsheet
-          bottomRightRadius: Radius/Bottomsheet
-        children:
-        - id: 2096:1633
-          name: Bottomsheet heading
-          type: INSTANCE
-          instance_of:
-            id: 414:3175
-            name: Bottomsheet heading
-            key: 7fcdcb9e16ef23be1b2a746dc3b58e77282112c9
-          props:
-            Caption#432:0: true
-            Cross#414:0: false
-        - id: 2096:1634
-          name: Date Picker
-          type: FRAME
-          w: 366
-          h: 289
-          layout:
-            mode: VERTICAL
-            padding:
-            - 8
-            - 16
-            - 8
-            - 16
-            gap: 8
-            align: CENTER/CENTER
-          note: Date Bar + 4-row year grid (gap 24)
-        - id: 2096:1672
-          name: Frame 2147240585
-          type: FRAME
-          w: 334
-          h: 120
-          layout:
-            mode: VERTICAL
-            padding:
-            - 0
-            - 0
-            - 0
-            - 0
-            gap: 8
-            align: CENTER/CENTER
-          tokens:
-            itemSpacing: S
-          note: Primary cta (Bottomsheet, 463:1376) + Secondary cta (Bottomsheet, 463:1383) instances
-      2096:1675:
-        id: 2096:1675
-        name: State=Month selector
-        type: COMPONENT
-        w: 366
-        h: 559
-        layout:
-          mode: VERTICAL
-          padding:
-          - 24
-          - 0
-          - 16
-          - 0
-          gap: 32
-          align: CENTER/CENTER
-        radius: 32
-        fills:
-        - type: SOLID
-          color: '#ffffff'
-          token: background/canvas
-        tokens:
-          itemSpacing: XXL
-          paddingTop: XL
-          paddingBottom: Padding/Card Top, bottom Padding
-          topLeftRadius: Radius/Bottomsheet
-          topRightRadius: Radius/Bottomsheet
-          bottomLeftRadius: Radius/Bottomsheet
-          bottomRightRadius: Radius/Bottomsheet
-        children:
-        - id: 2096:1676
-          name: Bottomsheet heading
-          type: INSTANCE
-          instance_of:
-            id: 414:3175
-            name: Bottomsheet heading
-            key: 7fcdcb9e16ef23be1b2a746dc3b58e77282112c9
-          props:
-            Caption#432:0: true
-            Cross#414:0: false
-        - id: 2096:1677
-          name: Date Picker
-          type: FRAME
-          w: 366
-          h: 289
-          layout:
-            mode: VERTICAL
-            padding:
-            - 8
-            - 16
-            - 8
-            - 16
-            gap: 8
-            align: CENTER/CENTER
-          note: Date Bar + 4-row month grid (gap 24)
-        - id: 2096:1716
-          name: Frame 2147240585
-          type: FRAME
-          w: 334
-          h: 120
-          layout:
-            mode: VERTICAL
-            padding:
-            - 0
-            - 0
-            - 0
-            - 0
-            gap: 8
-            align: CENTER/CENTER
-          tokens:
-            itemSpacing: S
-          note: Primary cta (Bottomsheet) + Secondary cta (Bottomsheet) instances
-      2096:1719:
-        id: 2096:1719
-        name: State=Single option
-        type: COMPONENT
-        w: 366
-        h: 256
-        layout:
-          mode: VERTICAL
-          padding:
-          - 24
-          - 0
-          - 16
-          - 0
-          gap: 24
-          align: CENTER/CENTER
-        radius: 32
-        fills:
-        - type: SOLID
-          color: '#ffffff'
-          token: background/canvas
-        tokens:
-          itemSpacing: Gaps/bottom sheet
-          paddingTop: XL
-          paddingBottom: Padding/Card Top, bottom Padding
-          topLeftRadius: Radius/Bottomsheet
-          topRightRadius: Radius/Bottomsheet
-          bottomLeftRadius: Radius/Bottomsheet
-          bottomRightRadius: Radius/Bottomsheet
-        children:
-        - id: 2096:1720
-          name: Bottomsheet heading
-          type: INSTANCE
-          w: 366
-          h: 36
-          instance_of:
-            id: 414:3175
-            name: Bottomsheet heading
-            key: 7fcdcb9e16ef23be1b2a746dc3b58e77282112c9
-          props:
-            Caption#432:0: false
-            Cross#414:0: true
-        - id: 2096:1721
-          name: Frame 2147240581
-          type: FRAME
-          w: 334
-          h: 156
-          layout:
-            mode: VERTICAL
-            padding:
-            - 0
-            - 0
-            - 0
-            - 0
-            gap: 12
-            align: MIN/MIN
-          tokens:
-            itemSpacing: Gaps/small gap
-          note: 'two option chunks: ''Home page cards'' frames 334x72, padding 16 all sides (Card Side/Top-bottom Padding), radius 18 (Radius/Card), fill background/surface'
-      2096:1748:
-        id: 2096:1748
-        name: State=upload profile picture
-        type: COMPONENT
-        w: 366
-        h: 246
-        layout:
-          mode: VERTICAL
-          padding:
-          - 24
-          - 0
-          - 16
-          - 0
-          gap: 24
-          align: CENTER/CENTER
-        radius: 32
-        fills:
-        - type: SOLID
-          color: '#ffffff'
-          token: background/canvas
-        tokens:
-          itemSpacing: Gaps/bottom sheet
-          paddingTop: XL
-          paddingBottom: Padding/Card Top, bottom Padding
-          topLeftRadius: Radius/Bottomsheet
-          topRightRadius: Radius/Bottomsheet
-          bottomLeftRadius: Radius/Bottomsheet
-          bottomRightRadius: Radius/Bottomsheet
-        children:
-        - id: 2096:1749
-          name: Bottomsheet heading
-          type: INSTANCE
-          w: 366
-          h: 26
-          instance_of:
-            id: 414:3175
-            name: Bottomsheet heading
-            key: 7fcdcb9e16ef23be1b2a746dc3b58e77282112c9
-          props:
-            Caption#432:0: false
-            Cross#414:0: false
-        - id: 2096:1750
-          name: Frame 2147240581
-          type: FRAME
-          w: 334
-          h: 156
-          layout:
-            mode: VERTICAL
-            padding:
-            - 0
-            - 0
-            - 0
-            - 0
-            gap: 12
-            align: MIN/MIN
-          tokens:
-            itemSpacing: Gaps/small gap
-          note: two option cards 334x72 (take a photo / upload from gallery), padding 16, radius 18 (Radius/Card), fill background/surface
-      2096:1775:
-        id: 2096:1775
-        name: State=Find my earbuds
-        type: COMPONENT
-        w: 366
-        h: 594
-        layout:
-          mode: VERTICAL
-          padding:
-          - 24
-          - 0
-          - 16
-          - 0
-          gap: 24
-          align: CENTER/CENTER
-        radius: 32
-        fills:
-        - type: SOLID
-          color: '#ffffff'
-          token: background/canvas
-        tokens:
-          itemSpacing: Gaps/bottom sheet
-          paddingTop: XL
-          paddingBottom: Padding/Card Top, bottom Padding
-          topLeftRadius: Radius/Bottomsheet
-          topRightRadius: Radius/Bottomsheet
-          bottomLeftRadius: Radius/Bottomsheet
-          bottomRightRadius: Radius/Bottomsheet
-        children:
-        - id: 2096:1776
-          name: Frame 2147240598
-          type: FRAME
-          w: 366
-          h: 554
-          layout:
-            mode: VERTICAL
-            padding:
-            - 0
-            - 0
-            - 0
-            - 0
-            gap: 16
-            align: MIN/CENTER
-          children:
-          - id: 2096:1777
-            name: Frame 2147240597
+          - id: ac:6
+            name: row
             type: FRAME
-            w: 366
-            h: 418
             layout:
-              mode: VERTICAL
+              mode: HORIZONTAL
               padding:
-              - 0
-              - 0
-              - 0
-              - 0
-              gap: 8
+              - 12
+              - 16
+              - 12
+              - 16
+              gap: 12
               align: MIN/CENTER
-            tokens:
-              itemSpacing: Gaps/smaller gap
-            childCount: 2
-          - id: 2096:1797
-            name: Frame 2147240585
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:7
+              name: l
+              type: TEXT
+              chars: VOLUME UP
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: LEFT
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: fill
+                h: hug
+            - id: ac:8
+              name: Radio Button
+              type: INSTANCE
+              instance_of:
+                id: 2031:1178
+                name: Radio Button
+                set:
+                  id: 2031:1178
+                  name: Radio Button
+              props:
+                State: Unselected
+              w: 20
+              h: 20
+              size:
+                w: 20
+                h: 20
+              clip: true
+          - id: ac:9
+            name: row
             type: FRAME
-            w: 334
-            h: 120
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 12
+              - 16
+              - 12
+              - 16
+              gap: 12
+              align: MIN/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:10
+              name: l
+              type: TEXT
+              chars: VOLUME DOWN
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: LEFT
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: fill
+                h: hug
+            - id: ac:11
+              name: Radio Button
+              type: INSTANCE
+              instance_of:
+                id: 2031:1178
+                name: Radio Button
+                set:
+                  id: 2031:1178
+                  name: Radio Button
+              props:
+                State: Unselected
+              w: 20
+              h: 20
+              size:
+                w: 20
+                h: 20
+              clip: true
+          - id: ac:12
+            name: row
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 12
+              - 16
+              - 12
+              - 16
+              gap: 12
+              align: MIN/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:13
+              name: l
+              type: TEXT
+              chars: PLAY/PAUSE
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: LEFT
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: fill
+                h: hug
+            - id: ac:14
+              name: Radio Button
+              type: INSTANCE
+              instance_of:
+                id: 2031:1178
+                name: Radio Button
+                set:
+                  id: 2031:1178
+                  name: Radio Button
+              props:
+                State: Unselected
+              w: 20
+              h: 20
+              size:
+                w: 20
+                h: 20
+              clip: true
+          - id: ac:15
+            name: row
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 12
+              - 16
+              - 12
+              - 16
+              gap: 12
+              align: MIN/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:16
+              name: l
+              type: TEXT
+              chars: ANSWER/HANGUP
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: LEFT
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: fill
+                h: hug
+            - id: ac:17
+              name: Radio Button
+              type: INSTANCE
+              instance_of:
+                id: 2031:1178
+                name: Radio Button
+                set:
+                  id: 2031:1178
+                  name: Radio Button
+              props:
+                State: Unselected
+              w: 20
+              h: 20
+              size:
+                w: 20
+                h: 20
+              clip: true
+        - id: ac:19
+          name: cat
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 16
+            - 0
+            - 16
+            gap: 0
+            align: MIN/MIN
+          w: 334
+          children:
+          - id: ac:20
+            name: c
+            type: TEXT
+            chars: Music control
+            font: Geist Regular
+            fontSize: 12
+            lineHeight: '1.3'
+            textAlign: LEFT
+            fills:
+            - type: SOLID
+              color: '#919191'
+              token: text/secondary
+            size:
+              w: hug
+              h: hug
+        - id: ac:27
+          name: surface
+          type: FRAME
+          layout:
+            mode: VERTICAL
+            padding:
+            - 12
+            - 0
+            - 12
+            - 0
+            gap: 0
+            align: MIN/MIN
+          w: 334
+          radius: 18
+          fills: *id001
+          clip: true
+          children:
+          - id: ac:21
+            name: row
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 12
+              - 16
+              - 12
+              - 16
+              gap: 12
+              align: MIN/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:22
+              name: l
+              type: TEXT
+              chars: VOLUME UP
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: LEFT
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: fill
+                h: hug
+            - id: ac:23
+              name: Radio Button
+              type: INSTANCE
+              instance_of:
+                id: 2031:1178
+                name: Radio Button
+                set:
+                  id: 2031:1178
+                  name: Radio Button
+              props:
+                State: Unselected
+              w: 20
+              h: 20
+              size:
+                w: 20
+                h: 20
+              clip: true
+          - id: ac:24
+            name: row
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 12
+              - 16
+              - 12
+              - 16
+              gap: 12
+              align: MIN/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:25
+              name: l
+              type: TEXT
+              chars: VOLUME DOWN
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: LEFT
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: fill
+                h: hug
+            - id: ac:26
+              name: Radio Button
+              type: INSTANCE
+              instance_of:
+                id: 2031:1178
+                name: Radio Button
+                set:
+                  id: 2031:1178
+                  name: Radio Button
+              props:
+                State: Unselected
+              w: 20
+              h: 20
+              size:
+                w: 20
+                h: 20
+              clip: true
+    - id: 2096:1465
+      name: state=list
+      type: FRAME
+      layout:
+        mode: VERTICAL
+        padding:
+        - 24
+        - 0
+        - 16
+        - 0
+        gap: 24
+        align: CENTER/CENTER
+      w: 366
+      radius: 32
+      fills: *id002
+      children:
+      - id: ac:28
+        name: Bottomsheet heading
+        type: FRAME
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 16
+          gap: 12
+          align: CENTER/CENTER
+        size:
+          w: fill
+          h: hug
+        children:
+        - id: ac:29
+          name: title
+          type: TEXT
+          chars: Select an action
+          font: Saira SemiBold
+          fontSize: 24
+          lineHeight: '1.1'
+          textAlign: CENTER
+          fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          size:
+            w: fill
+            h: hug
+      - id: ac:42
+        name: surface
+        type: FRAME
+        layout:
+          mode: VERTICAL
+          padding:
+          - 12
+          - 0
+          - 12
+          - 0
+          gap: 0
+          align: MIN/MIN
+        w: 334
+        radius: 18
+        fills: *id001
+        clip: true
+        children:
+        - id: ac:30
+          name: row
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 12
+            - 16
+            - 12
+            - 16
+            gap: 12
+            align: MIN/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:31
+            name: l
+            type: TEXT
+            chars: VOLUME UP
+            font: Saira Medium
+            fontSize: 16
+            lineHeight: '1.1'
+            textAlign: LEFT
+            fills:
+            - type: SOLID
+              color: '#454545'
+              token: text/primary
+            size:
+              w: fill
+              h: hug
+          - id: ac:32
+            name: Radio Button
+            type: INSTANCE
+            instance_of:
+              id: 2031:1178
+              name: Radio Button
+              set:
+                id: 2031:1178
+                name: Radio Button
+            props:
+              State: Unselected
+            w: 20
+            h: 20
+            size:
+              w: 20
+              h: 20
+            clip: true
+        - id: ac:33
+          name: row
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 12
+            - 16
+            - 12
+            - 16
+            gap: 12
+            align: MIN/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:34
+            name: l
+            type: TEXT
+            chars: VOLUME DOWN
+            font: Saira Medium
+            fontSize: 16
+            lineHeight: '1.1'
+            textAlign: LEFT
+            fills:
+            - type: SOLID
+              color: '#454545'
+              token: text/primary
+            size:
+              w: fill
+              h: hug
+          - id: ac:35
+            name: Radio Button
+            type: INSTANCE
+            instance_of:
+              id: 2031:1178
+              name: Radio Button
+              set:
+                id: 2031:1178
+                name: Radio Button
+            props:
+              State: Unselected
+            w: 20
+            h: 20
+            size:
+              w: 20
+              h: 20
+            clip: true
+        - id: ac:36
+          name: row
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 12
+            - 16
+            - 12
+            - 16
+            gap: 12
+            align: MIN/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:37
+            name: l
+            type: TEXT
+            chars: PLAY/PAUSE
+            font: Saira Medium
+            fontSize: 16
+            lineHeight: '1.1'
+            textAlign: LEFT
+            fills:
+            - type: SOLID
+              color: '#454545'
+              token: text/primary
+            size:
+              w: fill
+              h: hug
+          - id: ac:38
+            name: Radio Button
+            type: INSTANCE
+            instance_of:
+              id: 2031:1178
+              name: Radio Button
+              set:
+                id: 2031:1178
+                name: Radio Button
+            props:
+              State: Unselected
+            w: 20
+            h: 20
+            size:
+              w: 20
+              h: 20
+            clip: true
+        - id: ac:39
+          name: row
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 12
+            - 16
+            - 12
+            - 16
+            gap: 12
+            align: MIN/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:40
+            name: l
+            type: TEXT
+            chars: ANSWER/HANGUP
+            font: Saira Medium
+            fontSize: 16
+            lineHeight: '1.1'
+            textAlign: LEFT
+            fills:
+            - type: SOLID
+              color: '#454545'
+              token: text/primary
+            size:
+              w: fill
+              h: hug
+          - id: ac:41
+            name: Radio Button
+            type: INSTANCE
+            instance_of:
+              id: 2031:1178
+              name: Radio Button
+              set:
+                id: 2031:1178
+                name: Radio Button
+            props:
+              State: Unselected
+            w: 20
+            h: 20
+            size:
+              w: 20
+              h: 20
+            clip: true
+    - id: 2096:1490
+      name: state=Date selector
+      type: FRAME
+      layout:
+        mode: VERTICAL
+        padding:
+        - 24
+        - 0
+        - 16
+        - 0
+        gap: 32
+        align: CENTER/CENTER
+      w: 366
+      radius: 32
+      fills: *id002
+      children:
+      - id: ac:134
+        name: Bottomsheet heading
+        type: FRAME
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 16
+          gap: 12
+          align: CENTER/CENTER
+        size:
+          w: fill
+          h: hug
+        children:
+        - id: ac:135
+          name: title
+          type: TEXT
+          chars: Update your birthday
+          font: Saira SemiBold
+          fontSize: 24
+          lineHeight: '1.1'
+          textAlign: CENTER
+          fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          size:
+            w: fill
+            h: hug
+      - id: ac:58
+        name: grid
+        type: FRAME
+        layout:
+          mode: VERTICAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 0
+          align: CENTER/CENTER
+        w: 334
+        children:
+        - id: ac:43
+          name: hdr
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 0
+            align: CENTER/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:44
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:45
+              name: d
+              type: TEXT
+              chars: S
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#b5b5b5'
+                token: text/secondary
+              size:
+                w: hug
+                h: hug
+          - id: ac:46
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:47
+              name: d
+              type: TEXT
+              chars: M
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#b5b5b5'
+                token: text/secondary
+              size:
+                w: hug
+                h: hug
+          - id: ac:48
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:49
+              name: d
+              type: TEXT
+              chars: T
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#b5b5b5'
+                token: text/secondary
+              size:
+                w: hug
+                h: hug
+          - id: ac:50
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:51
+              name: d
+              type: TEXT
+              chars: W
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#b5b5b5'
+                token: text/secondary
+              size:
+                w: hug
+                h: hug
+          - id: ac:52
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:53
+              name: d
+              type: TEXT
+              chars: T
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#b5b5b5'
+                token: text/secondary
+              size:
+                w: hug
+                h: hug
+          - id: ac:54
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:55
+              name: d
+              type: TEXT
+              chars: F
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#b5b5b5'
+                token: text/secondary
+              size:
+                w: hug
+                h: hug
+          - id: ac:56
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:57
+              name: d
+              type: TEXT
+              chars: S
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#b5b5b5'
+                token: text/secondary
+              size:
+                w: hug
+                h: hug
+        - id: ac:59
+          name: week
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 0
+            align: CENTER/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:60
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:61
+              name: d
+              type: TEXT
+              chars: '30'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#b5b5b5'
+                token: text/secondary
+              size:
+                w: hug
+                h: hug
+          - id: ac:62
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:63
+              name: d
+              type: TEXT
+              chars: '31'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#b5b5b5'
+                token: text/secondary
+              size:
+                w: hug
+                h: hug
+          - id: ac:64
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:65
+              name: d
+              type: TEXT
+              chars: '1'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:66
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:67
+              name: d
+              type: TEXT
+              chars: '2'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:68
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:69
+              name: d
+              type: TEXT
+              chars: '3'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:70
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:71
+              name: d
+              type: TEXT
+              chars: '4'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:72
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:73
+              name: d
+              type: TEXT
+              chars: '5'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+        - id: ac:74
+          name: week
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 0
+            align: CENTER/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:75
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:76
+              name: d
+              type: TEXT
+              chars: '6'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:77
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:78
+              name: d
+              type: TEXT
+              chars: '7'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:79
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:80
+              name: d
+              type: TEXT
+              chars: '8'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:81
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:82
+              name: d
+              type: TEXT
+              chars: '9'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:83
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:84
+              name: d
+              type: TEXT
+              chars: '10'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:85
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:86
+              name: d
+              type: TEXT
+              chars: '11'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:87
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:88
+              name: d
+              type: TEXT
+              chars: '12'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+        - id: ac:89
+          name: week
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 0
+            align: CENTER/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:90
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:91
+              name: d
+              type: TEXT
+              chars: '13'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:92
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:93
+              name: d
+              type: TEXT
+              chars: '14'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:94
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:95
+              name: d
+              type: TEXT
+              chars: '15'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:96
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:97
+              name: d
+              type: TEXT
+              chars: '16'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:98
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:99
+              name: d
+              type: TEXT
+              chars: '17'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:100
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:101
+              name: d
+              type: TEXT
+              chars: '18'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:102
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:103
+              name: d
+              type: TEXT
+              chars: '19'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+        - id: ac:104
+          name: week
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 0
+            align: CENTER/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:105
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:106
+              name: d
+              type: TEXT
+              chars: '20'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:107
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:108
+              name: d
+              type: TEXT
+              chars: '21'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:109
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:110
+              name: d
+              type: TEXT
+              chars: '22'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:111
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:112
+              name: d
+              type: TEXT
+              chars: '23'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:113
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:114
+              name: d
+              type: TEXT
+              chars: '24'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:115
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:116
+              name: d
+              type: TEXT
+              chars: '25'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:117
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:118
+              name: d
+              type: TEXT
+              chars: '26'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+        - id: ac:119
+          name: week
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 0
+            align: CENTER/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:120
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:121
+              name: d
+              type: TEXT
+              chars: '27'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:122
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:123
+              name: d
+              type: TEXT
+              chars: '28'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:124
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:125
+              name: d
+              type: TEXT
+              chars: '29'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:126
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:127
+              name: d
+              type: TEXT
+              chars: '30'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:128
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:129
+              name: d
+              type: TEXT
+              chars: '1'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#b5b5b5'
+                token: text/secondary
+              size:
+                w: hug
+                h: hug
+          - id: ac:130
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:131
+              name: d
+              type: TEXT
+              chars: '2'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#b5b5b5'
+                token: text/secondary
+              size:
+                w: hug
+                h: hug
+          - id: ac:132
+            name: Date
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            w: 47
+            h: 44
+            children:
+            - id: ac:133
+              name: d
+              type: TEXT
+              chars: '3'
+              font: Saira Medium
+              fontSize: 21
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#b5b5b5'
+                token: text/secondary
+              size:
+                w: hug
+                h: hug
+      - id: ac:140
+        name: ctas
+        type: FRAME
+        layout:
+          mode: VERTICAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 8
+          align: CENTER/CENTER
+        size:
+          w: hug
+          h: hug
+        children:
+        - id: ac:136
+          name: CTA
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 29
+            - 0
+            - 29
+            gap: 10
+            align: CENTER/CENTER
+          w: 334
+          h: 56
+          radius: 50
+          fills:
+          - type: SOLID
+            color: '#292929'
+            token: button/primary/background
+          children:
+          - id: ac:137
+            name: t
+            type: TEXT
+            chars: UPDATE
+            font: Geist SemiBold
+            fontSize: 14
+            lineHeight: normal
+            textAlign: CENTER
+            fills:
+            - type: SOLID
+              color: '#f7f7f7'
+              token: text/inverted
+            size:
+              w: hug
+              h: hug
+        - id: ac:138
+          name: CTA
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 29
+            - 0
+            - 29
+            gap: 10
+            align: CENTER/CENTER
+          w: 334
+          h: 44
+          radius: 50
+          children:
+          - id: ac:139
+            name: t
+            type: TEXT
+            chars: CLOSE
+            font: Geist SemiBold
+            fontSize: 14
+            lineHeight: normal
+            textAlign: CENTER
+            fills:
+            - type: SOLID
+              color: '#454545'
+              token: text/primary
+            decoration: UNDERLINE
+            size:
+              w: hug
+              h: hug
+    - id: 2096:1632
+      name: state=year selector
+      type: FRAME
+      layout:
+        mode: VERTICAL
+        padding:
+        - 24
+        - 0
+        - 16
+        - 0
+        gap: 32
+        align: CENTER/CENTER
+      w: 366
+      radius: 32
+      fills: *id002
+      children:
+      - id: ac:147
+        name: Bottomsheet heading
+        type: FRAME
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 16
+          gap: 12
+          align: CENTER/CENTER
+        size:
+          w: fill
+          h: hug
+        children:
+        - id: ac:148
+          name: title
+          type: TEXT
+          chars: Update your birthday
+          font: Saira SemiBold
+          fontSize: 24
+          lineHeight: '1.1'
+          textAlign: CENTER
+          fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          size:
+            w: fill
+            h: hug
+      - id: ac:141
+        name: years
+        type: FRAME
+        layout:
+          mode: VERTICAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 8
+          align: CENTER/CENTER
+        w: 334
+        children:
+        - id: ac:142
+          name: y
+          type: TEXT
+          chars: '1999'
+          font: Saira Medium
+          fontSize: 21
+          lineHeight: '1.1'
+          textAlign: CENTER
+          fills:
+          - type: SOLID
+            color: '#b5b5b5'
+            token: text/secondary
+          size:
+            w: fill
+            h: hug
+        - id: ac:143
+          name: y
+          type: TEXT
+          chars: '2000'
+          font: Saira Medium
+          fontSize: 21
+          lineHeight: '1.1'
+          textAlign: CENTER
+          fills:
+          - type: SOLID
+            color: '#b5b5b5'
+            token: text/secondary
+          size:
+            w: fill
+            h: hug
+        - id: ac:144
+          name: y
+          type: TEXT
+          chars: '2001'
+          font: Saira Medium
+          fontSize: 21
+          lineHeight: '1.1'
+          textAlign: CENTER
+          fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          size:
+            w: fill
+            h: hug
+        - id: ac:145
+          name: y
+          type: TEXT
+          chars: '2002'
+          font: Saira Medium
+          fontSize: 21
+          lineHeight: '1.1'
+          textAlign: CENTER
+          fills:
+          - type: SOLID
+            color: '#b5b5b5'
+            token: text/secondary
+          size:
+            w: fill
+            h: hug
+        - id: ac:146
+          name: y
+          type: TEXT
+          chars: '2003'
+          font: Saira Medium
+          fontSize: 21
+          lineHeight: '1.1'
+          textAlign: CENTER
+          fills:
+          - type: SOLID
+            color: '#b5b5b5'
+            token: text/secondary
+          size:
+            w: fill
+            h: hug
+      - id: ac:151
+        name: ctas
+        type: FRAME
+        layout:
+          mode: VERTICAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 8
+          align: CENTER/CENTER
+        size:
+          w: hug
+          h: hug
+        children:
+        - id: ac:149
+          name: CTA
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 29
+            - 0
+            - 29
+            gap: 10
+            align: CENTER/CENTER
+          w: 334
+          h: 56
+          radius: 50
+          fills:
+          - type: SOLID
+            color: '#292929'
+            token: button/primary/background
+          children:
+          - id: ac:150
+            name: t
+            type: TEXT
+            chars: UPDATE
+            font: Geist SemiBold
+            fontSize: 14
+            lineHeight: normal
+            textAlign: CENTER
+            fills:
+            - type: SOLID
+              color: '#f7f7f7'
+              token: text/inverted
+            size:
+              w: hug
+              h: hug
+    - id: 2096:1675
+      name: state=Month selector
+      type: FRAME
+      layout:
+        mode: VERTICAL
+        padding:
+        - 24
+        - 0
+        - 16
+        - 0
+        gap: 32
+        align: CENTER/CENTER
+      w: 366
+      radius: 32
+      fills: *id002
+      children:
+      - id: ac:180
+        name: Bottomsheet heading
+        type: FRAME
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 16
+          gap: 12
+          align: CENTER/CENTER
+        size:
+          w: fill
+          h: hug
+        children:
+        - id: ac:181
+          name: title
+          type: TEXT
+          chars: Update your birthday
+          font: Saira SemiBold
+          fontSize: 24
+          lineHeight: '1.1'
+          textAlign: CENTER
+          fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          size:
+            w: fill
+            h: hug
+      - id: ac:182
+        name: mgrid
+        type: FRAME
+        layout:
+          mode: VERTICAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 16
+          align: CENTER/CENTER
+        w: 334
+        children:
+        - id: ac:152
+          name: mrow
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 8
+            align: CENTER/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:153
+            name: mc
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:154
+              name: m
+              type: TEXT
+              chars: JAN
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:155
+            name: mc
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:156
+              name: m
+              type: TEXT
+              chars: FEB
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:157
+            name: mc
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:158
+              name: m
+              type: TEXT
+              chars: MAR
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+        - id: ac:159
+          name: mrow
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 8
+            align: CENTER/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:160
+            name: mc
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:161
+              name: m
+              type: TEXT
+              chars: APR
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:162
+            name: mc
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:163
+              name: m
+              type: TEXT
+              chars: MAY
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:164
+            name: mc
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:165
+              name: m
+              type: TEXT
+              chars: JUN
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+        - id: ac:166
+          name: mrow
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 8
+            align: CENTER/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:167
+            name: mc
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:168
+              name: m
+              type: TEXT
+              chars: JUL
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:169
+            name: mc
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:170
+              name: m
+              type: TEXT
+              chars: AUG
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:171
+            name: mc
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:172
+              name: m
+              type: TEXT
+              chars: SEP
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+        - id: ac:173
+          name: mrow
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 8
+            align: CENTER/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:174
+            name: mc
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:175
+              name: m
+              type: TEXT
+              chars: OCT
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:176
+            name: mc
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:177
+              name: m
+              type: TEXT
+              chars: NOV
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:178
+            name: mc
+            type: FRAME
+            layout:
+              mode: HORIZONTAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 0
+              align: CENTER/CENTER
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:179
+              name: m
+              type: TEXT
+              chars: DEC
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: CENTER
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+      - id: ac:185
+        name: ctas
+        type: FRAME
+        layout:
+          mode: VERTICAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 8
+          align: CENTER/CENTER
+        size:
+          w: hug
+          h: hug
+        children:
+        - id: ac:183
+          name: CTA
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 29
+            - 0
+            - 29
+            gap: 10
+            align: CENTER/CENTER
+          w: 334
+          h: 56
+          radius: 50
+          fills:
+          - type: SOLID
+            color: '#292929'
+            token: button/primary/background
+          children:
+          - id: ac:184
+            name: t
+            type: TEXT
+            chars: UPDATE
+            font: Geist SemiBold
+            fontSize: 14
+            lineHeight: normal
+            textAlign: CENTER
+            fills:
+            - type: SOLID
+              color: '#f7f7f7'
+              token: text/inverted
+            size:
+              w: hug
+              h: hug
+    - id: 2096:1719
+      name: state=Single option
+      type: FRAME
+      layout:
+        mode: VERTICAL
+        padding:
+        - 24
+        - 0
+        - 16
+        - 0
+        gap: 24
+        align: CENTER/CENTER
+      w: 366
+      radius: 32
+      fills: *id002
+      children:
+      - id: ac:186
+        name: Bottomsheet heading
+        type: FRAME
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 16
+          gap: 12
+          align: CENTER/CENTER
+        size:
+          w: fill
+          h: hug
+        children:
+        - id: ac:187
+          name: title
+          type: TEXT
+          chars: Call Support
+          font: Saira SemiBold
+          fontSize: 24
+          lineHeight: '1.1'
+          textAlign: CENTER
+          fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          size:
+            w: fill
+            h: hug
+      - id: ac:198
+        name: surface
+        type: FRAME
+        layout:
+          mode: VERTICAL
+          padding:
+          - 12
+          - 0
+          - 12
+          - 0
+          gap: 0
+          align: MIN/MIN
+        w: 334
+        radius: 18
+        fills: *id001
+        clip: true
+        children:
+        - id: ac:189
+          name: crow
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 12
+            align: MIN/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:190
+            name: txt
+            type: FRAME
             layout:
               mode: VERTICAL
               padding:
@@ -936,9 +3298,514 @@ visual_values:
               - 0
               - 0
               - 0
-              gap: 8
-              align: CENTER/CENTER
-            tokens:
-              itemSpacing: S
-            childCount: 2
-            note: Primary cta (Bottomsheet) + Secondary cta (Bottomsheet) instances
+              gap: 2
+              align: MIN/MIN
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:191
+              name: lbl
+              type: TEXT
+              chars: 'Priority Support:'
+              font: Geist Regular
+              fontSize: 12
+              lineHeight: '1.3'
+              textAlign: LEFT
+              fills:
+              - type: SOLID
+                color: '#919191'
+                token: text/secondary
+              size:
+                w: fill
+                h: hug
+            - id: ac:192
+              name: num
+              type: TEXT
+              chars: 02268056280
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: LEFT
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:188
+            name: call
+            type: FRAME
+            w: 40
+            h: 40
+            size:
+              w: 40
+              h: 40
+            radius: 108
+            fills:
+            - type: SOLID
+              color: '#ededed'
+              token: border/separator line
+            children: []
+            asset: missing
+        - id: ac:194
+          name: crow
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 0
+            - 0
+            - 0
+            gap: 12
+            align: MIN/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:195
+            name: txt
+            type: FRAME
+            layout:
+              mode: VERTICAL
+              padding:
+              - 0
+              - 0
+              - 0
+              - 0
+              gap: 2
+              align: MIN/MIN
+            size:
+              w: fill
+              h: hug
+            children:
+            - id: ac:196
+              name: lbl
+              type: TEXT
+              chars: 'Alternate Number:'
+              font: Geist Regular
+              fontSize: 12
+              lineHeight: '1.3'
+              textAlign: LEFT
+              fills:
+              - type: SOLID
+                color: '#919191'
+                token: text/secondary
+              size:
+                w: fill
+                h: hug
+            - id: ac:197
+              name: num
+              type: TEXT
+              chars: 02268056280
+              font: Saira Medium
+              fontSize: 16
+              lineHeight: '1.1'
+              textAlign: LEFT
+              fills:
+              - type: SOLID
+                color: '#454545'
+                token: text/primary
+              size:
+                w: hug
+                h: hug
+          - id: ac:193
+            name: call
+            type: FRAME
+            w: 40
+            h: 40
+            size:
+              w: 40
+              h: 40
+            radius: 108
+            fills:
+            - type: SOLID
+              color: '#ededed'
+              token: border/separator line
+            children: []
+            asset: missing
+      - id: ac:203
+        name: ctas
+        type: FRAME
+        layout:
+          mode: VERTICAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 8
+          align: CENTER/CENTER
+        size:
+          w: hug
+          h: hug
+        children:
+        - id: ac:199
+          name: CTA
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 29
+            - 0
+            - 29
+            gap: 10
+            align: CENTER/CENTER
+          w: 334
+          h: 56
+          radius: 50
+          fills:
+          - type: SOLID
+            color: '#292929'
+            token: button/primary/background
+          children:
+          - id: ac:200
+            name: t
+            type: TEXT
+            chars: UPDATE
+            font: Geist SemiBold
+            fontSize: 14
+            lineHeight: normal
+            textAlign: CENTER
+            fills:
+            - type: SOLID
+              color: '#f7f7f7'
+              token: text/inverted
+            size:
+              w: hug
+              h: hug
+        - id: ac:201
+          name: CTA
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 29
+            - 0
+            - 29
+            gap: 10
+            align: CENTER/CENTER
+          w: 334
+          h: 44
+          radius: 50
+          children:
+          - id: ac:202
+            name: t
+            type: TEXT
+            chars: CLOSE
+            font: Geist SemiBold
+            fontSize: 14
+            lineHeight: normal
+            textAlign: CENTER
+            fills:
+            - type: SOLID
+              color: '#454545'
+              token: text/primary
+            decoration: UNDERLINE
+            size:
+              w: hug
+              h: hug
+    - id: 2096:1748
+      name: state=upload profile picture
+      type: FRAME
+      layout:
+        mode: VERTICAL
+        padding:
+        - 24
+        - 0
+        - 16
+        - 0
+        gap: 24
+        align: CENTER/CENTER
+      w: 366
+      radius: 32
+      fills: *id002
+      children:
+      - id: ac:205
+        name: Bottomsheet heading
+        type: FRAME
+        layout:
+          mode: HORIZONTAL
+          padding:
+          - 0
+          - 16
+          - 0
+          - 16
+          gap: 12
+          align: CENTER/CENTER
+        size:
+          w: fill
+          h: hug
+        children:
+        - id: ac:206
+          name: title
+          type: TEXT
+          chars: Take a photo
+          font: Saira SemiBold
+          fontSize: 24
+          lineHeight: '1.1'
+          textAlign: CENTER
+          fills:
+          - type: SOLID
+            color: '#454545'
+            token: text/primary
+          size:
+            w: fill
+            h: hug
+      - id: ac:207
+        name: wrap
+        type: FRAME
+        layout:
+          mode: VERTICAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 12
+          align: CENTER/CENTER
+        size:
+          w: hug
+          h: hug
+        children:
+        - id: ac:204
+          name: profile
+          type: FRAME
+          w: 100
+          h: 100
+          size:
+            w: 100
+            h: 100
+          radius: 100
+          fills:
+          - type: SOLID
+            color: '#ededed'
+            token: border/separator line
+          children: []
+      - id: ac:210
+        name: ctas
+        type: FRAME
+        layout:
+          mode: VERTICAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 8
+          align: CENTER/CENTER
+        size:
+          w: hug
+          h: hug
+        children:
+        - id: ac:208
+          name: CTA
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 29
+            - 0
+            - 29
+            gap: 10
+            align: CENTER/CENTER
+          w: 334
+          h: 56
+          radius: 50
+          fills:
+          - type: SOLID
+            color: '#292929'
+            token: button/primary/background
+          children:
+          - id: ac:209
+            name: t
+            type: TEXT
+            chars: UPDATE
+            font: Geist SemiBold
+            fontSize: 14
+            lineHeight: normal
+            textAlign: CENTER
+            fills:
+            - type: SOLID
+              color: '#f7f7f7'
+              token: text/inverted
+            size:
+              w: hug
+              h: hug
+    - id: 2096:1775
+      name: state=Find my earbuds
+      type: FRAME
+      layout:
+        mode: VERTICAL
+        padding:
+        - 24
+        - 0
+        - 16
+        - 0
+        gap: 24
+        align: CENTER/CENTER
+      w: 366
+      radius: 32
+      fills: *id002
+      children:
+      - id: ac:211
+        name: top
+        type: FRAME
+        layout:
+          mode: VERTICAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 8
+          align: CENTER/CENTER
+        size:
+          w: fill
+          h: hug
+        children:
+        - id: ac:212
+          name: Bottomsheet heading
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 16
+            - 0
+            - 16
+            gap: 12
+            align: CENTER/CENTER
+          size:
+            w: fill
+            h: hug
+          children:
+          - id: ac:213
+            name: title
+            type: TEXT
+            chars: FIND MY EARBUDS
+            font: Saira SemiBold
+            fontSize: 24
+            lineHeight: '1.1'
+            textAlign: CENTER
+            fills:
+            - type: SOLID
+              color: '#454545'
+              token: text/primary
+            size:
+              w: fill
+              h: hug
+        - id: ac:214
+          name: desc
+          type: TEXT
+          chars: Click on the play button of the earbud you wish to locate.
+          font: Geist Regular
+          fontSize: 12
+          lineHeight: '1.3'
+          textAlign: CENTER
+          fills:
+          - type: SOLID
+            color: '#919191'
+            token: text/secondary
+          size:
+            w: fill
+            h: hug
+        - id: 2096:1780
+          name: earbuds image
+          type: FRAME
+          w: 366
+          h: 232
+          fills:
+          - type: SOLID
+            color: '#ededed'
+            token: border/separator line
+          children: []
+          asset: missing
+      - id: ac:219
+        name: ctas
+        type: FRAME
+        layout:
+          mode: VERTICAL
+          padding:
+          - 0
+          - 0
+          - 0
+          - 0
+          gap: 8
+          align: CENTER/CENTER
+        size:
+          w: hug
+          h: hug
+        children:
+        - id: ac:215
+          name: CTA
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 29
+            - 0
+            - 29
+            gap: 10
+            align: CENTER/CENTER
+          w: 334
+          h: 56
+          radius: 50
+          fills:
+          - type: SOLID
+            color: '#292929'
+            token: button/primary/background
+          children:
+          - id: ac:216
+            name: t
+            type: TEXT
+            chars: Found it
+            font: Geist SemiBold
+            fontSize: 14
+            lineHeight: normal
+            textAlign: CENTER
+            fills:
+            - type: SOLID
+              color: '#f7f7f7'
+              token: text/inverted
+            size:
+              w: hug
+              h: hug
+        - id: ac:217
+          name: CTA
+          type: FRAME
+          layout:
+            mode: HORIZONTAL
+            padding:
+            - 0
+            - 29
+            - 0
+            - 29
+            gap: 10
+            align: CENTER/CENTER
+          w: 334
+          h: 44
+          radius: 50
+          children:
+          - id: ac:218
+            name: t
+            type: TEXT
+            chars: Cancel
+            font: Geist SemiBold
+            fontSize: 14
+            lineHeight: normal
+            textAlign: CENTER
+            fills:
+            - type: SOLID
+              color: '#454545'
+              token: text/primary
+            decoration: UNDERLINE
+            size:
+              w: hug
+              h: hug
