@@ -318,15 +318,38 @@ def first_visible_solid(fills):
             return f
     return None
 
-def node_style(n):
+def node_style(n, parent_dir=None):
     s = []
-    if "w" in n:
+    size = n.get("size")
+    # --- sizing. The layout-model 'size' (fill / hug / fixed-px, per axis) supersedes a legacy
+    # fixed w/h snapshot. 'fill' grows/shrinks to fill the parent (flex on the main axis,
+    # stretch on the cross); 'hug' sizes to content; a number is fixed px. This is the field
+    # whose absence made hard-pinned snapshot widths overflow and bleed out of their box.
+    if size:
+        for axis in ("w", "h"):
+            val = size.get(axis)
+            if val is None:
+                continue
+            main = (axis == "w" and parent_dir == "row") or (axis == "h" and parent_dir == "column")
+            dim = "width" if axis == "w" else "height"
+            if val == "fill":
+                if main:
+                    s.append("flex:1 1 0"); s.append(f"min-{dim}:0")
+                else:
+                    s.append("align-self:stretch")
+            elif val == "hug":
+                if main:
+                    s.append("flex:0 0 auto")
+            elif isinstance(val, (int, float)):
+                s.append(f"{dim}:{val}px")
+                if main:
+                    s.append("flex:none")
+    elif "w" in n:
         s.append(f'width:{n["w"]}px')
         # A TEXT node's captured height is a snapshot of how tall Figma's own renderer made
         # the wrapped text; ours doesn't always agree (missing/approximated line-height, a
-        # different font stack), so pinning it can crop a wrapped line right off -- e.g.
-        # link-cta's 3-line label was cut down to under two. Width still constrains wrapping
-        # (that's what has to match Figma); height is left intrinsic so it always fits.
+        # different font stack), so pinning it can crop a wrapped line right off. Width still
+        # constrains wrapping (that's what has to match Figma); height is left intrinsic.
         if n.get("type") != "TEXT":
             s.append(f'height:{n["h"]}px')
     lay = n.get("layout")
@@ -341,14 +364,22 @@ def node_style(n):
         s.append(f"justify-content:{ALIGN.get(prim,'flex-start')}")
         s.append(f"align-items:{ALIGN.get(cnt,'flex-start')}")
         s.append("box-sizing:border-box")
+    # --- positioning. 'abs' pins a child out of the auto-layout flow to its parent's edges
+    # (the trailing count / badge / overlay that Figma positions absolutely -- pinning it in
+    # flow was what pushed "0/50" out of the box). Legacy x/y kept for older components;
+    # everything else is position:relative so it can host absolutely-positioned children.
+    abs_ = n.get("abs")
+    if abs_:
+        s.append("position:absolute")
+        for edge in ("left", "right", "top", "bottom"):
+            if edge in abs_:
+                s.append(f"{edge}:{abs_[edge]}px")
     elif "x" in n and "y" in n:
-        # explicit position within its parent (freely-placed / overlapping layers outside
-        # auto-layout, e.g. a toggle thumb or a radio button's inner dot) -- position:absolute
-        # here, inline, so it actually wins; a stylesheet rule can't out-specificity an inline
-        # style, which is what silently broke this case before (see git history).
         s.append(f'position:absolute;left:{n["x"]}px;top:{n["y"]}px')
     else:
         s.append("position:relative")
+    if n.get("clip"):
+        s.append("overflow:hidden")
     r = n.get("radius")
     if r is not None:
         s.append("border-radius:" + (f"{r}px" if isinstance(r, (int, float)) else "%spx %spx %spx %spx" % tuple(r)))
@@ -473,13 +504,13 @@ def resolve_variant_node(target_tree, target_comp, props):
 
 MAX_INSTANCE_DEPTH = 6  # guards against a cyclic instance reference; never expected in practice
 
-def render_node(n, depth=0, link_prefix="", instance_chain=()):
+def render_node(n, depth=0, link_prefix="", instance_chain=(), parent_dir=None):
     if n.get("visible") is False:
         return ""  # hidden in Figma; present in the data, not in the render
     t = n.get("type")
     tip = E(f'{n.get("name","")} · {n.get("id","")}' + (f' · token: {json.dumps(n["tokens"])}' if n.get("tokens") else ""))
     if t == "TEXT":
-        return f'<span class="pv-text" title="{tip}" style="{node_style(n)};{text_style(n)}">{E(n.get("chars",""))}</span>'
+        return f'<span class="pv-text" title="{tip}" style="{node_style(n, parent_dir)};{text_style(n)}">{E(n.get("chars",""))}</span>'
     if t == "INSTANCE":
         ref = n.get("instance_of") or {}
         target = None
@@ -496,10 +527,15 @@ def render_node(n, depth=0, link_prefix="", instance_chain=()):
         target_tree = components.get(target, {}).get("visual_values", {}).get("tree") if target else None
         if target and isinstance(target_tree, dict) and target not in instance_chain and len(instance_chain) < MAX_INSTANCE_DEPTH:
             variant_node = resolve_variant_node(target_tree, components[target], n.get("props") or {})
-            return render_node(variant_node, depth + 1, link_prefix, instance_chain + (target,))
+            # carry the instance's own sizing/position onto the resolved variant so a
+            # fill/hug/pinned instance still sizes and sits where the parent placed it
+            for k in ("size", "abs", "clip"):
+                if k in n and k not in variant_node:
+                    variant_node = {**variant_node, k: n[k]}
+            return render_node(variant_node, depth + 1, link_prefix, instance_chain + (target,), parent_dir)
         inner = (f'<a href="{link_prefix}{target}.html">{E(label)}</a>' if target
                  else f'<span class="pv-unresolved" title="main component is outside the ingested page">{E(label)} ⚠</span>')
-        return (f'<span class="pv-instance" title="{tip}" style="{node_style(n)}">'
+        return (f'<span class="pv-instance" title="{tip}" style="{node_style(n, parent_dir)}">'
                 f'<span class="pv-instance-label">{inner}</span></span>')
     if t in ("VECTOR", "LINE", "ELLIPSE", "BOOLEAN_OPERATION"):
         icon = PLACEHOLDER_ICONS.get(n.get("placeholder_icon"))
@@ -509,15 +545,17 @@ def render_node(n, depth=0, link_prefix="", instance_chain=()):
             color = (first_visible_solid(n.get("fills")) or first_visible_solid(n.get("strokes")) or {}).get("color", "#171717")
             svg = icon(n, n.get("w", 24), n.get("h", 24), color)
             return f'<span class="pv-icon-placeholder" title="{tip} · placeholder, pending real Figma asset">{svg}</span>'
-        return f'<span class="pv-shape" title="{tip}" style="{node_style(n)}"></span>'
+        return f'<span class="pv-shape" title="{tip}" style="{node_style(n, parent_dir)}"></span>'
     kids = n.get("children")
     if isinstance(kids, dict):
         kids = list(kids.values())
-    inner = "".join(render_node(c, depth + 1, link_prefix, instance_chain) for c in (kids or []))
+    my_dir = ("column" if n["layout"]["mode"] == "VERTICAL" else "row") if n.get("layout") else None
+    inner = "".join(render_node(c, depth + 1, link_prefix, instance_chain, my_dir) for c in (kids or []))
     if not kids and n.get("childCount"):
         inner = f'<span class="pv-note">{n["childCount"]} children — {E(n.get("note","summarized in visual_values"))}</span>'
-    abspos = "" if n.get("layout") else ' data-stack="1"'
-    return f'<div class="pv-frame" title="{tip}" style="{node_style(n)}"{abspos}>{inner}</div>'
+    # a frame with absolutely-positioned children must NOT also get the data-stack overlap rule
+    abspos = "" if (n.get("layout") or any((isinstance(c, dict) and c.get("abs")) for c in (kids or []))) else ' data-stack="1"'
+    return f'<div class="pv-frame" title="{tip}" style="{node_style(n, parent_dir)}"{abspos}>{inner}</div>'
 
 def render_preview(comp, link_prefix=""):
     tree = comp.get("visual_values", {}).get("tree")

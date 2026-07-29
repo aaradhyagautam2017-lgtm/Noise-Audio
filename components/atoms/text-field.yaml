@@ -189,23 +189,23 @@ authored_metadata: |
         heading-to-field gap resolves to space.numeral.s (= 8).
 visual_values:
   source: figma_mcp
-  extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
+  schema: v2-layout-model
+  extracted_at: '2026-07-29'
+  note: Values extracted from the Figma node tree as a LAYOUT MODEL, not a pixel snapshot. size = per-child
+    resize behaviour (fill / hug / fixed px); abs = absolutely-positioned child pinned to parent edges
+    (out of auto-layout flow); clip = frame clips overflow. Text content is verbatim and complete. Instance
+    subtrees are not expanded; each child governs itself, but the instance's as-placed variant/overrides
+    are recorded here.
   tree:
     id: 445:8434
     name: Text field
     type: COMPONENT_SET
     w: 398
     h: 886
-    radius: 5
-    strokes:
-    - type: SOLID
-      color: '#8a38f5'
-    strokeWeight: 1
     children:
     - id: 445:8433
       name: Type=small
-      type: COMPONENT
+      type: FRAME
       w: 358
       h: 64
       layout:
@@ -215,7 +215,7 @@ visual_values:
         - 0
         - 0
         - 0
-        gap: 8
+        gap: 0
         align: MIN/CENTER
       children:
       - id: 445:8430
@@ -232,50 +232,48 @@ visual_values:
           - 16
           gap: 34
           align: MIN/CENTER
+        size:
+          w: fill
+          h: fill
         radius: 18
-        fills:
+        fills: &id002
         - type: SOLID
           color: '#f7f7f7'
           token: background/surface
-        tokens:
-          topLeftRadius: Radius/Card
-          topRightRadius: Radius/Card
-          bottomLeftRadius: Radius/Card
-          bottomRightRadius: Radius/Card
         children:
         - id: 445:8431
           name: Briefly explain your problem
           type: TEXT
-          w: 285
-          h: 18
+          chars: Briefly explain your problem
+          font: Saira Medium
+          fontSize: 16
+          lineHeight: '1.1'
+          textAlign: LEFT
           fills:
           - type: SOLID
             color: '#919191'
             token: text/secondary
-          chars: Briefly explain your problem
-          textStyle: Sub Headings/card headings
-          font: Saira Medium
-          fontSize: 16
-          lineHeight: 110%
-          textAlign: LEFT
+          size:
+            w: 285
+            h: hug
         - id: 445:8432
           name: 0/50
           type: TEXT
-          w: 29
-          h: 16
+          chars: 0/50
+          font: Geist Regular
+          fontSize: 12
+          lineHeight: '1.3'
+          textAlign: RIGHT
           fills:
           - type: SOLID
             color: '#919191'
             token: text/secondary
-          chars: 0/50
-          textStyle: Content/Small
-          font: Geist Regular
-          fontSize: 12
-          lineHeight: 130%
-          textAlign: RIGHT
+          abs:
+            right: 12
+            top: 36
     - id: 758:875
       name: Type=Noise Ai text field
-      type: COMPONENT
+      type: FRAME
       w: 358
       h: 56
       layout:
@@ -285,12 +283,12 @@ visual_values:
         - 0
         - 0
         - 0
-        gap: 8
+        gap: 0
         align: MIN/CENTER
       radius: 18
       effects:
       - type: DROP_SHADOW
-        radius: 4.599999904632568
+        radius: 2.3
         offset:
           x: 1
           y: 1
@@ -309,8 +307,11 @@ visual_values:
           - 16
           - 0
           - 16
-          gap: 34
+          gap: 0
           align: MIN/CENTER
+        size:
+          w: fill
+          h: fill
         radius: 18
         fills:
         - type: SOLID
@@ -329,21 +330,26 @@ visual_values:
             - 0
             - 0
             - 0
-            gap: 70
+            gap: 8
             align: SPACE_BETWEEN/CENTER
+          size:
+            w: fill
+            h: hug
           children:
           - id: 758:899
             name: '| Ask Anything'
             type: TEXT
-            w: 254
-            h: 21
-            tokens:
-              textRangeFills:
-              - text/primary
-              - text/tertiary
             chars: '| Ask Anything'
             font: Geist Regular
+            fontSize: 14
+            lineHeight: '1.2'
             textAlign: LEFT
+            fills:
+            - type: SOLID
+              color: '#b5b5b5'
+            size:
+              w: fill
+              h: hug
           - id: 758:900
             name: Frame 2147240649
             type: FRAME
@@ -358,16 +364,20 @@ visual_values:
               - 0
               gap: 8
               align: MIN/CENTER
-            tokens:
-              itemSpacing: Gaps/smaller gap
+            size:
+              w: hug
+              h: hug
             children:
             - id: 758:901
               name: Frame 2147240647
               type: FRAME
               w: 32
               h: 32
+              size:
+                w: 32
+                h: 32
               radius: 63
-              fills:
+              fills: &id001
               - type: SOLID
                 color: '#ededed'
                 token: border/separator line
@@ -377,15 +387,15 @@ visual_values:
               type: FRAME
               w: 32
               h: 32
+              size:
+                w: 32
+                h: 32
               radius: 63
-              fills:
-              - type: SOLID
-                color: '#ededed'
-                token: border/separator line
+              fills: *id001
               children: []
     - id: 445:8435
       name: Type=Big
-      type: COMPONENT
+      type: FRAME
       w: 358
       h: 178
       layout:
@@ -395,7 +405,7 @@ visual_values:
         - 0
         - 0
         - 0
-        gap: 8
+        gap: 0
         align: MIN/CENTER
       children:
       - id: 445:8436
@@ -412,50 +422,46 @@ visual_values:
           - 16
           gap: 34
           align: MIN/CENTER
+        size:
+          w: fill
+          h: fill
         radius: 18
-        fills:
-        - type: SOLID
-          color: '#f7f7f7'
-          token: background/surface
-        tokens:
-          topLeftRadius: Radius/Card
-          topRightRadius: Radius/Card
-          bottomLeftRadius: Radius/Card
-          bottomRightRadius: Radius/Card
+        fills: *id002
         children:
         - id: 445:8437
           name: Please share details of your issue
           type: TEXT
-          w: 329
-          h: 18
+          chars: Please share details of your issue
+          font: Saira Medium
+          fontSize: 16
+          lineHeight: '1.1'
+          textAlign: LEFT
           fills:
           - type: SOLID
             color: '#919191'
             token: text/secondary
-          chars: Please share details of your issue
-          textStyle: Sub Headings/card headings
-          font: Saira Medium
-          fontSize: 16
-          lineHeight: 110%
-          textAlign: LEFT
+          w: 329
+          abs:
+            left: 13
+            top: 16
         - id: 445:8438
           name: 0/300
           type: TEXT
-          w: 37
-          h: 16
+          chars: 0/300
+          font: Geist Regular
+          fontSize: 12
+          lineHeight: '1.3'
+          textAlign: RIGHT
           fills:
           - type: SOLID
             color: '#919191'
             token: text/secondary
-          chars: 0/300
-          textStyle: Content/Small
-          font: Geist Regular
-          fontSize: 12
-          lineHeight: 130%
-          textAlign: RIGHT
+          abs:
+            right: 12
+            top: 150
     - id: 569:3939
       name: Type=Bold
-      type: COMPONENT
+      type: FRAME
       w: 358
       h: 64
       layout:
@@ -465,7 +471,7 @@ visual_values:
         - 0
         - 0
         - 0
-        gap: 8
+        gap: 0
         align: MIN/CENTER
       children:
       - id: 569:3940
@@ -480,34 +486,29 @@ visual_values:
           - 16
           - 0
           - 16
-          gap: 34
+          gap: 0
           align: SPACE_BETWEEN/CENTER
+        size:
+          w: fill
+          h: fill
         radius: 18
-        fills:
-        - type: SOLID
-          color: '#f7f7f7'
-          token: background/surface
-        tokens:
-          topLeftRadius: Radius/Card
-          topRightRadius: Radius/Card
-          bottomLeftRadius: Radius/Card
-          bottomRightRadius: Radius/Card
+        fills: *id002
         children:
         - id: 569:3941
           name: Briefly explain your problem
           type: TEXT
-          w: 290
-          h: 23
+          chars: Briefly explain your problem
+          font: Saira Medium
+          fontSize: 21
+          lineHeight: '1.1'
+          textAlign: LEFT
           fills:
           - type: SOLID
             color: '#454545'
             token: text/primary
-          chars: Briefly explain your problem
-          textStyle: Sub Headings/Section title
-          font: Saira Medium
-          fontSize: 21
-          lineHeight: 110%
-          textAlign: LEFT
+          size:
+            w: fill
+            h: hug
         - id: 569:3943
           name: Actionables
           type: INSTANCE
@@ -516,16 +517,18 @@ visual_values:
           instance_of:
             id: 2031:1132
             name: Actionables
-            key: 319c48cae4ec45084ee2296b6d0e0460d0d27a40
             set:
               id: 2031:1132
               name: Actionables
-            rewired_from: 329:2095
           props:
             Action: Chevron
+          size:
+            w: hug
+            h: hug
+          clip: true
     - id: 573:4090
       name: Type=File upload
-      type: COMPONENT
+      type: FRAME
       w: 358
       h: 240
       layout:
@@ -535,7 +538,7 @@ visual_values:
         - 0
         - 0
         - 0
-        gap: 8
+        gap: 0
         align: MIN/CENTER
       children:
       - id: 573:4091
@@ -550,20 +553,13 @@ visual_values:
           - 16
           - 16
           - 16
-          gap: 34
+          gap: 0
           align: MIN/CENTER
+        size:
+          w: fill
+          h: hug
         radius: 18
-        fills:
-        - type: SOLID
-          color: '#f7f7f7'
-          token: background/surface
-        tokens:
-          paddingTop: Padding/Card Top, bottom Padding
-          paddingBottom: Padding/Card Top, bottom Padding
-          topLeftRadius: Radius/Card
-          topRightRadius: Radius/Card
-          bottomLeftRadius: Radius/Card
-          bottomRightRadius: Radius/Card
+        fills: *id002
         children:
         - id: 573:4094
           name: Frame 2147240603
@@ -579,11 +575,12 @@ visual_values:
             - 0
             gap: 8
             align: MIN/MIN
-          tokens:
-            itemSpacing: Gaps/smaller gap
+          size:
+            w: 267
+            h: hug
           children:
           - id: 573:4095
-            name: Frame 2147240601
+            name: Frame row
             type: FRAME
             w: 267
             h: 64
@@ -596,48 +593,40 @@ visual_values:
               - 0
               gap: 16
               align: MIN/CENTER
-            tokens:
-              itemSpacing: Gaps/L2-Card Gap
+            size:
+              w: fill
+              h: hug
             children:
             - id: 573:4096
               name: Text field with Heading
               type: FRAME
               w: 64
               h: 64
+              size:
+                w: 64
+                h: 64
               radius: 8
-              fills:
-              - type: SOLID
-                color: '#ededed'
-                token: border/separator line
-              tokens:
-                topLeftRadius: Radius/Slider button
-                topRightRadius: Radius/Slider button
-                bottomLeftRadius: Radius/Slider button
-                bottomRightRadius: Radius/Slider button
+              fills: *id001
               children: []
             - id: 573:4097
               name: 'Heading-content component '
               type: INSTANCE
               w: 187
               h: 38
-              layout:
-                mode: VERTICAL
-                padding:
-                - 0
-                - 0
-                - 0
-                - 0
-                gap: 4
-                align: MIN/MIN
               instance_of:
                 id: 301:20202
                 name: 'Heading-content component '
-                key: 18df4dd5982a7e913f345ea9459801fb472a255b
+                set:
+                  id: 301:20202
+                  name: 'Heading-content component '
               props:
                 Heading#395:0: true
                 content#301:0: true
+              size:
+                w: 187
+                h: hug
           - id: 573:4098
-            name: Frame 2147240602
+            name: Frame row
             type: FRAME
             w: 267
             h: 64
@@ -650,48 +639,40 @@ visual_values:
               - 0
               gap: 16
               align: MIN/CENTER
-            tokens:
-              itemSpacing: Gaps/L2-Card Gap
+            size:
+              w: fill
+              h: hug
             children:
             - id: 573:4099
               name: Text field with Heading
               type: FRAME
               w: 64
               h: 64
+              size:
+                w: 64
+                h: 64
               radius: 8
-              fills:
-              - type: SOLID
-                color: '#ededed'
-                token: border/separator line
-              tokens:
-                topLeftRadius: Radius/Slider button
-                topRightRadius: Radius/Slider button
-                bottomLeftRadius: Radius/Slider button
-                bottomRightRadius: Radius/Slider button
+              fills: *id001
               children: []
             - id: 573:4100
               name: 'Heading-content component '
               type: INSTANCE
               w: 187
               h: 38
-              layout:
-                mode: VERTICAL
-                padding:
-                - 0
-                - 0
-                - 0
-                - 0
-                gap: 4
-                align: MIN/MIN
               instance_of:
                 id: 301:20202
                 name: 'Heading-content component '
-                key: 18df4dd5982a7e913f345ea9459801fb472a255b
+                set:
+                  id: 301:20202
+                  name: 'Heading-content component '
               props:
                 Heading#395:0: true
                 content#301:0: true
+              size:
+                w: 187
+                h: hug
           - id: 573:4101
-            name: Frame 2147240603
+            name: Frame row
             type: FRAME
             w: 267
             h: 64
@@ -704,49 +685,41 @@ visual_values:
               - 0
               gap: 16
               align: MIN/CENTER
-            tokens:
-              itemSpacing: Gaps/L2-Card Gap
+            size:
+              w: fill
+              h: hug
             children:
             - id: 573:4102
               name: Text field with Heading
               type: FRAME
               w: 64
               h: 64
+              size:
+                w: 64
+                h: 64
               radius: 8
-              fills:
-              - type: SOLID
-                color: '#ededed'
-                token: border/separator line
-              tokens:
-                topLeftRadius: Radius/Slider button
-                topRightRadius: Radius/Slider button
-                bottomLeftRadius: Radius/Slider button
-                bottomRightRadius: Radius/Slider button
+              fills: *id001
               children: []
             - id: 573:4103
               name: 'Heading-content component '
               type: INSTANCE
               w: 187
               h: 38
-              layout:
-                mode: VERTICAL
-                padding:
-                - 0
-                - 0
-                - 0
-                - 0
-                gap: 4
-                align: MIN/MIN
               instance_of:
                 id: 301:20202
                 name: 'Heading-content component '
-                key: 18df4dd5982a7e913f345ea9459801fb472a255b
+                set:
+                  id: 301:20202
+                  name: 'Heading-content component '
               props:
                 Heading#395:0: true
                 content#301:0: true
+              size:
+                w: 187
+                h: hug
     - id: 604:2554
       name: Type=OTP
-      type: COMPONENT
+      type: FRAME
       w: 358
       h: 64
       layout:
@@ -760,9 +733,9 @@ visual_values:
         align: MIN/CENTER
       children:
       - id: 604:2555
-        name: Frame 244
+        name: Frame slot
         type: FRAME
-        w: 83.5
+        w: 83
         h: 64
         layout:
           mode: HORIZONTAL
@@ -771,38 +744,33 @@ visual_values:
           - 16
           - 0
           - 16
-          gap: 34
+          gap: 0
           align: CENTER/CENTER
+        size:
+          w: fill
+          h: fill
         radius: 18
-        fills:
-        - type: SOLID
-          color: '#f7f7f7'
-          token: background/surface
-        tokens:
-          topLeftRadius: Radius/Card
-          topRightRadius: Radius/Card
-          bottomLeftRadius: Radius/Card
-          bottomRightRadius: Radius/Card
+        fills: *id002
         children:
         - id: 604:2566
           name: '1'
           type: TEXT
-          w: 9
-          h: 23
+          chars: '1'
+          font: Saira Medium
+          fontSize: 21
+          lineHeight: '1.1'
+          textAlign: LEFT
           fills:
           - type: SOLID
             color: '#454545'
             token: text/primary
-          chars: '1'
-          textStyle: Sub Headings/Section title
-          font: Saira Medium
-          fontSize: 21
-          lineHeight: 110%
-          textAlign: LEFT
+          size:
+            w: hug
+            h: hug
       - id: 604:2558
-        name: Frame 245
+        name: Frame slot
         type: FRAME
-        w: 83.5
+        w: 83
         h: 64
         layout:
           mode: HORIZONTAL
@@ -811,38 +779,33 @@ visual_values:
           - 16
           - 0
           - 16
-          gap: 34
+          gap: 0
           align: CENTER/CENTER
+        size:
+          w: fill
+          h: fill
         radius: 18
-        fills:
-        - type: SOLID
-          color: '#f7f7f7'
-          token: background/surface
-        tokens:
-          topLeftRadius: Radius/Card
-          topRightRadius: Radius/Card
-          bottomLeftRadius: Radius/Card
-          bottomRightRadius: Radius/Card
+        fills: *id002
         children:
         - id: 604:2567
           name: '1'
           type: TEXT
-          w: 9
-          h: 23
+          chars: '1'
+          font: Saira Medium
+          fontSize: 21
+          lineHeight: '1.1'
+          textAlign: LEFT
           fills:
           - type: SOLID
             color: '#454545'
             token: text/primary
-          chars: '1'
-          textStyle: Sub Headings/Section title
-          font: Saira Medium
-          fontSize: 21
-          lineHeight: 110%
-          textAlign: LEFT
+          size:
+            w: hug
+            h: hug
       - id: 604:2560
-        name: Frame 246
+        name: Frame slot
         type: FRAME
-        w: 83.5
+        w: 83
         h: 64
         layout:
           mode: HORIZONTAL
@@ -851,38 +814,33 @@ visual_values:
           - 16
           - 0
           - 16
-          gap: 34
+          gap: 0
           align: CENTER/CENTER
+        size:
+          w: fill
+          h: fill
         radius: 18
-        fills:
-        - type: SOLID
-          color: '#f7f7f7'
-          token: background/surface
-        tokens:
-          topLeftRadius: Radius/Card
-          topRightRadius: Radius/Card
-          bottomLeftRadius: Radius/Card
-          bottomRightRadius: Radius/Card
+        fills: *id002
         children:
         - id: 604:2568
           name: '1'
           type: TEXT
-          w: 9
-          h: 23
+          chars: '1'
+          font: Saira Medium
+          fontSize: 21
+          lineHeight: '1.1'
+          textAlign: LEFT
           fills:
           - type: SOLID
             color: '#454545'
             token: text/primary
-          chars: '1'
-          textStyle: Sub Headings/Section title
-          font: Saira Medium
-          fontSize: 21
-          lineHeight: 110%
-          textAlign: LEFT
+          size:
+            w: hug
+            h: hug
       - id: 604:2562
-        name: Frame 247
+        name: Frame slot
         type: FRAME
-        w: 83.5
+        w: 83
         h: 64
         layout:
           mode: HORIZONTAL
@@ -891,34 +849,29 @@ visual_values:
           - 16
           - 0
           - 16
-          gap: 34
+          gap: 0
           align: CENTER/CENTER
+        size:
+          w: fill
+          h: fill
         radius: 18
-        fills:
-        - type: SOLID
-          color: '#f7f7f7'
-          token: background/surface
-        tokens:
-          topLeftRadius: Radius/Card
-          topRightRadius: Radius/Card
-          bottomLeftRadius: Radius/Card
-          bottomRightRadius: Radius/Card
+        fills: *id002
         children:
         - id: 604:2569
           name: '1'
           type: TEXT
-          w: 9
-          h: 23
+          chars: '1'
+          font: Saira Medium
+          fontSize: 21
+          lineHeight: '1.1'
+          textAlign: LEFT
           fills:
           - type: SOLID
             color: '#454545'
             token: text/primary
-          chars: '1'
-          textStyle: Sub Headings/Section title
-          font: Saira Medium
-          fontSize: 21
-          lineHeight: 110%
-          textAlign: LEFT
+          size:
+            w: hug
+            h: hug
       - id: 605:2824
         name: Frame 2147240604
         type: FRAME
@@ -933,32 +886,37 @@ visual_values:
           - 0
           gap: 83
           align: MAX/CENTER
+        abs:
+          left: 0
+          top: 72
         children:
         - id: 605:2822
           name: Incorrect OTP entered.
           type: TEXT
-          w: 234
-          h: 18
+          chars: Incorrect OTP entered.
+          font: Geist Regular
+          fontSize: 14
+          lineHeight: '1.2'
+          textAlign: LEFT
           fills:
           - type: SOLID
             color: '#c42e2e'
             token: text/colored/red
-          chars: Incorrect OTP entered.
-          textStyle: Content/Medium
-          font: Geist Regular
-          fontSize: 14
-          textAlign: LEFT
+          size:
+            w: fill
+            h: hug
         - id: 605:2823
           name: 00:30
           type: TEXT
-          w: 41
-          h: 18
+          chars: 00:30
+          font: Geist Regular
+          fontSize: 14
+          lineHeight: '1.2'
+          textAlign: CENTER
           fills:
           - type: SOLID
             color: '#454545'
             token: text/primary
-          chars: 00:30
-          textStyle: Content/Medium
-          font: Geist Regular
-          fontSize: 14
-          textAlign: CENTER
+          size:
+            w: hug
+            h: hug
