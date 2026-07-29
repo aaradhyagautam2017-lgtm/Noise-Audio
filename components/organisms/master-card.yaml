@@ -270,7 +270,9 @@ visual_values:
                 name: Actionables
             props:
               Action: Chevron
+            w: 36
+            h: 36
             size:
-              w: hug
-              h: hug
+              w: 36
+              h: 36
             clip: true

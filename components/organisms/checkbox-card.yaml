@@ -131,25 +131,20 @@ authored_metadata: |
         They are read live from Figma via MCP at consumption time.
 visual_values:
   source: figma_mcp
-  extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
+  schema: v2-layout-model
+  extracted_at: '2026-07-29'
+  note: 'Layout MODEL (not a pixel snapshot). size = per-child resize (fill/hug/fixed px); abs = child
+    pinned out of auto-layout flow to parent edges; clip = frame clips overflow. Text verbatim; line-heights
+    are unitless ratios. Left: checkbox + heading-content + trailing cross. Right: heading-content + trailing
+    checkbox. Instances resolve to v2 components.'
   tree:
     id: 2032:1265
     name: Checkbox card
     type: COMPONENT_SET
-    w: 398
-    h: 168
-    radius: 5
-    strokes:
-    - type: SOLID
-      color: '#8a38f5'
-    strokeWeight: 1
     children:
     - id: 2032:1266
       name: position=checkbox Left
-      type: COMPONENT
-      w: 358
-      h: 70
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
@@ -159,17 +154,11 @@ visual_values:
         - 16
         gap: 57
         align: MIN/CENTER
-      tokens:
-        paddingLeft: Gaps/L2-Card Gap
-        paddingTop: S
-        paddingRight: Gaps/L2-Card Gap
-        paddingBottom: S
+      w: 358
       children:
       - id: 2032:1267
-        name: Frame 2147227749
+        name: Frame
         type: FRAME
-        w: 245
-        h: 54
         layout:
           mode: HORIZONTAL
           padding:
@@ -179,66 +168,62 @@ visual_values:
           - 0
           gap: 8
           align: MIN/CENTER
-        tokens:
-          itemSpacing: S
+        size:
+          w: fill
+          h: hug
         children:
         - id: 2032:1268
           name: Actionables
           type: INSTANCE
-          w: 36
-          h: 36
           instance_of:
             id: 2031:1132
             name: Actionables
-            key: 319c48cae4ec45084ee2296b6d0e0460d0d27a40
             set:
               id: 2031:1132
               name: Actionables
-            rewired_from: 2031:437
           props:
             Action: Checkbox
+          w: 36
+          h: 36
+          size:
+            w: 36
+            h: 36
+          clip: true
         - id: 2032:1269
           name: 'Heading-content component '
           type: INSTANCE
-          w: 201
-          h: 54
-          layout:
-            mode: VERTICAL
-            padding:
-            - 0
-            - 0
-            - 0
-            - 0
-            gap: 4
-            align: MIN/MIN
           instance_of:
             id: 301:20202
             name: 'Heading-content component '
-            key: 18df4dd5982a7e913f345ea9459801fb472a255b
-            rewired_from: 2031:372
+            set:
+              id: 301:20202
+              name: 'Heading-content component '
           props:
             Heading#395:0: true
             content#301:0: true
+          size:
+            w: fill
+            h: hug
       - id: 2032:1270
         name: Cross
         type: INSTANCE
-        w: 24
-        h: 24
         instance_of:
           id: 2031:1201
           name: Cross
-          key: 4630976d22073248745eb76ebe8a4c2e55d2c1ef
           set:
             id: 2031:1201
             name: Cross
-          rewired_from: 2031:416
         props:
           Type: Default
+        w: 24
+        h: 24
+        size:
+          w: 24
+          h: 24
+        clip: true
     - id: 2032:1271
       name: position=checkbox Right
-      type: COMPONENT
-      w: 358
-      h: 54
+      type: FRAME
       layout:
         mode: HORIZONTAL
         padding:
@@ -246,19 +231,13 @@ visual_values:
         - 16
         - 8
         - 16
-        gap: 57
+        gap: 0
         align: MIN/CENTER
-      tokens:
-        paddingLeft: Gaps/L2-Card Gap
-        paddingTop: S
-        paddingRight: Gaps/L2-Card Gap
-        paddingBottom: S
+      w: 358
       children:
       - id: 2032:1272
-        name: Frame 2147227749
+        name: Frame
         type: FRAME
-        w: 326
-        h: 38
         layout:
           mode: HORIZONTAL
           padding:
@@ -268,43 +247,39 @@ visual_values:
           - 0
           gap: 8
           align: MIN/CENTER
-        tokens:
-          itemSpacing: S
+        size:
+          w: fill
+          h: hug
         children:
         - id: 2032:1273
           name: 'Heading-content component '
           type: INSTANCE
-          w: 282
-          h: 38
-          layout:
-            mode: VERTICAL
-            padding:
-            - 0
-            - 0
-            - 0
-            - 0
-            gap: 4
-            align: MIN/MIN
           instance_of:
             id: 301:20202
             name: 'Heading-content component '
-            key: 18df4dd5982a7e913f345ea9459801fb472a255b
-            rewired_from: 2031:372
+            set:
+              id: 301:20202
+              name: 'Heading-content component '
           props:
             Heading#395:0: true
             content#301:0: true
+          size:
+            w: fill
+            h: hug
         - id: 2032:1274
           name: Actionables
           type: INSTANCE
-          w: 36
-          h: 36
           instance_of:
             id: 2031:1132
             name: Actionables
-            key: 319c48cae4ec45084ee2296b6d0e0460d0d27a40
             set:
               id: 2031:1132
               name: Actionables
-            rewired_from: 2031:437
           props:
             Action: Checkbox
+          w: 36
+          h: 36
+          size:
+            w: 36
+            h: 36
+          clip: true
