@@ -64,16 +64,15 @@ authored_metadata: |
         read live from Figma via MCP at consumption time.
 visual_values:
   source: figma_mcp
-  extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
-    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+  schema: v2-layout-model
+  extracted_at: '2026-07-29'
+  note: Layout MODEL (not a pixel snapshot). size = per-child resize (fill/hug/fixed px); abs = child
+    pinned out of auto-layout flow to parent edges; clip = frame clips overflow. Text verbatim; line-heights
+    are unitless ratios.
   tree:
     id: 450:8770
     name: Privacy policy tab
-    type: COMPONENT
-    w: 358
-    h: 48
+    type: FRAME
     layout:
       mode: VERTICAL
       padding:
@@ -82,15 +81,12 @@ visual_values:
       - 0
       - 0
       gap: 16
-      align: MIN/CENTER
-    tokens:
-      itemSpacing: L
+      align: CENTER/CENTER
+    w: 358
     children:
     - id: 450:8767
-      name: Frame 2147240582
+      name: Frame
       type: FRAME
-      w: 358
-      h: 16
       layout:
         mode: HORIZONTAL
         padding:
@@ -98,51 +94,54 @@ visual_values:
         - 32
         - 0
         - 32
-        gap: 69
+        gap: 0
         align: SPACE_BETWEEN/CENTER
+      size:
+        w: fill
+        h: hug
       children:
       - id: 450:8763
         name: Privacy Policy
         type: TEXT
-        w: 76
-        h: 16
+        chars: Privacy Policy
+        font: Geist Regular
+        fontSize: 12
+        lineHeight: '1.3'
+        textAlign: LEFT
         fills:
         - type: SOLID
           color: '#454545'
           token: text/primary
-        chars: Privacy Policy
-        textStyle: Content/Small
-        font: Geist Regular
-        fontSize: 12
-        lineHeight: 130%
-        textAlign: CENTER
+        size:
+          w: hug
+          h: hug
       - id: 450:8764
         name: Terms & Conditions
         type: TEXT
-        w: 106
-        h: 16
+        chars: Terms & Conditions
+        font: Geist Regular
+        fontSize: 12
+        lineHeight: '1.3'
+        textAlign: RIGHT
         fills:
         - type: SOLID
           color: '#454545'
           token: text/primary
-        chars: Terms & Conditions
-        textStyle: Content/Small
-        font: Geist Regular
-        fontSize: 12
-        lineHeight: 130%
-        textAlign: CENTER
+        size:
+          w: hug
+          h: hug
     - id: 450:8765
       name: App Version 1.02
       type: TEXT
-      w: 358
-      h: 16
+      chars: App Version 1.02
+      font: Geist Regular
+      fontSize: 12
+      lineHeight: '1.3'
+      textAlign: CENTER
       fills:
       - type: SOLID
         color: '#919191'
         token: text/secondary
-      chars: App Version 1.02
-      textStyle: Content/Small
-      font: Geist Regular
-      fontSize: 12
-      lineHeight: 130%
-      textAlign: CENTER
+      size:
+        w: fill
+        h: hug

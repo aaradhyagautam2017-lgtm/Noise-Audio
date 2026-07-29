@@ -76,16 +76,16 @@ authored_metadata: |
           Drives the status bar's canvas fill during its scrolled state.
 visual_values:
   source: figma_mcp
-  extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
-    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+  schema: v2-layout-model
+  extracted_at: '2026-07-29'
+  note: Layout MODEL (not a pixel snapshot). size = per-child resize (fill/hug/fixed px); abs = child
+    pinned out of auto-layout flow to parent edges; clip = frame clips overflow. Text verbatim; line-heights
+    are unitless ratios. iOS status-bar chrome; signal/wifi/battery are system glyphs rendered as solid
+    shapes.
   tree:
     id: 2007:775
     name: Status bar
-    type: COMPONENT
-    w: 390
-    h: 59
+    type: FRAME
     layout:
       mode: HORIZONTAL
       padding:
@@ -93,14 +93,14 @@ visual_values:
       - 0
       - 0
       - 0
-      gap: 38
-      align: MIN/CENTER
+      gap: 0
+      align: SPACE_BETWEEN/CENTER
+    w: 390
+    h: 59
     children:
     - id: 2007:753
       name: Time
       type: FRAME
-      w: 95
-      h: 22
       layout:
         mode: HORIZONTAL
         padding:
@@ -110,41 +110,34 @@ visual_values:
         - 16
         gap: 10
         align: CENTER/CENTER
+      size:
+        w: hug
+        h: hug
       children:
       - id: 2007:754
-        name: Time
+        name: '9:41'
         type: TEXT
-        w: 37
-        h: 22
+        chars: '9:41'
+        font: SF Pro Semibold
+        fontSize: 17
+        lineHeight: 22px
+        textAlign: CENTER
         fills:
         - type: SOLID
           color: '#000000'
           token: default/status bar
-        chars: '9:41'
-        font: SF Pro Semibold
-        fontSize: 17
-        lineHeight: 22
-        textAlign: CENTER
+        size:
+          w: hug
+          h: hug
     - id: 2007:755
       name: Dynamic Island spacer
       type: FRAME
       w: 124
       h: 10
-      layout:
-        mode: HORIZONTAL
-        padding:
-        - 0
-        - 0
-        - 0
-        - 0
-        gap: 0
-        align: CENTER/CENTER
       children: []
     - id: 2007:756
       name: Levels
       type: FRAME
-      w: 95
-      h: 13
       layout:
         mode: HORIZONTAL
         padding:
@@ -154,13 +147,16 @@ visual_values:
         - 6
         gap: 7
         align: CENTER/CENTER
+      size:
+        w: hug
+        h: hug
       children:
       - id: 2007:757
         name: Cellular Connection
         type: VECTOR
         w: 19.2
         h: 12.2
-        fills:
+        fills: &id001
         - type: SOLID
           color: '#000000'
           token: default/status bar
@@ -169,45 +165,42 @@ visual_values:
         type: VECTOR
         w: 17.1
         h: 12.3
-        fills:
-        - type: SOLID
-          color: '#000000'
-          token: default/status bar
+        fills: *id001
       - id: 2007:759
         name: Battery
-        type: GROUP
+        type: FRAME
         w: 27.3
         h: 13
         children:
         - id: 2007:760
           name: Border
-          type: RECTANGLE
+          type: VECTOR
           w: 25
           h: 13
-          opacity: 0.35
-          radius: 4.300000190734863
-          strokes:
-          - type: SOLID
-            color: '#000000'
-            token: default/status bar
+          strokes: *id001
           strokeWeight: 1
+          opacity: 0.35
+          radius: 4.3
+          abs:
+            left: 0
+            top: 0
+        - id: 2007:762
+          name: Capacity
+          type: VECTOR
+          w: 21
+          h: 9
+          fills: *id001
+          radius: 2.5
+          abs:
+            left: 2
+            top: 2
         - id: 2007:761
           name: Cap
           type: VECTOR
           w: 1.3
           h: 4.1
+          fills: *id001
           opacity: 0.4
-          fills:
-          - type: SOLID
-            color: '#000000'
-            token: default/status bar
-        - id: 2007:762
-          name: Capacity
-          type: RECTANGLE
-          w: 21
-          h: 9
-          radius: 2.5
-          fills:
-          - type: SOLID
-            color: '#000000'
-            token: default/status bar
+          abs:
+            left: 25.5
+            top: 4.5

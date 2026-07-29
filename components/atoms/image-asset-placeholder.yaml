@@ -161,237 +161,124 @@ authored_metadata: |
         They are read live from Figma via MCP at consumption time.
 visual_values:
   source: figma_mcp
-  extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component governs itself.'
+  schema: v2-layout-model
+  extracted_at: '2026-07-29'
+  note: 'Layout MODEL (not a pixel snapshot). size = per-child resize (fill/hug/fixed px); abs = child
+    pinned out of auto-layout flow to parent edges; clip = frame clips overflow. Text verbatim; line-heights
+    are unitless ratios. Photo/avatar image content (L, XS) is a real Figma asset not fetchable in this
+    environment (asset: missing); rendered as flagged grey placeholders. Box sizes/colors, popup title
+    and loading skeleton bars are faithful.'
   tree:
     id: 458:8952
-    name: Image, asset placeholder
+    name: Image / asset placeholder
     type: COMPONENT_SET
-    w: 843
-    h: 1092
-    radius: 5
-    strokes:
-    - type: SOLID
-      color: '#8a38f5'
-    strokeWeight: 1
     children:
     - id: 458:8951
       name: size usage=S
-      type: COMPONENT
+      type: FRAME
       w: 390
       h: 326
-      fills:
+      fills: &id001
       - type: SOLID
         color: '#ededed'
         token: border/separator line
+      clip: true
       children: []
     - id: 494:2876
       name: size usage=M
-      type: COMPONENT
+      type: FRAME
       w: 390
       h: 400
-      fills:
-      - type: SOLID
-        color: '#ededed'
-        token: border/separator line
+      fills: *id001
+      clip: true
       children: []
     - id: 480:10902
       name: size usage=L
-      type: COMPONENT
+      type: FRAME
       w: 390
       h: 510
-      fills:
-      - type: SOLID
-        color: '#ededed'
-        token: border/separator line
-      - type: IMAGE
-        scaleMode: CROP
-      - type: SOLID
-        color: '#000000'
-        opacity: 0.4
-      children:
-      - id: 480:11131
-        name: Mask group
-        type: GROUP
-        w: 390
-        h: 390
-        children:
-        - id: 480:11132
-          name: Rectangle 34628946
-          type: RECTANGLE
-          w: 390
-          h: 390
-          radius: 260
-          fills:
-          - type: SOLID
-            color: '#d9d9d9'
-        - id: 480:11133
-          name: image 59
-          type: RECTANGLE
-          w: 951.4
-          h: 634.1
-          radius: 260
-          fills:
-          - type: IMAGE
-            scaleMode: FILL
-        - id: 480:11134
-          name: Group 2147227390
-          type: GROUP
-          w: 390
-          h: 349
-          children:
-          - id: 480:11135
-            name: Frame 2147227708
-            type: FRAME
-            w: 129
-            h: 349
-            layout:
-              mode: HORIZONTAL
-              padding:
-              - 0
-              - 0
-              - 0
-              - 0
-              gap: 129
-              align: MIN/CENTER
-            children:
-            - id: 480:11136
-              name: Vector 12309
-              type: VECTOR
-              w: 0
-              h: 387
-              strokes:
-              - type: SOLID
-                color: '#ffffff'
-                token: gray/1100
-              strokeWeight: 2
-            - id: 480:11137
-              name: Vector 12310
-              type: VECTOR
-              w: 0
-              h: 387
-              strokes:
-              - type: SOLID
-                color: '#ffffff'
-                token: gray/1100
-              strokeWeight: 2
-          - id: 480:11138
-            name: Frame 2147227709
-            type: FRAME
-            w: 126.5
-            h: 390
-            layout:
-              mode: HORIZONTAL
-              padding:
-              - 0
-              - 0
-              - 0
-              - 0
-              gap: 129
-              align: MIN/CENTER
-            children:
-            - id: 480:11139
-              name: Vector 12309
-              type: VECTOR
-              w: 0
-              h: 390
-              strokes:
-              - type: SOLID
-                color: '#ffffff'
-                token: gray/1100
-              strokeWeight: 2
-            - id: 480:11140
-              name: Vector 12310
-              type: VECTOR
-              w: 0
-              h: 390
-              strokes:
-              - type: SOLID
-                color: '#ffffff'
-                token: gray/1100
-              strokeWeight: 2
+      fills: *id001
+      clip: true
+      children: []
+      asset: missing
     - id: 458:8953
       name: size usage=XS
-      type: COMPONENT
+      type: FRAME
       w: 390
       h: 180
-      fills:
-      - type: SOLID
-        color: '#ededed'
-        token: border/separator line
+      fills: *id001
+      clip: true
       children:
-      - id: 460:1034
+      - id: 460:985
         name: Profile icon
-        type: INSTANCE
+        type: FRAME
         w: 124
         h: 124
-        instance_of:
-          id: 460:984
-          name: state=Default
-          key: aff5db4fc57709b00a30d1a66afd7bf4708e97da
-          set:
-            id: 460:985
-            name: Profile icon
-        props:
-          state: Default
+        abs:
+          left: 133
+          top: 28
+        radius: 62
+        fills:
+        - type: SOLID
+          color: '#e0e0e0'
+        children: []
+        asset: missing
     - id: 611:1266
       name: size usage=Native popup placeholder
-      type: COMPONENT
+      type: FRAME
       w: 270
       h: 206
-      fills:
-      - type: SOLID
-        color: '#ededed'
-        token: border/separator line
+      fills: *id001
+      clip: true
       children:
       - id: 611:1267
         name: Device native pop up
         type: TEXT
-        w: 150
-        h: 52
+        chars: 'Device native
+
+          pop up'
+        font: Saira SemiBold
+        fontSize: 24
+        lineHeight: '1.1'
+        textAlign: CENTER
         fills:
         - type: SOLID
           color: '#454545'
           token: text/primary
-        chars: Device native pop up
-        textStyle: 👄 Headings/Small
-        font: Saira SemiBold
-        fontSize: 24
-        lineHeight: 110%
-        textAlign: CENTER
+        abs:
+          left: 0
+          right: 0
+          top: 70
     - id: 684:1205
       name: size usage=transcribe loading
-      type: COMPONENT
+      type: FRAME
       w: 390
       h: 72
       fills:
       - type: SOLID
         color: '#ffffff'
         token: background/canvas
+      clip: true
       children:
-      - id: 686:1209
-        name: Group 2147227415
-        type: GROUP
+      - id: 684:1206
+        name: skeleton1
+        type: FRAME
         w: 358
-        h: 56
-        children:
-        - id: 684:1206
-          name: Rectangle 161125011
-          type: RECTANGLE
-          w: 358
-          h: 24
-          radius: 4
-          fills:
-          - type: SOLID
-            color: '#ededed'
-            token: background/surface/raised+2
-        - id: 684:1207
-          name: Rectangle 161125013
-          type: RECTANGLE
-          w: 247
-          h: 24
-          radius: 4
-          fills:
-          - type: SOLID
-            color: '#ededed'
-            token: background/surface/raised+2
+        h: 24
+        abs:
+          left: 16
+          top: 16
+        radius: 4
+        fills: *id001
+        children: []
+      - id: 684:1207
+        name: skeleton2
+        type: FRAME
+        w: 247
+        h: 24
+        abs:
+          left: 16
+          top: 48
+        radius: 4
+        fills: *id001
+        children: []

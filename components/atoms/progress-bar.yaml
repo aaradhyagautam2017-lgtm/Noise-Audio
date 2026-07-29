@@ -66,16 +66,15 @@ authored_metadata: |
         time.
 visual_values:
   source: figma_mcp
-  extracted_at: '2026-07-10'
-  note: 'Values extracted from the Figma node tree, tagged by node id. Colors are hex resolved at extraction
-    time; ''token'' names the bound Figma variable. Instance subtrees are not expanded: each child component
-    governs itself.'
+  schema: v2-layout-model
+  extracted_at: '2026-07-29'
+  note: Layout MODEL (not a pixel snapshot). size = per-child resize (fill/hug/fixed px); abs = child
+    pinned out of auto-layout flow to parent edges; clip = frame clips overflow. Text verbatim; line-heights
+    are unitless ratios. Track (full width, 30% opacity) + fill (mock 95px) overlaid; content line beneath.
   tree:
     id: 489:2133
     name: Progress bar
-    type: COMPONENT
-    w: 240
-    h: 34
+    type: FRAME
     layout:
       mode: VERTICAL
       padding:
@@ -84,44 +83,54 @@ visual_values:
       - 0
       - 0
       gap: 12
-      align: MIN/CENTER
+      align: CENTER/CENTER
+    w: 240
     children:
     - id: 489:2128
-      name: Group 249
-      type: GROUP
+      name: Bar
+      type: FRAME
       w: 240
       h: 4
       children:
       - id: 489:2129
-        name: Rectangle 221
-        type: RECTANGLE
+        name: Track
+        type: FRAME
         w: 240
         h: 4
-        opacity: 0.3
+        abs:
+          left: 0
+          top: 0
         fills:
         - type: SOLID
           color: '#ededed'
           token: border/separator line
+        children: []
+        opacity: 0.3
       - id: 489:2130
-        name: Rectangle 222
-        type: RECTANGLE
+        name: Fill
+        type: FRAME
         w: 95
         h: 4
+        abs:
+          left: 0
+          top: 0
         fills:
         - type: SOLID
           color: '#171717'
           token: button/radio/on
+        children: []
     - id: 489:2131
       name: Transferring Firmware
       type: TEXT
-      w: 240
-      h: 18
+      chars: Transferring Firmware
+      font: Geist Regular
+      fontSize: 14
+      lineHeight: normal
+      textAlign: CENTER
       fills:
       - type: SOLID
         color: '#919191'
         token: text/secondary
-      chars: Transferring Firmware
-      textStyle: Content/Medium
-      font: Geist Regular
-      fontSize: 14
-      textAlign: CENTER
+      size:
+        w: fill
+        h: hug
