@@ -351,6 +351,18 @@
     padding: 4px 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .walkthrough-body { min-height: 220px; display: flex; align-items: center; justify-content: center; }
+  .walkthrough-body img { width: 100%; height: auto; display: block; }
+
+  /* ---------- Stage 2: roadmap / what's-next note ---------- */
+  .roadmap-note {
+    margin-top: 28px; max-width: 680px; border: 1px solid var(--border); border-radius: var(--r-md);
+    background: var(--bg-surface); overflow: hidden;
+  }
+  .roadmap-note-head {
+    padding: 9px 16px; background: var(--bg-base); border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3);
+  }
+  .roadmap-note-body { padding: 16px 18px; font-size: 13.5px; line-height: 1.6; color: var(--ink-2); }
 
   /* ---------- Final Screens gallery scaffold ---------- */
   .gallery-grid {
@@ -394,17 +406,18 @@
           <button class="structure-item" type="button" data-phase="problem">02 / Problem</button>
           <button class="structure-item" type="button" data-phase="approach">03 / Approach</button>
           <button class="structure-item" type="button" data-phase="rebuild">04 / Stage 1</button>
-          <button class="structure-item" type="button" data-phase="decision">05 / Solution Options</button>
-          <button class="structure-item" type="button" data-phase="design">06 / Visual &amp; Interaction Design</button>
-          <button class="structure-item" type="button" data-phase="finalflow">07 / Final System Flow</button>
-          <div class="structure-group-label">08 / Final Design</div>
+          <button class="structure-item" type="button" data-phase="stage2">05 / Stage 2</button>
+          <button class="structure-item" type="button" data-phase="decision">06 / Solution Options</button>
+          <button class="structure-item" type="button" data-phase="design">07 / Visual &amp; Interaction Design</button>
+          <button class="structure-item" type="button" data-phase="finalflow">08 / Final System Flow</button>
+          <div class="structure-group-label">09 / Final Design</div>
           <button class="structure-item structure-item--sub" type="button" data-phase="screen-overview">Overview Page</button>
           <button class="structure-item structure-item--sub" type="button" data-phase="screen-component">Component Detail Page</button>
           <button class="structure-item structure-item--sub" type="button" data-phase="screen-sidebar">Sidebar Navigation</button>
           <button class="structure-item structure-item--sub" type="button" data-phase="screen-tokens">Colors &amp; Tokens</button>
           <button class="structure-item structure-item--sub" type="button" data-phase="screen-search">Search (⌘K)</button>
-          <button class="structure-item" type="button" data-phase="gallery">09 / Final Screens</button>
-          <button class="structure-item" type="button" data-phase="polish">10 / Fixes &amp; Refinements</button>
+          <button class="structure-item" type="button" data-phase="gallery">10 / Final Screens</button>
+          <button class="structure-item" type="button" data-phase="polish">11 / Fixes &amp; Refinements</button>
         </nav>
       </div>
 
@@ -1034,26 +1047,136 @@
         </div>
       </div>
 
+      <div class="research-panel" data-phase="stage2">
+        <div class="rc-eyebrow">05 / Stage 2</div>
+        <h2 class="rc-title">Stage 2</h2>
+
+        <div class="overview-section">
+          <p class="overview-paragraph">
+            Stage 1 gets you one component's worth of knowledge — a name, a purpose, a list of
+            anti-patterns, sitting in one Figma description field. Do that for every component in
+            the file, and you're not left with a pile of scattered notes anymore. You're left with
+            enough to build something real: a structured repository, and a dashboard the agent can
+            actually browse.
+          </p>
+          <p class="overview-paragraph">
+            Stage 1 was a live conversation, because every component is different and needs its own
+            questions answered. Stage 2 isn't — it's the same prompt, run once, after the whole
+            Figma file has been metadata'd. So instead of another chat screenshot, here's what that
+            one prompt actually does.
+          </p>
+
+          <div class="flow-strip">
+            <div class="flow-node">
+              <div class="flow-node-title">Fully metadata'd Figma file</div>
+              <div class="flow-node-sub">every component now carries<br>its Stage 1 YAML</div>
+            </div>
+            <div class="flow-arrow">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 7h20M15 1l6 6-6 6"/></svg>
+              one prompt, run once
+            </div>
+            <div class="flow-node">
+              <div class="flow-node-title">Existing ingestion prompt</div>
+              <div class="flow-node-sub">reads every component's YAML<br>+ its real values, via Figma</div>
+            </div>
+            <div class="flow-arrow">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 7h20M15 1l6 6-6 6"/></svg>
+              writes
+            </div>
+            <div class="flow-node">
+              <div class="flow-node-title">One file per component</div>
+              <div class="flow-node-sub">26 components,<br>26 files</div>
+            </div>
+          </div>
+
+          <p class="overview-paragraph">
+            That repository isn't a hypothetical — it's the one this exact case study runs on. Every
+            piece of YAML you've seen so far, master-card included, is a real file sitting inside it
+            right now.
+          </p>
+
+          <div class="flow-strip">
+            <div class="flow-node">
+              <div class="flow-node-title">Structured repository</div>
+              <div class="flow-node-sub">atoms, molecules, organisms,<br>tokens, one registry</div>
+            </div>
+            <div class="flow-arrow">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 7h20M15 1l6 6-6 6"/></svg>
+              one script
+            </div>
+            <div class="flow-node">
+              <div class="flow-node-title">build_dashboard.py</div>
+              <div class="flow-node-sub">regenerates the whole<br>dashboard in one pass</div>
+            </div>
+            <div class="flow-arrow">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 7h20M15 1l6 6-6 6"/></svg>
+              produces
+            </div>
+            <div class="flow-node">
+              <div class="flow-node-title">Live dashboard</div>
+              <div class="flow-node-sub">browsable,<br>searchable</div>
+            </div>
+          </div>
+
+          <p class="overview-paragraph" style="margin-top:28px">
+            This isn't a mockup of what the dashboard could look like. It's a real screenshot of the
+            real thing, generated from the real repository.
+          </p>
+
+          <div class="walkthrough-frame">
+            <div class="browser-chrome">
+              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+              <span class="browser-url">noise-audio-dashboard — Overview</span>
+            </div>
+            <div class="walkthrough-body">
+              <img src="assets/stage2-dashboard-overview.png" alt="The generated dashboard's overview page, showing 26 components in the library broken down into 16 atoms, 2 molecules, 6 organisms, and 2 complex organisms.">
+            </div>
+          </div>
+          <p class="visual-caption">26 components, one repository, generated automatically — nobody hand-built this page.</p>
+
+          <div class="walkthrough-frame">
+            <div class="browser-chrome">
+              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+              <span class="browser-url">noise-audio-dashboard — Master card</span>
+            </div>
+            <div class="walkthrough-body">
+              <img src="assets/stage2-dashboard-component-detail.png" alt="The generated dashboard's component detail page for Master card, showing the same usage and design intent text seen earlier in The Approach and Stage 1, now rendered live from the repository.">
+            </div>
+          </div>
+          <p class="visual-caption">The same master-card usage and design intent from The Approach and Stage 1 — live, on its own page, generated straight from the repository.</p>
+
+          <div class="roadmap-note">
+            <div class="roadmap-note-head">Where this is going next</div>
+            <div class="roadmap-note-body">
+              Right now, this dashboard is built for this one design system. The plan is to package
+              the repository itself into a downloadable file — hand a coding agent that file, plus
+              this same ingestion prompt, and it builds this exact dashboard for any company's own
+              design system, onboarding every one of their components in the process.
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="research-panel" data-phase="decision">
-        <div class="rc-eyebrow">05 / Solution Options</div>
+        <div class="rc-eyebrow">06 / Solution Options</div>
         <h2 class="rc-title">Solution Options</h2>
         <div class="rc-pending">Pending — Option A (minimal per-bug fixes) vs Option B (full layout-model rebuild), the tradeoffs of each, and why Option B was chosen.</div>
       </div>
 
       <div class="research-panel" data-phase="design">
-        <div class="rc-eyebrow">06 / Visual &amp; Interaction Design</div>
+        <div class="rc-eyebrow">07 / Visual &amp; Interaction Design</div>
         <h2 class="rc-title">Visual &amp; Interaction Design</h2>
         <div class="rc-pending">Pending — the sidebar redesign (icons, collapsible Foundations/Atoms/Molecules/Organisms sections, search with ⌘K), and the Colors &amp; Tokens documentation rebuild.</div>
       </div>
 
       <div class="research-panel" data-phase="finalflow">
-        <div class="rc-eyebrow">07 / Final System Flow</div>
+        <div class="rc-eyebrow">08 / Final System Flow</div>
         <h2 class="rc-title">Final System Flow</h2>
         <div class="rc-pending">Pending — how the finished tool works end-to-end: Figma → YAML → build script → static dashboard, one diagram.</div>
       </div>
 
       <div class="research-panel" data-phase="screen-overview">
-        <div class="rc-eyebrow">08 / Final Design</div>
+        <div class="rc-eyebrow">09 / Final Design</div>
         <h2 class="rc-title">Overview Page</h2>
         <div class="walkthrough-frame">
           <div class="browser-chrome">
@@ -1065,7 +1188,7 @@
       </div>
 
       <div class="research-panel" data-phase="screen-component">
-        <div class="rc-eyebrow">08 / Final Design</div>
+        <div class="rc-eyebrow">09 / Final Design</div>
         <h2 class="rc-title">Component Detail Page</h2>
         <div class="walkthrough-frame">
           <div class="browser-chrome">
@@ -1077,7 +1200,7 @@
       </div>
 
       <div class="research-panel" data-phase="screen-sidebar">
-        <div class="rc-eyebrow">08 / Final Design</div>
+        <div class="rc-eyebrow">09 / Final Design</div>
         <h2 class="rc-title">Sidebar Navigation</h2>
         <div class="walkthrough-frame">
           <div class="browser-chrome">
@@ -1089,7 +1212,7 @@
       </div>
 
       <div class="research-panel" data-phase="screen-tokens">
-        <div class="rc-eyebrow">08 / Final Design</div>
+        <div class="rc-eyebrow">09 / Final Design</div>
         <h2 class="rc-title">Colors &amp; Tokens</h2>
         <div class="walkthrough-frame">
           <div class="browser-chrome">
@@ -1101,7 +1224,7 @@
       </div>
 
       <div class="research-panel" data-phase="screen-search">
-        <div class="rc-eyebrow">08 / Final Design</div>
+        <div class="rc-eyebrow">09 / Final Design</div>
         <h2 class="rc-title">Search (⌘K)</h2>
         <div class="walkthrough-frame">
           <div class="browser-chrome">
@@ -1113,7 +1236,7 @@
       </div>
 
       <div class="research-panel" data-phase="gallery">
-        <div class="rc-eyebrow">09 / Final Screens</div>
+        <div class="rc-eyebrow">10 / Final Screens</div>
         <h2 class="rc-title">Final Screens</h2>
         <div class="gallery-grid">
           <div class="gallery-tile">
@@ -1150,7 +1273,7 @@
       </div>
 
       <div class="research-panel" data-phase="polish">
-        <div class="rc-eyebrow">10 / Fixes &amp; Refinements</div>
+        <div class="rc-eyebrow">11 / Fixes &amp; Refinements</div>
         <h2 class="rc-title">Fixes &amp; Refinements</h2>
         <div class="rc-pending">Pending — the follow-up polish round: the pill/bubble background bug (and why static code review missed it), the sidebar scroll-reset bug (inline-script ordering race), cache-busting, and pulling real Usage text from Figma for the tokens pages.</div>
       </div>
