@@ -154,6 +154,7 @@ visual_values:
       - id: 2007:757
         name: Cellular Connection
         type: VECTOR
+        placeholder_icon: signal-cellular
         w: 19.2
         h: 12.2
         fills: &id001
@@ -163,12 +164,14 @@ visual_values:
       - id: 2007:758
         name: Wifi
         type: VECTOR
+        placeholder_icon: signal-wifi
         w: 17.1
         h: 12.3
         fills: *id001
       - id: 2007:759
         name: Battery
         type: FRAME
+        placeholder_icon: battery-icon
         w: 27.3
         h: 13
         children:

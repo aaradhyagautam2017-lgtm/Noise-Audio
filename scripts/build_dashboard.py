@@ -567,6 +567,19 @@ def _cross_diag_svg(flip):
                 f'stroke-linecap="round"/></svg>')
     return draw
 
+def _real_svg_icon(filename):
+    """Unlike the hand-drawn stand-ins above, these read a real, properly-licensed icon
+    file under assets/icons/ (see assets/icons/README.md for source + license) and
+    recolor/resize it to the node's own captured dimensions -- used where Figma exported
+    only a flattened shape with no real icon data (status bar signal/wifi/battery)."""
+    with open(os.path.join(ROOT, "assets", "icons", filename)) as f:
+        svg = f.read()
+    viewbox = (re.search(r'viewBox="([^"]+)"', svg) or [None, "0 0 16 16"])[1]
+    inner = re.sub(r"</?svg[^>]*>", "", svg).strip()
+    def draw(n, w, h, color):
+        return f'<svg viewBox="{viewbox}" width="{w}" height="{h}" fill="{color}" aria-hidden="true">{inner}</svg>'
+    return draw
+
 # Hand-authored stand-ins for the small set of icon glyphs the ingested visual_values can't
 # reproduce (Figma exports these as flattened image/SVG assets, never as CSS-representable
 # shape data -- see INGESTION_REPORT.md). Each is flagged in its component YAML via
@@ -584,6 +597,9 @@ PLACEHOLDER_ICONS = {
     "chevron-down": _chevron_svg(0, 1),
     "cross-diag-1": _cross_diag_svg(False),
     "cross-diag-2": _cross_diag_svg(True),
+    "signal-cellular": _real_svg_icon("signal-cellular.svg"),
+    "signal-wifi": _real_svg_icon("signal-wifi.svg"),
+    "battery-icon": _real_svg_icon("battery.svg"),
 }
 
 def resolve_variant_node(target_tree, target_comp, props):
@@ -645,14 +661,26 @@ def render_node(n, depth=0, link_prefix="", instance_chain=(), parent_dir=None):
                  else f'<span class="pv-unresolved" title="main component is outside the ingested page">{E(label)} ⚠</span>')
         return (f'<span class="pv-instance" title="{tip}" style="{node_style(n, parent_dir)}">'
                 f'<span class="pv-instance-label">{inner}</span></span>')
+    # Checked before the type dispatch below: a placeholder_icon tag can sit on a plain
+    # VECTOR (chevron, cross) or on a FRAME (status-bar's Battery is a 3-shape frame, not
+    # a single vector) -- either way it substitutes the whole subtree with a real icon.
+    icon = PLACEHOLDER_ICONS.get(n.get("placeholder_icon"))
+    if icon and t in ("VECTOR", "LINE", "ELLIPSE", "BOOLEAN_OPERATION", "FRAME"):
+        # chevron/cross are stroke-only vectors (no fill at all) -- checking fills alone
+        # always missed them and silently fell back to a hardcoded near-black. A FRAME
+        # substitution (battery) carries no fill/stroke of its own -- it's a container --
+        # so fall through to its first colored child (e.g. the Border/Capacity shapes)
+        # rather than losing the real captured color to the hardcoded fallback.
+        color_source = n
+        if not (first_visible_solid(n.get("fills")) or first_visible_solid(n.get("strokes"))):
+            for c in (n.get("children") or []):
+                if first_visible_solid(c.get("fills")) or first_visible_solid(c.get("strokes")):
+                    color_source = c
+                    break
+        color = (first_visible_solid(color_source.get("fills")) or first_visible_solid(color_source.get("strokes")) or {}).get("color", "#171717")
+        svg = icon(n, n.get("w", 24), n.get("h", 24), color)
+        return f'<span class="pv-icon-placeholder" title="{tip} · placeholder, pending real Figma asset">{svg}</span>'
     if t in ("VECTOR", "LINE", "ELLIPSE", "BOOLEAN_OPERATION"):
-        icon = PLACEHOLDER_ICONS.get(n.get("placeholder_icon"))
-        if icon:
-            # chevron/cross are stroke-only vectors (no fill at all) -- checking fills alone
-            # always missed them and silently fell back to a hardcoded near-black.
-            color = (first_visible_solid(n.get("fills")) or first_visible_solid(n.get("strokes")) or {}).get("color", "#171717")
-            svg = icon(n, n.get("w", 24), n.get("h", 24), color)
-            return f'<span class="pv-icon-placeholder" title="{tip} · placeholder, pending real Figma asset">{svg}</span>'
         return f'<span class="pv-shape" title="{tip}" style="{node_style(n, parent_dir)}"></span>'
     kids = n.get("children")
     if isinstance(kids, dict):
