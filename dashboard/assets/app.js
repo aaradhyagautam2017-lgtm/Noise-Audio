@@ -33,15 +33,13 @@ document.addEventListener('click', function (ev) {
 // Collapsible sidebar sections (Foundations / Atoms / Molecules / Organisms): a
 // section the visitor previously opened stays open on the next page too, EXCEPT a
 // section is never force-collapsed if it contains the page you're currently on
-// (data-forced="1", set server-side) -- you should never land on a component's page
-// and find its own section collapsed.
+// (data-forced="1", set server-side). Applying the stored open/closed state itself
+// happens earlier, inline right after the sidebar markup (see sidebar() in
+// build_dashboard.py) -- it has to run before the scroll-position restore below it,
+// or the container's height is still wrong when scrollTop gets set. This block only
+// has to persist future toggles.
 document.querySelectorAll('.navsection').forEach(function (sec) {
   const key = 'na-navsec-' + sec.dataset.key;
-  if (sec.dataset.forced !== '1') {
-    const stored = localStorage.getItem(key);
-    if (stored === '1') sec.setAttribute('open', '');
-    else if (stored === '0') sec.removeAttribute('open');
-  }
   sec.addEventListener('toggle', function () {
     try { localStorage.setItem(key, sec.open ? '1' : '0'); } catch (e) {}
   });

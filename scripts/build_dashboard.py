@@ -285,12 +285,27 @@ def sidebar(prefix, active):
     ''')
     # Every nav click is a full page load (this is a static multi-page site, not an
     # SPA), so without this .navscroll silently resets to the top on every click --
-    # scroll down to "Text field", click it, and you're back at the top next time.
+    # scroll down to an organism, click it, and you're back at the top next time.
     # Restored inline (before app.js, before first paint) so there's no visible jump,
     # mirroring the theme-flash-prevention script in <head>.
-    parts.append('<script>(function(){try{var e=document.querySelector(".navscroll"),'
-                  'y=sessionStorage.getItem("na-sidebar-scroll");if(e&&y)e.scrollTop=+y;}'
-                  'catch(e){}})();</script>')
+    #
+    # Order matters here and is the whole fix: a previously-opened section (say
+    # Atoms) must be re-opened from localStorage BEFORE scrollTop is set, not after
+    # in app.js. Otherwise scrollTop gets set against the shorter, still-collapsed
+    # layout, then Atoms pops open afterwards, pushing everything below it down the
+    # page -- which is exactly what made the list "jump back up" after a click even
+    # though the stored scroll value was correct the whole time.
+    parts.append(
+        '<script>(function(){'
+        'try{document.querySelectorAll(".navsection").forEach(function(s){'
+        'if(s.dataset.forced==="1")return;'
+        'var v=localStorage.getItem("na-navsec-"+s.dataset.key);'
+        'if(v==="1")s.setAttribute("open","");else if(v==="0")s.removeAttribute("open");'
+        '});}catch(e){}'
+        'try{var e=document.querySelector(".navscroll"),'
+        'y=sessionStorage.getItem("na-sidebar-scroll");if(e&&y)e.scrollTop=+y;}catch(e){}'
+        '})();</script>'
+    )
     return "".join(parts)
 
 def page(title, active, body, prefix=""):
@@ -1697,15 +1712,13 @@ document.addEventListener('click', function (ev) {
 // Collapsible sidebar sections (Foundations / Atoms / Molecules / Organisms): a
 // section the visitor previously opened stays open on the next page too, EXCEPT a
 // section is never force-collapsed if it contains the page you're currently on
-// (data-forced="1", set server-side) -- you should never land on a component's page
-// and find its own section collapsed.
+// (data-forced="1", set server-side). Applying the stored open/closed state itself
+// happens earlier, inline right after the sidebar markup (see sidebar() in
+// build_dashboard.py) -- it has to run before the scroll-position restore below it,
+// or the container's height is still wrong when scrollTop gets set. This block only
+// has to persist future toggles.
 document.querySelectorAll('.navsection').forEach(function (sec) {
   const key = 'na-navsec-' + sec.dataset.key;
-  if (sec.dataset.forced !== '1') {
-    const stored = localStorage.getItem(key);
-    if (stored === '1') sec.setAttribute('open', '');
-    else if (stored === '0') sec.removeAttribute('open');
-  }
   sec.addEventListener('toggle', function () {
     try { localStorage.setItem(key, sec.open ? '1' : '0'); } catch (e) {}
   });
