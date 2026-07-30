@@ -694,7 +694,6 @@ def component_page(cid):
     reg = reg_by_id[cid]
     name = comp["name"].strip()
     dangling = [e for e in reg.get("figma_instance_edges", []) or [] if not e["resolved"] and not e.get("excluded")]
-    excluded = [e for e in reg.get("figma_instance_edges", []) or [] if e.get("excluded")]
     warns = []
     if dangling:
         items = "".join(
@@ -704,12 +703,6 @@ def component_page(cid):
             for e in dangling)
         warns.append(warn(f'{len(dangling)} Figma instance reference(s) inside this component point outside '
                           f'the ingested library page (see INGESTION_REPORT.md):<ul>{items}</ul>'))
-    excluded_note = ""
-    if excluded:
-        items = "".join(f'<li><b>{E(e["references"])}</b> (node <code>{E(e["ref_node_id"])}</code>) — {E(e.get("external_location",""))}</li>' for e in excluded)
-        excluded_note = (f'<p class="dim">{len(excluded)} raw Figma instance reference(s) in this component were '
-                         f'reviewed and excluded — confirmed not real library dependencies (see INGESTION_REPORT.md §5d):'
-                         f'<ul>{items}</ul></p>')
 
     # Variant axes read as this library's equivalent of a component's props: the axis is the
     # knob, the declared options are its allowed values. Rendered in the rail beside the stage.
@@ -786,7 +779,6 @@ def component_page(cid):
       <span class="dim">used by {reg.get("usage_count", 0)}</span>
     </header>
     {"".join(warns)}
-    {excluded_note}
     <div class="detailgrid">
       <div class="stagecard">{render_preview(comp)}</div>
       <aside class="rail">{axes_card}{ids_card}{rel_card}</aside>
