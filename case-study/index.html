@@ -150,6 +150,73 @@
   }
   .screen-group-panel .rc-eyebrow { color: var(--accent-deep); }
 
+  /* ---------- Overview / Problem content blocks ---------- */
+  .overview-section { margin-top: 32px; }
+  .overview-section:first-of-type { margin-top: 22px; }
+  .overview-section-title {
+    font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 12px;
+  }
+  .overview-paragraph { font-size: 15px; line-height: 1.65; color: var(--ink-2); max-width: 680px; }
+  .info-card {
+    background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-md);
+    padding: 22px 24px; max-width: 680px; box-shadow: var(--shadow-sm);
+  }
+  .info-card-label {
+    font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--accent-deep); margin-bottom: 8px;
+  }
+  .info-card-text { font-size: 14.5px; line-height: 1.6; color: var(--ink-2); }
+  .approach-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 760px; }
+  @media (max-width: 700px) { .approach-grid { grid-template-columns: 1fr; } }
+  .principle-card {
+    background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-md);
+    padding: 20px; box-shadow: var(--shadow-sm);
+  }
+  .principle-title { font-size: 14.5px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+  .principle-desc { font-size: 13px; line-height: 1.5; color: var(--ink-2); }
+  .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 760px; margin-top: 22px; }
+  @media (max-width: 620px) { .comparison-grid { grid-template-columns: 1fr; } }
+  .comparison-card {
+    background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-md);
+    padding: 22px; box-shadow: var(--shadow-sm);
+  }
+  .comparison-card-title {
+    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+    margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--hairline);
+    color: var(--ink-3);
+  }
+  .comparison-card.is-us .comparison-card-title { color: var(--accent-deep); border-bottom-color: var(--accent-tint); }
+  .comparison-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; }
+  .comparison-list li { font-size: 13.5px; line-height: 1.5; color: var(--ink-2); position: relative; padding-left: 18px; }
+  .comparison-list li::before { content: "•"; position: absolute; left: 0; color: var(--ink-3); font-size: 16px; line-height: 1; }
+  .comparison-card.is-us .comparison-list li::before { color: var(--accent); }
+  .challenge-card {
+    background: var(--accent-tint); border-left: 4px solid var(--accent);
+    border-top: 1px solid var(--hairline); border-right: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
+    border-radius: var(--r-md); padding: 26px 28px; max-width: 680px; margin-top: 24px; box-shadow: var(--shadow-sm);
+  }
+  .challenge-label {
+    font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--accent-deep); margin-bottom: 12px;
+  }
+  .challenge-text { font-weight: 600; font-size: 18px; line-height: 1.5; color: var(--ink); font-style: italic; }
+  .evidence-list { margin-top: 22px; max-width: 680px; display: flex; flex-direction: column; gap: 14px; }
+  .evidence-item {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-md);
+    padding: 16px 18px; box-shadow: var(--shadow-sm);
+  }
+  .evidence-tag {
+    flex: none; font-family: var(--font-mono); font-size: 10.5px; font-weight: 700; color: #fff;
+    background: #d1483f; border-radius: var(--r-sm); padding: 3px 8px; margin-top: 2px;
+  }
+  .evidence-body-text { font-size: 13.5px; line-height: 1.55; color: var(--ink-2); }
+  .evidence-body-text b { color: var(--ink); font-weight: 700; }
+  .stakes-paragraph {
+    margin-top: 22px; font-size: 15px; line-height: 1.65; color: var(--ink-2); max-width: 680px;
+  }
+
   /* ---------- Final Design walkthrough scaffold ---------- */
   .walkthrough-frame {
     margin-top: 22px; max-width: 900px;
@@ -261,13 +328,118 @@
         <div class="research-panel" data-phase="overview">
           <div class="rc-eyebrow">01 / Overview</div>
           <h2 class="rc-title">Overview</h2>
-          <div class="rc-pending">Pending — what Noise Audio is, the assignment/context, and the approach principles (mirrors the Assignment / Opportunity / My Approach cards from the Zepto case study).</div>
+
+          <div class="overview-section">
+            <p class="overview-paragraph">
+              Noise Audio Dashboard turns a real, production Figma design system into a structurally
+              faithful, always-in-sync component library — not a one-time export, but a living
+              reference an engineer, a PM, or a coding agent can all read from and trust.
+            </p>
+          </div>
+
+          <div class="overview-section">
+            <h3 class="overview-section-title">The Assignment</h3>
+            <div class="info-card">
+              <div class="info-card-label">Assignment</div>
+              <p class="info-card-text">Ingest Noise Audio's own design language system out of Figma — 26 components across atoms, molecules, and organisms — and stand up a dashboard where every component's structure, visual rules, and relationships are correct enough to build real product screens from, not just look at.</p>
+            </div>
+          </div>
+
+          <div class="overview-section">
+            <h3 class="overview-section-title">The Opportunity</h3>
+            <div class="info-card">
+              <div class="info-card-label">Opportunity</div>
+              <p class="info-card-text">Agentic "Figma to code" tools already exist and work well for a single screen. Nobody has really solved the harder version of that problem: onboarding a company's <em>entire</em> production design system — hundreds of variants, cross-referenced components, evolving tokens — into a form an agent can reliably reason over, not just glance at once.</p>
+            </div>
+          </div>
+
+          <div class="overview-section">
+            <h3 class="overview-section-title">My Approach</h3>
+            <div class="approach-grid">
+              <div class="principle-card">
+                <div class="principle-title">Structure, Not Snapshots</div>
+                <p class="principle-desc">Capture layout intent — fill/hug/fixed sizing, absolute positioning, clipping, real variant wiring — instead of a flattened grid of pixel positions.</p>
+              </div>
+              <div class="principle-card">
+                <div class="principle-title">One-Way, Verifiable</div>
+                <p class="principle-desc">Figma is the only source of truth. Every value traces back to a real node; nothing in the dashboard is invented or guessed.</p>
+              </div>
+              <div class="principle-card">
+                <div class="principle-title">Self-Describing</div>
+                <p class="principle-desc">Every component carries its own rules, anti-patterns, and relationships, so an agent — or a PM — can reason about correct usage, not just copy a shape.</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="research-panel" data-phase="problem">
           <div class="rc-eyebrow">02 / The Problem</div>
           <h2 class="rc-title">The Problem</h2>
-          <div class="rc-pending">Pending — the visual-fidelity bugs found (screenshots of components not matching Figma pixel-for-picture), and why this was a "the whole tool goes to trash" severity problem, not a cosmetic one.</div>
+
+          <div class="overview-section">
+            <p class="overview-paragraph">
+              Point solutions for "hand a coding agent a Figma frame, get a component" already exist,
+              and they're genuinely good — for a single screen, designed once, built once. That's not
+              the situation a real product team is in. A production design system is hundreds of
+              components deep, cross-referenced, and it keeps changing. That's the version of this
+              problem nobody has actually solved.
+            </p>
+          </div>
+
+          <div class="overview-section">
+            <h3 class="overview-section-title">What Changes At Product Scale</h3>
+            <div class="comparison-grid">
+              <div class="comparison-card">
+                <div class="comparison-card-title">Single-Screen Handoff</div>
+                <ul class="comparison-list">
+                  <li>One frame, read once, thrown away after</li>
+                  <li>Nobody notices if a component is 90% right</li>
+                  <li>No expectation the output stays in sync with Figma later</li>
+                </ul>
+              </div>
+              <div class="comparison-card is-us">
+                <div class="comparison-card-title">Production Design System</div>
+                <ul class="comparison-list">
+                  <li>Hundreds of components, reused everywhere, for years</li>
+                  <li>A wrong pixel compounds every time an agent reuses that component</li>
+                  <li>Tokens, variants, and rules change — the library has to keep up</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="overview-section">
+            <h3 class="overview-section-title">The Failure Mode</h3>
+            <div class="challenge-card">
+              <div class="challenge-label">The Core Problem</div>
+              <p class="challenge-text">Hand a real, production design system to a coding agent through Figma's MCP today, and it doesn't build your design system — it builds a rough guess of it, once, with no way to get more accurate the second time.</p>
+            </div>
+          </div>
+
+          <div class="overview-section">
+            <h3 class="overview-section-title">Not Hypothetical — It Happened To This Dashboard</h3>
+            <div class="evidence-list">
+              <div class="evidence-item">
+                <span class="evidence-tag">BUG</span>
+                <p class="evidence-body-text"><b>Flattened pixel snapshots, not structure.</b> The first ingestion recorded bare width/height numbers instead of fill/hug/fixed sizing rules — a text field's "0/50" character counter rendered bleeding off its own container, because nothing described that it should size to its content.</p>
+              </div>
+              <div class="evidence-item">
+                <span class="evidence-tag">BUG</span>
+                <p class="evidence-body-text"><b>Instances that never resolve.</b> Nested components silently fell back to generic placeholder boxes instead of rendering their actual selected Figma variant — an agent building from this would ship the wrong state every time.</p>
+              </div>
+              <div class="evidence-item">
+                <span class="evidence-tag">BUG</span>
+                <p class="evidence-body-text"><b>Icons collapsing to nothing.</b> A fixed-size icon whose only child was absolutely positioned computed to a 0×0 box, because "hug" sizing has no content to size to when the layout model doesn't capture absolute positioning.</p>
+              </div>
+            </div>
+          </div>
+
+          <p class="stakes-paragraph">
+            None of these were cosmetic. A design-system dashboard that can't be trusted pixel-for-pixel
+            can't be trusted by anyone building from it — not an engineer, not a PM, and least of all an
+            agent that will reuse the same wrong component hundreds of times. That's the problem this
+            project set out to actually solve, not patch around.
+          </p>
         </div>
 
         <div class="research-panel" data-phase="diagnosis">
