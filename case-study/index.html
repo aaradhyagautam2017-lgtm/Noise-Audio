@@ -6,179 +6,174 @@
 <title>Noise Audio Dashboard — Case Study</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   /* ============================================================
      case-study/index.html
-     Structure mirrors the Zepto "Paw Parade" case study
-     (aaradhyagautam2017-lgtm/Tata-1mg-assignment-, case-study/index.html):
-     a sticky sidebar with numbered sections, scrollspy'd against a single
-     long scroll. No Prototype/live-demo view — this is a straight case
-     study, not an interactive tool.
+     Visual language (palette, type, sidebar/metadata pattern, flat
+     bordered cards, no shadows) is pulled from Project Orbit's own
+     case study (aaradhyagautam2017-lgtm/aaradhya-portfolio,
+     project-orbit.html + css/typography.css) — a light editorial
+     theme: warm neutral ground, Inter for reading, JetBrains Mono
+     for labels/metadata, a growing left-tick marker for the active
+     sidebar item instead of color.
      Sections not yet written carry a dashed "pending" placeholder.
      ============================================================ */
   :root {
     --font-ui:   'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    --font-mono: 'Roboto Mono', ui-monospace, 'SF Mono', monospace;
-    --accent:      #6d4aff;
-    --accent-deep: #5a35f5;
-    --accent-tint: #efeaff;
-    --ink:      #131315;
-    --ink-2:    #5c5c63;
-    --ink-3:    #8e8e96;
-    --hairline: #e4e4e7;
-    --hairline-2: #d4d4d8;
-    --card:     #ffffff;
-    --page:     #fbfbfc;
-    --page-alt: #f5f5f7;
-    --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-pill: 9999px;
-    --shadow-sm: 0 4px 14px rgba(20,20,28,.06);
-    --shadow-md: 0 10px 28px rgba(20,20,28,.09);
+    --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+    --bg-base:    #f7f6f3;
+    --bg-surface: #ffffff;
+    --border:       #e4e1da;
+    --border-hover: #c5c2bb;
+    --ink:   #111111;
+    --ink-2: #5f5f5f;
+    --ink-3: #8a8780;
+    --r-sm: 4px; --r-md: 6px; --r-lg: 8px; --r-pill: 9999px;
   }
   * { box-sizing: border-box; }
   html, body { height: 100%; margin: 0; }
   body {
     font-family: var(--font-ui);
-    background: var(--page);
+    background: var(--bg-base);
     color: var(--ink);
     -webkit-font-smoothing: antialiased;
   }
   a { color: inherit; }
 
-  /* ---------- header ---------- */
-  .cs-header {
-    padding: 48px 24px 36px;
-    text-align: center;
-    max-width: 720px;
-    margin: 0 auto;
-  }
-  .cs-eyebrow {
-    font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--accent-deep);
-  }
-  .cs-title {
-    font-weight: 700; font-size: clamp(28px, 4.5vw, 42px);
-    line-height: 1.1; color: var(--ink); margin-top: 12px; letter-spacing: -0.01em;
-  }
-  .cs-sub {
-    font-size: 15px; line-height: 1.55; color: var(--ink-2); margin-top: 14px;
-  }
-
-  /* ================= OVERVIEW ================= */
-  .research-layout {
-    max-width: 1180px; margin: 0 auto; padding: 8px 24px 64px;
-    display: grid; grid-template-columns: 240px 1fr; gap: 40px;
+  /* ================= LAYOUT ================= */
+  .layout-wrapper {
+    max-width: 1180px; margin: 0 auto; padding: 64px 24px 160px;
+    display: grid; grid-template-columns: 240px 1fr; gap: 64px;
     align-items: start;
   }
   .research-sidebar {
-    position: sticky; top: 40px;
+    position: sticky; top: 56px;
     display: flex; flex-direction: column; gap: 32px;
   }
   .sidebar-label {
-    font-size: 10.5px; font-weight: 800; letter-spacing: .12em;
+    font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .12em;
     text-transform: uppercase; color: var(--ink-3); margin-bottom: 12px;
   }
-  .structure-nav { display: flex; flex-direction: column; gap: 2px; }
+  .structure-nav { display: flex; flex-direction: column; gap: 16px; }
   .structure-item {
-    display: block; width: 100%;
-    font-family: var(--font-ui); font-size: 13px; font-weight: 700; text-align: left;
+    display: block; width: 100%; position: relative;
+    font-family: var(--font-mono); font-size: 12.5px; font-weight: 500; text-align: left;
     color: var(--ink-3); background: none; border: none; cursor: pointer;
-    padding: 8px 0 8px 12px; border-left: 2px solid var(--hairline);
+    padding: 0 0 0 14px; transition: color .2s ease, padding-left .2s ease;
   }
-  .structure-item.is-active { color: var(--accent-deep); border-left-color: var(--accent); }
+  .structure-item::before {
+    content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+    width: 2px; height: 0; background: var(--ink); transition: height .2s ease;
+  }
+  .structure-item:hover { color: var(--ink-2); }
+  .structure-item.is-active { color: var(--ink); padding-left: 20px; }
+  .structure-item.is-active::before { height: 12px; }
   .structure-group-label {
-    font-size: 13px; font-weight: 700;
-    color: var(--ink-3); padding: 8px 0 8px 12px; margin-top: 2px;
-    border-left: 2px solid var(--hairline);
+    font-family: var(--font-mono); font-size: 12.5px; font-weight: 500;
+    color: var(--ink-3); padding: 0 0 0 14px; margin-top: 2px;
   }
-  .structure-item--sub { font-size: 12px; font-weight: 600; padding-left: 24px; }
+  .structure-item--sub { font-size: 11.5px; padding-left: 26px; }
+  .structure-item--sub.is-active { padding-left: 32px; }
+
+  .sidebar-meta {
+    border-top: 1px solid var(--border); padding-top: 28px;
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .meta-block { display: flex; flex-direction: column; gap: 4px; }
+  .meta-block-label {
+    font-family: var(--font-mono); font-size: 10px; color: var(--ink-3);
+    text-transform: uppercase; letter-spacing: .08em;
+  }
+  .meta-block-value { font-family: var(--font-ui); font-size: 13.5px; color: var(--ink-2); }
 
   .research-content { min-width: 0; }
   .research-panel {
     margin-bottom: 48px; padding-bottom: 32px;
-    border-bottom: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--border);
     scroll-margin-top: 40px;
   }
   .research-panel:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
   .rc-eyebrow {
-    font-size: 11.5px; font-weight: 800; letter-spacing: .1em;
-    text-transform: uppercase; color: var(--ink-2);
+    font-family: var(--font-mono); font-size: 11.5px; font-weight: 500; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-3);
   }
   .rc-title {
-    font-weight: 700; font-size: clamp(26px, 3.6vw, 36px);
-    color: var(--ink); margin-top: 10px; letter-spacing: -0.01em;
+    font-weight: 600; font-size: clamp(24px, 3.4vw, 32px);
+    color: var(--ink); margin-top: 10px; letter-spacing: -0.015em;
+  }
+  .intro-title {
+    font-weight: 600; font-size: clamp(36px, 5.5vw, 52px);
+    color: var(--ink); margin-top: 12px; letter-spacing: -0.02em; line-height: 1.1;
   }
   .rc-pending {
     margin-top: 22px; padding: 18px 20px; max-width: 680px;
-    border: 1.5px dashed var(--hairline-2); border-radius: var(--r-md);
+    border: 1.5px dashed var(--border-hover); border-radius: var(--r-md);
     font-size: 13px; color: var(--ink-2); line-height: 1.6; font-style: italic;
-    background: var(--page-alt);
+    background: var(--bg-surface);
   }
-  .screen-group-panel .rc-eyebrow { color: var(--accent-deep); }
 
-  /* ---------- Overview / Problem content blocks ---------- */
+  /* ---------- Intro (section 01): flowing prose, no cards ---------- */
+  .lead-text {
+    font-size: 18px; font-weight: 500; line-height: 1.55; color: var(--ink);
+    max-width: 680px; margin-top: 18px;
+  }
+  .reading-col { max-width: 680px; margin-top: 28px; }
+  .reading-col p {
+    font-size: 15.5px; line-height: 1.7; color: var(--ink-2); margin: 0 0 22px;
+  }
+  .reading-col p:last-child { margin-bottom: 0; }
+  .pull-quote {
+    font-size: 18px; font-weight: 500; line-height: 1.55; color: var(--ink); font-style: italic;
+    border-left: 3px solid var(--ink); padding-left: 26px;
+    margin: 34px 0;
+  }
+
+  /* ---------- Problem-section content blocks ---------- */
   .overview-section { margin-top: 32px; }
   .overview-section:first-of-type { margin-top: 22px; }
   .overview-section-title {
-    font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
-    color: var(--ink-3); margin-bottom: 12px;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: 12px;
   }
   .overview-paragraph { font-size: 15px; line-height: 1.65; color: var(--ink-2); max-width: 680px; }
-  .info-card {
-    background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-md);
-    padding: 22px 24px; max-width: 680px; box-shadow: var(--shadow-sm);
-  }
-  .info-card-label {
-    font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
-    color: var(--accent-deep); margin-bottom: 8px;
-  }
-  .info-card-text { font-size: 14.5px; line-height: 1.6; color: var(--ink-2); }
-  .approach-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 760px; }
-  @media (max-width: 700px) { .approach-grid { grid-template-columns: 1fr; } }
-  .principle-card {
-    background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-md);
-    padding: 20px; box-shadow: var(--shadow-sm);
-  }
-  .principle-title { font-size: 14.5px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
-  .principle-desc { font-size: 13px; line-height: 1.5; color: var(--ink-2); }
   .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 760px; margin-top: 22px; }
   @media (max-width: 620px) { .comparison-grid { grid-template-columns: 1fr; } }
   .comparison-card {
-    background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-md);
-    padding: 22px; box-shadow: var(--shadow-sm);
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--r-md); padding: 22px;
   }
   .comparison-card-title {
-    font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
-    margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--hairline);
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .05em;
+    margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
     color: var(--ink-3);
   }
-  .comparison-card.is-us .comparison-card-title { color: var(--accent-deep); border-bottom-color: var(--accent-tint); }
+  .comparison-card.is-us .comparison-card-title { color: var(--ink); border-bottom-color: var(--ink); }
   .comparison-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; }
   .comparison-list li { font-size: 13.5px; line-height: 1.5; color: var(--ink-2); position: relative; padding-left: 18px; }
   .comparison-list li::before { content: "•"; position: absolute; left: 0; color: var(--ink-3); font-size: 16px; line-height: 1; }
-  .comparison-card.is-us .comparison-list li::before { color: var(--accent); }
+  .comparison-card.is-us .comparison-list li::before { color: var(--ink); }
   .challenge-card {
-    background: var(--accent-tint); border-left: 4px solid var(--accent);
-    border-top: 1px solid var(--hairline); border-right: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);
-    border-radius: var(--r-md); padding: 26px 28px; max-width: 680px; margin-top: 24px; box-shadow: var(--shadow-sm);
+    background: var(--bg-surface); border-left: 3px solid var(--ink);
+    border-top: 1px solid var(--border); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    border-radius: var(--r-md); padding: 26px 28px; max-width: 680px; margin-top: 24px;
   }
   .challenge-label {
-    font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
-    color: var(--accent-deep); margin-bottom: 12px;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 12px;
   }
-  .challenge-text { font-weight: 600; font-size: 18px; line-height: 1.5; color: var(--ink); font-style: italic; }
+  .challenge-text { font-weight: 500; font-size: 18px; line-height: 1.5; color: var(--ink); font-style: italic; }
   .evidence-list { margin-top: 22px; max-width: 680px; display: flex; flex-direction: column; gap: 14px; }
   .evidence-item {
     display: flex; gap: 14px; align-items: flex-start;
-    background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-md);
-    padding: 16px 18px; box-shadow: var(--shadow-sm);
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--r-md);
+    padding: 16px 18px;
   }
   .evidence-tag {
-    flex: none; font-family: var(--font-mono); font-size: 10.5px; font-weight: 700; color: #fff;
-    background: #d1483f; border-radius: var(--r-sm); padding: 3px 8px; margin-top: 2px;
+    flex: none; font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; color: #fff;
+    background: #a8503f; border-radius: var(--r-sm); padding: 3px 8px; margin-top: 2px;
   }
   .evidence-body-text { font-size: 13.5px; line-height: 1.55; color: var(--ink-2); }
-  .evidence-body-text b { color: var(--ink); font-weight: 700; }
+  .evidence-body-text b { color: var(--ink); font-weight: 600; }
   .stakes-paragraph {
     margin-top: 22px; font-size: 15px; line-height: 1.65; color: var(--ink-2); max-width: 680px;
   }
@@ -186,17 +181,17 @@
   /* ---------- Final Design walkthrough scaffold ---------- */
   .walkthrough-frame {
     margin-top: 22px; max-width: 900px;
-    border: 1px solid var(--hairline); border-radius: var(--r-lg);
-    background: var(--card); box-shadow: var(--shadow-sm); overflow: hidden;
+    border: 1px solid var(--border); border-radius: var(--r-lg);
+    background: var(--bg-surface); overflow: hidden;
   }
   .browser-chrome {
     display: flex; align-items: center; gap: 8px;
-    padding: 10px 14px; background: var(--page-alt); border-bottom: 1px solid var(--hairline);
+    padding: 10px 14px; background: var(--bg-base); border-bottom: 1px solid var(--border);
   }
-  .browser-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--hairline-2); }
+  .browser-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border-hover); }
   .browser-url {
     margin-left: 8px; flex: 1; font-family: var(--font-mono); font-size: 11px; color: var(--ink-3);
-    background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-pill);
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--r-pill);
     padding: 4px 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .walkthrough-body { min-height: 220px; display: flex; align-items: center; justify-content: center; }
@@ -207,321 +202,321 @@
     display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px;
   }
   .gallery-tile {
-    border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--card);
-    box-shadow: var(--shadow-sm); overflow: hidden;
+    border: 1px solid var(--border); border-radius: var(--r-md); background: var(--bg-surface); overflow: hidden;
   }
   .gallery-tile .browser-chrome { padding: 8px 10px; }
   .gallery-tile .browser-dot { width: 7px; height: 7px; }
   .gallery-tile-body {
     height: 150px; display: flex; align-items: center; justify-content: center;
-    background: var(--page-alt); color: var(--ink-3); font-size: 11.5px; text-align: center; padding: 12px;
+    background: var(--bg-base); color: var(--ink-3); font-size: 11.5px; text-align: center; padding: 12px;
   }
   .gallery-tile-caption { padding: 10px 12px; font-size: 12.5px; font-weight: 600; color: var(--ink); }
 
   /* ---------- footer ---------- */
-  .cs-footer { text-align: center; padding: 32px 24px 24px; font-size: 12.5px; color: var(--ink-2); }
+  .cs-footer {
+    font-family: var(--font-mono); text-align: center; padding: 32px 24px 24px;
+    font-size: 11px; letter-spacing: .04em; color: var(--ink-3);
+  }
 
   @media (max-width: 760px) {
-    .research-layout { grid-template-columns: 1fr; gap: 32px; }
-    .research-sidebar { position: static; flex-direction: row; flex-wrap: wrap; gap: 32px; }
+    .layout-wrapper { grid-template-columns: 1fr; gap: 32px; }
+    .research-sidebar { position: static; }
   }
 </style>
 </head>
 <body>
 
-<header class="cs-header">
-  <div class="cs-eyebrow">Case Study</div>
-  <h1 class="cs-title">Noise Audio Dashboard</h1>
-  <p class="cs-sub"><em>[Pending — one-line summary of the tool and the problem it solves.]</em></p>
-</header>
-
 <main>
 
-  <section>
-    <div class="research-layout">
+  <div class="layout-wrapper">
 
-      <aside class="research-sidebar">
-        <div>
-          <div class="sidebar-label">Structure</div>
-          <nav class="structure-nav" id="structure-nav">
-            <button class="structure-item is-active" type="button" data-phase="overview">01 / Overview</button>
-            <button class="structure-item" type="button" data-phase="problem">02 / The Problem</button>
-            <button class="structure-item" type="button" data-phase="diagnosis">03 / Diagnosis</button>
-            <button class="structure-item" type="button" data-phase="decision">04 / Solution Options</button>
-            <button class="structure-item" type="button" data-phase="rebuild">05 / Rebuild Strategy</button>
-            <button class="structure-item" type="button" data-phase="design">06 / Visual &amp; Interaction Design</button>
-            <button class="structure-item" type="button" data-phase="finalflow">07 / Final System Flow</button>
-            <div class="structure-group-label">08 / Final Design</div>
-            <button class="structure-item structure-item--sub" type="button" data-phase="screen-overview">Overview Page</button>
-            <button class="structure-item structure-item--sub" type="button" data-phase="screen-component">Component Detail Page</button>
-            <button class="structure-item structure-item--sub" type="button" data-phase="screen-sidebar">Sidebar Navigation</button>
-            <button class="structure-item structure-item--sub" type="button" data-phase="screen-tokens">Colors &amp; Tokens</button>
-            <button class="structure-item structure-item--sub" type="button" data-phase="screen-search">Search (⌘K)</button>
-            <button class="structure-item" type="button" data-phase="gallery">09 / Final Screens</button>
-            <button class="structure-item" type="button" data-phase="polish">10 / Fixes &amp; Refinements</button>
-          </nav>
+    <aside class="research-sidebar">
+      <div>
+        <div class="sidebar-label">Structure</div>
+        <nav class="structure-nav" id="structure-nav">
+          <button class="structure-item is-active" type="button" data-phase="overview">01 / Intro</button>
+          <button class="structure-item" type="button" data-phase="problem">02 / Problem</button>
+          <button class="structure-item" type="button" data-phase="diagnosis">03 / Diagnosis</button>
+          <button class="structure-item" type="button" data-phase="decision">04 / Solution Options</button>
+          <button class="structure-item" type="button" data-phase="rebuild">05 / Rebuild Strategy</button>
+          <button class="structure-item" type="button" data-phase="design">06 / Visual &amp; Interaction Design</button>
+          <button class="structure-item" type="button" data-phase="finalflow">07 / Final System Flow</button>
+          <div class="structure-group-label">08 / Final Design</div>
+          <button class="structure-item structure-item--sub" type="button" data-phase="screen-overview">Overview Page</button>
+          <button class="structure-item structure-item--sub" type="button" data-phase="screen-component">Component Detail Page</button>
+          <button class="structure-item structure-item--sub" type="button" data-phase="screen-sidebar">Sidebar Navigation</button>
+          <button class="structure-item structure-item--sub" type="button" data-phase="screen-tokens">Colors &amp; Tokens</button>
+          <button class="structure-item structure-item--sub" type="button" data-phase="screen-search">Search (⌘K)</button>
+          <button class="structure-item" type="button" data-phase="gallery">09 / Final Screens</button>
+          <button class="structure-item" type="button" data-phase="polish">10 / Fixes &amp; Refinements</button>
+        </nav>
+      </div>
+
+      <div class="sidebar-meta">
+        <div class="meta-block">
+          <span class="meta-block-label">Operator Role</span>
+          <span class="meta-block-value">Systems Designer</span>
         </div>
-      </aside>
-
-      <div class="research-content" id="research-content">
-
-        <div class="research-panel" data-phase="overview">
-          <div class="rc-eyebrow">01 / Overview</div>
-          <h2 class="rc-title">Overview</h2>
-
-          <div class="overview-section">
-            <p class="overview-paragraph">
-              Noise Audio Dashboard turns a real, production Figma design system into a structurally
-              faithful, always-in-sync component library — not a one-time export, but a living
-              reference an engineer, a PM, or a coding agent can all read from and trust.
-            </p>
-          </div>
-
-          <div class="overview-section">
-            <h3 class="overview-section-title">The Assignment</h3>
-            <div class="info-card">
-              <div class="info-card-label">Assignment</div>
-              <p class="info-card-text">Ingest Noise Audio's own design language system out of Figma — 26 components across atoms, molecules, and organisms — and stand up a dashboard where every component's structure, visual rules, and relationships are correct enough to build real product screens from, not just look at.</p>
-            </div>
-          </div>
-
-          <div class="overview-section">
-            <h3 class="overview-section-title">The Opportunity</h3>
-            <div class="info-card">
-              <div class="info-card-label">Opportunity</div>
-              <p class="info-card-text">Agentic "Figma to code" tools already exist and work well for a single screen. Nobody has really solved the harder version of that problem: onboarding a company's <em>entire</em> production design system — hundreds of variants, cross-referenced components, evolving tokens — into a form an agent can reliably reason over, not just glance at once.</p>
-            </div>
-          </div>
-
-          <div class="overview-section">
-            <h3 class="overview-section-title">My Approach</h3>
-            <div class="approach-grid">
-              <div class="principle-card">
-                <div class="principle-title">Structure, Not Snapshots</div>
-                <p class="principle-desc">Capture layout intent — fill/hug/fixed sizing, absolute positioning, clipping, real variant wiring — instead of a flattened grid of pixel positions.</p>
-              </div>
-              <div class="principle-card">
-                <div class="principle-title">One-Way, Verifiable</div>
-                <p class="principle-desc">Figma is the only source of truth. Every value traces back to a real node; nothing in the dashboard is invented or guessed.</p>
-              </div>
-              <div class="principle-card">
-                <div class="principle-title">Self-Describing</div>
-                <p class="principle-desc">Every component carries its own rules, anti-patterns, and relationships, so an agent — or a PM — can reason about correct usage, not just copy a shape.</p>
-              </div>
-            </div>
-          </div>
+        <div class="meta-block">
+          <span class="meta-block-label">Methodology</span>
+          <span class="meta-block-value">AI-Native Design Pipeline</span>
         </div>
+        <div class="meta-block">
+          <span class="meta-block-label">Timeframe</span>
+          <span class="meta-block-value">Q3 2026</span>
+        </div>
+        <div class="meta-block">
+          <span class="meta-block-label">Status</span>
+          <span class="meta-block-value">In Progress</span>
+        </div>
+      </div>
+    </aside>
 
-        <div class="research-panel" data-phase="problem">
-          <div class="rc-eyebrow">02 / The Problem</div>
-          <h2 class="rc-title">The Problem</h2>
+    <div class="research-content" id="research-content">
 
-          <div class="overview-section">
-            <p class="overview-paragraph">
-              Point solutions for "hand a coding agent a Figma frame, get a component" already exist,
-              and they're genuinely good — for a single screen, designed once, built once. That's not
-              the situation a real product team is in. A production design system is hundreds of
-              components deep, cross-referenced, and it keeps changing. That's the version of this
-              problem nobody has actually solved.
-            </p>
-          </div>
+      <div class="research-panel" data-phase="overview">
+        <div class="rc-eyebrow">01 / Introduction</div>
+        <h1 class="intro-title">Noise Audio Dashboard</h1>
+        <p class="lead-text">
+          Turning a real, production Figma design system into a structurally faithful, agent-ready component library.
+        </p>
+        <div class="reading-col">
+          <p>
+            Noise Audio Dashboard ingests a real, production Figma design system — 26 components across atoms,
+            molecules, and organisms — and turns it into a structurally faithful, always-in-sync component
+            library: a living reference an engineer, a PM, or a coding agent can all read from and trust, not a
+            one-time export.
+          </p>
+          <p class="pull-quote">
+            Can a real, production design system be onboarded into a coding agent with enough structural
+            accuracy that the agent reasons from it correctly — not just approximates it once and never again?
+          </p>
+          <p>
+            Agentic "Figma to code" tools already exist, and they work well for a single screen, designed once,
+            built once. Nobody has really solved the harder version of that problem: onboarding a company's
+            entire production design system — hundreds of variants, cross-referenced components, evolving
+            tokens — into a form an agent can reliably reason over, not just glance at once.
+          </p>
+          <p>
+            The approach rests on three principles. <b>Structure over snapshots</b>: capture layout intent —
+            fill/hug/fixed sizing, absolute positioning, clipping, real variant wiring — instead of a flattened
+            grid of pixel positions. <b>One-way and verifiable</b>: Figma is the only source of truth, and every
+            value traces back to a real node, nothing invented or guessed. <b>Self-describing</b>: every
+            component carries its own rules, anti-patterns, and relationships, so an agent — or a PM — can
+            reason about correct usage, not just copy a shape.
+          </p>
+        </div>
+      </div>
 
-          <div class="overview-section">
-            <h3 class="overview-section-title">What Changes At Product Scale</h3>
-            <div class="comparison-grid">
-              <div class="comparison-card">
-                <div class="comparison-card-title">Single-Screen Handoff</div>
-                <ul class="comparison-list">
-                  <li>One frame, read once, thrown away after</li>
-                  <li>Nobody notices if a component is 90% right</li>
-                  <li>No expectation the output stays in sync with Figma later</li>
-                </ul>
-              </div>
-              <div class="comparison-card is-us">
-                <div class="comparison-card-title">Production Design System</div>
-                <ul class="comparison-list">
-                  <li>Hundreds of components, reused everywhere, for years</li>
-                  <li>A wrong pixel compounds every time an agent reuses that component</li>
-                  <li>Tokens, variants, and rules change — the library has to keep up</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+      <div class="research-panel" data-phase="problem">
+        <div class="rc-eyebrow">02 / The Problem</div>
+        <h2 class="rc-title">The Problem</h2>
 
-          <div class="overview-section">
-            <h3 class="overview-section-title">The Failure Mode</h3>
-            <div class="challenge-card">
-              <div class="challenge-label">The Core Problem</div>
-              <p class="challenge-text">Hand a real, production design system to a coding agent through Figma's MCP today, and it doesn't build your design system — it builds a rough guess of it, once, with no way to get more accurate the second time.</p>
-            </div>
-          </div>
-
-          <div class="overview-section">
-            <h3 class="overview-section-title">Not Hypothetical — It Happened To This Dashboard</h3>
-            <div class="evidence-list">
-              <div class="evidence-item">
-                <span class="evidence-tag">BUG</span>
-                <p class="evidence-body-text"><b>Flattened pixel snapshots, not structure.</b> The first ingestion recorded bare width/height numbers instead of fill/hug/fixed sizing rules — a text field's "0/50" character counter rendered bleeding off its own container, because nothing described that it should size to its content.</p>
-              </div>
-              <div class="evidence-item">
-                <span class="evidence-tag">BUG</span>
-                <p class="evidence-body-text"><b>Instances that never resolve.</b> Nested components silently fell back to generic placeholder boxes instead of rendering their actual selected Figma variant — an agent building from this would ship the wrong state every time.</p>
-              </div>
-              <div class="evidence-item">
-                <span class="evidence-tag">BUG</span>
-                <p class="evidence-body-text"><b>Icons collapsing to nothing.</b> A fixed-size icon whose only child was absolutely positioned computed to a 0×0 box, because "hug" sizing has no content to size to when the layout model doesn't capture absolute positioning.</p>
-              </div>
-            </div>
-          </div>
-
-          <p class="stakes-paragraph">
-            None of these were cosmetic. A design-system dashboard that can't be trusted pixel-for-pixel
-            can't be trusted by anyone building from it — not an engineer, not a PM, and least of all an
-            agent that will reuse the same wrong component hundreds of times. That's the problem this
-            project set out to actually solve, not patch around.
+        <div class="overview-section">
+          <p class="overview-paragraph">
+            Point solutions for "hand a coding agent a Figma frame, get a component" already exist,
+            and they're genuinely good — for a single screen, designed once, built once. That's not
+            the situation a real product team is in. A production design system is hundreds of
+            components deep, cross-referenced, and it keeps changing. That's the version of this
+            problem nobody has actually solved.
           </p>
         </div>
 
-        <div class="research-panel" data-phase="diagnosis">
-          <div class="rc-eyebrow">03 / Diagnosis</div>
-          <h2 class="rc-title">Root-Cause Diagnosis</h2>
-          <div class="rc-pending">Pending — the flattened pixel-snapshot schema root cause, found before any fix was proposed (mirrors the UX Audit's campaign-system analysis).</div>
-        </div>
-
-        <div class="research-panel" data-phase="decision">
-          <div class="rc-eyebrow">04 / Solution Options</div>
-          <h2 class="rc-title">Solution Options</h2>
-          <div class="rc-pending">Pending — Option A (minimal per-bug fixes) vs Option B (full layout-model rebuild), the tradeoffs of each, and why Option B was chosen.</div>
-        </div>
-
-        <div class="research-panel" data-phase="rebuild">
-          <div class="rc-eyebrow">05 / Rebuild Strategy</div>
-          <h2 class="rc-title">Rebuild Strategy</h2>
-          <div class="rc-pending">Pending — the systematic dependency-ordered rebuild (atoms → molecules → organisms), re-pulling fresh Figma data per component, verifying each against Figma before committing.</div>
-        </div>
-
-        <div class="research-panel" data-phase="design">
-          <div class="rc-eyebrow">06 / Visual &amp; Interaction Design</div>
-          <h2 class="rc-title">Visual &amp; Interaction Design</h2>
-          <div class="rc-pending">Pending — the sidebar redesign (icons, collapsible Foundations/Atoms/Molecules/Organisms sections, search with ⌘K), and the Colors &amp; Tokens documentation rebuild.</div>
-        </div>
-
-        <div class="research-panel" data-phase="finalflow">
-          <div class="rc-eyebrow">07 / Final System Flow</div>
-          <h2 class="rc-title">Final System Flow</h2>
-          <div class="rc-pending">Pending — how the finished tool works end-to-end: Figma → YAML → build script → static dashboard, one diagram.</div>
-        </div>
-
-        <div class="research-panel screen-group-panel" data-phase="screen-overview">
-          <div class="rc-eyebrow">08 / Final Design</div>
-          <h2 class="rc-title">Overview Page</h2>
-          <div class="walkthrough-frame">
-            <div class="browser-chrome">
-              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
-              <span class="browser-url">noise-audio-dashboard.vercel.app/index.html</span>
+        <div class="overview-section">
+          <h3 class="overview-section-title">What Changes At Product Scale</h3>
+          <div class="comparison-grid">
+            <div class="comparison-card">
+              <div class="comparison-card-title">Single-Screen Handoff</div>
+              <ul class="comparison-list">
+                <li>One frame, read once, thrown away after</li>
+                <li>Nobody notices if a component is 90% right</li>
+                <li>No expectation the output stays in sync with Figma later</li>
+              </ul>
             </div>
-            <div class="walkthrough-body"><span class="rc-pending" style="border:none;background:none;margin:0">Pending — screenshot + annotated callouts.</span></div>
-          </div>
-        </div>
-
-        <div class="research-panel screen-group-panel" data-phase="screen-component">
-          <div class="rc-eyebrow">08 / Final Design</div>
-          <h2 class="rc-title">Component Detail Page</h2>
-          <div class="walkthrough-frame">
-            <div class="browser-chrome">
-              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
-              <span class="browser-url">noise-audio-dashboard.vercel.app/components/action-card.html</span>
-            </div>
-            <div class="walkthrough-body"><span class="rc-pending" style="border:none;background:none;margin:0">Pending — screenshot + annotated callouts.</span></div>
-          </div>
-        </div>
-
-        <div class="research-panel screen-group-panel" data-phase="screen-sidebar">
-          <div class="rc-eyebrow">08 / Final Design</div>
-          <h2 class="rc-title">Sidebar Navigation</h2>
-          <div class="walkthrough-frame">
-            <div class="browser-chrome">
-              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
-              <span class="browser-url">noise-audio-dashboard.vercel.app</span>
-            </div>
-            <div class="walkthrough-body"><span class="rc-pending" style="border:none;background:none;margin:0">Pending — screenshot + annotated callouts (collapsible sections, search, scroll persistence).</span></div>
-          </div>
-        </div>
-
-        <div class="research-panel screen-group-panel" data-phase="screen-tokens">
-          <div class="rc-eyebrow">08 / Final Design</div>
-          <h2 class="rc-title">Colors &amp; Tokens</h2>
-          <div class="walkthrough-frame">
-            <div class="browser-chrome">
-              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
-              <span class="browser-url">noise-audio-dashboard.vercel.app/foundations-colors.html</span>
-            </div>
-            <div class="walkthrough-body"><span class="rc-pending" style="border:none;background:none;margin:0">Pending — screenshot + annotated callouts.</span></div>
-          </div>
-        </div>
-
-        <div class="research-panel screen-group-panel" data-phase="screen-search">
-          <div class="rc-eyebrow">08 / Final Design</div>
-          <h2 class="rc-title">Search (⌘K)</h2>
-          <div class="walkthrough-frame">
-            <div class="browser-chrome">
-              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
-              <span class="browser-url">noise-audio-dashboard.vercel.app</span>
-            </div>
-            <div class="walkthrough-body"><span class="rc-pending" style="border:none;background:none;margin:0">Pending — screenshot + annotated callouts.</span></div>
-          </div>
-        </div>
-
-        <div class="research-panel" data-phase="gallery">
-          <div class="rc-eyebrow">09 / Final Screens</div>
-          <h2 class="rc-title">Final Screens</h2>
-          <div class="gallery-grid">
-            <div class="gallery-tile">
-              <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
-              <div class="gallery-tile-body">Pending screenshot</div>
-              <div class="gallery-tile-caption">Overview</div>
-            </div>
-            <div class="gallery-tile">
-              <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
-              <div class="gallery-tile-body">Pending screenshot</div>
-              <div class="gallery-tile-caption">Component graph</div>
-            </div>
-            <div class="gallery-tile">
-              <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
-              <div class="gallery-tile-body">Pending screenshot</div>
-              <div class="gallery-tile-caption">Fill the gaps</div>
-            </div>
-            <div class="gallery-tile">
-              <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
-              <div class="gallery-tile-body">Pending screenshot</div>
-              <div class="gallery-tile-caption">Colors &amp; tokens</div>
-            </div>
-            <div class="gallery-tile">
-              <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
-              <div class="gallery-tile-body">Pending screenshot</div>
-              <div class="gallery-tile-caption">Typography</div>
-            </div>
-            <div class="gallery-tile">
-              <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
-              <div class="gallery-tile-body">Pending screenshot</div>
-              <div class="gallery-tile-caption">Spacing &amp; radius</div>
+            <div class="comparison-card is-us">
+              <div class="comparison-card-title">Production Design System</div>
+              <ul class="comparison-list">
+                <li>Hundreds of components, reused everywhere, for years</li>
+                <li>A wrong pixel compounds every time an agent reuses that component</li>
+                <li>Tokens, variants, and rules change — the library has to keep up</li>
+              </ul>
             </div>
           </div>
         </div>
 
-        <div class="research-panel" data-phase="polish">
-          <div class="rc-eyebrow">10 / Fixes &amp; Refinements</div>
-          <h2 class="rc-title">Fixes &amp; Refinements</h2>
-          <div class="rc-pending">Pending — the follow-up polish round: the pill/bubble background bug (and why static code review missed it), the sidebar scroll-reset bug (inline-script ordering race), cache-busting, and pulling real Usage text from Figma for the tokens pages.</div>
+        <div class="overview-section">
+          <h3 class="overview-section-title">The Failure Mode</h3>
+          <div class="challenge-card">
+            <div class="challenge-label">The Core Problem</div>
+            <p class="challenge-text">Hand a real, production design system to a coding agent through Figma's MCP today, and it doesn't build your design system — it builds a rough guess of it, once, with no way to get more accurate the second time.</p>
+          </div>
         </div>
 
+        <div class="overview-section">
+          <h3 class="overview-section-title">Not Hypothetical — It Happened To This Dashboard</h3>
+          <div class="evidence-list">
+            <div class="evidence-item">
+              <span class="evidence-tag">BUG</span>
+              <p class="evidence-body-text"><b>Flattened pixel snapshots, not structure.</b> The first ingestion recorded bare width/height numbers instead of fill/hug/fixed sizing rules — a text field's "0/50" character counter rendered bleeding off its own container, because nothing described that it should size to its content.</p>
+            </div>
+            <div class="evidence-item">
+              <span class="evidence-tag">BUG</span>
+              <p class="evidence-body-text"><b>Instances that never resolve.</b> Nested components silently fell back to generic placeholder boxes instead of rendering their actual selected Figma variant — an agent building from this would ship the wrong state every time.</p>
+            </div>
+            <div class="evidence-item">
+              <span class="evidence-tag">BUG</span>
+              <p class="evidence-body-text"><b>Icons collapsing to nothing.</b> A fixed-size icon whose only child was absolutely positioned computed to a 0×0 box, because "hug" sizing has no content to size to when the layout model doesn't capture absolute positioning.</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="stakes-paragraph">
+          None of these were cosmetic. A design-system dashboard that can't be trusted pixel-for-pixel
+          can't be trusted by anyone building from it — not an engineer, not a PM, and least of all an
+          agent that will reuse the same wrong component hundreds of times. That's the problem this
+          project set out to actually solve, not patch around.
+        </p>
       </div>
+
+      <div class="research-panel" data-phase="diagnosis">
+        <div class="rc-eyebrow">03 / Diagnosis</div>
+        <h2 class="rc-title">Root-Cause Diagnosis</h2>
+        <div class="rc-pending">Pending — the flattened pixel-snapshot schema root cause, found before any fix was proposed (mirrors the UX Audit's campaign-system analysis).</div>
+      </div>
+
+      <div class="research-panel" data-phase="decision">
+        <div class="rc-eyebrow">04 / Solution Options</div>
+        <h2 class="rc-title">Solution Options</h2>
+        <div class="rc-pending">Pending — Option A (minimal per-bug fixes) vs Option B (full layout-model rebuild), the tradeoffs of each, and why Option B was chosen.</div>
+      </div>
+
+      <div class="research-panel" data-phase="rebuild">
+        <div class="rc-eyebrow">05 / Rebuild Strategy</div>
+        <h2 class="rc-title">Rebuild Strategy</h2>
+        <div class="rc-pending">Pending — the systematic dependency-ordered rebuild (atoms → molecules → organisms), re-pulling fresh Figma data per component, verifying each against Figma before committing.</div>
+      </div>
+
+      <div class="research-panel" data-phase="design">
+        <div class="rc-eyebrow">06 / Visual &amp; Interaction Design</div>
+        <h2 class="rc-title">Visual &amp; Interaction Design</h2>
+        <div class="rc-pending">Pending — the sidebar redesign (icons, collapsible Foundations/Atoms/Molecules/Organisms sections, search with ⌘K), and the Colors &amp; Tokens documentation rebuild.</div>
+      </div>
+
+      <div class="research-panel" data-phase="finalflow">
+        <div class="rc-eyebrow">07 / Final System Flow</div>
+        <h2 class="rc-title">Final System Flow</h2>
+        <div class="rc-pending">Pending — how the finished tool works end-to-end: Figma → YAML → build script → static dashboard, one diagram.</div>
+      </div>
+
+      <div class="research-panel" data-phase="screen-overview">
+        <div class="rc-eyebrow">08 / Final Design</div>
+        <h2 class="rc-title">Overview Page</h2>
+        <div class="walkthrough-frame">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">noise-audio-dashboard.vercel.app/index.html</span>
+          </div>
+          <div class="walkthrough-body"><span class="rc-pending" style="border:none;background:none;margin:0">Pending — screenshot + annotated callouts.</span></div>
+        </div>
+      </div>
+
+      <div class="research-panel" data-phase="screen-component">
+        <div class="rc-eyebrow">08 / Final Design</div>
+        <h2 class="rc-title">Component Detail Page</h2>
+        <div class="walkthrough-frame">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">noise-audio-dashboard.vercel.app/components/action-card.html</span>
+          </div>
+          <div class="walkthrough-body"><span class="rc-pending" style="border:none;background:none;margin:0">Pending — screenshot + annotated callouts.</span></div>
+        </div>
+      </div>
+
+      <div class="research-panel" data-phase="screen-sidebar">
+        <div class="rc-eyebrow">08 / Final Design</div>
+        <h2 class="rc-title">Sidebar Navigation</h2>
+        <div class="walkthrough-frame">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">noise-audio-dashboard.vercel.app</span>
+          </div>
+          <div class="walkthrough-body"><span class="rc-pending" style="border:none;background:none;margin:0">Pending — screenshot + annotated callouts (collapsible sections, search, scroll persistence).</span></div>
+        </div>
+      </div>
+
+      <div class="research-panel" data-phase="screen-tokens">
+        <div class="rc-eyebrow">08 / Final Design</div>
+        <h2 class="rc-title">Colors &amp; Tokens</h2>
+        <div class="walkthrough-frame">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">noise-audio-dashboard.vercel.app/foundations-colors.html</span>
+          </div>
+          <div class="walkthrough-body"><span class="rc-pending" style="border:none;background:none;margin:0">Pending — screenshot + annotated callouts.</span></div>
+        </div>
+      </div>
+
+      <div class="research-panel" data-phase="screen-search">
+        <div class="rc-eyebrow">08 / Final Design</div>
+        <h2 class="rc-title">Search (⌘K)</h2>
+        <div class="walkthrough-frame">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">noise-audio-dashboard.vercel.app</span>
+          </div>
+          <div class="walkthrough-body"><span class="rc-pending" style="border:none;background:none;margin:0">Pending — screenshot + annotated callouts.</span></div>
+        </div>
+      </div>
+
+      <div class="research-panel" data-phase="gallery">
+        <div class="rc-eyebrow">09 / Final Screens</div>
+        <h2 class="rc-title">Final Screens</h2>
+        <div class="gallery-grid">
+          <div class="gallery-tile">
+            <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
+            <div class="gallery-tile-body">Pending screenshot</div>
+            <div class="gallery-tile-caption">Overview</div>
+          </div>
+          <div class="gallery-tile">
+            <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
+            <div class="gallery-tile-body">Pending screenshot</div>
+            <div class="gallery-tile-caption">Component graph</div>
+          </div>
+          <div class="gallery-tile">
+            <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
+            <div class="gallery-tile-body">Pending screenshot</div>
+            <div class="gallery-tile-caption">Fill the gaps</div>
+          </div>
+          <div class="gallery-tile">
+            <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
+            <div class="gallery-tile-body">Pending screenshot</div>
+            <div class="gallery-tile-caption">Colors &amp; tokens</div>
+          </div>
+          <div class="gallery-tile">
+            <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
+            <div class="gallery-tile-body">Pending screenshot</div>
+            <div class="gallery-tile-caption">Typography</div>
+          </div>
+          <div class="gallery-tile">
+            <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
+            <div class="gallery-tile-body">Pending screenshot</div>
+            <div class="gallery-tile-caption">Spacing &amp; radius</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="research-panel" data-phase="polish">
+        <div class="rc-eyebrow">10 / Fixes &amp; Refinements</div>
+        <h2 class="rc-title">Fixes &amp; Refinements</h2>
+        <div class="rc-pending">Pending — the follow-up polish round: the pill/bubble background bug (and why static code review missed it), the sidebar scroll-reset bug (inline-script ordering race), cache-busting, and pulling real Usage text from Figma for the tokens pages.</div>
+      </div>
+
     </div>
-  </section>
+  </div>
 
 </main>
 
-<footer class="cs-footer">Noise Audio Dashboard — a Figma-to-code design-system tool case study.</footer>
+<footer class="cs-footer">NOISE AUDIO DASHBOARD — A FIGMA-TO-CODE DESIGN-SYSTEM CASE STUDY</footer>
 
 <script>
   // ---------- sub-navigation (Structure sidebar): click-to-scroll + scrollspy ----------
