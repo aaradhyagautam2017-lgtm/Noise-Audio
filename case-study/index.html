@@ -9,15 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   /* ============================================================
-     case-study/index.html — structure pass only.
-     Mirrors the section/interaction pattern of the Zepto "Paw Parade"
-     case study (aaradhyagautam2017-lgtm/Tata-1mg-assignment-,
-     case-study/index.html): two top-level views (Overview / Prototype)
-     behind a floating pill toggle; Overview is a sticky-sidebar,
-     scrollspy'd long-scroll of numbered panels; Prototype embeds the
-     real, live thing instead of a phone-mockup screenshot.
-     Content for each panel is intentionally a dashed "pending" box —
-     populated in the next pass, not this one.
+     case-study/index.html
+     Structure mirrors the Zepto "Paw Parade" case study
+     (aaradhyagautam2017-lgtm/Tata-1mg-assignment-, case-study/index.html):
+     a sticky sidebar with numbered sections, scrollspy'd against a single
+     long scroll. No Prototype/live-demo view — this is a straight case
+     study, not an interactive tool.
+     Sections not yet written carry a dashed "pending" placeholder.
      ============================================================ */
   :root {
     --font-ui:   'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
@@ -44,12 +42,10 @@
     background: var(--page);
     color: var(--ink);
     -webkit-font-smoothing: antialiased;
-    padding-bottom: 96px;
   }
-  body[data-view="prototype"] { padding-bottom: 0; }
   a { color: inherit; }
 
-  /* ---------- header (shared chrome across both views) ---------- */
+  /* ---------- header ---------- */
   .cs-header {
     padding: 48px 24px 36px;
     text-align: center;
@@ -68,37 +64,7 @@
     font-size: 15px; line-height: 1.55; color: var(--ink-2); margin-top: 14px;
   }
 
-  /* ---------- views: mutually exclusive, never share a scroll ---------- */
-  .cs-view[hidden] { display: none; }
-
-  /* ---------- floating section toggle ---------- */
-  .floating-toggle {
-    position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
-    z-index: 100;
-    display: flex;
-    background: var(--card);
-    border: 1px solid var(--hairline);
-    border-radius: var(--r-pill);
-    padding: 5px;
-    box-shadow: var(--shadow-md);
-  }
-  .ft-highlight {
-    position: absolute; top: 5px; bottom: 5px; left: 5px;
-    border-radius: var(--r-pill);
-    background: var(--accent);
-    transition: transform .3s cubic-bezier(.4,0,.2,1), width .3s cubic-bezier(.4,0,.2,1);
-    z-index: 0;
-  }
-  .ft-option {
-    position: relative; z-index: 1;
-    font-family: var(--font-ui); font-size: 13.5px; font-weight: 700;
-    padding: 10px 22px; border-radius: var(--r-pill); border: none; background: none;
-    color: var(--ink-2); cursor: pointer;
-    transition: color .25s ease;
-  }
-  .ft-option.is-active { color: #fff; }
-
-  /* ================= OVERVIEW VIEW ================= */
+  /* ================= OVERVIEW ================= */
   .research-layout {
     max-width: 1180px; margin: 0 auto; padding: 8px 24px 64px;
     display: grid; grid-template-columns: 240px 1fr; gap: 40px;
@@ -252,32 +218,6 @@
   }
   .gallery-tile-caption { padding: 10px 12px; font-size: 12.5px; font-weight: 600; color: var(--ink); }
 
-  /* ================= PROTOTYPE VIEW ================= */
-  body[data-view="prototype"] .cs-header,
-  body[data-view="prototype"] .cs-footer { display: none; }
-  .proto-view-inner { max-width: 1200px; margin: 0 auto; padding: 20px 24px; }
-  .proto-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
-  .frame-scale-wrap { display: flex; justify-content: center; align-items: flex-start; width: 100%; }
-  #proto-browser-shell { transform-origin: top center; }
-  .proto-controls { display: flex; align-items: center; gap: 10px; }
-  .proto-btn {
-    font-family: var(--font-ui); font-size: 13px; font-weight: 700; color: var(--accent-deep);
-    background: var(--accent-tint); border: none; border-radius: var(--r-pill); padding: 10px 18px;
-    cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
-  }
-  .proto-btn:active { background: #e9d9fb; }
-  .proto-btn svg { width: 14px; height: 14px; }
-  .proto-hint { font-size: 12.5px; color: var(--ink-2); }
-
-  .browser-shell {
-    width: 1180px; border-radius: var(--r-lg); overflow: hidden;
-    border: 1px solid var(--hairline-2); box-shadow: var(--shadow-md); background: var(--card);
-  }
-  .browser-shell .browser-chrome { padding: 12px 16px; }
-  .browser-shell .browser-dot { width: 11px; height: 11px; }
-  .proto-frame-wrap { width: 1180px; height: 760px; background: #fff; }
-  .proto-frame-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
-
   /* ---------- footer ---------- */
   .cs-footer { text-align: center; padding: 32px 24px 24px; font-size: 12.5px; color: var(--ink-2); }
 
@@ -297,7 +237,7 @@
 
 <main>
 
-  <section class="cs-view" id="view-overview" data-view="overview" hidden>
+  <section>
     <div class="research-layout">
 
       <aside class="research-sidebar">
@@ -579,116 +519,11 @@
     </div>
   </section>
 
-  <section class="cs-view" id="view-prototype" data-view="prototype" hidden>
-    <div class="proto-view-inner">
-      <div class="proto-wrap">
-        <div class="proto-controls">
-          <button class="proto-btn" id="restart-demo" type="button">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 21v-6h6"/></svg>
-            Restart
-          </button>
-          <span class="proto-hint">Click through the real, live dashboard inside the frame</span>
-        </div>
-
-        <div class="frame-scale-wrap" id="frame-scale-wrap">
-          <div class="browser-shell" id="proto-browser-shell">
-            <div class="browser-chrome">
-              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
-              <span class="browser-url" id="proto-url">../dashboard/index.html</span>
-            </div>
-            <div class="proto-frame-wrap">
-              <iframe id="proto-frame" src="../dashboard/index.html" title="Noise Audio Dashboard — live"></iframe>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
 </main>
 
 <footer class="cs-footer">Noise Audio Dashboard — a Figma-to-code design-system tool case study.</footer>
 
-<div class="floating-toggle" role="tablist" aria-label="Switch section">
-  <span class="ft-highlight" aria-hidden="true"></span>
-  <button class="ft-option" data-target="overview" type="button" role="tab">Overview</button>
-  <button class="ft-option" data-target="prototype" type="button" role="tab">Prototype</button>
-</div>
-
 <script>
-  document.getElementById('restart-demo').addEventListener('click', function () {
-    var frame = document.getElementById('proto-frame');
-    frame.src = '../dashboard/index.html';
-  });
-
-  // ---------- scale the browser mockup to fit the first fold, no scrolling ----------
-  function fitPrototypeFrame() {
-    var wrap = document.getElementById('frame-scale-wrap');
-    var shell = document.getElementById('proto-browser-shell');
-    if (!wrap || !shell) return;
-
-    shell.style.transform = 'none';
-    wrap.style.width = '';
-    wrap.style.height = '';
-
-    var naturalWidth = shell.offsetWidth;
-    var naturalHeight = shell.offsetHeight;
-    if (!naturalWidth || !naturalHeight) return;
-
-    var topOffset = wrap.getBoundingClientRect().top;
-    var reservedBottom = 96;
-    var availableHeight = window.innerHeight - topOffset - reservedBottom;
-    var availableWidth = document.documentElement.clientWidth - 48;
-
-    var scale = Math.min(1, availableHeight / naturalHeight, availableWidth / naturalWidth);
-    if (scale < 1) shell.style.transform = 'scale(' + scale + ')';
-    wrap.style.width = (naturalWidth * scale) + 'px';
-    wrap.style.height = (naturalHeight * scale) + 'px';
-  }
-
-  // ---------- top-level view switch (Overview <-> Prototype), never shared scroll ----------
-  (function () {
-    var toggle = document.querySelector('.floating-toggle');
-    var highlight = toggle.querySelector('.ft-highlight');
-    var options = Array.prototype.slice.call(toggle.querySelectorAll('.ft-option'));
-    var views = Array.prototype.slice.call(document.querySelectorAll('.cs-view'));
-
-    function moveHighlight(btn) {
-      var toggleRect = toggle.getBoundingClientRect();
-      var btnRect = btn.getBoundingClientRect();
-      highlight.style.width = btnRect.width + 'px';
-      highlight.style.transform = 'translateX(' + (btnRect.left - toggleRect.left - 5) + 'px)';
-    }
-
-    function setView(target) {
-      views.forEach(function (v) { v.hidden = v.dataset.view !== target; });
-      document.body.dataset.view = target;
-      options.forEach(function (opt) {
-        var active = opt.dataset.target === target;
-        opt.classList.toggle('is-active', active);
-        if (active) moveHighlight(opt);
-      });
-      window.scrollTo(0, 0);
-      if (target === 'prototype') fitPrototypeFrame();
-    }
-
-    options.forEach(function (opt) {
-      opt.addEventListener('click', function () { setView(opt.dataset.target); });
-    });
-
-    setView('overview');
-    window.addEventListener('load', function () {
-      var active = options.find(function (o) { return o.classList.contains('is-active'); });
-      if (active) moveHighlight(active);
-      if (document.body.dataset.view === 'prototype') fitPrototypeFrame();
-    });
-    window.addEventListener('resize', function () {
-      var active = toggle.querySelector('.ft-option.is-active');
-      if (active) moveHighlight(active);
-      if (document.body.dataset.view === 'prototype') fitPrototypeFrame();
-    });
-  })();
-
   // ---------- sub-navigation (Structure sidebar): click-to-scroll + scrollspy ----------
   (function () {
     var nav = document.getElementById('structure-nav');
