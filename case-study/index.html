@@ -194,6 +194,27 @@
   .code-block .k { color: var(--ink); font-weight: 600; }
   .code-block .c { color: var(--ink-3); font-style: italic; }
 
+  /* ---------- Stage 1: component categorization grid ---------- */
+  .category-grid {
+    margin: 22px 0; max-width: 760px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  }
+  .category-card {
+    border: 1px solid var(--border); border-radius: var(--r-md); background: var(--bg-surface);
+    padding: 14px 14px 16px;
+  }
+  .category-label {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: .04em;
+    text-transform: uppercase; color: var(--ink); margin-bottom: 8px;
+  }
+  .category-def { font-size: 12.5px; line-height: 1.5; color: var(--ink-2); }
+  .category-example {
+    margin-top: 10px; font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-3);
+  }
+  @media (max-width: 640px) {
+    .category-grid { grid-template-columns: 1fr 1fr; }
+  }
+
   /* ---------- Stage 1: real step-by-step screenshot walkthrough ---------- */
   .step-walkthrough { margin: 28px 0 8px; max-width: 760px; display: flex; flex-direction: column; gap: 36px; }
   .step-item { display: flex; gap: 18px; align-items: flex-start; }
@@ -407,17 +428,18 @@
           <button class="structure-item" type="button" data-phase="approach">03 / Approach</button>
           <button class="structure-item" type="button" data-phase="rebuild">04 / Stage 1</button>
           <button class="structure-item" type="button" data-phase="stage2">05 / Stage 2</button>
-          <button class="structure-item" type="button" data-phase="decision">06 / Solution Options</button>
-          <button class="structure-item" type="button" data-phase="design">07 / Visual &amp; Interaction Design</button>
-          <button class="structure-item" type="button" data-phase="finalflow">08 / Final System Flow</button>
-          <div class="structure-group-label">09 / Final Design</div>
+          <button class="structure-item" type="button" data-phase="stage3">06 / Stage 3</button>
+          <button class="structure-item" type="button" data-phase="decision">07 / Solution Options</button>
+          <button class="structure-item" type="button" data-phase="design">08 / Visual &amp; Interaction Design</button>
+          <button class="structure-item" type="button" data-phase="finalflow">09 / Final System Flow</button>
+          <div class="structure-group-label">10 / Final Design</div>
           <button class="structure-item structure-item--sub" type="button" data-phase="screen-overview">Overview Page</button>
           <button class="structure-item structure-item--sub" type="button" data-phase="screen-component">Component Detail Page</button>
           <button class="structure-item structure-item--sub" type="button" data-phase="screen-sidebar">Sidebar Navigation</button>
           <button class="structure-item structure-item--sub" type="button" data-phase="screen-tokens">Colors &amp; Tokens</button>
           <button class="structure-item structure-item--sub" type="button" data-phase="screen-search">Search (⌘K)</button>
-          <button class="structure-item" type="button" data-phase="gallery">10 / Final Screens</button>
-          <button class="structure-item" type="button" data-phase="polish">11 / Fixes &amp; Refinements</button>
+          <button class="structure-item" type="button" data-phase="gallery">11 / Final Screens</button>
+          <button class="structure-item" type="button" data-phase="polish">12 / Fixes &amp; Refinements</button>
         </nav>
       </div>
 
@@ -864,6 +886,36 @@
 
         <div class="overview-section">
           <p class="overview-paragraph">
+            Before any metadata gets written, every component needs one decision made first: what
+            kind of component is it? This isn't busywork — the bucket a component falls into changes
+            what questions even get asked about it later.
+          </p>
+
+          <div class="category-grid">
+            <div class="category-card">
+              <div class="category-label">Atom</div>
+              <div class="category-def">The smallest piece. Can't be broken down any further.</div>
+              <div class="category-example">e.g. checkbox, toggle, chevron</div>
+            </div>
+            <div class="category-card">
+              <div class="category-label">Molecule</div>
+              <div class="category-def">A small group of atoms working together.</div>
+              <div class="category-example">e.g. actionables</div>
+            </div>
+            <div class="category-card">
+              <div class="category-label">Organism</div>
+              <div class="category-def">A bigger piece, built from molecules and atoms.</div>
+              <div class="category-example">e.g. master-card</div>
+            </div>
+            <div class="category-card">
+              <div class="category-label">Complex organism</div>
+              <div class="category-def">An organism that itself contains another organism.</div>
+              <div class="category-example">e.g. action sheet (contains the action card)</div>
+            </div>
+          </div>
+          <p class="visual-caption">The same four buckets sort every one of this repo's 26 components — no fifth category, no exceptions.</p>
+
+          <p class="overview-paragraph">
             That piece of information from the last section — usage, design intent, anti-patterns,
             relationships — has a name. It's called <b>metadata</b>. You've already seen what it says.
             Here's the actual shape it's written in.
@@ -1056,14 +1108,16 @@
             Stage 1 gets you one component's worth of knowledge — a name, a purpose, a list of
             anti-patterns, sitting in one Figma description field. Do that for every component in
             the file, and you're not left with a pile of scattered notes anymore. You're left with
-            enough to build something real: a structured repository, and a dashboard the agent can
-            actually browse.
+            enough to build something real: a structured repository.
           </p>
           <p class="overview-paragraph">
             Stage 1 was a live conversation, because every component is different and needs its own
-            questions answered. Stage 2 isn't — it's the same prompt, run once, after the whole
-            Figma file has been metadata'd. So instead of another chat screenshot, here's what that
-            one prompt actually does.
+            questions answered. Stage 2 isn't — it's one existing prompt, handed to an agent, run
+            once the whole Figma file has been metadata'd. The agent reads every component straight
+            from Figma via MCP, pulling both kinds of data in the same pass — the real visual values
+            (size, spacing, color) and the YAML metadata sitting in each component's own description
+            — and writes everything it finds into a real repository, which it pushes straight to
+            GitHub.
           </p>
 
           <div class="flow-strip">
@@ -1073,26 +1127,39 @@
             </div>
             <div class="flow-arrow">
               <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 7h20M15 1l6 6-6 6"/></svg>
-              one prompt, run once
+              one prompt, one agent
             </div>
             <div class="flow-node">
-              <div class="flow-node-title">Existing ingestion prompt</div>
-              <div class="flow-node-sub">reads every component's YAML<br>+ its real values, via Figma</div>
+              <div class="flow-node-title">Agent reads via Figma MCP</div>
+              <div class="flow-node-sub">figma data + yaml data,<br>in the same pass</div>
             </div>
             <div class="flow-arrow">
               <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 7h20M15 1l6 6-6 6"/></svg>
-              writes
+              writes + pushes
             </div>
             <div class="flow-node">
-              <div class="flow-node-title">One file per component</div>
-              <div class="flow-node-sub">26 components,<br>26 files</div>
+              <div class="flow-node-title">Repository on GitHub</div>
+              <div class="flow-node-sub">one file per component,<br>26 files total</div>
             </div>
           </div>
 
           <p class="overview-paragraph">
-            That repository isn't a hypothetical — it's the one this exact case study runs on. Every
-            piece of YAML you've seen so far, master-card included, is a real file sitting inside it
-            right now.
+            That repository isn't a hypothetical — it's the one this exact case study runs on,
+            hosted right here on GitHub. Every piece of YAML you've seen so far, master-card
+            included, is a real file sitting inside it right now.
+          </p>
+        </div>
+      </div>
+
+      <div class="research-panel" data-phase="stage3">
+        <div class="rc-eyebrow">06 / Stage 3</div>
+        <h2 class="rc-title">Stage 3</h2>
+
+        <div class="overview-section">
+          <p class="overview-paragraph">
+            Stage 2 leaves you with a real repository on GitHub — one file per component, each one
+            carrying both its real Figma values and its Stage 1 metadata. Stage 3 is what turns that
+            repository into something a human can actually look at: a dashboard.
           </p>
 
           <div class="flow-strip">
@@ -1150,33 +1217,33 @@
             <div class="roadmap-note-body">
               Right now, this dashboard is built for this one design system. The plan is to package
               the repository itself into a downloadable file — hand a coding agent that file, plus
-              this same ingestion prompt, and it builds this exact dashboard for any company's own
-              design system, onboarding every one of their components in the process.
+              the Stage 2 prompt, and it builds this exact dashboard for any company's own design
+              system, onboarding every one of their components in the process.
             </div>
           </div>
         </div>
       </div>
 
       <div class="research-panel" data-phase="decision">
-        <div class="rc-eyebrow">06 / Solution Options</div>
+        <div class="rc-eyebrow">07 / Solution Options</div>
         <h2 class="rc-title">Solution Options</h2>
         <div class="rc-pending">Pending — Option A (minimal per-bug fixes) vs Option B (full layout-model rebuild), the tradeoffs of each, and why Option B was chosen.</div>
       </div>
 
       <div class="research-panel" data-phase="design">
-        <div class="rc-eyebrow">07 / Visual &amp; Interaction Design</div>
+        <div class="rc-eyebrow">08 / Visual &amp; Interaction Design</div>
         <h2 class="rc-title">Visual &amp; Interaction Design</h2>
         <div class="rc-pending">Pending — the sidebar redesign (icons, collapsible Foundations/Atoms/Molecules/Organisms sections, search with ⌘K), and the Colors &amp; Tokens documentation rebuild.</div>
       </div>
 
       <div class="research-panel" data-phase="finalflow">
-        <div class="rc-eyebrow">08 / Final System Flow</div>
+        <div class="rc-eyebrow">09 / Final System Flow</div>
         <h2 class="rc-title">Final System Flow</h2>
         <div class="rc-pending">Pending — how the finished tool works end-to-end: Figma → YAML → build script → static dashboard, one diagram.</div>
       </div>
 
       <div class="research-panel" data-phase="screen-overview">
-        <div class="rc-eyebrow">09 / Final Design</div>
+        <div class="rc-eyebrow">10 / Final Design</div>
         <h2 class="rc-title">Overview Page</h2>
         <div class="walkthrough-frame">
           <div class="browser-chrome">
@@ -1188,7 +1255,7 @@
       </div>
 
       <div class="research-panel" data-phase="screen-component">
-        <div class="rc-eyebrow">09 / Final Design</div>
+        <div class="rc-eyebrow">10 / Final Design</div>
         <h2 class="rc-title">Component Detail Page</h2>
         <div class="walkthrough-frame">
           <div class="browser-chrome">
@@ -1200,7 +1267,7 @@
       </div>
 
       <div class="research-panel" data-phase="screen-sidebar">
-        <div class="rc-eyebrow">09 / Final Design</div>
+        <div class="rc-eyebrow">10 / Final Design</div>
         <h2 class="rc-title">Sidebar Navigation</h2>
         <div class="walkthrough-frame">
           <div class="browser-chrome">
@@ -1212,7 +1279,7 @@
       </div>
 
       <div class="research-panel" data-phase="screen-tokens">
-        <div class="rc-eyebrow">09 / Final Design</div>
+        <div class="rc-eyebrow">10 / Final Design</div>
         <h2 class="rc-title">Colors &amp; Tokens</h2>
         <div class="walkthrough-frame">
           <div class="browser-chrome">
@@ -1224,7 +1291,7 @@
       </div>
 
       <div class="research-panel" data-phase="screen-search">
-        <div class="rc-eyebrow">09 / Final Design</div>
+        <div class="rc-eyebrow">10 / Final Design</div>
         <h2 class="rc-title">Search (⌘K)</h2>
         <div class="walkthrough-frame">
           <div class="browser-chrome">
@@ -1236,7 +1303,7 @@
       </div>
 
       <div class="research-panel" data-phase="gallery">
-        <div class="rc-eyebrow">10 / Final Screens</div>
+        <div class="rc-eyebrow">11 / Final Screens</div>
         <h2 class="rc-title">Final Screens</h2>
         <div class="gallery-grid">
           <div class="gallery-tile">
@@ -1273,7 +1340,7 @@
       </div>
 
       <div class="research-panel" data-phase="polish">
-        <div class="rc-eyebrow">11 / Fixes &amp; Refinements</div>
+        <div class="rc-eyebrow">12 / Fixes &amp; Refinements</div>
         <h2 class="rc-title">Fixes &amp; Refinements</h2>
         <div class="rc-pending">Pending — the follow-up polish round: the pill/bubble background bug (and why static code review missed it), the sidebar scroll-reset bug (inline-script ordering race), cache-busting, and pulling real Usage text from Figma for the tokens pages.</div>
       </div>
