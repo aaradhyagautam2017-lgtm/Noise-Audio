@@ -1,0 +1,82 @@
+<!-- ============================================================
+     PATTERN: screen-footer-cta
+     Applies to: any L1/L2 screen with a screen-level primary/secondary
+     CTA (primary-cta-button, secondary-cta-button) at the bottom of
+     its content — the kind of button that submits or confirms the
+     whole screen, not a CTA embedded inside a card or bottom sheet.
+
+     WHY THIS FILE EXISTS
+     Nothing in this repo (no component's visual_values, no authored
+     rule) said where a screen-level CTA sits vertically — pinned to
+     the viewport, or inline at the end of scrolling content. A real
+     test surfaced this as a live gap: the CTA rendered inside the
+     scroll container and scrolled out of reach. This is a genuine
+     product decision, not something extractable from Figma or safe
+     to guess, so it was asked of the designer directly and is recorded
+     here verbatim rather than invented.
+
+     THE DECISION (designer, 2026-07-30, verbatim):
+       "pinned to the bottom with a 38px padding if everything fits in
+       first fold if not then it scrolls down to where the content ends"
+
+     WHAT THAT MEANS, IN CSS TERMS
+     The footer is NOT position:fixed. It behaves like a standard
+     "sticky footer": when the screen's content is shorter than the
+     device viewport, the footer sits at the bottom of the viewport
+     (with 38px below it). When content is taller than the viewport,
+     the footer stops floating and sits right after the content ends —
+     reachable by scrolling, exactly like any other content. A single
+     flex layout gives both behaviors for free, with no JS and no
+     scroll listener:
+       .nds-screen-scroll  — the scrolling viewport (height: 100% of
+                              the device frame's content area, the
+                              area below status-bar + L1 nav)
+       .nds-screen-inner   — min-height:100%; flex column — this is
+                              what lets it grow taller than one
+                              viewport when content demands it
+       .nds-screen-footer  — margin-top:auto — pinned to the bottom of
+                              .nds-screen-inner when there's spare
+                              height, pushed below the content when
+                              there isn't
+
+     TOKEN USED: --l (16px, css/tokens.css) for the footer's horizontal
+     inset — the same side padding already used elsewhere in this
+     library, not a new value invented for this pattern. The 38px
+     bottom padding is the designer's own number above, not a token
+     (no existing token matched it).
+
+     This file is hand-authored, the same as patterns/grouped-list.pattern.html,
+     and for the same reason: it describes a relationship between a
+     screen and its content, not a single component's own visual_values.
+     ============================================================ -->
+<style>
+  .nds-screen-scroll {
+    height: 100%;
+    overflow-y: auto;
+  }
+  .nds-screen-inner {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  .nds-screen-footer {
+    margin-top: auto; /* pinned to viewport bottom when content is short; pushed below content otherwise */
+    padding: 0 var(--l, 16px) 38px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+</style>
+
+<!-- Usage — wrap a screen's real content (nav, lists, etc. from
+     components/**/*.snippet.html) in .nds-screen-inner, with the
+     screen-level CTA(s) as the last child inside .nds-screen-footer: -->
+<div class="nds-screen-scroll">
+  <div class="nds-screen-inner">
+    <!-- status-bar, L1/L2 nav, page content (real component snippets) -->
+    <div class="nds-screen-footer">
+      <!-- real primary-cta-button / secondary-cta-button snippet(s) -->
+    </div>
+  </div>
+</div>

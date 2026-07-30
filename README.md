@@ -68,10 +68,11 @@ checkbox-card variant side, a full-width instead of inset master-card
 separator) even though the agent had read and quoted the correct rule text.
 
 `patterns/` holds the handful of things that are true of *several* components
-placed together (e.g. the grouped-list container and its inset separator)
-that no single component's `visual_values` can capture on its own. Each
-pattern file is hand-authored directly from the exact rule text it implements
-and says so in its own header — never presented as a Figma extraction.
+placed together (e.g. the grouped-list container and its inset separator, and
+screen-level CTA placement) that no single component's `visual_values` can
+capture on its own. Each pattern file is hand-authored directly from the exact
+rule text or designer decision it implements and says so in its own header —
+never presented as a Figma extraction.
 
 ## Designer dashboard
 
