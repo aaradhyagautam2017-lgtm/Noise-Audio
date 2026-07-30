@@ -5,49 +5,51 @@ source:
 collections:
   color:
     description: Primitive color scale (single mode).
+    usage_source: 'Figma frame "Colors Visualization" (2035:1542), tokenDescription column'
     variables:
-      gray/100: '#000000'
-      gray/200: '#171717'
-      gray/300: '#292929'
-      gray/400: '#454545'
-      gray/500: '#696969'
-      gray/600: '#919191'
-      gray/700: '#b5b5b5'
-      gray/800: '#d1d1d1'
-      gray/900: '#ededed'
-      gray/1000: '#f7f7f7'
-      gray/1100: '#ffffff'
-      red/100: '#ffdada'
-      red/200: '#eb9494'
-      red/300: '#dc4848'
-      red/400: '#c42e2e'
-      red/500: '#9e1e1e'
-      red/600: '#7a1616'
-      red/700: '#5a1010'
-      red/800: '#3a0a0a'
-      red/900: '#240c0c'
-      red/1000: '#170707'
-      green/100: '#c4ecd2'
-      green/200: '#6ec494'
-      green/300: '#2ea864'
-      green/400: '#1c8a4c'
-      green/500: '#14683a'
-      green/600: '#125a32'
-      green/700: '#0e4426'
-      green/800: '#082e1a'
-      green/900: '#062012'
-      green/1000: '#04140c'
-      amber/100: '#fae0b8'
-      amber/200: '#d4a055'
-      amber/300: '#d4882f'
-      amber/400: '#b6732b'
-      amber/500: '#8a5218'
-      amber/600: '#7a4d18'
-      amber/700: '#5c3810'
-      amber/800: '#3d2408'
-      amber/900: '#241a08'
+      gray/100: {value: '#000000', usage: 'Lightest value in the gray scale used to build semantic tokens.'}
+      gray/200: {value: '#171717', usage: 'Light gray value used as a foundational step within the gray scale.'}
+      gray/300: {value: '#292929', usage: 'Light-mid gray value used for semantic token construction.'}
+      gray/400: {value: '#454545', usage: 'Mid-light gray value used within semantic mappings.'}
+      gray/500: {value: '#696969', usage: 'Middle gray value used as a neutral reference point in the grayscale.'}
+      gray/600: {value: '#919191', usage: 'Mid-dark gray value used in semantic token construction.'}
+      gray/700: {value: '#b5b5b5', usage: 'Dark gray value used for semantic token generation.'}
+      gray/800: {value: '#d1d1d1', usage: 'Very dark gray value used in semantic token construction.'}
+      gray/900: {value: '#ededed', usage: 'Near-black gray value used for semantic mappings.'}
+      gray/1000: {value: '#f7f7f7', usage: 'Ultra-dark gray value used for high-contrast semantic mappings.'}
+      gray/1100: {value: '#ffffff', usage: 'Darkest value in the grayscale system.'}
+      red/100: {value: '#ffdada', usage: 'Lightest red value used for semantic surface tokens.'}
+      red/200: {value: '#eb9494', usage: 'Currently not in use can be used in future !'}
+      red/300: {value: '#dc4848', usage: 'Primary red value used for semantic icon mappings.'}
+      red/400: {value: '#c42e2e', usage: 'Primary red value used for semantic text mappings.'}
+      red/500: {value: '#9e1e1e', usage: 'Currently not in use can be used in future !'}
+      red/600: {value: '#7a1616', usage: 'Currently not in use can be used in future !'}
+      red/700: {value: '#5a1010', usage: 'Currently not in use can be used in future !'}
+      red/800: {value: '#3a0a0a', usage: 'Currently not in use can be used in future !'}
+      red/900: {value: '#240c0c', usage: 'Currently not in use can be used in future !'}
+      red/1000: {value: '#170707', usage: 'Currently not in use can be used in future !'}
+      green/100: {value: '#c4ecd2', usage: 'Lightest green value used for semantic success surfaces.'}
+      green/200: {value: '#6ec494', usage: 'Currently not in use can be used in future !'}
+      green/300: {value: '#2ea864', usage: 'Primary green value used for semantic icon mappings.'}
+      green/400: {value: '#1c8a4c', usage: 'Primary green value used for semantic text mappings.'}
+      green/500: {value: '#14683a', usage: 'Currently not in use can be used in future !'}
+      green/600: {value: '#125a32', usage: 'Currently not in use can be used in future !'}
+      green/700: {value: '#0e4426', usage: 'Currently not in use can be used in future !'}
+      green/800: {value: '#082e1a', usage: 'Currently not in use can be used in future !'}
+      green/900: {value: '#062012', usage: 'Currently not in use can be used in future !'}
+      green/1000: {value: '#04140c', usage: 'Currently not in use can be used in future !'}
+      amber/100: {value: '#fae0b8', usage: 'Currently not in use can be used in future !'}
+      amber/200: {value: '#d4a055', usage: 'Currently not in use can be used in future !'}
+      amber/300: {value: '#d4882f', usage: 'Primary amber value used for semantic icon mappings.'}
+      amber/400: {value: '#b6732b', usage: 'Primary amber value used for semantic text mappings.'}
+      amber/500: {value: '#8a5218', usage: 'Currently not in use can be used in future !'}
+      amber/600: {value: '#7a4d18', usage: 'Currently not in use can be used in future !'}
+      amber/700: {value: '#5c3810', usage: 'Currently not in use can be used in future !'}
+      amber/800: {value: '#3d2408', usage: 'Currently not in use can be used in future !'}
+      amber/900: {value: '#241a08', usage: 'Currently not in use can be used in future !'}
   tokens:
     description: Semantic color tokens with light/dark modes. alias:<name> points into the color collection.
+    usage_source: 'Figma frame "Token Visualization" (2035:458), tokenDescription column. The four Ios/* tokens have no documentation card in that frame, so they carry no usage text.'
     modes:
     - light
     - dark
@@ -55,156 +57,207 @@ collections:
       background/canvas:
         light: alias:gray/1100
         dark: alias:gray/100
+        usage: Used as the page background color.
       background/surface:
         light: alias:gray/1000
         dark: alias:gray/200
+        usage: Used for cards, tiles, bottom sheets, and content surfaces elevated above the page background.
       background/surface/green:
         light: alias:green/100
         dark: alias:green/900
+        usage: Used for success-related cards, banners, and informational surfaces.
       background/surface/red:
         light: alias:red/100
         dark: alias:red/900
+        usage: Used for failure, error, and warning-related surfaces.
       background/surface/raised+2:
         light: alias:gray/900
         dark: alias:gray/300
+        usage: Used for loading, processing, and temporary system-state surfaces.
       background/surface/raised+5:
         light: alias:gray/500
         dark: alias:gray/700
+        usage: Used for toast messages and temporary feedback surfaces.
       background/surface/raised+6:
         light: alias:gray/400
         dark: alias:gray/800
+        usage: Used for notification chin and highest non-modal elevated surfaces.
       text/primary:
         light: alias:gray/400
         dark: alias:gray/1000
+        usage: Used for page titles, device names, primary content, and critical information.
       text/secondary:
         light: alias:gray/600
         dark: alias:gray/600
+        usage: Used for supporting information related to primary content.
       text/tertiary:
         light: alias:gray/700
         dark: alias:gray/700
+        usage: Used for labels, metadata, helper text, and section headings.
       text/disabled:
         light: alias:gray/800
         dark: alias:gray/400
+        usage: Used for disabled controls and unavailable content.
       text/inverted:
         light: alias:gray/1000
         dark: alias:gray/200
+        usage: Used on primary CTAs, toasts, notification chins, and elevated surfaces.
       text/cta:
         light: alias:gray/200
         dark: alias:gray/1000
+        usage: Used for secondary CTA labels and interactive actions.
       text/colored/red:
         light: alias:red/400
         dark: alias:red/400
+        usage: Used for error messages, destructive information, and failure states.
       text/colored/green:
         light: alias:green/400
         dark: alias:green/400
+        usage: Used for success messages and positive system feedback.
       text/colored/amber:
         light: alias:amber/400
         dark: alias:amber/400
+        usage: Used for pending, provisional, cautionary, and warning information.
       text/colored/gray:
         light: alias:gray/200
         dark: alias:gray/1000
+        usage: Used for neutral status information and non-semantic state indicators.
       icon/primary:
         light: alias:gray/400
         dark: alias:gray/900
+        usage: Used for primary informational icons and leading visual indicators.
       icon/disable:
         light: alias:gray/800
         dark: alias:gray/400
+        usage: Used for disabled or unavailable icon actions.
       icon/red:
         light: alias:red/300
         dark: alias:red/300
+        usage: Used for destructive, failure, and critical-state icons.
       icon/green:
         light: alias:green/300
         dark: alias:green/300
+        usage: Used for success-state and completion icons.
       icon/inverted:
         light: alias:gray/1000
         dark: alias:gray/200
+        usage: Used for icons placed on elevated and dark surfaces.
       icon/cta:
         light: alias:gray/200
         dark: alias:gray/1000
+        usage: Used for interactive icons inside CTAs and surface actions.
       button/primary/background:
         light: alias:gray/300
         dark: alias:gray/1000
+        usage: Used for the highest-priority action on a screen.
       button/primary/pressed:
         light: alias:gray/500
         dark: alias:gray/600
+        usage: Used during active press interaction.
       button/primary/disabled:
         light: alias:gray/1000
         dark: alias:gray/200
+        usage: Used when the primary action is unavailable.
       button/secondary/background:
         light: alias:gray/1000
         dark: alias:gray/300
+        usage: Used for supporting actions adjacent to primary actions.
       button/secondary/pressed:
         light: alias:gray/500
         dark: '#ffffff'
+        usage: Used during active interaction of secondary actions.
       button/link/text:
         light: alias:gray/400
         dark: alias:gray/1000
+        usage: Used for low-emphasis textual actions.
       button/actionable/enabled:
         light: alias:gray/600
         dark: alias:gray/600
+        usage: Used for actionable icons such as chevrons, edit, close, and navigation controls.
       button/actionable/disabled:
         light: alias:gray/900
         dark: alias:gray/300
+        usage: Used for disabled actionable controls.
       button/toggle/thumb:
         light: alias:gray/1000
         dark: alias:gray/200
+        usage: Used for the movable thumb element in toggle controls.
       button/toggle/track active:
         light: alias:gray/200
         dark: alias:gray/1000
+        usage: Used for enabled toggle states.
       button/toggle/track inactive:
         light: alias:gray/600
         dark: alias:gray/500
+        usage: Used for disabled or inactive toggle states.
       button/toggle/track disabled:
         light: alias:gray/900
         dark: alias:gray/300
+        usage: Used when a toggle cannot be modified.
       button/radio/on:
         light: alias:gray/200
         dark: alias:gray/1000
+        usage: Used for selected radio options.
       button/radio/off(stroke):
         light: alias:gray/700
         dark: alias:gray/500
+        usage: Used for unselected radio options.
       button/radio/disable:
         light: alias:gray/900
         dark: alias:gray/300
+        usage: Used for unavailable radio options.
       button/checkbox/checked:
         light: alias:gray/200
         dark: alias:gray/1000
+        usage: Used for selected checkboxes.
       button/checkbox/unchecked:
         light: alias:gray/700
         dark: alias:gray/500
+        usage: Used for unselected checkboxes.
       button/checkbox/disable:
         light: alias:gray/900
         dark: alias:gray/300
+        usage: Used for unavailable checkbox controls.
       button/chip/selected:
         light: alias:gray/200
         dark: alias:gray/1000
+        usage: Used for selected filter and choice chips.
       button/chip/unselected (stroke):
         light: alias:gray/700
         dark: alias:gray/500
+        usage: Used for available but inactive chips.
       battery/high:
         light: alias:green/300
         dark: alias:green/300
+        usage: Used for healthy battery states.
       battery/medium:
         light: alias:amber/300
         dark: alias:amber/300
+        usage: Used for moderate battery levels requiring awareness.
       battery/critical:
         light: alias:red/300
         dark: alias:red/300
+        usage: Used for low battery states requiring attention.
       border/separator line:
         light: alias:gray/900
         dark: alias:gray/500
+        usage: Used to separate content groups and card sections.
       border/default:
         light: alias:gray/800
         dark: alias:gray/500
+        usage: Used for tiles, segmented controls, and low-elevation surfaces.
       border/icon:
         light: alias:gray/700
         dark: alias:gray/500
+        usage: Reserved for future icon-boundary use cases.
       border/disable:
         light: alias:gray/900
         dark: alias:gray/300
+        usage: Used for disabled bordered controls.
       default/status bar:
         light: alias:gray/100
         dark: alias:gray/1100
+        usage: Used for status bar and handle bar.
       Ios/Liquid glass:
         light: '#f7f7f7a6'
         dark: '#171717a6'

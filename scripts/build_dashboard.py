@@ -791,21 +791,40 @@ def component_page(cid):
     return page(name, f"c-{cid}", body, prefix="../")
 
 # ----------------------------------------------------------------- foundations
+PRIMITIVE_FAMILIES = [("gray", "Greys"), ("red", "Reds"), ("green", "Greens"), ("amber", "Ambers")]
+
 def colors_page():
     cols = tokens_colors["collections"]
     prim = cols["color"]["variables"]
     sem = cols["tokens"]["variables"]
 
-    prim_cards = "".join(
-        f'<div class="swatchcard"><div class="swatchfill"><span style="background:{E(v)}"></span></div>'
-        f'<div class="swatchmeta"><div class="swatchname">{E(k)}</div>'
-        f'<div class="swatchhex"><span>{E(v)}</span>'
-        f'<button class="copybtn small" data-copy="{E(v)}">⧉</button></div></div></div>'
-        for k, v in prim.items())
+    def prim_hex(k):
+        v = prim.get(k)
+        return v["value"] if isinstance(v, dict) else v
+
+    # Grouped by color family (designer's own categorization: Greys / Reds / Greens /
+    # Ambers) rather than the flat grid it used to be, with the Usage text pulled
+    # verbatim from the Figma "Colors Visualization" documentation frame (2035:1542).
+    prim_rows = []
+    for prefix, label in PRIMITIVE_FAMILIES:
+        keys = [k for k in prim if k.split("/")[0] == prefix]
+        if not keys:
+            continue
+        prim_rows.append(f'<tr class="tok-grouphead"><td colspan="3">{E(label)}</td></tr>')
+        for k in keys:
+            v = prim[k]
+            hexval = v["value"] if isinstance(v, dict) else v
+            usage = v.get("usage") if isinstance(v, dict) else None
+            usage_html = E(usage) if usage else '<span class="dim">not yet ingested from Figma</span>'
+            prim_rows.append(
+                f'<tr><td><code>{E(k)}</code></td><td>{usage_html}</td>'
+                f'<td><div class="tokcell"><span class="tokswatch" style="background:{E(hexval)}" '
+                f'title="{E(hexval)}"></span><span class="tokswatchlabel">{E(hexval)}</span>'
+                f'<button class="copybtn small" data-copy="{E(hexval)}">⧉</button></div></td></tr>')
 
     def resolve(val):
         if isinstance(val, str) and val.startswith("alias:"):
-            return prim.get(val[6:]), val[6:]
+            return prim_hex(val[6:]), val[6:]
         return val, None
 
     # Semantic tokens are grouped by their top-level namespace (background/text/icon/...),
@@ -827,9 +846,11 @@ def colors_page():
                         f'{E(group.title())}</td></tr>')
         lv, la = resolve(modes.get("light"))
         dv, da = resolve(modes.get("dark"))
+        usage = modes.get("usage")
+        usage_html = E(usage) if usage else '<span class="dim">not yet ingested from Figma</span>'
         rows.append(
             f'<tr><td><code>token/{E(k)}</code></td>'
-            f'<td class="dim">not yet ingested from Figma</td>'
+            f'<td>{usage_html}</td>'
             f'<td>{modecell(lv, la)}</td>'
             f'<td>{modecell(dv, da)}</td></tr>')
 
@@ -841,7 +862,8 @@ def colors_page():
     <table class="table toktable"><thead><tr><th>Token</th><th>Usage</th><th>Light mode</th><th>Dark mode</th></tr></thead>
     <tbody>{''.join(rows)}</tbody></table>
     <div class="subhead">Primitive <span class="dim">— {len(prim)} raw scale values</span></div>
-    <div class="swatchgrid">{prim_cards}</div>
+    <table class="table toktable"><thead><tr><th>Token</th><th>Usage</th><th>Value</th></tr></thead>
+    <tbody>{''.join(prim_rows)}</tbody></table>
     """
     return page("Colors & tokens", "colors", body)
 
