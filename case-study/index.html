@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Noise Audio Dashboard — Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     case-study/index.html — structure pass only.
+     Mirrors the section/interaction pattern of the Zepto "Paw Parade"
+     case study (aaradhyagautam2017-lgtm/Tata-1mg-assignment-,
+     case-study/index.html): two top-level views (Overview / Prototype)
+     behind a floating pill toggle; Overview is a sticky-sidebar,
+     scrollspy'd long-scroll of numbered panels; Prototype embeds the
+     real, live thing instead of a phone-mockup screenshot.
+     Content for each panel is intentionally a dashed "pending" box —
+     populated in the next pass, not this one.
+     ============================================================ */
+  :root {
+    --font-ui:   'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-mono: 'Roboto Mono', ui-monospace, 'SF Mono', monospace;
+    --accent:      #6d4aff;
+    --accent-deep: #5a35f5;
+    --accent-tint: #efeaff;
+    --ink:      #131315;
+    --ink-2:    #5c5c63;
+    --ink-3:    #8e8e96;
+    --hairline: #e4e4e7;
+    --hairline-2: #d4d4d8;
+    --card:     #ffffff;
+    --page:     #fbfbfc;
+    --page-alt: #f5f5f7;
+    --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-pill: 9999px;
+    --shadow-sm: 0 4px 14px rgba(20,20,28,.06);
+    --shadow-md: 0 10px 28px rgba(20,20,28,.09);
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: var(--font-ui);
+    background: var(--page);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 96px;
+  }
+  body[data-view="prototype"] { padding-bottom: 0; }
+  a { color: inherit; }
+
+  /* ---------- header (shared chrome across both views) ---------- */
+  .cs-header {
+    padding: 48px 24px 36px;
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .cs-eyebrow {
+    font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent-deep);
+  }
+  .cs-title {
+    font-weight: 700; font-size: clamp(28px, 4.5vw, 42px);
+    line-height: 1.1; color: var(--ink); margin-top: 12px; letter-spacing: -0.01em;
+  }
+  .cs-sub {
+    font-size: 15px; line-height: 1.55; color: var(--ink-2); margin-top: 14px;
+  }
+
+  /* ---------- views: mutually exclusive, never share a scroll ---------- */
+  .cs-view[hidden] { display: none; }
+
+  /* ---------- floating section toggle ---------- */
+  .floating-toggle {
+    position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: var(--r-pill);
+    padding: 5px;
+    box-shadow: var(--shadow-md);
+  }
+  .ft-highlight {
+    position: absolute; top: 5px; bottom: 5px; left: 5px;
+    border-radius: var(--r-pill);
+    background: var(--accent);
+    transition: transform .3s cubic-bezier(.4,0,.2,1), width .3s cubic-bezier(.4,0,.2,1);
+    z-index: 0;
+  }
+  .ft-option {
+    position: relative; z-index: 1;
+    font-family: var(--font-ui); font-size: 13.5px; font-weight: 700;
+    padding: 10px 22px; border-radius: var(--r-pill); border: none; background: none;
+    color: var(--ink-2); cursor: pointer;
+    transition: color .25s ease;
+  }
+  .ft-option.is-active { color: #fff; }
+
+  /* ================= OVERVIEW VIEW ================= */
+  .research-layout {
+    max-width: 1180px; margin: 0 auto; padding: 8px 24px 64px;
+    display: grid; grid-template-columns: 240px 1fr; gap: 40px;
+    align-items: start;
+  }
+  .research-sidebar {
+    position: sticky; top: 40px;
+    display: flex; flex-direction: column; gap: 32px;
+  }
+  .sidebar-label {
+    font-size: 10.5px; font-weight: 800; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: 12px;
+  }
+  .structure-nav { display: flex; flex-direction: column; gap: 2px; }
+  .structure-item {
+    display: block; width: 100%;
+    font-family: var(--font-ui); font-size: 13px; font-weight: 700; text-align: left;
+    color: var(--ink-3); background: none; border: none; cursor: pointer;
+    padding: 8px 0 8px 12px; border-left: 2px solid var(--hairline);
+  }
+  .structure-item.is-active { color: var(--accent-deep); border-left-color: var(--accent); }
+  .structure-group-label {
+    font-size: 13px; font-weight: 700;
+    color: var(--ink-3); padding: 8px 0 8px 12px; margin-top: 2px;
+    border-left: 2px solid var(--hairline);
+  }
+  .structure-item--sub { font-size: 12px; font-weight: 600; padding-left: 24px; }
+
+  .research-content { min-width: 0; }
+  .research-panel {
+    margin-bottom: 48px; padding-bottom: 32px;
+    border-bottom: 1px solid var(--hairline);
+    scroll-margin-top: 40px;
+  }
+  .research-panel:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+  .rc-eyebrow {
+    font-size: 11.5px; font-weight: 800; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-2);
+  }
+  .rc-title {
+    font-weight: 700; font-size: clamp(26px, 3.6vw, 36px);
+    color: var(--ink); margin-top: 10px; letter-spacing: -0.01em;
+  }
+  .rc-pending {
+    margin-top: 22px; padding: 18px 20px; max-width: 680px;
+    border: 1.5px dashed var(--hairline-2); border-radius: var(--r-md);
+    font-size: 13px; color: var(--ink-2); line-height: 1.6; font-style: italic;
+    background: var(--page-alt);
+  }
+  .screen-group-panel .rc-eyebrow { color: var(--accent-deep); }
+
+  /* ---------- Final Design walkthrough scaffold ---------- */
+  .walkthrough-frame {
+    margin-top: 22px; max-width: 900px;
+    border: 1px solid var(--hairline); border-radius: var(--r-lg);
+    background: var(--card); box-shadow: var(--shadow-sm); overflow: hidden;
+  }
+  .browser-chrome {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; background: var(--page-alt); border-bottom: 1px solid var(--hairline);
+  }
+  .browser-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--hairline-2); }
+  .browser-url {
+    margin-left: 8px; flex: 1; font-family: var(--font-mono); font-size: 11px; color: var(--ink-3);
+    background: var(--card); border: 1px solid var(--hairline); border-radius: var(--r-pill);
+    padding: 4px 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .walkthrough-body { min-height: 220px; display: flex; align-items: center; justify-content: center; }
+
+  /* ---------- Final Screens gallery scaffold ---------- */
+  .gallery-grid {
+    margin-top: 22px; max-width: 960px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px;
+  }
+  .gallery-tile {
+    border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--card);
+    box-shadow: var(--shadow-sm); overflow: hidden;
+  }
+  .gallery-tile .browser-chrome { padding: 8px 10px; }
+  .gallery-tile .browser-dot { width: 7px; height: 7px; }
+  .gallery-tile-body {
+    height: 150px; display: flex; align-items: center; justify-content: center;
+    background: var(--page-alt); color: var(--ink-3); font-size: 11.5px; text-align: center; padding: 12px;
+  }
+  .gallery-tile-caption { padding: 10px 12px; font-size: 12.5px; font-weight: 600; color: var(--ink); }
+
+  /* ================= PROTOTYPE VIEW ================= */
+  body[data-view="prototype"] .cs-header,
+  body[data-view="prototype"] .cs-footer { display: none; }
+  .proto-view-inner { max-width: 1200px; margin: 0 auto; padding: 20px 24px; }
+  .proto-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .frame-scale-wrap { display: flex; justify-content: center; align-items: flex-start; width: 100%; }
+  #proto-browser-shell { transform-origin: top center; }
+  .proto-controls { display: flex; align-items: center; gap: 10px; }
+  .proto-btn {
+    font-family: var(--font-ui); font-size: 13px; font-weight: 700; color: var(--accent-deep);
+    background: var(--accent-tint); border: none; border-radius: var(--r-pill); padding: 10px 18px;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+  }
+  .proto-btn:active { background: #e9d9fb; }
+  .proto-btn svg { width: 14px; height: 14px; }
+  .proto-hint { font-size: 12.5px; color: var(--ink-2); }
+
+  .browser-shell {
+    width: 1180px; border-radius: var(--r-lg); overflow: hidden;
+    border: 1px solid var(--hairline-2); box-shadow: var(--shadow-md); background: var(--card);
+  }
+  .browser-shell .browser-chrome { padding: 12px 16px; }
+  .browser-shell .browser-dot { width: 11px; height: 11px; }
+  .proto-frame-wrap { width: 1180px; height: 760px; background: #fff; }
+  .proto-frame-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+  /* ---------- footer ---------- */
+  .cs-footer { text-align: center; padding: 32px 24px 24px; font-size: 12.5px; color: var(--ink-2); }
+
+  @media (max-width: 760px) {
+    .research-layout { grid-template-columns: 1fr; gap: 32px; }
+    .research-sidebar { position: static; flex-direction: row; flex-wrap: wrap; gap: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="cs-header">
+  <div class="cs-eyebrow">Case Study</div>
+  <h1 class="cs-title">Noise Audio Dashboard</h1>
+  <p class="cs-sub"><em>[Pending — one-line summary of the tool and the problem it solves.]</em></p>
+</header>
+
+<main>
+
+  <section class="cs-view" id="view-overview" data-view="overview" hidden>
+    <div class="research-layout">
+
+      <aside class="research-sidebar">
+        <div>
+          <div class="sidebar-label">Structure</div>
+          <nav class="structure-nav" id="structure-nav">
+            <button class="structure-item is-active" type="button" data-phase="overview">01 / Overview</button>
+            <button class="structure-item" type="button" data-phase="problem">02 / The Problem</button>
+            <button class="structure-item" type="button" data-phase="diagnosis">03 / Diagnosis</button>
+            <button class="structure-item" type="button" data-phase="decision">04 / Solution Options</button>
+            <button class="structure-item" type="button" data-phase="rebuild">05 / Rebuild Strategy</button>
+            <button class="structure-item" type="button" data-phase="design">06 / Visual &amp; Interaction Design</button>
+            <button class="structure-item" type="button" data-phase="finalflow">07 / Final System Flow</button>
+            <div class="structure-group-label">08 / Final Design</div>
+            <button class="structure-item structure-item--sub" type="button" data-phase="screen-overview">Overview Page</button>
+            <button class="structure-item structure-item--sub" type="button" data-phase="screen-component">Component Detail Page</button>
+            <button class="structure-item structure-item--sub" type="button" data-phase="screen-sidebar">Sidebar Navigation</button>
+            <button class="structure-item structure-item--sub" type="button" data-phase="screen-tokens">Colors &amp; Tokens</button>
+            <button class="structure-item structure-item--sub" type="button" data-phase="screen-search">Search (⌘K)</button>
+            <button class="structure-item" type="button" data-phase="gallery">09 / Final Screens</button>
+            <button class="structure-item" type="button" data-phase="polish">10 / Fixes &amp; Refinements</button>
+          </nav>
+        </div>
+      </aside>
+
+      <div class="research-content" id="research-content">
+
+        <div class="research-panel" data-phase="overview">
+          <div class="rc-eyebrow">01 / Overview</div>
+          <h2 class="rc-title">Overview</h2>
+          <div class="rc-pending">Pending — what Noise Audio is, the assignment/context, and the approach principles (mirrors the Assignment / Opportunity / My Approach cards from the Zepto case study).</div>
+        </div>
+
+        <div class="research-panel" data-phase="problem">
+          <div class="rc-eyebrow">02 / The Problem</div>
+          <h2 class="rc-title">The Problem</h2>
+          <div class="rc-pending">Pending — the visual-fidelity bugs found (screenshots of components not matching Figma pixel-for-picture), and why this was a "the whole tool goes to trash" severity problem, not a cosmetic one.</div>
+        </div>
+
+        <div class="research-panel" data-phase="diagnosis">
+          <div class="rc-eyebrow">03 / Diagnosis</div>
+          <h2 class="rc-title">Root-Cause Diagnosis</h2>
+          <div class="rc-pending">Pending — the flattened pixel-snapshot schema root cause, found before any fix was proposed (mirrors the UX Audit's campaign-system analysis).</div>
+        </div>
+
+        <div class="research-panel" data-phase="decision">
+          <div class="rc-eyebrow">04 / Solution Options</div>
+          <h2 class="rc-title">Solution Options</h2>
+          <div class="rc-pending">Pending — Option A (minimal per-bug fixes) vs Option B (full layout-model rebuild), the tradeoffs of each, and why Option B was chosen.</div>
+        </div>
+
+        <div class="research-panel" data-phase="rebuild">
+          <div class="rc-eyebrow">05 / Rebuild Strategy</div>
+          <h2 class="rc-title">Rebuild Strategy</h2>
+          <div class="rc-pending">Pending — the systematic dependency-ordered rebuild (atoms → molecules → organisms), re-pulling fresh Figma data per component, verifying each against Figma before committing.</div>
+        </div>
+
+        <div class="research-panel" data-phase="design">
+          <div class="rc-eyebrow">06 / Visual &amp; Interaction Design</div>
+          <h2 class="rc-title">Visual &amp; Interaction Design</h2>
+          <div class="rc-pending">Pending — the sidebar redesign (icons, collapsible Foundations/Atoms/Molecules/Organisms sections, search with ⌘K), and the Colors &amp; Tokens documentation rebuild.</div>
+        </div>
+
+        <div class="research-panel" data-phase="finalflow">
+          <div class="rc-eyebrow">07 / Final System Flow</div>
+          <h2 class="rc-title">Final System Flow</h2>
+          <div class="rc-pending">Pending — how the finished tool works end-to-end: Figma → YAML → build script → static dashboard, one diagram.</div>
+        </div>
+
+        <div class="research-panel screen-group-panel" data-phase="screen-overview">
+          <div class="rc-eyebrow">08 / Final Design</div>
+          <h2 class="rc-title">Overview Page</h2>
+          <div class="walkthrough-frame">
+            <div class="browser-chrome">
+              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+              <span class="browser-url">noise-audio-dashboard.vercel.app/index.html</span>
+            </div>
+            <div class="walkthrough-body"><span class="rc-pending" style="border:none;background:none;margin:0">Pending — screenshot + annotated callouts.</span></div>
+          </div>
+        </div>
+
+        <div class="research-panel screen-group-panel" data-phase="screen-component">
+          <div class="rc-eyebrow">08 / Final Design</div>
+          <h2 class="rc-title">Component Detail Page</h2>
+          <div class="walkthrough-frame">
+            <div class="browser-chrome">
+              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+              <span class="browser-url">noise-audio-dashboard.vercel.app/components/action-card.html</span>
+            </div>
+            <div class="walkthrough-body"><span class="rc-pending" style="border:none;background:none;margin:0">Pending — screenshot + annotated callouts.</span></div>
+          </div>
+        </div>
+
+        <div class="research-panel screen-group-panel" data-phase="screen-sidebar">
+          <div class="rc-eyebrow">08 / Final Design</div>
+          <h2 class="rc-title">Sidebar Navigation</h2>
+          <div class="walkthrough-frame">
+            <div class="browser-chrome">
+              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+              <span class="browser-url">noise-audio-dashboard.vercel.app</span>
+            </div>
+            <div class="walkthrough-body"><span class="rc-pending" style="border:none;background:none;margin:0">Pending — screenshot + annotated callouts (collapsible sections, search, scroll persistence).</span></div>
+          </div>
+        </div>
+
+        <div class="research-panel screen-group-panel" data-phase="screen-tokens">
+          <div class="rc-eyebrow">08 / Final Design</div>
+          <h2 class="rc-title">Colors &amp; Tokens</h2>
+          <div class="walkthrough-frame">
+            <div class="browser-chrome">
+              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+              <span class="browser-url">noise-audio-dashboard.vercel.app/foundations-colors.html</span>
+            </div>
+            <div class="walkthrough-body"><span class="rc-pending" style="border:none;background:none;margin:0">Pending — screenshot + annotated callouts.</span></div>
+          </div>
+        </div>
+
+        <div class="research-panel screen-group-panel" data-phase="screen-search">
+          <div class="rc-eyebrow">08 / Final Design</div>
+          <h2 class="rc-title">Search (⌘K)</h2>
+          <div class="walkthrough-frame">
+            <div class="browser-chrome">
+              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+              <span class="browser-url">noise-audio-dashboard.vercel.app</span>
+            </div>
+            <div class="walkthrough-body"><span class="rc-pending" style="border:none;background:none;margin:0">Pending — screenshot + annotated callouts.</span></div>
+          </div>
+        </div>
+
+        <div class="research-panel" data-phase="gallery">
+          <div class="rc-eyebrow">09 / Final Screens</div>
+          <h2 class="rc-title">Final Screens</h2>
+          <div class="gallery-grid">
+            <div class="gallery-tile">
+              <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
+              <div class="gallery-tile-body">Pending screenshot</div>
+              <div class="gallery-tile-caption">Overview</div>
+            </div>
+            <div class="gallery-tile">
+              <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
+              <div class="gallery-tile-body">Pending screenshot</div>
+              <div class="gallery-tile-caption">Component graph</div>
+            </div>
+            <div class="gallery-tile">
+              <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
+              <div class="gallery-tile-body">Pending screenshot</div>
+              <div class="gallery-tile-caption">Fill the gaps</div>
+            </div>
+            <div class="gallery-tile">
+              <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
+              <div class="gallery-tile-body">Pending screenshot</div>
+              <div class="gallery-tile-caption">Colors &amp; tokens</div>
+            </div>
+            <div class="gallery-tile">
+              <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
+              <div class="gallery-tile-body">Pending screenshot</div>
+              <div class="gallery-tile-caption">Typography</div>
+            </div>
+            <div class="gallery-tile">
+              <div class="browser-chrome"><span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span></div>
+              <div class="gallery-tile-body">Pending screenshot</div>
+              <div class="gallery-tile-caption">Spacing &amp; radius</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="research-panel" data-phase="polish">
+          <div class="rc-eyebrow">10 / Fixes &amp; Refinements</div>
+          <h2 class="rc-title">Fixes &amp; Refinements</h2>
+          <div class="rc-pending">Pending — the follow-up polish round: the pill/bubble background bug (and why static code review missed it), the sidebar scroll-reset bug (inline-script ordering race), cache-busting, and pulling real Usage text from Figma for the tokens pages.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="cs-view" id="view-prototype" data-view="prototype" hidden>
+    <div class="proto-view-inner">
+      <div class="proto-wrap">
+        <div class="proto-controls">
+          <button class="proto-btn" id="restart-demo" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 21v-6h6"/></svg>
+            Restart
+          </button>
+          <span class="proto-hint">Click through the real, live dashboard inside the frame</span>
+        </div>
+
+        <div class="frame-scale-wrap" id="frame-scale-wrap">
+          <div class="browser-shell" id="proto-browser-shell">
+            <div class="browser-chrome">
+              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+              <span class="browser-url" id="proto-url">../dashboard/index.html</span>
+            </div>
+            <div class="proto-frame-wrap">
+              <iframe id="proto-frame" src="../dashboard/index.html" title="Noise Audio Dashboard — live"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="cs-footer">Noise Audio Dashboard — a Figma-to-code design-system tool case study.</footer>
+
+<div class="floating-toggle" role="tablist" aria-label="Switch section">
+  <span class="ft-highlight" aria-hidden="true"></span>
+  <button class="ft-option" data-target="overview" type="button" role="tab">Overview</button>
+  <button class="ft-option" data-target="prototype" type="button" role="tab">Prototype</button>
+</div>
+
+<script>
+  document.getElementById('restart-demo').addEventListener('click', function () {
+    var frame = document.getElementById('proto-frame');
+    frame.src = '../dashboard/index.html';
+  });
+
+  // ---------- scale the browser mockup to fit the first fold, no scrolling ----------
+  function fitPrototypeFrame() {
+    var wrap = document.getElementById('frame-scale-wrap');
+    var shell = document.getElementById('proto-browser-shell');
+    if (!wrap || !shell) return;
+
+    shell.style.transform = 'none';
+    wrap.style.width = '';
+    wrap.style.height = '';
+
+    var naturalWidth = shell.offsetWidth;
+    var naturalHeight = shell.offsetHeight;
+    if (!naturalWidth || !naturalHeight) return;
+
+    var topOffset = wrap.getBoundingClientRect().top;
+    var reservedBottom = 96;
+    var availableHeight = window.innerHeight - topOffset - reservedBottom;
+    var availableWidth = document.documentElement.clientWidth - 48;
+
+    var scale = Math.min(1, availableHeight / naturalHeight, availableWidth / naturalWidth);
+    if (scale < 1) shell.style.transform = 'scale(' + scale + ')';
+    wrap.style.width = (naturalWidth * scale) + 'px';
+    wrap.style.height = (naturalHeight * scale) + 'px';
+  }
+
+  // ---------- top-level view switch (Overview <-> Prototype), never shared scroll ----------
+  (function () {
+    var toggle = document.querySelector('.floating-toggle');
+    var highlight = toggle.querySelector('.ft-highlight');
+    var options = Array.prototype.slice.call(toggle.querySelectorAll('.ft-option'));
+    var views = Array.prototype.slice.call(document.querySelectorAll('.cs-view'));
+
+    function moveHighlight(btn) {
+      var toggleRect = toggle.getBoundingClientRect();
+      var btnRect = btn.getBoundingClientRect();
+      highlight.style.width = btnRect.width + 'px';
+      highlight.style.transform = 'translateX(' + (btnRect.left - toggleRect.left - 5) + 'px)';
+    }
+
+    function setView(target) {
+      views.forEach(function (v) { v.hidden = v.dataset.view !== target; });
+      document.body.dataset.view = target;
+      options.forEach(function (opt) {
+        var active = opt.dataset.target === target;
+        opt.classList.toggle('is-active', active);
+        if (active) moveHighlight(opt);
+      });
+      window.scrollTo(0, 0);
+      if (target === 'prototype') fitPrototypeFrame();
+    }
+
+    options.forEach(function (opt) {
+      opt.addEventListener('click', function () { setView(opt.dataset.target); });
+    });
+
+    setView('overview');
+    window.addEventListener('load', function () {
+      var active = options.find(function (o) { return o.classList.contains('is-active'); });
+      if (active) moveHighlight(active);
+      if (document.body.dataset.view === 'prototype') fitPrototypeFrame();
+    });
+    window.addEventListener('resize', function () {
+      var active = toggle.querySelector('.ft-option.is-active');
+      if (active) moveHighlight(active);
+      if (document.body.dataset.view === 'prototype') fitPrototypeFrame();
+    });
+  })();
+
+  // ---------- sub-navigation (Structure sidebar): click-to-scroll + scrollspy ----------
+  (function () {
+    var nav = document.getElementById('structure-nav');
+    var items = Array.prototype.slice.call(nav.querySelectorAll('.structure-item'));
+    var panels = Array.prototype.slice.call(document.querySelectorAll('.research-panel'));
+
+    var isScrolling = false;
+    var scrollTimeout;
+
+    items.forEach(function (item) {
+      item.addEventListener('click', function () {
+        var targetPanel = document.querySelector('.research-panel[data-phase="' + item.dataset.phase + '"]');
+        if (!targetPanel) return;
+        isScrolling = true;
+        clearTimeout(scrollTimeout);
+        items.forEach(function (i) { i.classList.toggle('is-active', i === item); });
+        var yOffset = -40;
+        var y = targetPanel.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+        scrollTimeout = setTimeout(function () { isScrolling = false; }, 800);
+      });
+    });
+
+    var observer = new IntersectionObserver(function (entries) {
+      if (isScrolling) return;
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var phase = entry.target.dataset.phase;
+          items.forEach(function (item) {
+            item.classList.toggle('is-active', item.dataset.phase === phase);
+          });
+        }
+      });
+    }, { root: null, rootMargin: '-10% 0px -75% 0px', threshold: 0 });
+
+    panels.forEach(function (panel) { observer.observe(panel); });
+  })();
+</script>
+
+</body>
+</html>
