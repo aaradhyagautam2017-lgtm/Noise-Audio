@@ -368,6 +368,14 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .table code{color:var(--ink);font-size:11.5px}
 .fpcell code{font-size:10.5px}
 .darkcell{background:var(--surface-2);border-radius:4px}
+.toktable td{color:var(--ink2)}
+.tok-grouphead td{background:var(--surface-2);color:var(--ink);font-weight:600;font-size:12.5px;
+  padding:8px 10px;border-bottom:1px solid var(--line)}
+.tok-groupsep{color:var(--ink3);font-weight:400}
+.tokcell{display:flex;align-items:center;gap:9px}
+.tokswatch{display:inline-block;width:26px;height:26px;border-radius:6px;flex:none;
+  border:1px solid var(--line-2)}
+.tokswatchlabel{font-family:var(--font-mono);font-size:11px;color:var(--ink3)}
 ul{margin:6px 0;padding-left:20px;color:var(--ink2)}
 ul.rules li,ul li{margin:6px 0}
 .linklist{list-style:none;padding-left:0}

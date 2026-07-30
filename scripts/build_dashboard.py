@@ -808,29 +808,38 @@ def colors_page():
             return prim.get(val[6:]), val[6:]
         return val, None
 
-    # Semantic tokens carry a value per mode, so the swatch is split rather than picking
-    # one mode and hiding the other — both are the real stored values.
-    sem_cards = []
+    # Semantic tokens are grouped by their top-level namespace (background/text/icon/...),
+    # mirroring how the collection is browsed in Figma, with one row per token and a
+    # dedicated column per mode instead of one split swatch.
+    def modecell(v, alias):
+        label = E(alias) if alias else E(v)
+        return (f'<div class="tokcell"><span class="tokswatch" style="background:{E(v)}" '
+                f'title="{E(v)}"></span><span class="tokswatchlabel">{label}</span></div>')
+
+    rows = []
+    current_group = None
     for k, modes in sem.items():
+        group = k.split("/")[0]
+        if group != current_group:
+            current_group = group
+            rows.append(f'<tr class="tok-grouphead"><td colspan="4">'
+                        f'<span class="dim">token</span> <span class="tok-groupsep">/</span> '
+                        f'{E(group.title())}</td></tr>')
         lv, la = resolve(modes.get("light"))
         dv, da = resolve(modes.get("dark"))
-        alias_note = ""
-        if la or da:
-            alias_note = f'<div class="dim" style="font-size:10.5px;margin-top:3px">→ {E(la or da)}</div>'
-        sem_cards.append(
-            f'<div class="swatchcard"><div class="swatchfill">'
-            f'<span data-mode="L" style="background:{E(lv)}"></span>'
-            f'<span data-mode="D" style="background:{E(dv)}"></span></div>'
-            f'<div class="swatchmeta"><div class="swatchname">{E(k)}</div>'
-            f'<div class="swatchhex"><span>{E(lv)}</span><span>{E(dv)}</span></div>'
-            f'{alias_note}</div></div>')
+        rows.append(
+            f'<tr><td><code>token/{E(k)}</code></td>'
+            f'<td class="dim">not yet ingested from Figma</td>'
+            f'<td>{modecell(lv, la)}</td>'
+            f'<td>{modecell(dv, da)}</td></tr>')
 
     body = f"""
     <header class="pagehead"><h1>Colors &amp; tokens</h1></header>
     <p class="subtle">Synced from the Figma variable collections <code>color</code> (primitives) and
     <code>tokens</code> (semantic, Light/Dark). Source: <code>tokens/colors.yaml</code>.</p>
     <div class="subhead">Semantic <span class="dim">— {len(sem)} tokens, light and dark value each</span></div>
-    <div class="swatchgrid">{''.join(sem_cards)}</div>
+    <table class="table toktable"><thead><tr><th>Token</th><th>Usage</th><th>Light mode</th><th>Dark mode</th></tr></thead>
+    <tbody>{''.join(rows)}</tbody></table>
     <div class="subhead">Primitive <span class="dim">— {len(prim)} raw scale values</span></div>
     <div class="swatchgrid">{prim_cards}</div>
     """
@@ -1620,6 +1629,14 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .table code{color:var(--ink);font-size:11.5px}
 .fpcell code{font-size:10.5px}
 .darkcell{background:var(--surface-2);border-radius:4px}
+.toktable td{color:var(--ink2)}
+.tok-grouphead td{background:var(--surface-2);color:var(--ink);font-weight:600;font-size:12.5px;
+  padding:8px 10px;border-bottom:1px solid var(--line)}
+.tok-groupsep{color:var(--ink3);font-weight:400}
+.tokcell{display:flex;align-items:center;gap:9px}
+.tokswatch{display:inline-block;width:26px;height:26px;border-radius:6px;flex:none;
+  border:1px solid var(--line-2)}
+.tokswatchlabel{font-family:var(--font-mono);font-size:11px;color:var(--ink3)}
 ul{margin:6px 0;padding-left:20px;color:var(--ink2)}
 ul.rules li,ul li{margin:6px 0}
 .linklist{list-style:none;padding-left:0}
