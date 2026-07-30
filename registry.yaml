@@ -32,6 +32,7 @@ registry:
     node_id: 248:4940
     figma_fingerprint: 13d9bcf56d34b8f5859397f76b4787da65b4f6f8
     file: components/atoms/primary-cta-button.yaml
+    snippet: components/atoms/primary-cta-button.snippet.html
     variant_axes:
       State:
       - Enabled
@@ -47,6 +48,7 @@ registry:
     node_id: 250:4953
     figma_fingerprint: 496c1152f7812e427b173dfadf82190e3ca7c3c0
     file: components/atoms/secondary-cta-button.yaml
+    snippet: components/atoms/secondary-cta-button.snippet.html
     variant_axes:
       State:
       - Enabled
@@ -65,6 +67,7 @@ registry:
     node_id: 463:1380
     figma_fingerprint: c8690c419dcc5e5873b064217a90ab827caf16e9
     file: components/atoms/link-cta.yaml
+    snippet: components/atoms/link-cta.snippet.html
     variant_axes:
       Usecase:
       - Screens
@@ -81,6 +84,7 @@ registry:
     node_id: 2031:1132
     figma_fingerprint: 319c48cae4ec45084ee2296b6d0e0460d0d27a40
     file: components/molecules/actionables.yaml
+    snippet: components/molecules/actionables.snippet.html
     variant_axes:
       Action:
       - Chevron
@@ -133,6 +137,7 @@ registry:
     node_id: 2031:1154
     figma_fingerprint: 01dc1aeeb4cb8263bbcdf477e7be617bb160ed27
     file: components/atoms/chevron.yaml
+    snippet: components/atoms/chevron.snippet.html
     variant_axes:
       State:
       - Chevron back
@@ -146,6 +151,7 @@ registry:
     node_id: 2031:1168
     figma_fingerprint: 5d813fa76c98d5e979b8e58f3097ee481b6974bc
     file: components/atoms/checkbox.yaml
+    snippet: components/atoms/checkbox.snippet.html
     variant_axes:
       state:
       - Selected
@@ -158,6 +164,7 @@ registry:
     node_id: 2031:1178
     figma_fingerprint: 5aaf9ca2a4ce74111f0f3c1f26e495c980cec34e
     file: components/atoms/radio-button.yaml
+    snippet: components/atoms/radio-button.snippet.html
     variant_axes:
       State:
       - Selected
@@ -170,6 +177,7 @@ registry:
     node_id: 2031:1190
     figma_fingerprint: 5671f20fe570cab72796a90ebac8b77ca42e0621
     file: components/atoms/toggle.yaml
+    snippet: components/atoms/toggle.snippet.html
     variant_axes:
       State:
       - On state
@@ -182,6 +190,7 @@ registry:
     node_id: 2031:1201
     figma_fingerprint: 4630976d22073248745eb76ebe8a4c2e55d2c1ef
     file: components/atoms/cross.yaml
+    snippet: components/atoms/cross.snippet.html
     variant_axes:
       Type:
       - Default
@@ -193,6 +202,7 @@ registry:
     node_id: 301:20202
     figma_fingerprint: 18df4dd5982a7e913f345ea9459801fb472a255b
     file: components/atoms/heading-content-component.yaml
+    snippet: components/atoms/heading-content-component.snippet.html
     usage_count: 4
   - id: l2-inner-pages-heading
     name: L2/Inner pages Heading
@@ -200,6 +210,7 @@ registry:
     node_id: 244:133
     figma_fingerprint: b315ce3a53f3c7c83388272cb7b77659f4e07c50
     file: components/molecules/l2-inner-pages-heading.yaml
+    snippet: components/molecules/l2-inner-pages-heading.snippet.html
     behavioral_edges:
     - target: l1-inner-page-navigation
       relation: heading-destination
@@ -210,6 +221,7 @@ registry:
     node_id: 2007:775
     figma_fingerprint: 0642c8e04f3d5b41411530a951699e5567e63f29
     file: components/atoms/status-bar.yaml
+    snippet: components/atoms/status-bar.snippet.html
     behavioral_edges:
     - target: l1-inner-page-navigation
       relation: shares-scroll-state
@@ -220,6 +232,7 @@ registry:
     node_id: 243:6378
     figma_fingerprint: 948135f671d61083862a0d646e005015301c3beb
     file: components/organisms/l1-home-page-navigation.yaml
+    snippet: components/organisms/l1-home-page-navigation.snippet.html
     behavioral_edges:
     - target: l1-inner-page-navigation
       relation: sibling
@@ -271,6 +284,7 @@ registry:
     node_id: 2097:1930
     figma_fingerprint: 21d9c86623d946fdffe7c9489dcf24ef5699f576
     file: components/organisms/modal-card.yaml
+    snippet: components/organisms/modal-card.snippet.html
     variant_axes:
       Type:
       - Default modal
@@ -311,6 +325,7 @@ registry:
     node_id: 418:965
     figma_fingerprint: 32faaefa1091152dce02bc7f3330092f25545cf5
     file: components/organisms/action-sheet.yaml
+    snippet: components/organisms/action-sheet.snippet.html
     structural_edges:
       uses:
       - action-card
@@ -352,6 +367,7 @@ registry:
     node_id: 458:8952
     figma_fingerprint: aeb5091d768aa1acd45c5220bcddd658abbcf259
     file: components/atoms/image-asset-placeholder.yaml
+    snippet: components/atoms/image-asset-placeholder.snippet.html
     variant_axes:
       size usage:
       - S
@@ -376,6 +392,7 @@ registry:
     node_id: 611:1378
     figma_fingerprint: 1ff5504fa0229284b6ae328723679fb94b0ab477
     file: components/organisms/modal-sheet.yaml
+    snippet: components/organisms/modal-sheet.snippet.html
     variant_axes:
       Type:
       - App Modal
@@ -427,6 +444,7 @@ registry:
     node_id: 340:11254
     figma_fingerprint: 1cf5d7102660483fa53fe58ba6462229a449e45c
     file: components/atoms/card-heading.yaml
+    snippet: components/atoms/card-heading.snippet.html
     behavioral_edges:
     - target: heading-content-component
       relation: distinct-sibling
@@ -437,6 +455,7 @@ registry:
     node_id: 445:8616
     figma_fingerprint: e429f00b447a3f8e74485cff0ebb08049999600a
     file: components/atoms/description.yaml
+    snippet: components/atoms/description.snippet.html
     behavioral_edges:
     - target: heading-content-component
       relation: distinct
@@ -449,6 +468,7 @@ registry:
     node_id: 445:8434
     figma_fingerprint: c32a11ab5b2fcac3c6c92f4a3723f63c390027fc
     file: components/atoms/text-field.yaml
+    snippet: components/atoms/text-field.snippet.html
     variant_axes:
       Type:
       - small
@@ -483,6 +503,7 @@ registry:
     node_id: 450:8770
     figma_fingerprint: b9945fc2df7c786e4dddeba14021e7f232c580af
     file: components/atoms/privacy-policy-tab.yaml
+    snippet: components/atoms/privacy-policy-tab.snippet.html
     usage_count: 0
   - id: progress-bar
     name: Progress bar
@@ -490,6 +511,7 @@ registry:
     node_id: 489:2133
     figma_fingerprint: f92b7ef136d4b0b6c9618e26f856f0d6537d346e
     file: components/atoms/progress-bar.yaml
+    snippet: components/atoms/progress-bar.snippet.html
     usage_count: 0
   - id: master-card
     name: Master card
@@ -497,6 +519,7 @@ registry:
     node_id: 396:728
     figma_fingerprint: 2a70e23d69359d2c963b4663448e7b7de1f923bb
     file: components/organisms/master-card.yaml
+    snippet: components/organisms/master-card.snippet.html
     structural_edges:
       uses:
       - actionables
@@ -527,6 +550,7 @@ registry:
     node_id: 2032:1265
     figma_fingerprint: 63123afdabcda90456472d6efa03baaae5bfae51
     file: components/organisms/checkbox-card.yaml
+    snippet: components/organisms/checkbox-card.snippet.html
     variant_axes:
       position:
       - checkbox Left
@@ -562,6 +586,7 @@ registry:
     node_id: 2007:1007
     figma_fingerprint: bbd24c7b7a648836ba325942f634a414386375d6
     file: components/organisms/l1-inner-page-navigation.yaml
+    snippet: components/organisms/l1-inner-page-navigation.snippet.html
     variant_axes:
       state:
       - Clean-Only Chevron
@@ -623,6 +648,7 @@ registry:
     node_id: 2096:1434
     figma_fingerprint: f21a114bbd31c9be808ce2265358902b7aeefbc4
     file: components/organisms/action-card.yaml
+    snippet: components/organisms/action-card.snippet.html
     variant_axes:
       State:
       - Categorised

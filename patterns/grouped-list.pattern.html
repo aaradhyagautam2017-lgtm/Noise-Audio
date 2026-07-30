@@ -1,0 +1,78 @@
+<!-- ============================================================
+     PATTERN: grouped-list
+     Applies to: master-card, checkbox-card (both organisms)
+
+     WHY THIS FILE EXISTS AND IS SEPARATE FROM components/**/*.snippet.html
+     Every file in components/**/*.snippet.html is rendered directly from
+     one component's own visual_values — verbatim, nothing invented. This
+     file is different on purpose: no single component's visual_values can
+     capture what "several cards stacked as one grouped list" looks like,
+     because that shape only exists once you place MULTIPLE rows together.
+     master-card.yaml's own tree is one card, not N cards plus a divider.
+     So the grouped-list container and its separator are authored here,
+     directly from the exact rule text below — never presented as a Figma
+     extraction, always presented as a rule translated into CSS.
+
+     SOURCE RULES (quoted verbatim from the repo):
+     - components/organisms/master-card.yaml, anti_patterns:
+         "grouped-list-requires-separators" — grouped-list mode must enable
+         separator lines between rows.
+         "no-dual-corner-radius" — do not apply both row-level and
+         container-level corner radius simultaneously.
+         "no-standalone-when-grouped" — do not use standalone cards when
+         multiple related items should be grouped.
+     - components/organisms/master-card.yaml, rules.separator-inset:
+         "The separator line between rows is inset, not full-width. It
+         begins at the start of the text/content block (aligned after the
+         leading icon) and runs to the trailing edge. It must never extend
+         under the leading icon. Applies only in grouped-list mode."
+     - components/organisms/checkbox-card.yaml, rules.parent_frame:
+         "Follow Master Card construction principles." — this is why the
+         same container/separator below is shared by both organisms,
+         instead of two similar-but-diverging patterns.
+
+     WHERE THE 64px INSET COMES FROM (not a guess — computed once from
+     master-card's own captured layout, see components/organisms/master-card.yaml):
+       outer row padding-left ......... 16px  (Frame 2147227754, padding[3])
+       + leading icon width ............ 40px (Circled icon, node 301:20193)
+       + gap between icon and content ... 8px (Frame 2147227754, gap)
+       = 64px  — where the text/content block actually begins.
+
+     TOKENS USED (css/tokens.css, unmodified):
+       --radius-card (18px), --background-surface, --border-separator-line
+
+     Regenerate components/**/*.snippet.html with
+     scripts/build_component_library.py after any repo change. This file is
+     hand-authored and is not touched by that script.
+     ============================================================ -->
+<style>
+  .nds-grouped-list {
+    background: var(--background-surface, #f7f7f7);
+    border-radius: var(--radius-card, 18px); /* container-level radius only — no-dual-corner-radius */
+  }
+  .nds-grouped-list .nds-row {
+    border-radius: 0; /* rows never carry their own radius when grouped */
+  }
+  /* Inset separator: begins after the leading icon, runs to the trailing
+     edge, never under the icon. Real inset computed above, not guessed. */
+  .nds-grouped-list .nds-separator {
+    height: 1px;
+    margin-left: 64px;
+    background: var(--border-separator-line, #ededed);
+  }
+  /* A row with no leading icon (e.g. a checkbox-card "checkbox-right" row,
+     which has no icon before its content) starts its text block at the
+     row's own left padding instead — 16px in this library's rows — so its
+     separator uses that inset instead of the icon-based 64px. */
+  .nds-grouped-list .nds-row--no-icon + .nds-separator { margin-left: 16px; }
+</style>
+
+<!-- Usage — wrap real card/row snippets from components/organisms/master-card.snippet.html
+     or components/organisms/checkbox-card.snippet.html with .nds-row, and place exactly one
+     .nds-separator between rows (never before the first row, never after the last, and
+     grouped-list-requires-separators means never omit the ones between rows that ARE there): -->
+<div class="nds-grouped-list">
+  <div class="nds-row"><!-- row 1: real master-card / checkbox-card markup goes here --></div>
+  <div class="nds-separator"></div>
+  <div class="nds-row"><!-- row 2 --></div>
+</div>

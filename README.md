@@ -23,7 +23,7 @@ CONTROL_PANEL.md          Screen state panel rules (human-placed; not generated)
 registry.yaml             The map: every component with ids, fingerprints, edges, usage counts.
 INGESTION_REPORT.md       Gaps, drift, dangling references found during ingestion.
 components/
-  atoms/                  16 atoms      (id.yaml per component)
+  atoms/                  16 atoms      (id.yaml + id.snippet.html per component)
   molecules/              2 molecules
   organisms/              8 organisms   (includes the two complex-organisms: the sheets)
 tokens/
@@ -32,6 +32,7 @@ tokens/
   spacing.yaml            Designer-authored spacing YAML (mirrored verbatim) + `numeral` variables
 css/
   tokens.css              Concrete token values synced from Figma (light + dark custom properties)
+patterns/                 Hand-authored multi-component patterns (Phase 4) — see below.
 dashboard/                Designer dashboard — a static, browsable site generated FROM this repo (Phase 2).
 graph/
   graph.json              The canonical component graph in queryable form (Phase 3) — nodes with
@@ -41,8 +42,36 @@ scripts/
   build_dashboard.py      Regenerates dashboard/ in one pass from the current repo state.
   build_graph.py          Regenerates graph/graph.json + dashboard/graph.html from registry.yaml
                           (also invoked automatically by build_dashboard.py).
+  build_component_library.py  Regenerates components/**/*.snippet.html + registry.yaml's
+                          `snippet:` pointers from the current repo state (Phase 4).
 screens/                  Empty in Phase 1 — no screens are composed during ingestion.
 ```
+
+## Component code library (Phase 4)
+
+Every component has a sibling `<id>.snippet.html` next to its `<id>.yaml` (path
+recorded in registry.yaml as `snippet:`) — real, self-contained HTML/CSS for
+every actual Figma variant of that component, rendered directly from its own
+`visual_values` by `scripts/build_component_library.py`. Nothing in a snippet
+is re-derived or guessed: it reuses the exact rendering logic that already
+produces the dashboard's faithful live previews. Regenerate after any repo
+change with:
+
+```
+python3 scripts/build_component_library.py
+```
+
+This exists so a composition agent can copy real, already-correct markup
+instead of re-deriving CSS from a text description on every request — the
+latter is what let two components ship with a violated rule (wrong
+checkbox-card variant side, a full-width instead of inset master-card
+separator) even though the agent had read and quoted the correct rule text.
+
+`patterns/` holds the handful of things that are true of *several* components
+placed together (e.g. the grouped-list container and its inset separator)
+that no single component's `visual_values` can capture on its own. Each
+pattern file is hand-authored directly from the exact rule text it implements
+and says so in its own header — never presented as a Figma extraction.
 
 ## Designer dashboard
 
