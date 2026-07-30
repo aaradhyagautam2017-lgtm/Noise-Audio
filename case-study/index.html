@@ -177,6 +177,32 @@
     .flow-arrow { width: auto; padding: 6px 0; flex-direction: row; }
     .flow-arrow svg { transform: rotate(90deg); }
   }
+
+  /* ---------- Stage sections: YAML schema block + image slots ---------- */
+  .code-block {
+    max-width: 640px; margin: 24px 0; border: 1px solid var(--border); border-radius: var(--r-md);
+    background: var(--bg-surface); overflow: hidden;
+  }
+  .code-block-head {
+    padding: 9px 16px; background: var(--bg-base); border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-3); letter-spacing: .05em; text-transform: uppercase;
+  }
+  .code-block pre {
+    margin: 0; padding: 18px 20px; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.75;
+    color: var(--ink-2); white-space: pre; overflow-x: auto;
+  }
+  .code-block .k { color: var(--ink); font-weight: 600; }
+  .code-block .c { color: var(--ink-3); font-style: italic; }
+
+  .image-slot {
+    margin-top: 22px; max-width: 820px; border: 1px solid var(--border); border-radius: var(--r-lg);
+    background: var(--bg-surface); overflow: hidden;
+  }
+  .image-slot-body {
+    min-height: 200px; display: flex; align-items: center; justify-content: center;
+    border: 1.5px dashed var(--border-hover); margin: 14px; border-radius: var(--r-md);
+    font-size: 13px; font-style: italic; color: var(--ink-3); text-align: center; padding: 20px;
+  }
   .chip {
     font-family: var(--font-mono); font-size: 12.5px; padding: 7px 14px;
     border: 1px solid var(--border); border-radius: var(--r-pill); color: var(--ink-2); background: var(--bg-surface);
@@ -351,7 +377,7 @@
           <button class="structure-item" type="button" data-phase="problem">02 / Problem</button>
           <button class="structure-item" type="button" data-phase="approach">03 / Approach</button>
           <button class="structure-item" type="button" data-phase="decision">04 / Solution Options</button>
-          <button class="structure-item" type="button" data-phase="rebuild">05 / Rebuild Strategy</button>
+          <button class="structure-item" type="button" data-phase="rebuild">05 / Stage 1</button>
           <button class="structure-item" type="button" data-phase="design">06 / Visual &amp; Interaction Design</button>
           <button class="structure-item" type="button" data-phase="finalflow">07 / Final System Flow</button>
           <div class="structure-group-label">08 / Final Design</div>
@@ -809,9 +835,123 @@
       </div>
 
       <div class="research-panel" data-phase="rebuild">
-        <div class="rc-eyebrow">05 / Rebuild Strategy</div>
-        <h2 class="rc-title">Rebuild Strategy</h2>
-        <div class="rc-pending">Pending — the systematic dependency-ordered rebuild (atoms → molecules → organisms), re-pulling fresh Figma data per component, verifying each against Figma before committing.</div>
+        <div class="rc-eyebrow">05 / Stage 1</div>
+        <h2 class="rc-title">Stage 1</h2>
+
+        <div class="overview-section">
+          <p class="overview-paragraph">
+            That piece of information from the last section — usage, design intent, anti-patterns,
+            relationships — has a name. It's called <b>metadata</b>. You've already seen what it says.
+            Here's the actual shape it's written in.
+          </p>
+
+          <div class="code-block">
+            <div class="code-block-head">component metadata — structural shape</div>
+            <pre><span class="k">component</span>:
+  <span class="k">id</span>: master-card
+  <span class="k">type</span>: organism
+
+  <span class="k">usage</span>: <span class="c">&gt;</span>
+    This is the master card used in the majority of table
+    cell use cases.
+
+  <span class="k">design_intent</span>: <span class="c">&gt;</span>
+    Provide a flexible row pattern that supports standalone
+    surfaces and grouped lists.
+
+  <span class="k">anti_patterns</span>:
+    - <span class="k">rule</span>: <span class="c">&gt;</span>
+        Do not use standalone cards when multiple related
+        items should be grouped.
+
+  <span class="k">composition</span>:
+    <span class="k">used_molecules</span>: [actionables]</pre>
+          </div>
+          <p class="visual-caption">Same fields, same shape, for every component in the library.</p>
+
+          <p class="overview-paragraph" style="margin-top:26px">
+            Writing this by hand is harder than it looks. A designer has to think through every
+            anti-pattern and every relationship, in a strict format a machine can parse — correct
+            structure, correct field names, nothing missing. Most designers have never written a line of
+            YAML in their life, and there's no reason they should have to.
+          </p>
+          <p class="overview-paragraph">
+            So instead of asking a designer to write YAML directly, we built a prompt for it.
+          </p>
+
+          <div class="flow-strip">
+            <div class="flow-node">
+              <div class="flow-node-title">Screenshot + basics</div>
+              <div class="flow-node-sub">a component image,<br>a few rough notes</div>
+            </div>
+            <div class="flow-arrow">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 7h20M15 1l6 6-6 6"/></svg>
+              you provide
+            </div>
+            <div class="flow-node">
+              <div class="flow-node-title">Claude asks questions</div>
+              <div class="flow-node-sub">fills the gaps<br>by asking, not guessing</div>
+            </div>
+            <div class="flow-arrow">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 7h20M15 1l6 6-6 6"/></svg>
+              you answer
+            </div>
+            <div class="flow-node">
+              <div class="flow-node-title">Structured YAML</div>
+              <div class="flow-node-sub">ready to paste<br>straight into Figma</div>
+            </div>
+          </div>
+
+          <div class="image-slot">
+            <div class="knowledge-card-head">Screenshot slot — the metadata prompt running in a fresh Claude chat</div>
+            <div class="image-slot-body">Pending — screenshot to come</div>
+          </div>
+          <div class="image-slot">
+            <div class="knowledge-card-head">Screenshot slot — the resulting YAML, pasted into Figma's component description field</div>
+            <div class="image-slot-body">Pending — screenshot to come</div>
+          </div>
+
+          <p class="overview-paragraph" style="margin-top:28px">
+            Why YAML specifically? It's one of the simplest structured formats there is — just
+            <code style="font-family:var(--font-mono);font-size:13px">key: value</code> pairs, with
+            indentation doing the job grammar would do in a sentence. <code style="font-family:var(--font-mono);font-size:13px">usage:</code>
+            is always in the same place, every time, for every component. That's exactly why an agent
+            can read it reliably. Hand an agent a paragraph of prose instead, and it has to guess where
+            the anti-patterns end and the usage note begins. A field named
+            <code style="font-family:var(--font-mono);font-size:13px">anti_patterns:</code> never needs
+            guessing — and it's faster for the designer too, once the shape exists, filling in a
+            template beats composing paragraphs from a blank page.
+          </p>
+
+          <p class="overview-paragraph">
+            And once it's written, it doesn't go into a separate database or a spreadsheet somewhere.
+            It goes exactly where the designer already works.
+          </p>
+
+          <div class="flow-strip">
+            <div class="flow-node">
+              <div class="flow-node-title">Figma description field</div>
+              <div class="flow-node-sub">same place<br>the designer already works</div>
+            </div>
+            <div class="flow-arrow">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 7h20M15 1l6 6-6 6"/></svg>
+              read on ingestion
+            </div>
+            <div class="flow-node">
+              <div class="flow-node-title">Ingestion step</div>
+              <div class="flow-node-sub">pulls the YAML<br>back out automatically</div>
+            </div>
+            <div class="flow-arrow">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 7h20M15 1l6 6-6 6"/></svg>
+              becomes
+            </div>
+            <div class="flow-node">
+              <div class="flow-node-title">authored_metadata</div>
+              <div class="flow-node-sub">one field, on the<br>component's own record</div>
+            </div>
+          </div>
+          <p class="visual-caption">The same field you saw in the master-card example, back in The Approach.</p>
+        </div>
       </div>
 
       <div class="research-panel" data-phase="design">
