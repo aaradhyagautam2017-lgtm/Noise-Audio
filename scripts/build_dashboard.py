@@ -8,6 +8,7 @@ metadata as-is. Re-run it after any repo change to regenerate the site.
 
 Usage:  python3 scripts/build_dashboard.py
 """
+import hashlib
 import html
 import json
 import os
@@ -208,7 +209,11 @@ NAV_ICONS = {
 
 def sidebar(prefix, active):
     def item(href, label, key, count=None, warn=0, dot=None, icon=None):
-        cls = "navitem pill" if dot else "navitem"
+        # NB: "pill" is deliberately not added as a class here even for dot items --
+        # there is an unrelated, pre-existing .pill class (the small key:value badges
+        # on a component page, e.g. "reusable: True") that a shared class name would
+        # silently pull in, which is exactly what happened before this comment existed.
+        cls = "navitem"
         if key == active:
             cls += " active"
         if dot:
@@ -297,7 +302,7 @@ def page(title, active, body, prefix=""):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{prefix}assets/style.css">
+<link rel="stylesheet" href="{prefix}assets/style.css?v={STYLE_VER}">
 </head><body>
 <div class="layout">
 {sidebar(prefix, active)}
@@ -306,7 +311,7 @@ def page(title, active, body, prefix=""):
 <footer class="footer">Generated from the repository — single source of truth. Regenerate with <code>python3 scripts/build_dashboard.py</code>. Source: Figma file <code>{E(registry["source"]["figma_file_key"])}</code>, page “{E(registry["source"]["figma_page"])}”, ingested {E(registry["generated"])}.</footer>
 </main>
 </div>
-<script src="{prefix}assets/app.js"></script>
+<script src="{prefix}assets/app.js?v={APPJS_VER}"></script>
 </body></html>"""
 
 def copyable(label, value):
@@ -1758,6 +1763,15 @@ document.querySelectorAll('.navsection').forEach(function (sec) {
   });
 })();
 """
+
+# Cache-busting for the static asset files. style.css/app.js are fixed filenames --
+# a browser or an intermediate CDN can and does keep serving a stale copy from cache
+# indefinitely even after a hard-refresh, since a hard-refresh only forces the browser's
+# OWN cache to revalidate, not every proxy/edge cache in between. Appending a hash of
+# the actual content as a query string means any real change always produces a new URL,
+# so a cached response for the old URL is simply never reused -- this can't go stale.
+STYLE_VER = hashlib.md5(STYLE.encode()).hexdigest()[:10]
+APPJS_VER = hashlib.md5(APPJS.encode()).hexdigest()[:10]
 
 # ----------------------------------------------------------------- emit
 def main():
