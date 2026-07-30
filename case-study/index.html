@@ -131,6 +131,12 @@
 
   /* ---------- Intro visuals: chip row / timeline / stat strip ---------- */
   .chip-row { display: flex; flex-wrap: wrap; gap: 10px; max-width: 820px; margin: 28px 0 10px; }
+  .comparison-card .chip-row { margin: 0; max-width: none; }
+  .comparison-card .chip.is-missing { border-style: dashed; color: var(--ink); font-weight: 500; }
+  .takeaway-line {
+    font-size: 17px; font-weight: 500; line-height: 1.5; color: var(--ink); font-style: italic;
+    border-left: 3px solid var(--ink); padding-left: 24px; margin: 30px 0 0; max-width: 680px;
+  }
   .chip {
     font-family: var(--font-mono); font-size: 12.5px; padding: 7px 14px;
     border: 1px solid var(--border); border-radius: var(--r-pill); color: var(--ink-2); background: var(--bg-surface);
@@ -303,7 +309,7 @@
         <nav class="structure-nav" id="structure-nav">
           <button class="structure-item is-active" type="button" data-phase="overview">01 / Intro</button>
           <button class="structure-item" type="button" data-phase="problem">02 / Problem</button>
-          <button class="structure-item" type="button" data-phase="diagnosis">03 / Diagnosis</button>
+          <button class="structure-item" type="button" data-phase="approach">03 / Approach</button>
           <button class="structure-item" type="button" data-phase="decision">04 / Solution Options</button>
           <button class="structure-item" type="button" data-phase="rebuild">05 / Rebuild Strategy</button>
           <button class="structure-item" type="button" data-phase="design">06 / Visual &amp; Interaction Design</button>
@@ -633,10 +639,55 @@
         </p>
       </div>
 
-      <div class="research-panel" data-phase="diagnosis">
-        <div class="rc-eyebrow">03 / Diagnosis</div>
-        <h2 class="rc-title">Root-Cause Diagnosis</h2>
-        <div class="rc-pending">Pending — the flattened pixel-snapshot schema root cause, found before any fix was proposed (mirrors the UX Audit's campaign-system analysis).</div>
+      <div class="research-panel" data-phase="approach">
+        <div class="rc-eyebrow">03 / Approach</div>
+        <h2 class="rc-title">The Approach</h2>
+
+        <div class="overview-section">
+          <p class="overview-paragraph">
+            Every component in a design system carries two kinds of information. One kind is easy —
+            color, spacing, size, text. An agent can pull all of that straight out of Figma by itself.
+            The other kind is usually missing: when to use this component, when not to, what it's meant
+            to do, and what breaks if someone uses it the wrong way. Most tools only ever give an agent
+            the first kind.
+          </p>
+
+          <div class="comparison-grid">
+            <div class="comparison-card">
+              <div class="comparison-card-title">What Figma Already Gives You</div>
+              <div class="chip-row">
+                <span class="chip">Color</span>
+                <span class="chip">Spacing</span>
+                <span class="chip">Size</span>
+                <span class="chip">Position</span>
+                <span class="chip">Text</span>
+              </div>
+            </div>
+            <div class="comparison-card is-us">
+              <div class="comparison-card-title">What's Usually Missing</div>
+              <div class="chip-row">
+                <span class="chip is-missing">Usage</span>
+                <span class="chip is-missing">Design Intent</span>
+                <span class="chip is-missing">Anti-Patterns</span>
+                <span class="chip is-missing">Relationships</span>
+                <span class="chip is-missing">When Not To Use It</span>
+              </div>
+            </div>
+          </div>
+          <p class="visual-caption" style="margin-top:14px">Most agents only ever see the left column.</p>
+
+          <p class="overview-paragraph" style="margin-top:28px">
+            Our approach is simple: give the agent both columns, for every component. Not just what it
+            looks like, but why it exists, how it should be used, and where it shouldn't be. Once an
+            agent actually knows this, it stops just copying shapes — it starts making the same calls a
+            designer would: which component is right for this screen, and which one isn't.
+          </p>
+
+          <p class="takeaway-line">
+            Pixels alone make an agent that copies. Pixels plus usage, intent, and anti-patterns make
+            an agent that decides.
+          </p>
+        </div>
       </div>
 
       <div class="research-panel" data-phase="decision">
