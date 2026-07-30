@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Noise Audio Dashboard — Case Study</title>
+<title>Smart Agentic System to Manage Design Systems — Case Study</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -128,6 +128,52 @@
     border-left: 3px solid var(--ink); padding-left: 26px;
     margin: 34px 0;
   }
+
+  /* ---------- Intro visuals: chip row / timeline / stat strip ---------- */
+  .chip-row { display: flex; flex-wrap: wrap; gap: 10px; max-width: 820px; margin: 28px 0 10px; }
+  .chip {
+    font-family: var(--font-mono); font-size: 12.5px; padding: 7px 14px;
+    border: 1px solid var(--border); border-radius: var(--r-pill); color: var(--ink-2); background: var(--bg-surface);
+  }
+  .visual-caption {
+    font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); letter-spacing: .02em;
+    max-width: 820px; margin: 0 0 28px;
+  }
+
+  .timeline-card {
+    max-width: 820px; margin: 32px 0; padding: 28px 24px 20px;
+    border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--bg-surface);
+  }
+  .timeline-card svg { width: 100%; height: auto; display: block; }
+  .timeline-card .visual-caption { margin: 14px 0 0; max-width: none; }
+
+  .stat-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 820px; margin: 32px 0; }
+  @media (max-width: 680px) { .stat-strip { grid-template-columns: 1fr; } }
+  .stat-card { border: 1px solid var(--border); border-radius: var(--r-md); background: var(--bg-surface); padding: 20px; }
+  .stat-card.is-counter { border-style: dashed; border-color: var(--border-hover); }
+  .stat-number { font-weight: 700; font-size: 30px; color: var(--ink); letter-spacing: -0.02em; line-height: 1; }
+  .stat-counter-label {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: var(--ink-3);
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+  .stat-desc { font-size: 12.5px; line-height: 1.5; color: var(--ink-2); margin-top: 8px; }
+  .stat-card.is-counter .stat-desc { font-style: italic; }
+  .stat-source { font-family: var(--font-mono); font-size: 10px; color: var(--ink-3); margin-top: 12px; }
+  .stat-source a { color: inherit; }
+
+  .citation-list {
+    max-width: 680px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .citation-label {
+    font-family: var(--font-mono); font-size: 10px; color: var(--ink-3); text-transform: uppercase;
+    letter-spacing: .08em; margin-bottom: 6px;
+  }
+  .citation-list a {
+    font-family: var(--font-mono); font-size: 11px; color: var(--ink-3);
+    text-decoration: underline; text-underline-offset: 2px;
+  }
+  .citation-list a:hover { color: var(--ink); }
 
   /* ---------- Problem-section content blocks ---------- */
   .overview-section { margin-top: 32px; }
@@ -276,35 +322,162 @@
 
       <div class="research-panel" data-phase="overview">
         <div class="rc-eyebrow">01 / Introduction</div>
-        <h1 class="intro-title">Noise Audio Dashboard</h1>
+        <h1 class="intro-title">Smart Agentic System to Manage Design Systems</h1>
         <p class="lead-text">
-          Turning a real, production Figma design system into a structurally faithful, agent-ready component library.
+          Anyone can grab a design system off the shelf and start designing. The harder problem is the
+          design system a company already has.
         </p>
         <div class="reading-col">
           <p>
-            Noise Audio Dashboard ingests a real, production Figma design system — 26 components across atoms,
-            molecules, and organisms — and turns it into a structurally faithful, always-in-sync component
-            library: a living reference an engineer, a PM, or a coding agent can all read from and trust, not a
-            one-time export.
+            If you're building something new today, you don't have to invent a design system from
+            scratch. Material Design, shadcn/ui, Ant Design, Chakra — pick one, drop it into Figma or a
+            whiteboard, and you can start sketching a real app, website, or piece of software the same
+            afternoon. For a brand-new product, this problem is basically solved.
           </p>
+
+          <div class="chip-row">
+            <span class="chip">Material Design</span>
+            <span class="chip">shadcn/ui</span>
+            <span class="chip">Ant Design</span>
+            <span class="chip">Chakra UI</span>
+            <span class="chip">Bootstrap</span>
+          </div>
+          <p class="visual-caption">Pick one, drop it into Figma, start designing today.</p>
+
+          <p>
+            But most software isn't brand new. It's a company that's been building the same product for
+            years, with a design system that was drawn up long before anyone had heard of an AI coding
+            agent.
+          </p>
+          <p>
+            Think about the design systems running some of the biggest products around — Shopify's
+            Polaris, IBM's Carbon, Salesforce's Lightning system, Google's own Material Design. Every one
+            of them existed years before tools like Cursor, Claude Code, or Figma's own AI features
+            showed up. Nobody built them with an AI agent in mind.
+          </p>
+
+          <div class="timeline-card">
+            <svg viewBox="0 0 920 190" role="img" aria-label="Timeline showing design systems launching between 2014 and 2018, years before AI coding agents arrived starting in 2021">
+              <text x="80" y="24" font-family="var(--font-mono)" font-size="11" font-weight="500" letter-spacing="0.06em" fill="var(--ink-3)">DESIGN SYSTEMS ALREADY RUNNING IN PRODUCTION</text>
+              <text x="860" y="24" font-family="var(--font-mono)" font-size="11" font-weight="500" letter-spacing="0.06em" fill="var(--ink-3)" text-anchor="end">AI CODING AGENTS ARRIVE</text>
+
+              <line x1="80" y1="110" x2="860" y2="110" stroke="var(--border)" stroke-width="1.5" />
+
+              <!-- 2014 Material Design -->
+              <line x1="80" y1="103" x2="80" y2="117" stroke="var(--ink-3)" stroke-width="1.5" />
+              <circle cx="80" cy="110" r="4" fill="var(--ink)" />
+              <text x="80" y="90" font-family="var(--font-ui)" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">Material Design</text>
+              <text x="80" y="134" font-family="var(--font-mono)" font-size="11" fill="var(--ink-3)" text-anchor="middle">2014</text>
+
+              <!-- 2015 Salesforce Lightning -->
+              <line x1="145" y1="103" x2="145" y2="117" stroke="var(--ink-3)" stroke-width="1.5" />
+              <circle cx="145" cy="110" r="4" fill="var(--ink)" />
+              <text x="145" y="148" font-family="var(--font-ui)" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">Salesforce Lightning</text>
+              <text x="145" y="166" font-family="var(--font-mono)" font-size="11" fill="var(--ink-3)" text-anchor="middle">~2015</text>
+
+              <!-- 2016 Shopify Polaris -->
+              <line x1="210" y1="103" x2="210" y2="117" stroke="var(--ink-3)" stroke-width="1.5" />
+              <circle cx="210" cy="110" r="4" fill="var(--ink)" />
+              <text x="210" y="90" font-family="var(--font-ui)" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">Shopify Polaris</text>
+              <text x="210" y="70" font-family="var(--font-mono)" font-size="11" fill="var(--ink-3)" text-anchor="middle">~2016</text>
+
+              <!-- 2018 IBM Carbon -->
+              <line x1="340" y1="103" x2="340" y2="117" stroke="var(--ink-3)" stroke-width="1.5" />
+              <circle cx="340" cy="110" r="4" fill="var(--ink)" />
+              <text x="340" y="148" font-family="var(--font-ui)" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">IBM Carbon</text>
+              <text x="340" y="166" font-family="var(--font-mono)" font-size="11" fill="var(--ink-3)" text-anchor="middle">2018</text>
+
+              <!-- gap bracket -->
+              <path d="M 368 110 Q 452 60 518 110" fill="none" stroke="var(--border-hover)" stroke-width="1.5" stroke-dasharray="3 3" />
+              <text x="452" y="52" font-family="var(--font-mono)" font-size="11" fill="var(--ink-3)" text-anchor="middle">years before any AI agent could code</text>
+
+              <!-- 2021 GitHub Copilot -->
+              <line x1="535" y1="103" x2="535" y2="117" stroke="var(--ink-3)" stroke-width="1.5" />
+              <circle cx="535" cy="110" r="4" fill="var(--ink)" />
+              <text x="535" y="90" font-family="var(--font-ui)" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">GitHub Copilot</text>
+              <text x="535" y="70" font-family="var(--font-mono)" font-size="11" fill="var(--ink-3)" text-anchor="middle">2021</text>
+
+              <!-- 2022 ChatGPT -->
+              <line x1="600" y1="103" x2="600" y2="117" stroke="var(--ink-3)" stroke-width="1.5" />
+              <circle cx="600" cy="110" r="4" fill="var(--ink)" />
+              <text x="600" y="148" font-family="var(--font-ui)" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">ChatGPT</text>
+              <text x="600" y="166" font-family="var(--font-mono)" font-size="11" fill="var(--ink-3)" text-anchor="middle">2022</text>
+
+              <!-- 2023 Cursor -->
+              <line x1="665" y1="103" x2="665" y2="117" stroke="var(--ink-3)" stroke-width="1.5" />
+              <circle cx="665" cy="110" r="4" fill="var(--ink)" />
+              <text x="665" y="90" font-family="var(--font-ui)" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="middle">Cursor</text>
+              <text x="665" y="70" font-family="var(--font-mono)" font-size="11" fill="var(--ink-3)" text-anchor="middle">2023</text>
+
+              <!-- 2026 Figma MCP -->
+              <line x1="860" y1="103" x2="860" y2="117" stroke="var(--ink-3)" stroke-width="1.5" />
+              <circle cx="860" cy="110" r="4" fill="var(--ink)" />
+              <text x="860" y="148" font-family="var(--font-ui)" font-size="12.5" font-weight="600" fill="var(--ink)" text-anchor="end">Figma's MCP</text>
+              <text x="860" y="166" font-family="var(--font-mono)" font-size="11" fill="var(--ink-3)" text-anchor="end">2026</text>
+            </svg>
+            <p class="visual-caption">Dates are approximate. The point holds either way: these systems were built for people, years before they had to work for an agent too.</p>
+          </div>
+
+          <p>
+            So the real question isn't "which design system should I use." It's: how does a company hand
+            its design system — the real one, already running in production — to an AI agent, and trust
+            the agent to actually understand it? Not glance at it once. Understand it.
+          </p>
+
           <p class="pull-quote">
-            Can a real, production design system be onboarded into a coding agent with enough structural
-            accuracy that the agent reasons from it correctly — not just approximates it once and never again?
+            How do you teach an AI coding agent a design system that existed years before AI could
+            code — accurately enough that the mistakes become negligible, not just fewer?
+          </p>
+
+          <p>
+            This turns out to be genuinely hard, and the data backs that up. Teams with a mature,
+            well-structured component library are seeing real gains — less time spent scaffolding new
+            screens, lower engineering cost on repetitive UI work. But that only holds if the design
+            system was actually structured before it was handed to an agent. Give the same agent an
+            unstructured, screenshot-level view of a design system instead, and the opposite happens: it
+            ignores the design system, hard-codes colors, and overrides typography, because it never
+            understood which components existed or which rules were mandatory.
+          </p>
+
+          <div class="stat-strip">
+            <div class="stat-card">
+              <div class="stat-number">50–70%</div>
+              <p class="stat-desc">less time scaffolding new screens, for teams with a mature, well-structured component library.</p>
+              <div class="stat-source">Figma / Managed Code, 2026</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">40–70%</div>
+              <p class="stat-desc">lower development cost when repetitive UI work is handed to a well-onboarded agent.</p>
+              <div class="stat-source">AutonomyAI</div>
+            </div>
+            <div class="stat-card is-counter">
+              <div class="stat-counter-label">Same agent, no structure</div>
+              <p class="stat-desc">"Ignores the design system, hard-codes colors, overrides typography" — the same AI, handed an unstructured design file instead.</p>
+              <div class="stat-source">Managed Code, 2026</div>
+            </div>
+          </div>
+
+          <p>
+            The single biggest predictor of whether AI-generated code is actually usable isn't which AI
+            tool you pick. It's whether the design system was structured — not just captured as pixels —
+            before anyone handed it to an agent. That's the real problem worth solving: not authoring a
+            new design system for AI, but onboarding the one a company already has, accurately enough
+            that an agent can be trusted to build real product screens from it, not just guess at them.
           </p>
           <p>
-            Agentic "Figma to code" tools already exist, and they work well for a single screen, designed once,
-            built once. Nobody has really solved the harder version of that problem: onboarding a company's
-            entire production design system — hundreds of variants, cross-referenced components, evolving
-            tokens — into a form an agent can reliably reason over, not just glance at once.
+            The rest of this case study walks through exactly that, using one real, production design
+            system as the proof: Noise Audio's own design language system, and what it actually took to
+            get an AI agent to understand it.
           </p>
-          <p>
-            The approach rests on three principles. <b>Structure over snapshots</b>: capture layout intent —
-            fill/hug/fixed sizing, absolute positioning, clipping, real variant wiring — instead of a flattened
-            grid of pixel positions. <b>One-way and verifiable</b>: Figma is the only source of truth, and every
-            value traces back to a real node, nothing invented or guessed. <b>Self-describing</b>: every
-            component carries its own rules, anti-patterns, and relationships, so an agent — or a PM — can
-            reason about correct usage, not just copy a shape.
-          </p>
+
+          <div class="citation-list">
+            <div class="citation-label">Sources</div>
+            <a href="https://www.figma.com/blog/design-systems-104-making-metrics-matter/" target="_blank" rel="noopener">Figma — Design systems 104: Making metrics matter</a>
+            <a href="https://www.figma.com/blog/design-systems-ai-mcp/" target="_blank" rel="noopener">Figma — Design Systems And AI: Why MCP Servers Are The Unlock</a>
+            <a href="https://www.managed-code.com/blog-post/design-to-code-ai-tools-2026" target="_blank" rel="noopener">Managed Code — Design-to-code in 2026: an honest evaluation of the AI tools</a>
+            <a href="https://www.pixipace.com/insights/figma-ai-agents-design-to-code-2026" target="_blank" rel="noopener">PIXIPACE Insights — Figma Just Let AI Agents Edit Your Designs</a>
+            <a href="https://autonomyai.io/business/from-mockups-to-merged-code-closing-the-last-mile-between-design-and-production/" target="_blank" rel="noopener">AutonomyAI — From Mockups to Merged Code</a>
+          </div>
         </div>
       </div>
 
