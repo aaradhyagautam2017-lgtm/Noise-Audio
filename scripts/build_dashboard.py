@@ -1312,8 +1312,8 @@ code{font-family:var(--font-mono);font-size:.92em}
 .navsecicon{width:16px;height:16px;flex:none;display:flex}
 .navsecicon svg{width:100%;height:100%}
 .navseclabel{flex:1}
-.navsection .count{background:var(--surface-2);color:var(--ink2);border-radius:var(--r-sm);
-  padding:1px 7px;font-size:10.5px;font-weight:600;font-variant-numeric:tabular-nums}
+.navsection .count{background:none;color:var(--ink3);padding:0;font-size:10.5px;
+  font-weight:600;font-variant-numeric:tabular-nums}
 .navchevron{width:14px;height:14px;flex:none;color:var(--ink3);transition:transform .16s}
 .navchevron svg{width:100%;height:100%}
 .navsection[open] .navchevron{transform:rotate(180deg)}
@@ -1324,9 +1324,6 @@ code{font-family:var(--font-mono);font-size:.92em}
 .navitem:hover{background:var(--surface-2);color:var(--ink)}
 .navitem.active{background:var(--accent);color:#fff;font-weight:500}
 .navitem.active .count,.navitem.active .warnbadge{color:#fff;opacity:.85}
-.navitem.pill{background:var(--surface-2);margin-bottom:3px}
-.navitem.pill:hover{background:var(--surface-3)}
-.navitem.pill.active{background:var(--accent);box-shadow:none}
 .navicon{width:16px;height:16px;flex:none;display:flex}
 .navicon svg{width:100%;height:100%}
 .navdot{width:6px;height:6px;flex:none;border-radius:50%;background:var(--ink3)}
