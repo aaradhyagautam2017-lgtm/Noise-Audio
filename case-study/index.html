@@ -175,6 +175,27 @@
   }
   .citation-list a:hover { color: var(--ink); }
 
+  /* ---------- Screen vs. screenshot comparison ---------- */
+  .compare-block { margin-top: 28px; max-width: 820px; }
+  .compare-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 620px) { .compare-pair { grid-template-columns: 1fr; } }
+  .compare-col { display: flex; flex-direction: column; gap: 10px; }
+  .compare-col-label {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 500; text-transform: uppercase;
+    letter-spacing: .06em; color: var(--ink-3);
+  }
+  .compare-col img {
+    width: 100%; height: auto; display: block; border: 1px solid var(--border); border-radius: var(--r-md);
+    background: var(--bg-surface);
+  }
+  .compare-finding {
+    margin-top: 14px; padding: 16px 18px; border: 1px solid var(--border); border-radius: var(--r-md);
+    background: var(--bg-surface); font-size: 13px; line-height: 1.6; color: var(--ink-2);
+  }
+  .compare-finding b { color: var(--ink); font-weight: 600; }
+  .compare-finding code { font-family: var(--font-mono); font-size: 12px; }
+  .compare-intro { font-size: 15px; line-height: 1.7; color: var(--ink-2); max-width: 680px; }
+
   /* ---------- Problem-section content blocks ---------- */
   .overview-section { margin-top: 32px; }
   .overview-section:first-of-type { margin-top: 22px; }
@@ -523,6 +544,67 @@
             <div class="challenge-label">The Core Problem</div>
             <p class="challenge-text">Hand a real, production design system to a coding agent through Figma's MCP today, and it doesn't build your design system — it builds a rough guess of it, once, with no way to get more accurate the second time.</p>
           </div>
+        </div>
+
+        <div class="overview-section">
+          <h3 class="overview-section-title">Close Enough To Look Right</h3>
+          <p class="compare-intro">
+            To see this gap first-hand instead of just arguing about it, we ran a small experiment: take
+            two of Noise Audio's own screens and have a coding agent rebuild them as working HTML using
+            nothing but visual feedback — no structural design data, just iterating by eye against the
+            reference. Holistically, the result holds up well — roughly seventy percent of the way there
+            at a glance. Looking closely is where it falls apart.
+          </p>
+
+          <div class="compare-block">
+            <div class="compare-pair">
+              <div class="compare-col">
+                <span class="compare-col-label">Figma design</span>
+                <img src="assets/sidetone-design.png" alt="Sidetone screen as designed in Figma" loading="lazy">
+              </div>
+              <div class="compare-col">
+                <span class="compare-col-label">Agent-built clone</span>
+                <img src="assets/sidetone-clone.png" alt="Sidetone screen rebuilt as HTML by a coding agent" loading="lazy">
+              </div>
+            </div>
+            <div class="compare-finding">
+              Same layout, same copy, same three-option card. But the description column is a different
+              width in the clone, so two of the three rows wrap at a different point. <b>High</b> breaks
+              as "Maximum loudness. Recommended" / "for loud environments" in the design — "Maximum
+              loudness. Recommended for loud" / "environments" in the clone. <b>Low</b> does the same
+              thing. Only <b>Medium</b> happens to break identically, which is exactly why this hides at
+              a glance: two of three rows still read fine, and only close inspection shows the container
+              itself is the wrong width.
+            </div>
+          </div>
+
+          <div class="compare-block">
+            <div class="compare-pair">
+              <div class="compare-col">
+                <span class="compare-col-label">Figma design</span>
+                <img src="assets/selection-dropdown-design.png" alt="Purchase channel selection screen as designed in Figma" loading="lazy">
+              </div>
+              <div class="compare-col">
+                <span class="compare-col-label">Agent-built clone</span>
+                <img src="assets/selection-dropdown-clone.png" alt="Purchase channel selection screen rebuilt as HTML by a coding agent" loading="lazy">
+              </div>
+            </div>
+            <div class="compare-finding">
+              The modal, the option list, and the selected state are all correct. But the dimmed layer
+              behind the modal is a different technique entirely, measured pixel-for-pixel: a flat,
+              uniform <code>#666666</code> gray in the design, versus a top-to-bottom gradient in the
+              clone that drifts from a warm <code>#48433d</code> near the top to <code>#2b2929</code> near
+              the bottom. Nobody specified a gradient. The agent produced one anyway, because it was
+              matching pixels in a screenshot, not reproducing a rule.
+            </div>
+          </div>
+
+          <p class="overview-paragraph" style="margin-top:24px">
+            This is what "roughly seventy percent accurate" looks like in practice — genuinely close at a
+            glance, on both screens. But neither miss shows up in a quick look, and both are exactly the
+            kind of gap that compounds the moment a component gets reused a hundred times across a real
+            product, instead of recreated once for a single screenshot.
+          </p>
         </div>
 
         <div class="overview-section">
