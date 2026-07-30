@@ -668,10 +668,7 @@ def render_preview(comp, link_prefix=""):
     tree = comp.get("visual_values", {}).get("tree")
     if not isinstance(tree, dict):
         return warn("No extracted visual tree stored for this component — preview unavailable.")
-    out = ['<p class="pv-caption">Preview rendered from the extracted visual values in this file '
-           '(schematic: positions inside non-auto-layout groups are approximate; hidden layers omitted; '
-           'nested component instances render inline from their own component\'s data — each child still '
-           'governs itself; an instance this dashboard can\'t resolve falls back to a linked reference chip).</p>']
+    out = []
     variants = []
     if tree.get("type") == "COMPONENT_SET":
         kids = tree.get("children")
