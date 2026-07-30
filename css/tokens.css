@@ -188,6 +188,23 @@
 }
 
 /* Typography — synced from Figma local text styles */
+/* Fonts — installed locally under assets/fonts/ (see assets/fonts/README.md
+   for provenance/license). Variable fonts; one file per family covers every
+   weight this system uses (400/500/600). No external/CDN dependency. */
+@font-face {
+  font-family: 'Saira';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../assets/fonts/Saira-Variable.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../assets/fonts/Geist-Variable.woff2') format('woff2');
+}
 :root {
   --font-heading: 'Saira';
   --font-content: 'Geist';

@@ -55,6 +55,25 @@ RENDERER_CSS = """  .pv-frame{flex:none}
   .pv-unresolved{color:#8a6414}
   .pv-note{font-size:10.5px;color:#8e8e96;padding:4px}"""
 
+# Same font files/weights wired into css/tokens.css (see assets/fonts/README.md).
+# Embedded directly here too so a snippet renders its real fonts even when
+# copied somewhere that hasn't linked css/tokens.css. Every components/<tier>/
+# file sits at the same depth from repo root, so one relative path fits all.
+FONT_FACE_CSS = """  @font-face {
+    font-family: 'Saira';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('../../assets/fonts/Saira-Variable.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'Geist';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('../../assets/fonts/Geist-Variable.woff2') format('woff2');
+  }"""
+
 
 def variants_of(tree):
     """Mirrors build_dashboard.render_preview's own variant loop: a COMPONENT_SET's
@@ -91,6 +110,7 @@ def snippet_for(cid):
      scripts/build_component_library.py after any repo change.
      ============================================================ -->
 <style>
+{FONT_FACE_CSS}
 {RENDERER_CSS}
 </style>
 '''
