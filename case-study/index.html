@@ -429,17 +429,18 @@
           <button class="structure-item" type="button" data-phase="rebuild">04 / Stage 1</button>
           <button class="structure-item" type="button" data-phase="stage2">05 / Stage 2</button>
           <button class="structure-item" type="button" data-phase="stage3">06 / Stage 3</button>
-          <button class="structure-item" type="button" data-phase="decision">07 / Solution Options</button>
-          <button class="structure-item" type="button" data-phase="design">08 / Visual &amp; Interaction Design</button>
-          <button class="structure-item" type="button" data-phase="finalflow">09 / Final System Flow</button>
-          <div class="structure-group-label">10 / Final Design</div>
+          <button class="structure-item" type="button" data-phase="stage4">07 / Stage 4</button>
+          <button class="structure-item" type="button" data-phase="decision">08 / Solution Options</button>
+          <button class="structure-item" type="button" data-phase="design">09 / Visual &amp; Interaction Design</button>
+          <button class="structure-item" type="button" data-phase="finalflow">10 / Final System Flow</button>
+          <div class="structure-group-label">11 / Final Design</div>
           <button class="structure-item structure-item--sub" type="button" data-phase="screen-overview">Overview Page</button>
           <button class="structure-item structure-item--sub" type="button" data-phase="screen-component">Component Detail Page</button>
           <button class="structure-item structure-item--sub" type="button" data-phase="screen-sidebar">Sidebar Navigation</button>
           <button class="structure-item structure-item--sub" type="button" data-phase="screen-tokens">Colors &amp; Tokens</button>
           <button class="structure-item structure-item--sub" type="button" data-phase="screen-search">Search (⌘K)</button>
-          <button class="structure-item" type="button" data-phase="gallery">11 / Final Screens</button>
-          <button class="structure-item" type="button" data-phase="polish">12 / Fixes &amp; Refinements</button>
+          <button class="structure-item" type="button" data-phase="gallery">12 / Final Screens</button>
+          <button class="structure-item" type="button" data-phase="polish">13 / Fixes &amp; Refinements</button>
         </nav>
       </div>
 
@@ -1224,26 +1225,144 @@
         </div>
       </div>
 
+      <div class="research-panel" data-phase="stage4">
+        <div class="rc-eyebrow">07 / Stage 4</div>
+        <h2 class="rc-title">Stage 4</h2>
+
+        <div class="overview-section">
+          <p class="overview-paragraph">
+            Stage 2 and Stage 3 give you a repository and a dashboard. Neither one, by itself, tells
+            the agent how to think. That's what this stage builds — the part of the system that
+            actually reasons. We call it the graph, and it's the closest thing this project has to a
+            brain.
+          </p>
+
+          <p class="overview-paragraph">
+            Here's the problem it solves. Picture a real design system with hundreds of components,
+            not 26. Hand an agent a PRD and ask it to build a screen, and the naive approach is to
+            read every single component before deciding anything — hundreds of files, most of them
+            irrelevant, burning tokens and diluting the one thing an agent has a limited supply of:
+            context. The more it reads, the less sharp it gets. The graph exists so it never has to
+            do that.
+          </p>
+
+          <p class="overview-paragraph">
+            Every one of this repo's 26 components is a node in the graph, wired together by 48 real
+            relationships pulled straight from the metadata each one carries. Color marks what kind
+            of component it is — atom, molecule, organism, complex organism, the same four buckets
+            from Stage 1. Size marks how often it gets reused. And the connections come in two kinds:
+            a solid line means one component is literally built from another — structural, part of
+            the whole. A dashed line means the two are related in how they behave, even though
+            neither is built from the other.
+          </p>
+
+          <div class="walkthrough-frame">
+            <div class="browser-chrome">
+              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+              <span class="browser-url">noise-audio-dashboard — Component graph</span>
+            </div>
+            <div class="walkthrough-body">
+              <img src="assets/stage4-graph-full-view.png" alt="The full component graph: 26 nodes colored by type and sized by usage count, connected by solid structural edges and dashed behavioral edges, laid out live by a force simulation.">
+            </div>
+          </div>
+          <p class="visual-caption">This repo's entire library, 26 components and 48 relationships, laid out live by a force simulation — nothing hand-positioned.</p>
+
+          <p class="overview-paragraph">
+            Hover any node and the graph spotlights exactly what it's wired to, dimming everything
+            else. Below, that's master-card — the same component from The Approach, Stage 1, and
+            Stage 3 — lit up next to the two things it's actually built from: the actionables
+            molecule and the heading-content atom. Everything unconnected fades to almost nothing.
+          </p>
+
+          <div class="walkthrough-frame">
+            <div class="browser-chrome">
+              <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+              <span class="browser-url">noise-audio-dashboard — Component graph (hover: master-card)</span>
+            </div>
+            <div class="walkthrough-body">
+              <img src="assets/stage4-graph-hover-spotlight.png" alt="Hovering the master-card node spotlights its two structural children, actionables and heading-content, while every unconnected node dims almost to invisible.">
+            </div>
+          </div>
+          <p class="visual-caption">Hovering master-card spotlights its two structural children — the same "is built from" relationship you saw on its dashboard page in Stage 3.</p>
+
+          <p class="overview-paragraph">
+            Click a node, and it takes you straight to that component's own page in the dashboard —
+            the same page from Stage 3. The graph isn't a static diagram sitting next to the real
+            system. It's a map you can actually walk, and it's the exact same map the agent walks.
+          </p>
+
+          <div class="roadmap-note">
+            <div class="roadmap-note-head">graph.json — the traversal rule, verbatim</div>
+            <div class="roadmap-note-body">
+              "Start at nodes with tier = organisms. A component's parts are the sources of
+              structural edges whose target is that component. Recurse into molecules, then atoms."
+            </div>
+          </div>
+
+          <p class="overview-paragraph" style="margin-top:24px">
+            That one rule is the whole trick. Instead of scanning every component, the agent starts
+            only at the top — the organisms and complex organisms — and reads just their metadata:
+            usage, anti-patterns, design intent, the things Stage 1 wrote down. Anything that doesn't
+            fit the request gets discarded right there, without ever opening what's inside it. For
+            whatever survives, the agent follows the graph's structural edges downward, one level at
+            a time, re-checking fit at each step, until it reaches the molecules and atoms that
+            component is actually built from.
+          </p>
+
+          <div class="flow-strip">
+            <div class="flow-node">
+              <div class="flow-node-title">Start at organisms only</div>
+              <div class="flow-node-sub">read their metadata,<br>not their children</div>
+            </div>
+            <div class="flow-arrow">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 7h20M15 1l6 6-6 6"/></svg>
+              filter
+            </div>
+            <div class="flow-node">
+              <div class="flow-node-title">Discard what doesn't fit</div>
+              <div class="flow-node-sub">unopened —<br>never scanned further</div>
+            </div>
+            <div class="flow-arrow">
+              <svg viewBox="0 0 24 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 7h20M15 1l6 6-6 6"/></svg>
+              for survivors
+            </div>
+            <div class="flow-node">
+              <div class="flow-node-title">Follow the graph down</div>
+              <div class="flow-node-sub">into molecules,<br>then atoms</div>
+            </div>
+          </div>
+
+          <p class="overview-paragraph" style="margin-top:28px">
+            A design system with 500 components never forces the agent to read 500 files. It reads
+            however many organisms are plausible candidates, throws out the ones that don't fit
+            before ever opening them, and only follows the graph down into the ones that survive.
+            Fewer files read means fewer tokens spent and less context diluted with irrelevant
+            components — which is exactly why the same request gets answered more accurately, not
+            less, as the library grows.
+          </p>
+        </div>
+      </div>
+
       <div class="research-panel" data-phase="decision">
-        <div class="rc-eyebrow">07 / Solution Options</div>
+        <div class="rc-eyebrow">08 / Solution Options</div>
         <h2 class="rc-title">Solution Options</h2>
         <div class="rc-pending">Pending — Option A (minimal per-bug fixes) vs Option B (full layout-model rebuild), the tradeoffs of each, and why Option B was chosen.</div>
       </div>
 
       <div class="research-panel" data-phase="design">
-        <div class="rc-eyebrow">08 / Visual &amp; Interaction Design</div>
+        <div class="rc-eyebrow">09 / Visual &amp; Interaction Design</div>
         <h2 class="rc-title">Visual &amp; Interaction Design</h2>
         <div class="rc-pending">Pending — the sidebar redesign (icons, collapsible Foundations/Atoms/Molecules/Organisms sections, search with ⌘K), and the Colors &amp; Tokens documentation rebuild.</div>
       </div>
 
       <div class="research-panel" data-phase="finalflow">
-        <div class="rc-eyebrow">09 / Final System Flow</div>
+        <div class="rc-eyebrow">10 / Final System Flow</div>
         <h2 class="rc-title">Final System Flow</h2>
         <div class="rc-pending">Pending — how the finished tool works end-to-end: Figma → YAML → build script → static dashboard, one diagram.</div>
       </div>
 
       <div class="research-panel" data-phase="screen-overview">
-        <div class="rc-eyebrow">10 / Final Design</div>
+        <div class="rc-eyebrow">11 / Final Design</div>
         <h2 class="rc-title">Overview Page</h2>
         <div class="walkthrough-frame">
           <div class="browser-chrome">
@@ -1255,7 +1374,7 @@
       </div>
 
       <div class="research-panel" data-phase="screen-component">
-        <div class="rc-eyebrow">10 / Final Design</div>
+        <div class="rc-eyebrow">11 / Final Design</div>
         <h2 class="rc-title">Component Detail Page</h2>
         <div class="walkthrough-frame">
           <div class="browser-chrome">
@@ -1267,7 +1386,7 @@
       </div>
 
       <div class="research-panel" data-phase="screen-sidebar">
-        <div class="rc-eyebrow">10 / Final Design</div>
+        <div class="rc-eyebrow">11 / Final Design</div>
         <h2 class="rc-title">Sidebar Navigation</h2>
         <div class="walkthrough-frame">
           <div class="browser-chrome">
@@ -1279,7 +1398,7 @@
       </div>
 
       <div class="research-panel" data-phase="screen-tokens">
-        <div class="rc-eyebrow">10 / Final Design</div>
+        <div class="rc-eyebrow">11 / Final Design</div>
         <h2 class="rc-title">Colors &amp; Tokens</h2>
         <div class="walkthrough-frame">
           <div class="browser-chrome">
@@ -1291,7 +1410,7 @@
       </div>
 
       <div class="research-panel" data-phase="screen-search">
-        <div class="rc-eyebrow">10 / Final Design</div>
+        <div class="rc-eyebrow">11 / Final Design</div>
         <h2 class="rc-title">Search (⌘K)</h2>
         <div class="walkthrough-frame">
           <div class="browser-chrome">
@@ -1303,7 +1422,7 @@
       </div>
 
       <div class="research-panel" data-phase="gallery">
-        <div class="rc-eyebrow">11 / Final Screens</div>
+        <div class="rc-eyebrow">12 / Final Screens</div>
         <h2 class="rc-title">Final Screens</h2>
         <div class="gallery-grid">
           <div class="gallery-tile">
@@ -1340,7 +1459,7 @@
       </div>
 
       <div class="research-panel" data-phase="polish">
-        <div class="rc-eyebrow">12 / Fixes &amp; Refinements</div>
+        <div class="rc-eyebrow">13 / Fixes &amp; Refinements</div>
         <h2 class="rc-title">Fixes &amp; Refinements</h2>
         <div class="rc-pending">Pending — the follow-up polish round: the pill/bubble background bug (and why static code review missed it), the sidebar scroll-reset bug (inline-script ordering race), cache-busting, and pulling real Usage text from Figma for the tokens pages.</div>
       </div>
