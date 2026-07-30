@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage My Earbuds — Noise Audio</title>
+<style>
+/* ============================================================
+   TOKENS — copied verbatim from css/tokens.css (Noise Audio DLS,
+   synced from Figma QjVyM5bRXgIOZn8PO1e0eK). Not hand-edited.
+   ============================================================ */
+:root {
+  --color-gray-100: #000000; --color-gray-200: #171717; --color-gray-300: #292929;
+  --color-gray-400: #454545; --color-gray-500: #696969; --color-gray-600: #919191;
+  --color-gray-700: #b5b5b5; --color-gray-800: #d1d1d1; --color-gray-900: #ededed;
+  --color-gray-1000: #f7f7f7; --color-gray-1100: #ffffff;
+
+  --xs: 4px; --s: 8px; --m: 12px; --l: 16px; --xl: 24px; --xxl: 32px;
+  --xxxl: 44px; --very-big: 56px; --rarely-use: 80px;
+  --gaps-bottom-sheet: 24px; --gaps-l2-card-gap: 16px;
+  --gaps-small-gap: 12px; --gaps-smaller-gap: 8px;
+  --radius-card: 18px; --radius-bottomsheet: 32px;
+  --radius-slider-button: 8px; --radius-tiniest: 12px;
+  --padding-screen-side-margin: 0px; --padding-top-bottom-padding-small: 12px;
+  --padding-card-side-padding: 16px; --padding-card-top-bottom-padding: 16px;
+  --padding-bottomsheet-padding: 20px;
+}
+:root, [data-theme="light"] {
+  --background-canvas: #ffffff; --background-surface: #f7f7f7;
+  --text-primary: #454545; --text-secondary: #919191; --text-tertiary: #b5b5b5;
+  --text-disabled: #d1d1d1; --text-inverted: #f7f7f7; --text-cta: #171717;
+  --icon-primary: #454545; --icon-disable: #d1d1d1;
+  --button-primary-background: #292929; --button-primary-pressed: #696969; --button-primary-disabled: #f7f7f7;
+  --button-secondary-background: #f7f7f7; --button-secondary-pressed: #696969;
+  --button-link-text: #454545;
+  --button-actionable-enabled: #919191; --button-actionable-disabled: #ededed;
+  --button-toggle-thumb: #f7f7f7; --button-toggle-track-active: #171717; --button-toggle-track-inactive: #919191;
+  --button-checkbox-checked: #171717; --button-checkbox-unchecked: #b5b5b5; --button-checkbox-disable: #ededed;
+  --border-separator-line: #ededed; --border-default: #d1d1d1;
+  --default-status-bar: #000000;
+}
+/* Typography — synced from Figma local text styles */
+:root { --font-heading: 'Saira'; --font-content: 'Geist'; }
+.text-headings-medium { font-family: var(--font-heading); font-size: 34px; font-weight: 600; line-height: 110%; }
+.text-headings-small { font-family: var(--font-heading); font-size: 24px; font-weight: 600; line-height: 110%; }
+.text-sub-headings-card-headings { font-family: var(--font-heading); font-size: 16px; font-weight: 500; line-height: 110%; }
+.text-content-medium { font-family: var(--font-content); font-size: 14px; font-weight: 400; line-height: normal; }
+.text-content-small { font-family: var(--font-content); font-size: 12px; font-weight: 400; line-height: 130%; }
+.text-bold-content-big { font-family: var(--font-content); font-size: 14px; font-weight: 600; line-height: normal; }
+.text-bold-content-small { font-family: var(--font-content); font-size: 12px; font-weight: 600; line-height: normal; }
+.navigation-shadow { box-shadow: 0 4px 12px 0 rgba(0,0,0,0.08); } /* the only shadow in the system — l1-inner-page-navigation scroll state */
+
+/* ============================================================
+   Layout scaffold — presentational chrome only (device bezel,
+   flow shell). Not a library component; no token claims made
+   on it beyond the screen canvas size, which mirrors the 390x844
+   canvas baked into action-sheet / modal-sheet's own authored trees.
+   ============================================================ */
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; }
+body {
+  font-family: var(--font-content), sans-serif;
+  background: #d8d8dc;
+  min-height: 100vh;
+  display:flex; align-items:center; justify-content:center;
+  padding: 32px 16px;
+}
+.stage { display:flex; flex-direction:column; align-items:center; gap:16px; }
+.trail-hint { font-family: var(--font-content); font-size:12px; color:#77777c; text-align:center; max-width:390px; }
+
+.iphone {
+  width: 422px; height: 876px;
+  background: #111214;
+  border-radius: 66px;
+  padding: 16px;
+  box-shadow: 0 40px 80px rgba(0,0,0,.4), 0 4px 12px rgba(0,0,0,.25);
+  position: relative;
+}
+.iphone-screen {
+  position: relative;
+  width: 390px; height: 844px;
+  background: var(--background-canvas);
+  border-radius: 52px;
+  overflow: hidden;
+}
+.dynamic-island {
+  position:absolute; top:12px; left:50%; transform:translateX(-50%);
+  width:124px; height:34px; background:#000; border-radius:20px; z-index:80;
+}
+
+/* hide scrollbars everywhere, scrolling itself stays functional */
+.scroll-hide { scrollbar-width:none; -ms-overflow-style:none; }
+.scroll-hide::-webkit-scrollbar { width:0; height:0; }
+
+/* ============================================================
+   status-bar (atom, 2007:775) — L0. Always first, above L1 nav
+   and page content, fixed at top.
+   ============================================================ */
+.status-bar {
+  height:59px; width:100%; flex:0 0 auto;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 0 16px 0 22px;
+  position: relative; z-index: 60;
+  transition: background-color .25s ease;
+}
+.status-bar .time { font-family:'SF Pro Semibold', var(--font-content); font-size:17px; color: var(--default-status-bar); }
+.status-bar .levels { display:flex; align-items:center; gap:7px; }
+.status-bar .glyph { background: var(--default-status-bar); border-radius:2px; }
+.status-bar.on-overlay { --default-status-bar: #ffffff; } /* dedicated contrasting token per action-sheet/modal-sheet rule */
+
+/* ============================================================
+   l1-home-page-navigation (organism, 243:6378) — L1, home only.
+   ============================================================ */
+.l1-home-nav {
+  height:56px; flex:0 0 auto;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 0 12px;
+}
+.l1-home-nav .devices { display:flex; align-items:center; gap:12px; }
+.device-avatar { width:32px; height:32px; border-radius:16px; background: var(--border-separator-line); }
+.device-adder { width:24px; height:24px; border-radius:12px; background: var(--border-separator-line); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); font-size:14px; }
+.l1-home-nav .quick-actions { display:flex; align-items:center; gap:12px; }
+.icon-chip { width:24px; height:24px; border-radius:12px; background: var(--border-separator-line); }
+
+/* ============================================================
+   l1-inner-page-navigation (organism, 2007:1007) — variant
+   state=Clean-Only Chevron. Sticky under status bar; gains the
+   authored scroll state (canvas fill + downward shadow + promoted
+   centered title) once page content scrolls past the first fold.
+   ============================================================ */
+.l1-inner-nav {
+  height:56px; flex:0 0 auto;
+  display:flex; align-items:center;
+  padding: 0 12px;
+  position: sticky; top:0; z-index:40;
+  background: transparent;
+  transition: background-color .25s ease, box-shadow .25s ease;
+}
+.l1-inner-nav.scrolled { background: var(--background-canvas); }
+.l1-inner-nav.scrolled.shadow-on { box-shadow: 0 4px 12px 0 rgba(0,0,0,0.08); }
+.l1-inner-nav .back-btn { width:24px; height:24px; display:flex; align-items:center; justify-content:center; cursor:pointer; background:none; border:none; padding:0; }
+.l1-inner-nav .promoted-title {
+  flex:1; text-align:center; color: var(--text-primary);
+  font-family: var(--font-heading); font-size:16px; font-weight:600;
+  opacity:0; transform: translateY(4px); transition: opacity .25s ease, transform .25s ease;
+}
+.l1-inner-nav.scrolled .promoted-title { opacity:1; transform: translateY(0); }
+.l1-inner-nav .spacer { width:24px; }
+
+/* ============================================================
+   l2-inner-pages-heading (molecule, 244:133) — flush directly
+   under the L1 inner nav; scrolls with content; collapses/hands
+   its text to the L1 nav's promoted-title slot on scroll.
+   ============================================================ */
+.l2-heading {
+  padding: 8px 16px; min-height:56px; box-sizing:border-box;
+  display:flex; align-items:center;
+  transition: opacity .2s ease;
+}
+.l2-heading span { font-family: var(--font-heading); font-size:34px; font-weight:600; line-height:1.1; color: var(--text-primary); }
+
+.screen-scroll { flex:1 1 auto; overflow-y:auto; overflow-x:hidden; }
+
+/* ============================================================
+   card-heading (atom, 340:11254) — labels a group of cards.
+   ============================================================ */
+.card-heading {
+  display:flex; align-items:baseline; justify-content:space-between;
+  padding: 0 16px; margin: 24px 0 8px;
+}
+.card-heading .label { font-family: var(--font-content); font-weight:600; font-size:12px; color: var(--text-tertiary); }
+
+/* ============================================================
+   Grouped-list container — construction shared by master-card
+   and checkbox-card per checkbox-card's own authored rule
+   ("Follow Master Card construction principles"): surface token
+   fill, radius.card corner radius, 12px top/bottom padding on
+   the parent frame, zero internal spacing between rows, radius
+   applied at container level only (no-dual-corner-radius).
+   ============================================================ */
+.grouped-list {
+  margin: 0 16px;
+  background: var(--background-surface);
+  border-radius: var(--radius-card);
+  padding: 12px 0;
+}
+
+/* ---- master-card (organism, 396:728) row ---- */
+.master-card-row {
+  display:flex; align-items:center; gap:12px;
+  padding: 16px;
+}
+.master-card-row + .master-card-row { border-top: 1px solid var(--border-separator-line); } /* separator-inset */
+.heading-content { flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:4px; }
+.heading-content .heading { font-family: var(--font-heading); font-size:16px; font-weight:500; line-height:1.1; color: var(--text-primary); }
+.heading-content .supporting { font-family: var(--font-content); font-size:12px; color: var(--text-secondary); line-height:1.3; }
+
+/* ---- actionables (molecule, 2031:1132) — trailing slot, one per row ---- */
+.actionable { width:36px; height:36px; flex:0 0 auto; display:flex; align-items:center; justify-content:center; }
+.actionable button { all:unset; display:flex; align-items:center; justify-content:center; width:100%; height:100%; cursor:pointer; }
+
+/* toggle atom (2031:1190) */
+.toggle-track { width:36px; height:19px; border-radius:40px; background: var(--button-toggle-track-inactive); position:relative; transition: background-color .15s ease; }
+.toggle-track.on { background: var(--button-toggle-track-active); }
+.toggle-thumb { position:absolute; top:1px; left:1px; width:17px; height:17px; border-radius:40px; background: var(--button-toggle-thumb); transition: transform .15s ease; }
+.toggle-track.on .toggle-thumb { transform: translateX(17px); }
+
+/* chevron atom (2031:1154) */
+.chevron-icon { width:7px; height:14px; }
+
+/* checkbox atom (2031:1168) */
+.checkbox-box { width:24px; height:24px; border-radius:4.5px; border:1.5px solid var(--button-checkbox-unchecked); display:flex; align-items:center; justify-content:center; transition: border-color .15s ease, background-color .15s ease; }
+.checkbox-box.checked { border-color: var(--button-checkbox-checked); background: var(--button-checkbox-checked); }
+.checkbox-box svg { opacity:0; transition: opacity .1s ease; }
+.checkbox-box.checked svg { opacity:1; }
+
+/* ---- checkbox-card (organism, 2032:1265) row — variant checkbox-right ---- */
+.checkbox-card-row { display:flex; align-items:center; gap:8px; padding: 8px 16px; cursor:pointer; }
+
+/* ============================================================
+   description (atom, 445:8616) — two placements: under a card
+   (grouped-list) as its description, or a disclaimer above a CTA.
+   ============================================================ */
+.description-text { padding: 12px 16px 0; font-family: var(--font-content); font-size:12px; line-height:1.3; color: var(--text-secondary); }
+
+/* ============================================================
+   primary-cta-button / secondary-cta-button (atoms) — usage=L1 L2 screens
+   ============================================================ */
+.cta-primary, .cta-secondary { all:unset; box-sizing:border-box; display:flex; align-items:center; justify-content:center; height:56px; border-radius:50px; font-family: var(--font-content); font-weight:600; font-size:14px; cursor:pointer; text-align:center; }
+.cta-primary { background: var(--button-primary-background); color: var(--text-inverted); }
+.cta-primary[disabled] { background: var(--button-primary-disabled); color: var(--text-disabled); cursor:not-allowed; }
+.cta-secondary { background: var(--button-secondary-background); color: var(--text-cta); }
+.cta-block { margin: 24px 16px 24px; }
+.cta-block.bottomsheet-width { margin: 0 16px; } /* 334px usage inside a 366px sheet; handled by sheet padding */
+
+/* ============================================================
+   privacy-policy-tab (atom, 450:8770) — fixed 3-part footer.
+   ============================================================ */
+.privacy-tab { display:flex; flex-direction:column; gap:16px; padding: 16px 16px 28px; margin-top:auto; }
+.privacy-tab .links { display:flex; justify-content:space-between; padding:0 16px; }
+.privacy-tab .links span { font-family: var(--font-content); font-size:12px; color: var(--text-primary); }
+.privacy-tab .version { text-align:center; font-family: var(--font-content); font-size:12px; color: var(--text-secondary); }
+
+/* ============================================================
+   app-screen shells — Home / Manage. Screen-to-screen navigation
+   is an instant swap: no motion is authored anywhere in the
+   registry for L1<->L1-inner page transitions, so none is invented.
+   ============================================================ */
+.app-screen { position:absolute; inset:0; display:none; flex-direction:column; background: var(--background-canvas); }
+.app-screen.active { display:flex; }
+
+/* ============================================================
+   action-sheet / modal-sheet family — complex-organism. Only
+   this family has authored motion: enters/exits by sliding, with
+   the overlay fading. "Smooth animation" per authored rule.
+   ============================================================ */
+.modal-sheet-overlay {
+  position:absolute; inset:0; z-index:100;
+  background: rgba(0,0,0,0.6);
+  display:flex; flex-direction:column; justify-content:flex-end;
+  opacity:0; pointer-events:none;
+  transition: opacity .3s ease;
+}
+.modal-sheet-overlay.open { opacity:1; pointer-events:auto; }
+.modal-sheet-overlay .status-bar { flex:0 0 auto; }
+.modal-card {
+  background: var(--background-canvas);
+  border-radius: var(--radius-bottomsheet);
+  padding: 24px 0 16px;
+  display:flex; flex-direction:column; gap:24px;
+  transform: translateY(100%);
+  transition: transform .32s cubic-bezier(.32,.72,0,1);
+}
+.modal-sheet-overlay.open .modal-card { transform: translateY(0); }
+.modal-card .headblk { display:flex; flex-direction:column; gap:8px; padding:0 16px; text-align:center; }
+.modal-card .headblk .title { font-family: var(--font-heading); font-size:24px; font-weight:600; line-height:1.1; color: var(--text-primary); }
+.modal-card .headblk .content { font-family: var(--font-content); font-size:14px; color: var(--text-secondary); line-height:1.4; }
+.modal-card .ctas { display:flex; flex-direction:column; gap:8px; padding: 0 16px; }
+.modal-card .ctas .cta-primary, .modal-card .ctas .cta-secondary { width:100%; }
+
+.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="iphone">
+    <div class="iphone-screen" id="deviceScreen">
+      <div class="dynamic-island"></div>
+
+      <!-- ============================================================
+           SCREEN 1 — Home
+           status-bar -> l1-home-page-navigation -> page content
+           ============================================================ -->
+      <section class="app-screen active" id="screen-home" aria-label="Home">
+        <div class="screen-scroll scroll-hide">
+          <div class="status-bar">
+            <span class="time">9:41</span>
+            <div class="levels">
+              <div class="glyph" style="width:19.2px;height:12.2px;"></div>
+              <div class="glyph" style="width:17.1px;height:12.3px;"></div>
+              <div class="glyph" style="width:27.3px;height:13px;"></div>
+            </div>
+          </div>
+
+          <div class="l1-home-nav">
+            <div class="devices">
+              <div class="device-avatar"></div>
+              <div class="device-avatar"></div>
+              <div class="device-adder">+</div>
+            </div>
+            <div class="quick-actions">
+              <div class="icon-chip" title="Downloads"></div>
+              <div class="icon-chip" title="Shop"></div>
+            </div>
+          </div>
+
+          <div class="card-heading">
+            <span class="label">YOUR EARBUDS</span>
+          </div>
+
+          <div class="grouped-list">
+            <div class="master-card-row">
+              <div class="heading-content">
+                <span class="heading">Sidetone</span>
+              </div>
+              <div class="actionable">
+                <button id="sidetoneToggle" role="switch" aria-checked="false" aria-label="Sidetone">
+                  <div class="toggle-track" id="sidetoneTrack"><div class="toggle-thumb"></div></div>
+                </button>
+              </div>
+            </div>
+            <div class="master-card-row" id="manageDevicesRow" style="cursor:pointer;" role="button" tabindex="0" aria-label="Manage saved devices">
+              <div class="heading-content">
+                <span class="heading">Manage saved devices</span>
+              </div>
+              <div class="actionable">
+                <svg class="chevron-icon" viewBox="0 0 7 14" fill="none"><path d="M1 1L6 7L1 13" stroke="#919191" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <p class="description-text">Sidetone only works while your earbuds are connected.</p>
+
+          <div class="privacy-tab">
+            <div class="links">
+              <span>Privacy Policy</span>
+              <span>Terms &amp; Conditions</span>
+            </div>
+            <div class="version">App Version 1.02</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           SCREEN 2 — Manage saved devices
+           status-bar -> l1-inner-page-navigation (Clean-Only Chevron)
+           -> l2-inner-pages-heading -> page content
+           ============================================================ -->
+      <section class="app-screen" id="screen-manage" aria-label="Manage saved devices">
+        <div class="status-bar" style="flex:0 0 auto;">
+          <span class="time">9:41</span>
+          <div class="levels">
+            <div class="glyph" style="width:19.2px;height:12.2px;"></div>
+            <div class="glyph" style="width:17.1px;height:12.3px;"></div>
+            <div class="glyph" style="width:27.3px;height:13px;"></div>
+          </div>
+        </div>
+        <div class="screen-scroll scroll-hide" id="manageScroll">
+          <div class="l1-inner-nav" id="manageL1Nav">
+            <button class="back-btn" id="backToHome" aria-label="Back to Home">
+              <svg class="chevron-icon" viewBox="0 0 7 14" fill="none"><path d="M6 1L1 7L6 13" stroke="#454545" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <span class="promoted-title" id="promotedTitle">Manage saved devices</span>
+            <span class="spacer"></span>
+          </div>
+
+          <div class="l2-heading" id="l2Heading"><span>Manage saved devices</span></div>
+
+          <div class="grouped-list" id="deviceList"><!-- checkbox-card rows injected by JS --></div>
+
+          <p class="description-text">Any device removed here will need to be paired again before it can be used.</p>
+
+          <div class="cta-block">
+            <button class="cta-primary" id="removeSelectedBtn" disabled>Remove Selected</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           SCREEN 3 — Remove device confirmation
+           modal-sheet (Type=App Modal) containing modal-card
+           (Type=Default modal): heading + content + 2 CTAs, no
+           dismissal affordance other than the CTAs themselves.
+           ============================================================ -->
+      <div class="modal-sheet-overlay" id="confirmModal" aria-hidden="true">
+        <div class="status-bar on-overlay">
+          <span class="time">9:41</span>
+          <div class="levels">
+            <div class="glyph" style="width:19.2px;height:12.2px;"></div>
+            <div class="glyph" style="width:17.1px;height:12.3px;"></div>
+            <div class="glyph" style="width:27.3px;height:13px;"></div>
+          </div>
+        </div>
+        <div class="modal-card" role="alertdialog" aria-modal="true" aria-labelledby="modalTitle">
+          <div class="headblk">
+            <span class="title" id="modalTitle">Remove selected devices?</span>
+            <span class="content" id="modalContent">This device will be removed and will need to be paired again to use.</span>
+          </div>
+          <div class="ctas">
+            <button class="cta-primary" id="confirmRemoveBtn">Remove</button>
+            <button class="cta-secondary" id="cancelRemoveBtn">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <p class="trail-hint">Home → Manage saved devices → Remove device confirmation</p>
+</div>
+
+<script>
+(function () {
+  var devices = [
+    { id: 'buds-pro', name: 'GONOISE Buds Pro', selected: false },
+    { id: 'buds-air', name: 'GONOISE Buds Air', selected: false },
+    { id: 'desktop',  name: 'Office Desktop',   selected: false }
+  ];
+
+  var deviceListEl = document.getElementById('deviceList');
+  var removeBtn = document.getElementById('removeSelectedBtn');
+  var checkSvg = '<svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5L5 9L13 1" stroke="#f7f7f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function renderDevices() {
+    deviceListEl.innerHTML = '';
+    devices.forEach(function (d) {
+      var row = document.createElement('div');
+      row.className = 'checkbox-card-row';
+      row.setAttribute('role', 'checkbox');
+      row.setAttribute('aria-checked', String(d.selected));
+      row.setAttribute('tabindex', '0');
+      row.innerHTML =
+        '<div class="actionable"><div class="checkbox-box' + (d.selected ? ' checked' : '') + '">' + checkSvg + '</div></div>' +
+        '<div class="heading-content"><span class="heading">' + d.name + '</span></div>';
+      row.addEventListener('click', function () { toggleDevice(d.id); });
+      row.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDevice(d.id); }
+      });
+      deviceListEl.appendChild(row);
+    });
+    updateRemoveButton();
+  }
+
+  function toggleDevice(id) {
+    var d = devices.find(function (x) { return x.id === id; });
+    d.selected = !d.selected;
+    renderDevices();
+  }
+
+  function updateRemoveButton() {
+    var anySelected = devices.some(function (d) { return d.selected; });
+    removeBtn.disabled = !anySelected;
+  }
+
+  renderDevices();
+
+  // ---- Screen navigation (Home <-> Manage saved devices) ----
+  var screenHome = document.getElementById('screen-home');
+  var screenManage = document.getElementById('screen-manage');
+
+  document.getElementById('manageDevicesRow').addEventListener('click', function () { goTo('manage'); });
+  document.getElementById('manageDevicesRow').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goTo('manage'); }
+  });
+  document.getElementById('backToHome').addEventListener('click', function () { goTo('home'); });
+
+  function goTo(screen) {
+    screenHome.classList.toggle('active', screen === 'home');
+    screenManage.classList.toggle('active', screen === 'manage');
+  }
+
+  // ---- Sidetone toggle (Home) — immediate, no navigation ----
+  var sidetoneBtn = document.getElementById('sidetoneToggle');
+  var sidetoneTrack = document.getElementById('sidetoneTrack');
+  var sidetoneOn = false;
+  sidetoneBtn.addEventListener('click', function () {
+    sidetoneOn = !sidetoneOn;
+    sidetoneTrack.classList.toggle('on', sidetoneOn);
+    sidetoneBtn.setAttribute('aria-checked', String(sidetoneOn));
+  });
+
+  // ---- l1-inner-page-navigation scroll-linked heading promotion ----
+  var manageScroll = document.getElementById('manageScroll');
+  var manageL1Nav = document.getElementById('manageL1Nav');
+  var l2Heading = document.getElementById('l2Heading');
+  manageScroll.addEventListener('scroll', function () {
+    var scrolled = manageScroll.scrollTop > 4;
+    manageL1Nav.classList.toggle('scrolled', scrolled);
+    manageL1Nav.classList.toggle('shadow-on', scrolled);
+    l2Heading.style.opacity = scrolled ? '0' : '1';
+  });
+
+  // ---- Screen 3 — modal-sheet / modal-card confirmation ----
+  var modal = document.getElementById('confirmModal');
+  var modalContent = document.getElementById('modalContent');
+
+  removeBtn.addEventListener('click', function () {
+    var selected = devices.filter(function (d) { return d.selected; }).map(function (d) { return d.name; });
+    if (selected.length === 0) return;
+    var list = selected.length === 1 ? selected[0]
+      : selected.slice(0, -1).join(', ') + ' and ' + selected[selected.length - 1];
+    modalContent.textContent = (selected.length > 1 ? 'These devices' : 'This device') +
+      ' (' + list + ') will be removed and will need to be paired again to use.';
+    openModal();
+  });
+
+  function openModal() {
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+  function closeModal() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  document.getElementById('cancelRemoveBtn').addEventListener('click', closeModal); // back out — nothing changed
+  document.getElementById('confirmRemoveBtn').addEventListener('click', function () {
+    devices = devices.filter(function (d) { return !d.selected; });
+    renderDevices();
+    closeModal();
+  });
+})();
+</script>
+</body>
+</html>
