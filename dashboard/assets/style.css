@@ -202,6 +202,8 @@ h2 .count{color:var(--ink3);font-size:12.5px;font-weight:400;font-variant-numeri
 .btn:active{transform:scale(.975)}
 .btn-primary{background:var(--ink);color:var(--canvas);border-color:var(--ink)}
 .btn-primary:hover{background:var(--ink);color:var(--canvas);opacity:.88}
+.btn-danger{background:var(--bad-bg);color:var(--bad-ink);border-color:var(--bad-line)}
+.btn-danger:hover{background:var(--bad-line);color:var(--bad-ink)}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .btn:disabled:hover{background:var(--ink);border-color:var(--ink);color:var(--canvas)}
 .gaprow{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-md);
@@ -235,20 +237,29 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .flowcard[data-flow-status="in-progress"],.flowcard-mock[data-flow-status="in-progress"]{border-right-color:var(--info-ink)}
 .flowcard[data-flow-status="depleted"],.flowcard-mock[data-flow-status="depleted"]{border-right-color:var(--bad-ink)}
 .flowcard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.flowcard-head-actions{display:flex;align-items:center;gap:6px;flex:none}
 /* Same small-icon-button look as .themetoggle in the sidebar — one convention for "a compact
-   icon-only affordance next to something," not a second one invented just for this. */
+   icon-only affordance next to something," not a second one invented just for this. Sits alone
+   at the top right of the head now that Edit has moved down into the footer. */
 .flowcard-resume{width:30px;height:30px;flex:none;border-radius:var(--r-sm);border:1px solid var(--line);
   background:var(--surface-2);color:var(--ink2);cursor:pointer;display:flex;align-items:center;
   justify-content:center;padding:0;transition:color .15s,border-color .15s}
 .flowcard-resume:hover{color:var(--ink);border-color:var(--line-2)}
 .flowcard-resume svg{width:15px;height:15px}
 .flowcard-title{font-size:14.5px;font-weight:600;color:var(--ink);margin:0}
-/* flex:1 1 auto is what pins the button below to the same bottom edge on every card in the
-   row: this grows to soak up whatever space the row's tallest card leaves over, so the button
+/* flex:1 1 auto is what pins .flowcard-footer to the same bottom edge on every card in the
+   row: this grows to soak up whatever space the row's tallest card leaves over, so the footer
    always sits a fixed 14px under it, whatever the description's actual length is */
 .flowcard-desc{font-size:13px;color:var(--ink2);margin:8px 0 0;line-height:1.5;flex:1 1 auto}
-.flowcard-open{display:inline-flex;width:100%;justify-content:center;box-sizing:border-box;margin-top:14px}
+/* Open flow (primary, fills the remaining width) and Edit (secondary, its own natural width) —
+   same row, same height, since both are plain .btn underneath and neither overrides padding. */
+.flowcard-footer{display:flex;gap:8px;margin-top:14px}
+/* Fixed height on both, not just matching padding — a real card's Open flow is an <a>, a
+   sample's is a <button> (nothing to link to), and browsers don't size those two tags
+   identically from the same padding/font alone. Forcing the height directly is what actually
+   guarantees every card's footer lines up, real or sample. */
+.flowcard-footer .btn{height:38px;box-sizing:border-box}
+.flowcard-open{flex:1 1 auto;display:inline-flex;justify-content:center}
+.flowcard-edit{flex:0 0 auto}
 .flowcard-label{display:block;font-size:11.5px;color:var(--ink3);margin:10px 0 4px}
 .flowcard-label:first-child{margin-top:0}
 .flowcard-input,.flowcard-textarea{width:100%;background:var(--surface);border:1px solid var(--line);
@@ -328,6 +339,8 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .modal-card-wide p{margin:0 0 12px}
 .modal-card-wide #flow-resume-textarea{margin-top:4px;font-family:var(--font-mono);font-size:12.5px}
 .modal-ctas{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.modal-ctas-split{justify-content:space-between}
+.modal-ctas-right{display:flex;gap:10px}
 
 /* Segmented control: switches which category panel shows, so a page with several
    categories (learnings.html's Pending/Confirmed/Rejected, fill-gaps.html's five

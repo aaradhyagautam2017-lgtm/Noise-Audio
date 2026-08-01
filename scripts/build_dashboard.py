@@ -1269,9 +1269,10 @@ PROTOTYPES_JS = r"""
     });
   });
 
-  // Resume-work prompt — real cards only (a sample card has no real file under screens/ to
-  // point a fresh session at). Built entirely from this card's own data-flow-* attributes, so
-  // there's no separate copy of title/description/status to drift out of sync with the card.
+  // Resume-work prompt — every card gets one, real or sample, for a consistent structure. Built
+  // entirely from this card's own data-flow-* attributes, so there's no separate copy of title/
+  // description/status to drift out of sync with the card. A sample card has no real file under
+  // screens/, so its prompt reads as a starting brief instead of "go read this existing file."
   var resumeModal = document.getElementById('flow-resume-modal');
   var resumeTextarea = document.getElementById('flow-resume-textarea');
   var resumeCopyBtn = document.getElementById('flow-resume-copy');
@@ -1282,25 +1283,38 @@ PROTOTYPES_JS = r"""
     var file = card.getAttribute('data-flow-file') || '';
     var description = card.getAttribute('data-flow-description') || '';
     var statusLabel = STATUS_LABELS[card.getAttribute('data-flow-status') || ''] || '';
-    var lines = [
-      'I’m resuming work on an existing flow: “' + title + '” (screens/' + file + ').',
-      '',
-      'This flow already exists in the repo. Before changing anything, read the current file at ' +
-        'screens/' + file + ' to see its current state, and follow this repo’s AGENT.md — ' +
-        'especially the Step 7 composition process, the confirmed entries in learnings.jsonl, and the ' +
-        'real component snippets under components/** — so changes stay consistent with how it and ' +
-        'the rest of the library were built. Don’t rebuild it from scratch or re-derive values ' +
-        'already sitting in the registry.'
-    ];
+    var lines;
+    if (file) {
+      lines = [
+        'I’m resuming work on an existing flow: “' + title + '” (screens/' + file + ').',
+        '',
+        'This flow already exists in the repo. Before changing anything, read the current file at ' +
+          'screens/' + file + ' to see its current state, and follow this repo’s AGENT.md — ' +
+          'especially the Step 7 composition process, the confirmed entries in learnings.jsonl, and the ' +
+          'real component snippets under components/** — so changes stay consistent with how it and ' +
+          'the rest of the library were built. Don’t rebuild it from scratch or re-derive values ' +
+          'already sitting in the registry.'
+      ];
+    } else {
+      lines = [
+        'I want to build a flow: “' + title + '.”',
+        '',
+        'This is a sample card on the Prototypes page, not a real file under screens/ yet — treat this ' +
+          'as a starting brief, not something to go read first. Follow this repo’s AGENT.md — especially ' +
+          'the Step 7 composition process, the confirmed entries in learnings.jsonl, and the real ' +
+          'component snippets under components/** — so it’s built the same way everything else here was.'
+      ];
+    }
     if (description) lines.push('', 'Current description: ' + description);
     if (statusLabel) lines.push('', 'Current status: ' + statusLabel);
     lines.push('', 'Here’s what I want you to work on next:', '<describe the change here>');
     return lines.join('\n');
   }
 
-  document.querySelectorAll('.flowcard [data-resume]').forEach(function (btn) {
+  document.querySelectorAll('[data-resume]').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      var prompt = buildResumePrompt(btn.closest('.flowcard'));
+      var card = btn.closest('.flowcard, .flowcard-mock');
+      var prompt = buildResumePrompt(card);
       resumeTextarea.value = prompt;
       resumeCopyBtn.dataset.copy = prompt; // read by the page-wide .copybtn handler in app.js
       resumeModal.hidden = false;
@@ -1310,6 +1324,73 @@ PROTOTYPES_JS = r"""
   function closeResumeModal() { resumeModal.hidden = true; }
   resumeCloseBtn.addEventListener('click', closeResumeModal);
   resumeModal.addEventListener('click', function (ev) { if (ev.target === resumeModal) closeResumeModal(); });
+
+  // Delete — reachable from inside the edit modal, behind its own confirm step since removing a
+  // real flow deletes a real file from the repo. A sample card has nothing to delete for real,
+  // so confirming just removes it from view in this browser (same "preview only" spirit as its
+  // Edit/Save above).
+  var deleteBtn = document.getElementById('flow-edit-delete');
+  var deleteModal = document.getElementById('flow-delete-modal');
+  var deleteDetail = document.getElementById('flow-delete-detail');
+  var deleteMsg = document.getElementById('flow-delete-msg');
+  var deleteCancelBtn = document.getElementById('flow-delete-cancel');
+  var deleteConfirmBtn = document.getElementById('flow-delete-confirm');
+  var cardPendingDelete = null;
+
+  deleteBtn.addEventListener('click', function () {
+    if (!currentCard) return;
+    cardPendingDelete = currentCard;
+    var isReal = currentCard.classList.contains('flowcard');
+    deleteDetail.textContent = isReal
+      ? 'This deletes screens/' + currentCard.getAttribute('data-flow-file') + ' from the repo. It can’t be undone from here.'
+      : 'This is a sample card — nothing is really stored, so this just removes it from view in this browser.';
+    deleteMsg.textContent = '';
+    deleteConfirmBtn.disabled = false;
+    modal.hidden = true; // step behind the edit modal rather than stacking on top of it
+    deleteModal.hidden = false;
+  });
+
+  function closeDeleteModal(reopenEdit) {
+    deleteModal.hidden = true;
+    cardPendingDelete = null;
+    if (reopenEdit) modal.hidden = false;
+  }
+  deleteCancelBtn.addEventListener('click', function () { closeDeleteModal(true); });
+  deleteModal.addEventListener('click', function (ev) { if (ev.target === deleteModal) closeDeleteModal(true); });
+
+  deleteConfirmBtn.addEventListener('click', function () {
+    if (!cardPendingDelete) return;
+    var card = cardPendingDelete;
+    var isReal = card.classList.contains('flowcard');
+
+    if (!isReal) {
+      card.remove();
+      closeDeleteModal(false);
+      currentCard = null;
+      return;
+    }
+
+    var file = card.getAttribute('data-flow-file');
+    deleteConfirmBtn.disabled = true;
+    deleteMsg.textContent = 'Deleting…';
+    fetch('/api/delete-flow', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ file: file })
+    }).then(function (res) {
+      if (res.ok) return true;
+      return res.json().catch(function () { return {}; }).then(function (body) {
+        throw new Error(body.error || ('HTTP ' + res.status));
+      });
+    }).then(function () {
+      card.remove();
+      closeDeleteModal(false);
+      currentCard = null;
+    }).catch(function (err) {
+      deleteConfirmBtn.disabled = false;
+      deleteMsg.textContent = 'Could not delete (' + err.message + '). Try again.';
+    });
+  });
 })();
 """
 
@@ -1454,25 +1535,26 @@ def prototypes_page():
     status_options = '<option value="">— No status —</option>' + "".join(
         f'<option value="{E(k)}">{E(l)}</option>' for k, l in STATUS_LABELS.items())
 
-    # Real and sample cards share one markup shape (head with title + Edit, description, an
-    # Open-flow-styled button) so editing feels identical everywhere — the only difference is
-    # what the shared modal below does with Save (network vs preview-only) and that a sample's
-    # Open-flow button has nothing real to link to. Editing itself is a shared modal, not an
-    # inline form, precisely so opening it never changes this card's own height and pushes its
-    # grid row around.
+    # Real and sample cards share one markup shape — head (title + a resume-prompt tag, top
+    # right), description, then a footer with Open flow (primary) and Edit (secondary) side by
+    # side at equal height — so every card behaves and looks identical. The only differences are
+    # what the shared modals below actually do (network call vs preview-only) and that a
+    # sample's Open-flow button has nothing real to link to. Editing/deleting are shared modals,
+    # not inline forms, precisely so opening one never changes this card's own height and pushes
+    # its grid row around.
     if prototypes:
         cards = "".join(f'''
         <div class="flowcard" data-flow-file="{E(p["file"])}" data-flow-title="{E(p["title"])}"
              data-flow-description="{E(p["description"])}" data-flow-status="{E(p["status"])}">
           <div class="flowcard-head">
             <h3 class="flowcard-title">{E(p["title"])}</h3>
-            <div class="flowcard-head-actions">
-              <button type="button" class="flowcard-resume" data-resume title="Copy a resume-work prompt for this flow" aria-label="Copy a resume-work prompt for this flow">{RESUME_ICON}</button>
-              <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
-            </div>
+            <button type="button" class="flowcard-resume" data-resume title="Copy a resume-work prompt for this flow" aria-label="Copy a resume-work prompt for this flow">{RESUME_ICON}</button>
           </div>
           <p class="flowcard-desc">{E(p["description"]) or '<span class="dim">No description yet.</span>'}</p>
-          <a class="btn btn-primary flowcard-open" href="screens/{E(p["file"])}" target="_blank" rel="noopener">Open flow ↗</a>
+          <div class="flowcard-footer">
+            <a class="btn btn-primary flowcard-open" href="screens/{E(p["file"])}" target="_blank" rel="noopener">Open flow ↗</a>
+            <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
+          </div>
         </div>''' for p in prototypes)
     else:
         cards = ('<p class="dim">No flows composed yet — a screen saved under screens/ '
@@ -1483,10 +1565,13 @@ def prototypes_page():
              data-flow-description="{E(m["description"])}" data-flow-status="{E(m["status"])}">
           <div class="flowcard-head">
             <h3 class="flowcard-title">{E(m["title"])}</h3>
-            <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
+            <button type="button" class="flowcard-resume" data-resume title="Copy a resume-work prompt for this flow" aria-label="Copy a resume-work prompt for this flow">{RESUME_ICON}</button>
           </div>
           <p class="flowcard-desc">{E(m["description"])}</p>
-          <button type="button" class="btn btn-primary flowcard-open">Open flow ↗</button>
+          <div class="flowcard-footer">
+            <button type="button" class="btn btn-primary flowcard-open">Open flow ↗</button>
+            <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
+          </div>
         </div>''' for m in MOCK_PROTOTYPES)
 
     body = f"""
@@ -1507,9 +1592,24 @@ def prototypes_page():
         <label class="flowcard-label">Status</label>
         <select class="flowcard-input" id="flow-edit-status-input">{status_options}</select>
         <span class="flowcard-status dim" id="flow-edit-msg"></span>
+        <div class="modal-ctas modal-ctas-split">
+          <button type="button" class="btn btn-danger" id="flow-edit-delete">Delete</button>
+          <div class="modal-ctas-right">
+            <button type="button" class="btn" id="flow-edit-cancel">Cancel</button>
+            <button type="button" class="btn btn-primary" id="flow-edit-save">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="flow-delete-modal" hidden>
+      <div class="modal-card" role="alertdialog" aria-modal="true" aria-labelledby="flow-delete-heading">
+        <h3 id="flow-delete-heading">Delete this flow?</h3>
+        <p class="dim" id="flow-delete-detail"></p>
+        <span class="flowcard-status dim" id="flow-delete-msg"></span>
         <div class="modal-ctas">
-          <button type="button" class="btn" id="flow-edit-cancel">Cancel</button>
-          <button type="button" class="btn btn-primary" id="flow-edit-save">Save</button>
+          <button type="button" class="btn" id="flow-delete-cancel">Cancel</button>
+          <button type="button" class="btn btn-danger" id="flow-delete-confirm">Delete</button>
         </div>
       </div>
     </div>
@@ -2015,6 +2115,8 @@ h2 .count{color:var(--ink3);font-size:12.5px;font-weight:400;font-variant-numeri
 .btn:active{transform:scale(.975)}
 .btn-primary{background:var(--ink);color:var(--canvas);border-color:var(--ink)}
 .btn-primary:hover{background:var(--ink);color:var(--canvas);opacity:.88}
+.btn-danger{background:var(--bad-bg);color:var(--bad-ink);border-color:var(--bad-line)}
+.btn-danger:hover{background:var(--bad-line);color:var(--bad-ink)}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .btn:disabled:hover{background:var(--ink);border-color:var(--ink);color:var(--canvas)}
 .gaprow{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-md);
@@ -2048,20 +2150,29 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .flowcard[data-flow-status="in-progress"],.flowcard-mock[data-flow-status="in-progress"]{border-right-color:var(--info-ink)}
 .flowcard[data-flow-status="depleted"],.flowcard-mock[data-flow-status="depleted"]{border-right-color:var(--bad-ink)}
 .flowcard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.flowcard-head-actions{display:flex;align-items:center;gap:6px;flex:none}
 /* Same small-icon-button look as .themetoggle in the sidebar — one convention for "a compact
-   icon-only affordance next to something," not a second one invented just for this. */
+   icon-only affordance next to something," not a second one invented just for this. Sits alone
+   at the top right of the head now that Edit has moved down into the footer. */
 .flowcard-resume{width:30px;height:30px;flex:none;border-radius:var(--r-sm);border:1px solid var(--line);
   background:var(--surface-2);color:var(--ink2);cursor:pointer;display:flex;align-items:center;
   justify-content:center;padding:0;transition:color .15s,border-color .15s}
 .flowcard-resume:hover{color:var(--ink);border-color:var(--line-2)}
 .flowcard-resume svg{width:15px;height:15px}
 .flowcard-title{font-size:14.5px;font-weight:600;color:var(--ink);margin:0}
-/* flex:1 1 auto is what pins the button below to the same bottom edge on every card in the
-   row: this grows to soak up whatever space the row's tallest card leaves over, so the button
+/* flex:1 1 auto is what pins .flowcard-footer to the same bottom edge on every card in the
+   row: this grows to soak up whatever space the row's tallest card leaves over, so the footer
    always sits a fixed 14px under it, whatever the description's actual length is */
 .flowcard-desc{font-size:13px;color:var(--ink2);margin:8px 0 0;line-height:1.5;flex:1 1 auto}
-.flowcard-open{display:inline-flex;width:100%;justify-content:center;box-sizing:border-box;margin-top:14px}
+/* Open flow (primary, fills the remaining width) and Edit (secondary, its own natural width) —
+   same row, same height, since both are plain .btn underneath and neither overrides padding. */
+.flowcard-footer{display:flex;gap:8px;margin-top:14px}
+/* Fixed height on both, not just matching padding — a real card's Open flow is an <a>, a
+   sample's is a <button> (nothing to link to), and browsers don't size those two tags
+   identically from the same padding/font alone. Forcing the height directly is what actually
+   guarantees every card's footer lines up, real or sample. */
+.flowcard-footer .btn{height:38px;box-sizing:border-box}
+.flowcard-open{flex:1 1 auto;display:inline-flex;justify-content:center}
+.flowcard-edit{flex:0 0 auto}
 .flowcard-label{display:block;font-size:11.5px;color:var(--ink3);margin:10px 0 4px}
 .flowcard-label:first-child{margin-top:0}
 .flowcard-input,.flowcard-textarea{width:100%;background:var(--surface);border:1px solid var(--line);
@@ -2141,6 +2252,8 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .modal-card-wide p{margin:0 0 12px}
 .modal-card-wide #flow-resume-textarea{margin-top:4px;font-family:var(--font-mono);font-size:12.5px}
 .modal-ctas{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.modal-ctas-split{justify-content:space-between}
+.modal-ctas-right{display:flex;gap:10px}
 
 /* Segmented control: switches which category panel shows, so a page with several
    categories (learnings.html's Pending/Confirmed/Rejected, fill-gaps.html's five
