@@ -4,7 +4,9 @@ This repository is the machine-navigable mirror of the **Noise Audio Design Lang
 ingested from Figma (file `QjVyM5bRXgIOZn8PO1e0eK`, page **Test pilot run**, node `2025:148`).
 
 It is built for an AI composition agent. **Read `AGENT.md` first** — it is the reasoning
-rulebook that governs how anything in this repository may be used.
+rulebook that governs how anything in this repository may be used. `PLAYBOOK.md` holds the
+exact prompts used to start or resume a session; AGENT.md §7 explains how the agent is
+expected to tell the two apart.
 
 ## Sources of truth
 
@@ -19,6 +21,8 @@ rulebook that governs how anything in this repository may be used.
 
 ```
 AGENT.md                  READ FIRST — the reasoning rulebook (human-placed; not generated).
+PLAYBOOK.md               The prompts used to start a new flow or resume an existing one
+                          (human-placed; not generated) — see AGENT.md §7.
 CONTROL_PANEL.md          Screen state panel rules (human-placed; not generated).
 registry.yaml             The map: every component with ids, fingerprints, edges, usage counts.
 INGESTION_REPORT.md       Gaps, drift, dangling references found during ingestion.
@@ -44,7 +48,10 @@ scripts/
                           (also invoked automatically by build_dashboard.py).
   build_component_library.py  Regenerates components/**/*.snippet.html + registry.yaml's
                           `snippet:` pointers from the current repo state (Phase 4).
-screens/                  Empty in Phase 1 — no screens are composed during ingestion.
+screens/                  Composed flows (AGENT.md §7), each a real standalone HTML file, plus
+                          index.json — a human-editable title/description/status overlay.
+                          Empty at the end of ingestion; populated only once the agent starts
+                          composing flows. Browsed from the dashboard's Prototypes page.
 ```
 
 ## Component code library (Phase 4)
