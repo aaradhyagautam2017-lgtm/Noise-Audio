@@ -240,8 +240,8 @@ NAV_ICONS = {
     "search": _navsvg('<circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/>'),
     "chevron": _navsvg('<path d="m5 8.5 7 6.5 7-6.5"/>'),
     "learnings": _navsvg('<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.45.9 1.15.9 1.9V16h5.4v-.3c0-.75.3-1.45.9-1.9A6 6 0 0 0 12 3z"/>'),
-    "prototypes": _navsvg('<rect x="3.5" y="3.5" width="12" height="17" rx="2"/>'
-                          '<path d="M15.5 8.5h5v11a2 2 0 0 1-2 2h-9"/>'),
+    "prototypes": _navsvg('<rect x="4" y="4" width="16" height="16" rx="3.5"/>'
+                          '<path d="M10 8.7v6.6l5.7-3.3z" fill="currentColor" stroke="none"/>'),
 }
 
 def sidebar(prefix, active):
