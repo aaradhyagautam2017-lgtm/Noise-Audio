@@ -1023,6 +1023,19 @@ FILL_GAP_JS = r"""
 # not something a static page can do for itself.
 LEARNINGS_JS = r"""
 (function () {
+  function saveDecision(id, status) {
+    return fetch('/api/decide', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id: id, status: status })
+    }).then(function (res) {
+      if (res.ok) return true;
+      return res.json().catch(function () { return {}; }).then(function (body) {
+        throw new Error(body.error || ('HTTP ' + res.status));
+      });
+    });
+  }
+
   function decide(row, id, newStatus) {
     var ctas = row.querySelector('[data-ctas]');
     var approveBtn = ctas.querySelector('[data-approve]');
@@ -1035,16 +1048,7 @@ LEARNINGS_JS = r"""
     note.classList.remove('is-approved', 'is-denied');
     note.textContent = 'Saving…';
 
-    fetch('/api/decide', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ id: id, status: newStatus })
-    }).then(function (res) {
-      if (res.ok) return true;
-      return res.json().catch(function () { return {}; }).then(function (body) {
-        throw new Error(body.error || ('HTTP ' + res.status));
-      });
-    }).then(function () {
+    saveDecision(id, newStatus).then(function () {
       row.classList.add('is-decided');
       approveBtn.hidden = true;
       denyBtn.hidden = true;
@@ -1058,12 +1062,57 @@ LEARNINGS_JS = r"""
     });
   }
 
+  function revoke(row, id) {
+    var ctas = row.querySelector('[data-ctas]');
+    var revokeBtn = ctas.querySelector('[data-revoke]');
+    var note = ctas.querySelector('[data-decided-note]');
+
+    revokeBtn.disabled = true;
+    note.hidden = false;
+    note.classList.remove('is-approved', 'is-denied');
+    note.textContent = 'Saving…';
+
+    saveDecision(id, 'proposed').then(function () {
+      row.classList.add('is-decided');
+      revokeBtn.hidden = true;
+      note.textContent = 'Revoked — moved back to Pending review. The dashboard is rebuilding; refresh in about a minute to see it move.';
+    }).catch(function (err) {
+      revokeBtn.disabled = false;
+      note.textContent = 'Could not revoke (' + err.message + '). Try again.';
+    });
+  }
+
+  var revokeModal = document.getElementById('revoke-modal');
+  var revokeCancelBtn = document.getElementById('revoke-cancel');
+  var revokeProceedBtn = document.getElementById('revoke-proceed');
+  var pendingRevoke = null;
+
+  function closeRevokeModal() {
+    revokeModal.hidden = true;
+    pendingRevoke = null;
+  }
+
+  revokeCancelBtn.addEventListener('click', closeRevokeModal);
+  revokeModal.addEventListener('click', function (ev) { if (ev.target === revokeModal) closeRevokeModal(); });
+  revokeProceedBtn.addEventListener('click', function () {
+    if (!pendingRevoke) return;
+    var target = pendingRevoke;
+    closeRevokeModal();
+    revoke(target.row, target.id);
+  });
+
   document.querySelectorAll('.learning-row[data-learning-id]').forEach(function (row) {
     var id = row.getAttribute('data-learning-id');
     var approveBtn = row.querySelector('[data-approve]');
     var denyBtn = row.querySelector('[data-deny]');
+    var revokeBtn = row.querySelector('[data-revoke]');
     if (approveBtn) approveBtn.addEventListener('click', function (ev) { ev.preventDefault(); decide(row, id, 'confirmed'); });
     if (denyBtn) denyBtn.addEventListener('click', function (ev) { ev.preventDefault(); decide(row, id, 'rejected'); });
+    if (revokeBtn) revokeBtn.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      pendingRevoke = { row: row, id: id };
+      revokeModal.hidden = false;
+    });
   });
 })();
 """
@@ -1148,14 +1197,14 @@ SEG_ICONS = {
 
 def learnings_page():
     """The dedicated destination the overview's three learnings tiles link into (see
-    AGENT.md §6). Pending entries are actionable (Approve/Deny); confirmed and rejected
-    ones are the closed record of past decisions. A segmented control shows exactly one
-    category at a time -- with dozens of entries logged over time, stacking all three
-    on one page would mean scrolling past everything confirmed just to reach what's
-    rejected, which is the opposite of what this page is for."""
+    AGENT.md §6). Pending entries get Approve/Deny; confirmed and rejected ones get Revoke,
+    since a past decision can always be sent back to Pending review. A segmented control
+    shows exactly one category at a time -- with dozens of entries logged over time,
+    stacking all three on one page would mean scrolling past everything confirmed just to
+    reach what's rejected, which is the opposite of what this page is for."""
     tabs = [
         ("pending", "Pending review", len(learnings_pending),
-         "".join(learning_row_html(e, actionable=True) for e in learnings_pending) or
+         "".join(learning_row_html(e) for e in learnings_pending) or
          '<p class="entrylist-empty">Nothing awaiting review.</p>'),
         ("confirmed", "Confirmed", len(learnings_confirmed),
          "".join(learning_row_html(e) for e in learnings_confirmed) or
@@ -1182,6 +1231,18 @@ def learnings_page():
 
     <div class="segtabs" data-seg-group="learnings">{segtabs_html}</div>
     {segpanels_html}
+
+    <div class="modal-overlay" id="revoke-modal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="revoke-modal-title">
+        <h3 id="revoke-modal-title">Revoke this decision?</h3>
+        <p class="dim">This will move the learning back to Pending review, where it can be approved or
+        denied again.</p>
+        <div class="modal-ctas">
+          <button type="button" class="btn" id="revoke-cancel">Cancel</button>
+          <button type="button" class="btn btn-primary" id="revoke-proceed">Proceed</button>
+        </div>
+      </div>
+    </div>
     <script>{LEARNINGS_JS}</script>
     """
     return page("Agent Learnings", "learnings", body)
@@ -1244,12 +1305,13 @@ def learning_entry(entry, cid=None):
     return {"title": entry.get("proposed_rule") or entry.get("user_correction") or "(no rule text logged)",
             "detail": entry.get("user_correction") or "", "chips": chips}
 
-def learning_row_html(entry, actionable=False):
+def learning_row_html(entry):
     """One collapsible row for learnings.html. Collapsed, only the proposed rule (or field
     label) and a chevron show — the component chips and the full what-happened/what-you-said
     detail are inside the <details> body, so a reader sees what a review is about before
-    deciding whether to open it. `actionable` adds the Approve/Deny controls; only a still-
-    pending entry gets those — a confirmed or rejected one is a closed, read-only record."""
+    deciding whether to open it. The CTA shown depends on the entry's own status: a pending
+    entry gets Approve/Deny; a confirmed or rejected one gets Revoke, since a past decision
+    is never truly final — a designer can send it back to Pending review if they reconsider."""
     chips = "".join(render_chip({"label": components.get(c, {}).get("name", c).strip() if c in components else c,
                                   "href": f"components/{c}.html"})
                      for c in (entry.get("components") or []))
@@ -1268,12 +1330,18 @@ def learning_row_html(entry, actionable=False):
             f'<div class="learning-field-value">{E(entry.get("user_correction") or "")}</div></div>'
         )
 
-    ctas = ""
-    if actionable:
+    status = entry.get("status")
+    if status == "proposed":
         ctas = ('<div class="learning-ctas" data-ctas>'
                 '<button type="button" class="btn btn-approve" data-approve>Approve</button>'
                 '<button type="button" class="btn btn-deny" data-deny>Deny</button>'
                 '<span class="learning-decided-note" data-decided-note hidden></span></div>')
+    elif status in ("confirmed", "rejected"):
+        ctas = ('<div class="learning-ctas" data-ctas>'
+                '<button type="button" class="btn btn-revoke" data-revoke>Revoke</button>'
+                '<span class="learning-decided-note" data-decided-note hidden></span></div>')
+    else:
+        ctas = ""
 
     return (f'<details class="learning-row" data-learning-id="{E(eid)}">'
             f'<summary><span class="learning-summary-text">{E(summary_text)}</span>'
@@ -1712,10 +1780,24 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .btn-approve:hover{background:var(--good-ink);color:var(--canvas);border-color:var(--good-ink)}
 .btn-deny{border-color:var(--bad-line);color:var(--bad-ink)}
 .btn-deny:hover{background:var(--bad-ink);color:var(--canvas);border-color:var(--bad-ink)}
+.btn-revoke{border-color:var(--warn-line);color:var(--warn-ink)}
+.btn-revoke:hover{background:var(--warn-ink);color:var(--canvas);border-color:var(--warn-ink)}
 .learning-row.is-decided{opacity:.6}
 .learning-decided-note{font-size:12.5px;font-weight:500}
 .learning-decided-note.is-approved{color:var(--good-ink)}
 .learning-decided-note.is-denied{color:var(--bad-ink)}
+
+/* Revoke confirmation — a floating modal rather than an inline toggle, since undoing a
+   confirmed/rejected decision (back to Pending review) is easy to click by accident amid
+   a long list, and deserves the same deliberate second step Approve/Deny doesn't need. */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;
+  align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal-overlay[hidden]{display:none}
+.modal-card{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-lg);
+  padding:24px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.modal-card h3{margin:0 0 8px;font-size:15px}
+.modal-card p{margin:0}
+.modal-ctas{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
 
 /* Segmented control: switches which category panel shows, so a page with several
    categories (learnings.html's Pending/Confirmed/Rejected, fill-gaps.html's five

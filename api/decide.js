@@ -3,7 +3,8 @@ import { verifySession, parseCookie, SESSION_COOKIE } from "../lib/dash-auth.js"
 const OWNER = "aaradhyagautam2017-lgtm";
 const REPO = "Noise-Audio";
 const FILE_PATH = "learnings.jsonl";
-const VALID_STATUSES = new Set(["confirmed", "rejected"]);
+// "proposed" is the revoke target: sends a confirmed/rejected entry back to Pending review.
+const VALID_STATUSES = new Set(["confirmed", "rejected", "proposed"]);
 const ID_RE = /^learn-[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-zA-Z0-9]+$/;
 
 // Node.js runtime, not Edge — needs Buffer (for base64 <-> utf-8) and a plain outbound
@@ -63,7 +64,9 @@ export default async function handler(req, res) {
         if (entry.id === id) {
           found = true;
           entry.status = status;
-          entry.reviewed_at = new Date().toISOString();
+          // A revoke (back to "proposed") means this entry hasn't actually been reviewed
+          // yet, by definition — clear reviewed_at rather than stamping a new one.
+          entry.reviewed_at = status === "proposed" ? null : new Date().toISOString();
           return JSON.stringify(entry);
         }
         return line;
@@ -77,7 +80,9 @@ export default async function handler(req, res) {
         method: "PUT",
         headers: { ...ghHeaders, "content-type": "application/json" },
         body: JSON.stringify({
-          message: `learnings: mark ${id} as ${status} via dashboard`,
+          message: status === "proposed"
+            ? `learnings: revoke ${id}, back to pending via dashboard`
+            : `learnings: mark ${id} as ${status} via dashboard`,
           content: Buffer.from(updatedLines.join("\n"), "utf-8").toString("base64"),
           sha: file.sha,
           branch,

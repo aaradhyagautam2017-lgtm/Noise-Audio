@@ -251,10 +251,24 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .btn-approve:hover{background:var(--good-ink);color:var(--canvas);border-color:var(--good-ink)}
 .btn-deny{border-color:var(--bad-line);color:var(--bad-ink)}
 .btn-deny:hover{background:var(--bad-ink);color:var(--canvas);border-color:var(--bad-ink)}
+.btn-revoke{border-color:var(--warn-line);color:var(--warn-ink)}
+.btn-revoke:hover{background:var(--warn-ink);color:var(--canvas);border-color:var(--warn-ink)}
 .learning-row.is-decided{opacity:.6}
 .learning-decided-note{font-size:12.5px;font-weight:500}
 .learning-decided-note.is-approved{color:var(--good-ink)}
 .learning-decided-note.is-denied{color:var(--bad-ink)}
+
+/* Revoke confirmation — a floating modal rather than an inline toggle, since undoing a
+   confirmed/rejected decision (back to Pending review) is easy to click by accident amid
+   a long list, and deserves the same deliberate second step Approve/Deny doesn't need. */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;
+  align-items:center;justify-content:center;z-index:100;padding:20px}
+.modal-overlay[hidden]{display:none}
+.modal-card{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-lg);
+  padding:24px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.modal-card h3{margin:0 0 8px;font-size:15px}
+.modal-card p{margin:0}
+.modal-ctas{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
 
 /* Segmented control: switches which category panel shows, so a page with several
    categories (learnings.html's Pending/Confirmed/Rejected, fill-gaps.html's five
