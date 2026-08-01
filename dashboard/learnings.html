@@ -41,16 +41,17 @@
 
     <header class="pagehead"><h1>Agent Learnings</h1></header>
     <p class="dim">Corrections the agent has absorbed, and what's still waiting on a human decision — see
-    <a href="../AGENT.md">AGENT.md §6</a>. This is a static site with no backend: clicking Approve/Deny marks
-    your decision here in the browser only. Download the updated <code>learnings.jsonl</code> at the bottom
-    once you're done, replace the repo's copy, and commit — nothing here saves by itself.</p>
+    <a href="../AGENT.md">AGENT.md §6</a>. Approve/Deny saves straight to <code>learnings.jsonl</code> in the
+    repo and the dashboard rebuilds itself — no download, no manual commit. Allow up to a minute for the
+    rebuilt version to appear, then refresh. If saving fails for any reason, a manual download is still
+    available at the bottom as a fallback.</p>
 
     <div class="segtabs" data-seg-group="learnings"><button type="button" class="segtab" data-seg-key="pending"><span class="segtab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>Pending review<span class="segtab-count">3</span></button><button type="button" class="segtab" data-seg-key="confirmed"><span class="segtab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M8.3 12.3l2.5 2.5 5-5.2"/></svg></span>Confirmed<span class="segtab-count">0</span></button><button type="button" class="segtab" data-seg-key="rejected"><span class="segtab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9 9l6 6M15 9l-6 6"/></svg></span>Rejected<span class="segtab-count">0</span></button></div>
     <div class="metasection" data-segpanel-group="learnings" data-seg-key="pending"><details class="learning-row" data-learning-id="learn-2026-08-01-001"><summary><span class="learning-summary-text">Any screen that is not the Home page must use l1-inner-page-navigation (+ l2-inner-pages-heading) as a literal navigated page. Do not substitute modal-sheet/modal-card or action-sheet/action-card for a step in a normal navigation flow, even when the PRD describes it as a skippable/confirmable check-in.</span><span class="ovchev" aria-hidden="true"></span></summary><div class="learning-body"><div class="learning-chips"><a class="entry-where" href="components/l1-home-page-navigation.html">L1/Home page</a><a class="entry-where" href="components/l1-inner-page-navigation.html">L1 Inner page navigation</a><a class="entry-where" href="components/modal-card.html">Modal card</a><a class="entry-where" href="components/modal-sheet.html">Modal Sheet</a><a class="entry-where" href="components/action-card.html">Action card</a><a class="entry-where" href="components/action-sheet.html">Action sheet</a></div><div class="learning-field"><div class="learning-field-label">What the agent did</div><div class="learning-field-value">Built Screen 3 (Remove device confirmation) as a Modal sheet + Modal card overlay with no L1 navigation bar, reasoning from the PRD&#x27;s &#x27;skippable&#x27; wording toward the action-card/modal-card usage_boundary distinction.</div></div><div class="learning-field"><div class="learning-field-label">What you said</div><div class="learning-field-value">The home page navigation is always l1-home-page-navigation, and every other page always carries l1-inner-page-navigation. The confirmation screen is such a page and I had not used l1-inner-page-navigation on it.</div></div><div class="learning-ctas" data-ctas><button type="button" class="btn btn-approve" data-approve>Approve</button><button type="button" class="btn btn-deny" data-deny>Deny</button><span class="learning-decided-note" data-decided-note hidden></span></div></div></details><details class="learning-row" data-learning-id="learn-2026-08-01-002"><summary><span class="learning-summary-text">Do not implement l1-inner-page-navigation&#x27;s distinct variant-axis cases (e.g. Clean-Only Chevron vs Items Selected) as a runtime toggle driven by interaction state within a single screen, unless the requirement explicitly calls for a dedicated selection-mode screen. Treat each case as a separate, deliberately-chosen placement, never an interpolated pair.</span><span class="ovchev" aria-hidden="true"></span></summary><div class="learning-body"><div class="learning-chips"><a class="entry-where" href="components/l1-inner-page-navigation.html">L1 Inner page navigation</a></div><div class="learning-field"><div class="learning-field-label">What the agent did</div><div class="learning-field-value">On the &#x27;Manage saved devices&#x27; screen, swapped l1-inner-page-navigation dynamically between its Clean-Only Chevron and Items Selected variants based on live checkbox-selection count.</div></div><div class="learning-field"><div class="learning-field-label">What you said</div><div class="learning-field-value">Clean-Only Chevron and Items Selected are two separate navigation case scenarios on l1-inner-page-navigation, not two states of one merged control. These are two different navigations that were merged into one; never do that. This screen only ever uses the plain chevron case.</div></div><div class="learning-ctas" data-ctas><button type="button" class="btn btn-approve" data-approve>Approve</button><button type="button" class="btn btn-deny" data-deny>Deny</button><span class="learning-decided-note" data-decided-note hidden></span></div></div></details><details class="learning-row" data-learning-id="learn-2026-08-01-003"><summary><span class="learning-summary-text">When placing the description atom beneath a 358px/16px-margin grouped-list card, align its side padding to 16px to match the card edges rather than applying its literal captured 12px padding verbatim — the captured value may reflect a different placement context, not this one.</span><span class="ovchev" aria-hidden="true"></span></summary><div class="learning-body"><div class="learning-chips"><a class="entry-where" href="components/description.html">Description</a></div><div class="learning-field"><div class="learning-field-label">What the agent did</div><div class="learning-field-value">Rendered the description atom on the Home screen (&#x27;Sidetone only applies while your earbuds are connected.&#x27;) using its captured visual_values side padding (12px) verbatim.</div></div><div class="learning-field"><div class="learning-field-label">What you said</div><div class="learning-field-value">The padding for that content is not correct.</div></div><div class="learning-ctas" data-ctas><button type="button" class="btn btn-approve" data-approve>Approve</button><button type="button" class="btn btn-deny" data-deny>Deny</button><span class="learning-decided-note" data-decided-note hidden></span></div></div></details></div><div class="metasection" data-segpanel-group="learnings" data-seg-key="confirmed"><p class="entrylist-empty">No learnings confirmed yet.</p></div><div class="metasection" data-segpanel-group="learnings" data-seg-key="rejected"><p class="entrylist-empty">Nothing rejected yet.</p></div>
 
     <div class="learnings-download-bar">
-      <button type="button" id="download-learnings" class="btn btn-primary" disabled>Download updated learnings.jsonl</button>
-      <span id="learnings-download-status" class="dim">Approve or deny an entry above to enable this.</span>
+      <button type="button" id="download-learnings" class="btn" disabled>Download learnings.jsonl (manual fallback)</button>
+      <span id="learnings-download-status" class="dim">Not needed unless automatic saving above fails.</span>
     </div>
     <script>
 (function () {
@@ -80,15 +81,31 @@
     ctas.querySelector('[data-deny]').hidden = true;
     var note = ctas.querySelector('[data-decided-note]');
     note.hidden = false;
-    note.textContent = newStatus === 'confirmed'
-      ? 'Marked approved — download below to save.'
-      : 'Marked denied — download below to save.';
+    note.textContent = 'Saving…';
     note.classList.add(newStatus === 'confirmed' ? 'is-approved' : 'is-denied');
 
     var dlBtn = document.getElementById('download-learnings');
     dlBtn.disabled = false;
     document.getElementById('learnings-download-status').textContent =
-      Object.keys(decisions).length + ' decision(s) made this session, not yet saved.';
+      Object.keys(decisions).length + ' decision(s) made this session.';
+
+    fetch('/api/decide', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id: id, status: newStatus })
+    }).then(function (res) {
+      if (res.ok) {
+        note.textContent = (newStatus === 'confirmed' ? 'Approved' : 'Denied') +
+          ' — saved to the repo. The dashboard is rebuilding; refresh in about a minute to see it move.';
+        return;
+      }
+      return res.json().catch(function () { return {}; }).then(function (body) {
+        throw new Error(body.error || ('HTTP ' + res.status));
+      });
+    }).catch(function (err) {
+      note.textContent = (newStatus === 'confirmed' ? 'Marked approved' : 'Marked denied') +
+        ' — could not save automatically (' + err.message + '). Use the download below as a fallback.';
+    });
   }
 
   document.querySelectorAll('.learning-row[data-learning-id]').forEach(function (row) {
@@ -114,7 +131,7 @@
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
     document.getElementById('learnings-download-status').textContent =
-      'Downloaded with ' + Object.keys(decisions).length + ' decision(s) applied. Replace learnings.jsonl in the repo with this file, then follow AGENT.md §6: regenerate the dashboard and commit both together.';
+      'Downloaded with ' + Object.keys(decisions).length + ' decision(s) applied — only needed if automatic saving above failed.';
   });
 })();
 </script>

@@ -1050,15 +1050,31 @@ LEARNINGS_JS = r"""
     ctas.querySelector('[data-deny]').hidden = true;
     var note = ctas.querySelector('[data-decided-note]');
     note.hidden = false;
-    note.textContent = newStatus === 'confirmed'
-      ? 'Marked approved — download below to save.'
-      : 'Marked denied — download below to save.';
+    note.textContent = 'Saving…';
     note.classList.add(newStatus === 'confirmed' ? 'is-approved' : 'is-denied');
 
     var dlBtn = document.getElementById('download-learnings');
     dlBtn.disabled = false;
     document.getElementById('learnings-download-status').textContent =
-      Object.keys(decisions).length + ' decision(s) made this session, not yet saved.';
+      Object.keys(decisions).length + ' decision(s) made this session.';
+
+    fetch('/api/decide', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id: id, status: newStatus })
+    }).then(function (res) {
+      if (res.ok) {
+        note.textContent = (newStatus === 'confirmed' ? 'Approved' : 'Denied') +
+          ' — saved to the repo. The dashboard is rebuilding; refresh in about a minute to see it move.';
+        return;
+      }
+      return res.json().catch(function () { return {}; }).then(function (body) {
+        throw new Error(body.error || ('HTTP ' + res.status));
+      });
+    }).catch(function (err) {
+      note.textContent = (newStatus === 'confirmed' ? 'Marked approved' : 'Marked denied') +
+        ' — could not save automatically (' + err.message + '). Use the download below as a fallback.';
+    });
   }
 
   document.querySelectorAll('.learning-row[data-learning-id]').forEach(function (row) {
@@ -1084,7 +1100,7 @@ LEARNINGS_JS = r"""
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
     document.getElementById('learnings-download-status').textContent =
-      'Downloaded with ' + Object.keys(decisions).length + ' decision(s) applied. Replace learnings.jsonl in the repo with this file, then follow AGENT.md §6: regenerate the dashboard and commit both together.';
+      'Downloaded with ' + Object.keys(decisions).length + ' decision(s) applied — only needed if automatic saving above failed.';
   });
 })();
 """
@@ -1203,16 +1219,17 @@ def learnings_page():
     body = f"""
     <header class="pagehead"><h1>Agent Learnings</h1></header>
     <p class="dim">Corrections the agent has absorbed, and what's still waiting on a human decision — see
-    <a href="../AGENT.md">AGENT.md §6</a>. This is a static site with no backend: clicking Approve/Deny marks
-    your decision here in the browser only. Download the updated <code>learnings.jsonl</code> at the bottom
-    once you're done, replace the repo's copy, and commit — nothing here saves by itself.</p>
+    <a href="../AGENT.md">AGENT.md §6</a>. Approve/Deny saves straight to <code>learnings.jsonl</code> in the
+    repo and the dashboard rebuilds itself — no download, no manual commit. Allow up to a minute for the
+    rebuilt version to appear, then refresh. If saving fails for any reason, a manual download is still
+    available at the bottom as a fallback.</p>
 
     <div class="segtabs" data-seg-group="learnings">{segtabs_html}</div>
     {segpanels_html}
 
     <div class="learnings-download-bar">
-      <button type="button" id="download-learnings" class="btn btn-primary" disabled>Download updated learnings.jsonl</button>
-      <span id="learnings-download-status" class="dim">Approve or deny an entry above to enable this.</span>
+      <button type="button" id="download-learnings" class="btn" disabled>Download learnings.jsonl (manual fallback)</button>
+      <span id="learnings-download-status" class="dim">Not needed unless automatic saving above fails.</span>
     </div>
     <script>{js}</script>
     """
