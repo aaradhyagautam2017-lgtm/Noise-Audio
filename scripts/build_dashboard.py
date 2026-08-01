@@ -327,7 +327,6 @@ def page(title, active, body, prefix=""):
 {sidebar(prefix, active)}
 <main class="main">
 {body}
-<footer class="footer">Generated from the repository — single source of truth. Regenerate with <code>python3 scripts/build_dashboard.py</code>. Source: Figma file <code>{E(registry["source"]["figma_file_key"])}</code>, page “{E(registry["source"]["figma_page"])}”, ingested {E(registry["generated"])}.</footer>
 </main>
 </div>
 <script src="{prefix}assets/app.js?v={APPJS_VER}"></script>
@@ -1024,56 +1023,38 @@ FILL_GAP_JS = r"""
 # not something a static page can do for itself.
 LEARNINGS_JS = r"""
 (function () {
-  var CURRENT_LEDGER = __CURRENT_LEDGER_JSON__;
-  var lines = CURRENT_LEDGER ? CURRENT_LEDGER.split('\n').filter(function (l) { return l.trim().length; }) : [];
-  var decisions = {}; // id -> modified line text, only for entries reviewed this session
-
-  function findLineIndex(id) {
-    for (var i = 0; i < lines.length; i++) {
-      try { if (JSON.parse(lines[i]).id === id) return i; } catch (e) {}
-    }
-    return -1;
-  }
-
   function decide(row, id, newStatus) {
-    var idx = findLineIndex(id);
-    if (idx === -1) return;
-    var entry;
-    try { entry = JSON.parse(lines[idx]); } catch (e) { return; }
-    entry.status = newStatus;
-    entry.reviewed_at = new Date().toISOString();
-    decisions[id] = JSON.stringify(entry);
-
-    row.classList.add('is-decided');
     var ctas = row.querySelector('[data-ctas]');
-    ctas.querySelector('[data-approve]').hidden = true;
-    ctas.querySelector('[data-deny]').hidden = true;
+    var approveBtn = ctas.querySelector('[data-approve]');
+    var denyBtn = ctas.querySelector('[data-deny]');
     var note = ctas.querySelector('[data-decided-note]');
-    note.hidden = false;
-    note.textContent = 'Saving…';
-    note.classList.add(newStatus === 'confirmed' ? 'is-approved' : 'is-denied');
 
-    var dlBtn = document.getElementById('download-learnings');
-    dlBtn.disabled = false;
-    document.getElementById('learnings-download-status').textContent =
-      Object.keys(decisions).length + ' decision(s) made this session.';
+    approveBtn.disabled = true;
+    denyBtn.disabled = true;
+    note.hidden = false;
+    note.classList.remove('is-approved', 'is-denied');
+    note.textContent = 'Saving…';
 
     fetch('/api/decide', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ id: id, status: newStatus })
     }).then(function (res) {
-      if (res.ok) {
-        note.textContent = (newStatus === 'confirmed' ? 'Approved' : 'Denied') +
-          ' — saved to the repo. The dashboard is rebuilding; refresh in about a minute to see it move.';
-        return;
-      }
+      if (res.ok) return true;
       return res.json().catch(function () { return {}; }).then(function (body) {
         throw new Error(body.error || ('HTTP ' + res.status));
       });
+    }).then(function () {
+      row.classList.add('is-decided');
+      approveBtn.hidden = true;
+      denyBtn.hidden = true;
+      note.classList.add(newStatus === 'confirmed' ? 'is-approved' : 'is-denied');
+      note.textContent = (newStatus === 'confirmed' ? 'Approved' : 'Denied') +
+        ' — saved to the repo. The dashboard is rebuilding; refresh in about a minute to see it move.';
     }).catch(function (err) {
-      note.textContent = (newStatus === 'confirmed' ? 'Marked approved' : 'Marked denied') +
-        ' — could not save automatically (' + err.message + '). Use the download below as a fallback.';
+      approveBtn.disabled = false;
+      denyBtn.disabled = false;
+      note.textContent = 'Could not save (' + err.message + '). Try again.';
     });
   }
 
@@ -1083,24 +1064,6 @@ LEARNINGS_JS = r"""
     var denyBtn = row.querySelector('[data-deny]');
     if (approveBtn) approveBtn.addEventListener('click', function (ev) { ev.preventDefault(); decide(row, id, 'confirmed'); });
     if (denyBtn) denyBtn.addEventListener('click', function (ev) { ev.preventDefault(); decide(row, id, 'rejected'); });
-  });
-
-  document.getElementById('download-learnings').addEventListener('click', function () {
-    var out = lines.map(function (line, i) {
-      try {
-        var id = JSON.parse(line).id;
-        if (decisions[id]) return decisions[id];
-      } catch (e) {}
-      return line;
-    });
-    var blob = new Blob([out.join('\n') + '\n'], { type: 'application/x-ndjson' });
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    a.href = url; a.download = 'learnings.jsonl';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    document.getElementById('learnings-download-status').textContent =
-      'Downloaded with ' + Object.keys(decisions).length + ' decision(s) applied — only needed if automatic saving above failed.';
   });
 })();
 """
@@ -1190,12 +1153,6 @@ def learnings_page():
     category at a time -- with dozens of entries logged over time, stacking all three
     on one page would mean scrolling past everything confirmed just to reach what's
     rejected, which is the opposite of what this page is for."""
-    ledger_raw = ""
-    if os.path.exists(learnings_path):
-        with open(learnings_path) as f:
-            ledger_raw = f.read()
-    js = LEARNINGS_JS.replace("__CURRENT_LEDGER_JSON__", json.dumps(ledger_raw))
-
     tabs = [
         ("pending", "Pending review", len(learnings_pending),
          "".join(learning_row_html(e, actionable=True) for e in learnings_pending) or
@@ -1220,18 +1177,12 @@ def learnings_page():
     <header class="pagehead"><h1>Agent Learnings</h1></header>
     <p class="dim">Corrections the agent has absorbed, and what's still waiting on a human decision — see
     <a href="../AGENT.md">AGENT.md §6</a>. Approve/Deny saves straight to <code>learnings.jsonl</code> in the
-    repo and the dashboard rebuilds itself — no download, no manual commit. Allow up to a minute for the
-    rebuilt version to appear, then refresh. If saving fails for any reason, a manual download is still
-    available at the bottom as a fallback.</p>
+    repo and the dashboard rebuilds itself. Allow up to a minute for the rebuilt version to appear, then
+    refresh.</p>
 
     <div class="segtabs" data-seg-group="learnings">{segtabs_html}</div>
     {segpanels_html}
-
-    <div class="learnings-download-bar">
-      <button type="button" id="download-learnings" class="btn" disabled>Download learnings.jsonl (manual fallback)</button>
-      <span id="learnings-download-status" class="dim">Not needed unless automatic saving above fails.</span>
-    </div>
-    <script>{js}</script>
+    <script>{LEARNINGS_JS}</script>
     """
     return page("Agent Learnings", "learnings", body)
 
@@ -1765,9 +1716,6 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .learning-decided-note{font-size:12.5px;font-weight:500}
 .learning-decided-note.is-approved{color:var(--good-ink)}
 .learning-decided-note.is-denied{color:var(--bad-ink)}
-.learnings-download-bar{position:sticky;bottom:0;margin:24px -22px -20px;padding:16px 22px;
-  background:var(--surface);border-top:1px solid var(--line);
-  display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 
 /* Segmented control: switches which category panel shows, so a page with several
    categories (learnings.html's Pending/Confirmed/Rejected, fill-gaps.html's five
