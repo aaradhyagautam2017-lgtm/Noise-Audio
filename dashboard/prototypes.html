@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=0a61241be1">
+<link rel="stylesheet" href="assets/style.css?v=176ff9a370">
 <link rel="stylesheet" href="../css/tokens.css">
 </head><body>
 <div class="layout">
@@ -47,9 +47,10 @@
     <p class="dim">Every flow the agent has composed and saved to <code>screens/</code>, in one place —
     open any of them, or rename the title and add a description. Renaming saves straight back to the
     repo and the dashboard rebuilds itself; allow up to a minute, then refresh.</p>
+    <div class="statuslegend"><span class="statustag s-ready-for-dev">Ready for dev</span><span class="statustag s-ready-for-review">Ready for review</span><span class="statustag s-in-progress">In progress</span><span class="statustag s-depleted">Depleted</span></div>
     <div class="flowgrid">
         <div class="flowcard" data-flow-file="manage-my-earbuds-flow.html" data-flow-title="Manage My Earbuds Flow"
-             data-flow-description="">
+             data-flow-description="" data-flow-status="ready-for-dev">
           <div class="flowcard-view" data-view>
             <div class="flowcard-head">
               <h3 class="flowcard-title">Manage My Earbuds Flow</h3>
@@ -69,35 +70,26 @@
             </div>
             <span class="flowcard-status dim" data-status></span>
           </div>
-        </div></div>
-
-    <div class="subhead">Status samples <span class="dim">— a proposed handoff-status stroke, not wired to anything yet</span></div>
-    <p class="dim">Illustrative only: these four are not real flows and aren't backed by a file under
-    <code>screens/</code> — nothing here is saved, opened, or persisted.</p>
-    <div class="flowgrid">
-        <div class="flowcard-mock" data-status="ready-for-dev">
-          <span class="flowcard-statuspill s-ready-for-dev">Ready for dev</span>
+        </div>
+        <div class="flowcard-mock" data-flow-status="ready-for-dev">
           <h3 class="flowcard-title">Battery Health Alert</h3>
           <p class="flowcard-desc">Low-battery warning card + dismiss action for the home screen.</p>
-          <p class="flowcard-mocknote dim">Signed off — handed to engineering.</p>
+          <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
         </div>
-        <div class="flowcard-mock" data-status="ready-for-review">
-          <span class="flowcard-statuspill s-ready-for-review">Ready for review</span>
+        <div class="flowcard-mock" data-flow-status="ready-for-review">
           <h3 class="flowcard-title">Quick Pair Onboarding</h3>
           <p class="flowcard-desc">First-time pairing walkthrough, three screens.</p>
-          <p class="flowcard-mocknote dim">Waiting on a senior designer&#x27;s pass.</p>
+          <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
         </div>
-        <div class="flowcard-mock" data-status="in-progress">
-          <span class="flowcard-statuspill s-in-progress">In progress</span>
+        <div class="flowcard-mock" data-flow-status="in-progress">
           <h3 class="flowcard-title">Firmware Update Flow</h3>
           <p class="flowcard-desc">Download progress, install confirmation, restart prompt.</p>
-          <p class="flowcard-mocknote dim">Still being worked on.</p>
+          <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
         </div>
-        <div class="flowcard-mock" data-status="depleted">
-          <span class="flowcard-statuspill s-depleted">Depleted</span>
+        <div class="flowcard-mock" data-flow-status="depleted">
           <h3 class="flowcard-title">Legacy Device Sync</h3>
-          <p class="flowcard-desc">Bluetooth Classic fallback pairing — shelved, not moving forward.</p>
-          <p class="flowcard-mocknote dim">Shelved — not moving forward.</p>
+          <p class="flowcard-desc">Bluetooth Classic fallback pairing.</p>
+          <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
         </div></div>
 
     <script>

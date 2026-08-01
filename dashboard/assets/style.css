@@ -220,8 +220,14 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 
 /* prototypes.html — directory of composed flows under screens/ */
 .flowgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-.flowcard{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-md);
+.flowcard,.flowcard-mock{background:var(--surface-2);border:2px solid var(--line);border-radius:var(--r-md);
   padding:16px}
+/* data-flow-status (not data-status — that bare attribute already marks the save-feedback
+   span inside a real card's edit form, found via card.querySelector('[data-status]')) */
+.flowcard[data-flow-status="ready-for-dev"],.flowcard-mock[data-flow-status="ready-for-dev"]{border-color:var(--good-ink)}
+.flowcard[data-flow-status="ready-for-review"],.flowcard-mock[data-flow-status="ready-for-review"]{border-color:var(--warn-ink)}
+.flowcard[data-flow-status="in-progress"],.flowcard-mock[data-flow-status="in-progress"]{border-color:var(--info-ink)}
+.flowcard[data-flow-status="depleted"],.flowcard-mock[data-flow-status="depleted"]{border-color:var(--bad-ink)}
 .flowcard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 .flowcard-title{font-size:14.5px;font-weight:600;color:var(--ink);margin:0}
 .flowcard-desc{font-size:13px;color:var(--ink2);margin:8px 0 14px;line-height:1.5}
@@ -235,23 +241,23 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .flowcard-ctas{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
 .flowcard-status{display:block;font-size:12px;margin-top:8px;min-height:15px}
 
-/* Sample/status-stroke cards — illustrative only, deliberately not sharing .flowcard's class
-   (kept off document.querySelectorAll('.flowcard') in PROTOTYPES_JS, which assumes every
-   .flowcard has edit/save controls these don't have) even though they share its look. */
-.flowcard-mock{background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--line-2);
-  border-radius:var(--r-md);padding:16px}
-.flowcard-mock[data-status="ready-for-dev"]{border-left-color:var(--good-ink)}
-.flowcard-mock[data-status="ready-for-review"]{border-left-color:var(--warn-ink)}
-.flowcard-mock[data-status="in-progress"]{border-left-color:var(--info-ink)}
-.flowcard-mock[data-status="depleted"]{border-left-color:var(--bad-ink)}
-.flowcard-statuspill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;
-  padding:3px 10px 3px 8px;border-radius:var(--r-pill);margin-bottom:10px}
-.flowcard-statuspill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
-.flowcard-statuspill.s-ready-for-dev{background:var(--good-bg);color:var(--good-ink)}
-.flowcard-statuspill.s-ready-for-review{background:var(--warn-bg);color:var(--warn-ink)}
-.flowcard-statuspill.s-in-progress{background:var(--info-bg);color:var(--info-ink)}
-.flowcard-statuspill.s-depleted{background:var(--bad-bg);color:var(--bad-ink)}
-.flowcard-mocknote{font-size:12px;margin:10px 0 0}
+/* Status legend — the tag row at the top of prototypes.html explaining what each border
+   colour means. Same four colours as the cards below it, nothing else. */
+.statuslegend{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 22px}
+.statustag{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:500;
+  padding:5px 12px;border-radius:var(--r-pill);border:1.5px solid var(--line);color:var(--ink2)}
+.statustag::before{content:"";width:9px;height:9px;border-radius:50%;flex:none;background:var(--tag-color)}
+.statustag.s-ready-for-dev{--tag-color:var(--good-ink);border-color:var(--good-ink)}
+.statustag.s-ready-for-review{--tag-color:var(--warn-ink);border-color:var(--warn-ink)}
+.statustag.s-in-progress{--tag-color:var(--info-ink);border-color:var(--info-ink)}
+.statustag.s-depleted{--tag-color:var(--bad-ink);border-color:var(--bad-ink)}
+
+/* Sample cards — same structure/markup as a real .flowcard (title, description, an Open-flow-
+   styled button) so they read as "this is what a prototype card looks like," just not wired to
+   anything: no Edit control, and the button is inert (disabled, no href). Deliberately kept off
+   the .flowcard class so PROTOTYPES_JS's querySelectorAll('.flowcard').forEach(...), which
+   assumes every match has edit/save controls, never touches them. */
+.flowcard-mock .flowcard-open{opacity:.45;cursor:not-allowed}
 
 .pills{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
 .pill{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);

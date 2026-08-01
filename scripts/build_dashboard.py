@@ -153,18 +153,21 @@ if os.path.isdir(screens_dir):
             "file": fn,
             "title": meta.get("title") or _default_flow_title(fn),
             "description": meta.get("description") or "",
+            "status": meta.get("status") or "",
         })
 
-# Sample cards for prototypes.html illustrating a proposed status-stroke convention for
-# handoff between designer / PM / senior-designer review — not real flows, not backed by any
-# file under screens/, not wired to Approve/Deny or any persistence. Placeholder only, pending
-# a decision on whether/how to make this a real feature.
-MOCK_PROTOTYPE_STATUSES = {
-    "ready-for-dev":    {"label": "Ready for dev",    "note": "Signed off — handed to engineering."},
-    "ready-for-review": {"label": "Ready for review", "note": "Waiting on a senior designer's pass."},
-    "in-progress":      {"label": "In progress",      "note": "Still being worked on."},
-    "depleted":         {"label": "Depleted",         "note": "Shelved — not moving forward."},
+# The four handoff statuses a flow card's border can carry (designer -> PM -> senior-designer
+# review -> engineering). Read by real cards via screens/index.json's optional "status" field,
+# and by the sample cards below. STATUS_LABELS also drives the legend row on prototypes.html.
+STATUS_LABELS = {
+    "ready-for-dev": "Ready for dev",
+    "ready-for-review": "Ready for review",
+    "in-progress": "In progress",
+    "depleted": "Depleted",
 }
+# Sample cards for prototypes.html — same card structure as a real one (title, description,
+# an Open-flow-styled button), just not backed by a file under screens/ and not wired to
+# anything: no Edit control, and the button is inert. Placeholder only.
 MOCK_PROTOTYPES = [
     {"title": "Battery Health Alert", "status": "ready-for-dev",
      "description": "Low-battery warning card + dismiss action for the home screen."},
@@ -173,7 +176,7 @@ MOCK_PROTOTYPES = [
     {"title": "Firmware Update Flow", "status": "in-progress",
      "description": "Download progress, install confirmation, restart prompt."},
     {"title": "Legacy Device Sync", "status": "depleted",
-     "description": "Bluetooth Classic fallback pairing — shelved, not moving forward."},
+     "description": "Bluetooth Classic fallback pairing."},
 ]
 
 E = lambda s: html.escape(str(s), quote=True)
@@ -1368,10 +1371,13 @@ def prototypes_page():
     file path. Which flows exist is read straight off disk on every build; title and
     description are the one thing here a designer can rename/edit anytime, stored in
     screens/index.json as a human-editable overlay, never as the source of which files exist."""
+    legend = "".join(f'<span class="statustag s-{E(key)}">{E(label)}</span>'
+                      for key, label in STATUS_LABELS.items())
+
     if prototypes:
         cards = "".join(f'''
         <div class="flowcard" data-flow-file="{E(p["file"])}" data-flow-title="{E(p["title"])}"
-             data-flow-description="{E(p["description"])}">
+             data-flow-description="{E(p["description"])}"{f' data-flow-status="{E(p["status"])}"' if p["status"] else ''}>
           <div class="flowcard-view" data-view>
             <div class="flowcard-head">
               <h3 class="flowcard-title">{E(p["title"])}</h3>
@@ -1396,12 +1402,14 @@ def prototypes_page():
         cards = ('<p class="dim">No flows composed yet — a screen saved under screens/ '
                   '(AGENT.md Step 7) shows up here automatically.</p>')
 
+    # Sample cards: same markup shape as a real .flowcard's view state (title, description,
+    # an Open-flow-styled button) minus Edit and minus a working link — see the .flowcard-mock
+    # CSS comment for why these stay off the .flowcard class.
     mock_cards = "".join(f'''
-        <div class="flowcard-mock" data-status="{E(m["status"])}">
-          <span class="flowcard-statuspill s-{E(m["status"])}">{E(MOCK_PROTOTYPE_STATUSES[m["status"]]["label"])}</span>
+        <div class="flowcard-mock" data-flow-status="{E(m["status"])}">
           <h3 class="flowcard-title">{E(m["title"])}</h3>
           <p class="flowcard-desc">{E(m["description"])}</p>
-          <p class="flowcard-mocknote dim">{E(MOCK_PROTOTYPE_STATUSES[m["status"]]["note"])}</p>
+          <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
         </div>''' for m in MOCK_PROTOTYPES)
 
     body = f"""
@@ -1409,12 +1417,8 @@ def prototypes_page():
     <p class="dim">Every flow the agent has composed and saved to <code>screens/</code>, in one place —
     open any of them, or rename the title and add a description. Renaming saves straight back to the
     repo and the dashboard rebuilds itself; allow up to a minute, then refresh.</p>
-    <div class="flowgrid">{cards}</div>
-
-    <div class="subhead">Status samples <span class="dim">— a proposed handoff-status stroke, not wired to anything yet</span></div>
-    <p class="dim">Illustrative only: these four are not real flows and aren't backed by a file under
-    <code>screens/</code> — nothing here is saved, opened, or persisted.</p>
-    <div class="flowgrid">{mock_cards}</div>
+    <div class="statuslegend">{legend}</div>
+    <div class="flowgrid">{cards}{mock_cards}</div>
 
     <script>{PROTOTYPES_JS}</script>
     """
@@ -1922,8 +1926,14 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 
 /* prototypes.html — directory of composed flows under screens/ */
 .flowgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-.flowcard{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-md);
+.flowcard,.flowcard-mock{background:var(--surface-2);border:2px solid var(--line);border-radius:var(--r-md);
   padding:16px}
+/* data-flow-status (not data-status — that bare attribute already marks the save-feedback
+   span inside a real card's edit form, found via card.querySelector('[data-status]')) */
+.flowcard[data-flow-status="ready-for-dev"],.flowcard-mock[data-flow-status="ready-for-dev"]{border-color:var(--good-ink)}
+.flowcard[data-flow-status="ready-for-review"],.flowcard-mock[data-flow-status="ready-for-review"]{border-color:var(--warn-ink)}
+.flowcard[data-flow-status="in-progress"],.flowcard-mock[data-flow-status="in-progress"]{border-color:var(--info-ink)}
+.flowcard[data-flow-status="depleted"],.flowcard-mock[data-flow-status="depleted"]{border-color:var(--bad-ink)}
 .flowcard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 .flowcard-title{font-size:14.5px;font-weight:600;color:var(--ink);margin:0}
 .flowcard-desc{font-size:13px;color:var(--ink2);margin:8px 0 14px;line-height:1.5}
@@ -1937,23 +1947,23 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .flowcard-ctas{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
 .flowcard-status{display:block;font-size:12px;margin-top:8px;min-height:15px}
 
-/* Sample/status-stroke cards — illustrative only, deliberately not sharing .flowcard's class
-   (kept off document.querySelectorAll('.flowcard') in PROTOTYPES_JS, which assumes every
-   .flowcard has edit/save controls these don't have) even though they share its look. */
-.flowcard-mock{background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--line-2);
-  border-radius:var(--r-md);padding:16px}
-.flowcard-mock[data-status="ready-for-dev"]{border-left-color:var(--good-ink)}
-.flowcard-mock[data-status="ready-for-review"]{border-left-color:var(--warn-ink)}
-.flowcard-mock[data-status="in-progress"]{border-left-color:var(--info-ink)}
-.flowcard-mock[data-status="depleted"]{border-left-color:var(--bad-ink)}
-.flowcard-statuspill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;
-  padding:3px 10px 3px 8px;border-radius:var(--r-pill);margin-bottom:10px}
-.flowcard-statuspill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
-.flowcard-statuspill.s-ready-for-dev{background:var(--good-bg);color:var(--good-ink)}
-.flowcard-statuspill.s-ready-for-review{background:var(--warn-bg);color:var(--warn-ink)}
-.flowcard-statuspill.s-in-progress{background:var(--info-bg);color:var(--info-ink)}
-.flowcard-statuspill.s-depleted{background:var(--bad-bg);color:var(--bad-ink)}
-.flowcard-mocknote{font-size:12px;margin:10px 0 0}
+/* Status legend — the tag row at the top of prototypes.html explaining what each border
+   colour means. Same four colours as the cards below it, nothing else. */
+.statuslegend{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 22px}
+.statustag{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:500;
+  padding:5px 12px;border-radius:var(--r-pill);border:1.5px solid var(--line);color:var(--ink2)}
+.statustag::before{content:"";width:9px;height:9px;border-radius:50%;flex:none;background:var(--tag-color)}
+.statustag.s-ready-for-dev{--tag-color:var(--good-ink);border-color:var(--good-ink)}
+.statustag.s-ready-for-review{--tag-color:var(--warn-ink);border-color:var(--warn-ink)}
+.statustag.s-in-progress{--tag-color:var(--info-ink);border-color:var(--info-ink)}
+.statustag.s-depleted{--tag-color:var(--bad-ink);border-color:var(--bad-ink)}
+
+/* Sample cards — same structure/markup as a real .flowcard (title, description, an Open-flow-
+   styled button) so they read as "this is what a prototype card looks like," just not wired to
+   anything: no Edit control, and the button is inert (disabled, no href). Deliberately kept off
+   the .flowcard class so PROTOTYPES_JS's querySelectorAll('.flowcard').forEach(...), which
+   assumes every match has edit/save controls, never touches them. */
+.flowcard-mock .flowcard-open{opacity:.45;cursor:not-allowed}
 
 .pills{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
 .pill{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);

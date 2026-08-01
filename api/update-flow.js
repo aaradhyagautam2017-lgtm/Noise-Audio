@@ -9,8 +9,10 @@ const MAX_DESC = 1000;
 
 // Node.js runtime, not Edge — needs Buffer (for base64 <-> utf-8) and a plain outbound
 // fetch to the GitHub REST API, both only available here. Mirrors api/decide.js, but the
-// ledger here is a small JSON object (filename -> {title, description}) rather than a
-// line-delimited log, since this is a human-editable overlay, not an append-only record.
+// ledger here is a small JSON object (filename -> {title, description, ...}) rather than a
+// line-delimited log, since this is a human-editable overlay, not an append-only record. This
+// endpoint only ever writes title/description, but merges into whatever's already there so it
+// never clobbers other overlay fields (e.g. "status") set directly in the JSON file.
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).json({ ok: false, error: "method not allowed" });
@@ -68,7 +70,10 @@ export default async function handler(req, res) {
       // getRes.status === 404 means the file doesn't exist yet — sha stays undefined,
       // which tells the PUT below to create it fresh.
 
-      registry[file] = { title: title.trim(), description: description.trim() };
+      // Merge, not replace — a per-file entry can carry other overlay fields (e.g. "status",
+      // set directly in screens/index.json) that this endpoint doesn't know about and must
+      // not silently drop just because a designer renamed the card through the dashboard.
+      registry[file] = { ...(registry[file] || {}), title: title.trim(), description: description.trim() };
 
       const putRes = await fetch(apiBase, {
         method: "PUT",
