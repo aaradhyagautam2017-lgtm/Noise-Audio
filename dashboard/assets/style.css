@@ -218,31 +218,36 @@ textarea#gap-text{width:100%;background:var(--surface-2);border:1px solid var(--
   resize:vertical;box-sizing:border-box}
 textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 
-/* prototypes.html — directory of composed flows under screens/ */
+/* prototypes.html — directory of composed flows under screens/. Cards in the same row are
+   already equal height (CSS Grid's default align-items:stretch); each card is then a flex
+   column internally with its description set to flex-grow, so its Open-flow button always
+   lands a fixed 14px under it at the same bottom edge on every card in the row, rather than
+   sitting wherever the text happens to end. */
 .flowgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
 .flowcard,.flowcard-mock{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-md);
-  padding:16px;border-right-width:3px}
+  padding:16px;border-right-width:3px;display:flex;flex-direction:column}
 /* A single accent edge, not a full coloured frame: this dashboard already carries taxonomy
    with small colour dots rather than loud outlines (see .navdot) — the status stroke follows
    that same restraint. data-flow-status, not data-status — that bare attribute already marks
-   the save-feedback span inside a card's edit form, found via card.querySelector('[data-status]'). */
+   the save-feedback span inside the shared edit modal, found via document.getElementById. */
 .flowcard[data-flow-status="ready-for-dev"],.flowcard-mock[data-flow-status="ready-for-dev"]{border-right-color:var(--good-ink)}
 .flowcard[data-flow-status="ready-for-review"],.flowcard-mock[data-flow-status="ready-for-review"]{border-right-color:var(--warn-ink)}
 .flowcard[data-flow-status="in-progress"],.flowcard-mock[data-flow-status="in-progress"]{border-right-color:var(--info-ink)}
 .flowcard[data-flow-status="depleted"],.flowcard-mock[data-flow-status="depleted"]{border-right-color:var(--bad-ink)}
 .flowcard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 .flowcard-title{font-size:14.5px;font-weight:600;color:var(--ink);margin:0}
-.flowcard-desc{font-size:13px;color:var(--ink2);margin:8px 0 14px;line-height:1.5}
-.flowcard-open{display:inline-flex;width:100%;justify-content:center;box-sizing:border-box}
+/* flex:1 1 auto is what pins the button below to the same bottom edge on every card in the
+   row: this grows to soak up whatever space the row's tallest card leaves over, so the button
+   always sits a fixed 14px under it, whatever the description's actual length is */
+.flowcard-desc{font-size:13px;color:var(--ink2);margin:8px 0 0;line-height:1.5;flex:1 1 auto}
+.flowcard-open{display:inline-flex;width:100%;justify-content:center;box-sizing:border-box;margin-top:14px}
 .flowcard-label{display:block;font-size:11.5px;color:var(--ink3);margin:10px 0 4px}
 .flowcard-label:first-child{margin-top:0}
 .flowcard-input,.flowcard-textarea{width:100%;background:var(--surface);border:1px solid var(--line);
   border-radius:var(--r-sm);padding:8px 10px;font:inherit;font-size:13px;color:var(--ink);
   box-sizing:border-box;resize:vertical}
-select.flowcard-input{appearance:auto}
 .flowcard-input:focus,.flowcard-textarea:focus{outline:none;border-color:var(--accent)}
-.flowcard-ctas{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
-.flowcard-status{display:block;font-size:12px;margin-top:8px;min-height:15px}
+.flowcard-status{display:block;font-size:12px;margin-top:10px;min-height:15px}
 
 /* Status legend — a plain neutral tag (same look as .pill elsewhere) with a small colour dot
    doing the identifying work, the same convention as .navdot in the sidebar. */
@@ -255,14 +260,6 @@ select.flowcard-input{appearance:auto}
 .statustag.s-ready-for-review{--tag-color:var(--warn-ink)}
 .statustag.s-in-progress{--tag-color:var(--info-ink)}
 .statustag.s-depleted{--tag-color:var(--bad-ink)}
-
-/* Sample cards — same structure/markup as a real .flowcard (title, description, an Open-flow-
-   styled button, an Edit affordance) so they read as "this is what a prototype card looks
-   like." The Open-flow button stays inert — no real file under screens/ behind these — and
-   Edit only ever changes the status shown right here in the browser (PROTOTYPES_JS's mock
-   branch skips the network call entirely). Kept off the .flowcard class so that branch can't
-   be mixed up with a real, network-saved card by a stray selector match. */
-.flowcard-mock .flowcard-open{opacity:.45;cursor:not-allowed}
 
 .pills{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
 .pill{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);

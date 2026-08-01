@@ -1183,71 +1183,85 @@ LEARNINGS_JS = r"""
 
 PROTOTYPES_JS = r"""
 (function () {
-  function wireCard(card) {
-    var isReal = card.classList.contains('flowcard'); // vs .flowcard-mock — a sample card
-    var file = card.getAttribute('data-flow-file');
-    var view = card.querySelector('[data-view]');
-    var form = card.querySelector('[data-form]');
-    var titleInput = card.querySelector('[data-title-input]');   // absent on a sample card
-    var descInput = card.querySelector('[data-desc-input]');     // absent on a sample card
-    var statusInput = card.querySelector('[data-status-input]');
-    var statusMsg = card.querySelector('[data-status]');
-    var editBtn = card.querySelector('[data-edit]');
-    var cancelBtn = card.querySelector('[data-cancel]');
-    var saveBtn = card.querySelector('[data-save]');
+  var modal = document.getElementById('flow-edit-modal');
+  var titleInput = document.getElementById('flow-edit-title-input');
+  var descInput = document.getElementById('flow-edit-desc-input');
+  var statusInput = document.getElementById('flow-edit-status-input');
+  var statusMsg = document.getElementById('flow-edit-msg');
+  var cancelBtn = document.getElementById('flow-edit-cancel');
+  var saveBtn = document.getElementById('flow-edit-save');
+  var currentCard = null;
 
-    editBtn.addEventListener('click', function () {
-      if (titleInput) titleInput.value = card.getAttribute('data-flow-title') || '';
-      if (descInput) descInput.value = card.getAttribute('data-flow-description') || '';
-      statusInput.value = card.getAttribute('data-flow-status') || '';
-      statusMsg.textContent = '';
-      view.hidden = true;
-      form.hidden = false;
-      (titleInput || statusInput).focus();
-    });
-
-    cancelBtn.addEventListener('click', function () {
-      form.hidden = true;
-      view.hidden = false;
-    });
-
-    saveBtn.addEventListener('click', function () {
-      var newStatus = statusInput.value;
-
-      if (!isReal) {
-        // Sample card — nothing here is backed by a real file, so there is nothing to save to.
-        // Just reflect the chosen status on the card itself, in this browser, right now.
-        card.setAttribute('data-flow-status', newStatus);
-        statusMsg.textContent = 'Preview only — this is a sample card, nothing was saved.';
-        return;
-      }
-
-      var title = titleInput.value.trim();
-      var description = descInput.value.trim();
-      if (!title) { statusMsg.textContent = 'Title cannot be empty.'; return; }
-      saveBtn.disabled = true;
-      statusMsg.textContent = 'Saving…';
-      fetch('/api/update-flow', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ file: file, title: title, description: description, status: newStatus })
-      }).then(function (res) {
-        if (res.ok) return true;
-        return res.json().catch(function () { return {}; }).then(function (body) {
-          throw new Error(body.error || ('HTTP ' + res.status));
-        });
-      }).then(function () {
-        saveBtn.disabled = false;
-        card.setAttribute('data-flow-status', newStatus); // reflect immediately; title/description need the rebuild
-        statusMsg.textContent = 'Saved — the dashboard is rebuilding; refresh in about a minute to see it here.';
-      }).catch(function (err) {
-        saveBtn.disabled = false;
-        statusMsg.textContent = 'Could not save (' + err.message + '). Try again.';
-      });
-    });
+  function applyToCardView(card, title, description, status) {
+    card.setAttribute('data-flow-title', title);
+    card.setAttribute('data-flow-description', description);
+    card.setAttribute('data-flow-status', status);
+    card.querySelector('.flowcard-title').textContent = title;
+    var descEl = card.querySelector('.flowcard-desc');
+    if (description) descEl.textContent = description;
+    else descEl.innerHTML = '<span class="dim">No description yet.</span>';
   }
 
-  document.querySelectorAll('.flowcard, .flowcard-mock').forEach(wireCard);
+  function openModal(card) {
+    currentCard = card;
+    titleInput.value = card.getAttribute('data-flow-title') || '';
+    descInput.value = card.getAttribute('data-flow-description') || '';
+    statusInput.value = card.getAttribute('data-flow-status') || '';
+    statusMsg.textContent = '';
+    saveBtn.disabled = false;
+    modal.hidden = false;
+    titleInput.focus();
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+    currentCard = null;
+  }
+
+  document.querySelectorAll('.flowcard, .flowcard-mock').forEach(function (card) {
+    card.querySelector('[data-edit]').addEventListener('click', function () { openModal(card); });
+  });
+
+  cancelBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', function (ev) { if (ev.target === modal) closeModal(); });
+
+  saveBtn.addEventListener('click', function () {
+    if (!currentCard) return;
+    var isReal = currentCard.classList.contains('flowcard'); // vs .flowcard-mock — a sample card
+    var title = titleInput.value.trim();
+    var description = descInput.value.trim();
+    var status = statusInput.value;
+    if (!title) { statusMsg.textContent = 'Title cannot be empty.'; return; }
+
+    if (!isReal) {
+      // Sample card — nothing here is backed by a real file, so there is nothing to save to.
+      // Just reflect the edit on this one card, in this browser, right now.
+      applyToCardView(currentCard, title, description, status);
+      statusMsg.textContent = 'Preview only — this is a sample card, nothing was saved.';
+      return;
+    }
+
+    var file = currentCard.getAttribute('data-flow-file');
+    saveBtn.disabled = true;
+    statusMsg.textContent = 'Saving…';
+    fetch('/api/update-flow', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ file: file, title: title, description: description, status: status })
+    }).then(function (res) {
+      if (res.ok) return true;
+      return res.json().catch(function () { return {}; }).then(function (body) {
+        throw new Error(body.error || ('HTTP ' + res.status));
+      });
+    }).then(function () {
+      saveBtn.disabled = false;
+      applyToCardView(currentCard, title, description, status);
+      statusMsg.textContent = 'Saved — the dashboard is rebuilding; refresh in about a minute to fully sync.';
+    }).catch(function (err) {
+      saveBtn.disabled = false;
+      statusMsg.textContent = 'Could not save (' + err.message + '). Try again.';
+    });
+  });
 })();
 """
 
@@ -1389,68 +1403,39 @@ def prototypes_page():
     screens/index.json as a human-editable overlay, never as the source of which files exist."""
     legend = "".join(f'<span class="statustag s-{E(key)}">{E(label)}</span>'
                       for key, label in STATUS_LABELS.items())
+    status_options = '<option value="">— No status —</option>' + "".join(
+        f'<option value="{E(k)}">{E(l)}</option>' for k, l in STATUS_LABELS.items())
 
-    def status_select(current):
-        opts = ['<option value="">— No status —</option>']
-        opts += [f'<option value="{E(k)}"{" selected" if k == current else ""}>{E(l)}</option>'
-                 for k, l in STATUS_LABELS.items()]
-        return f'<select class="flowcard-input" data-status-input>{"".join(opts)}</select>'
-
+    # Real and sample cards share one markup shape (head with title + Edit, description, an
+    # Open-flow-styled button) so editing feels identical everywhere — the only difference is
+    # what the shared modal below does with Save (network vs preview-only) and that a sample's
+    # Open-flow button has nothing real to link to. Editing itself is a shared modal, not an
+    # inline form, precisely so opening it never changes this card's own height and pushes its
+    # grid row around.
     if prototypes:
         cards = "".join(f'''
         <div class="flowcard" data-flow-file="{E(p["file"])}" data-flow-title="{E(p["title"])}"
              data-flow-description="{E(p["description"])}" data-flow-status="{E(p["status"])}">
-          <div class="flowcard-view" data-view>
-            <div class="flowcard-head">
-              <h3 class="flowcard-title">{E(p["title"])}</h3>
-              <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
-            </div>
-            <p class="flowcard-desc">{E(p["description"]) or '<span class="dim">No description yet.</span>'}</p>
-            <a class="btn btn-primary flowcard-open" href="screens/{E(p["file"])}" target="_blank" rel="noopener">Open flow ↗</a>
+          <div class="flowcard-head">
+            <h3 class="flowcard-title">{E(p["title"])}</h3>
+            <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
           </div>
-          <div class="flowcard-form" data-form hidden>
-            <label class="flowcard-label">Title</label>
-            <input type="text" class="flowcard-input" data-title-input maxlength="120">
-            <label class="flowcard-label">Description</label>
-            <textarea class="flowcard-textarea" data-desc-input rows="3" maxlength="1000"></textarea>
-            <label class="flowcard-label">Status</label>
-            {status_select(p["status"])}
-            <div class="flowcard-ctas">
-              <button type="button" class="btn" data-cancel>Cancel</button>
-              <button type="button" class="btn btn-primary" data-save>Save</button>
-            </div>
-            <span class="flowcard-status dim" data-status></span>
-          </div>
+          <p class="flowcard-desc">{E(p["description"]) or '<span class="dim">No description yet.</span>'}</p>
+          <a class="btn btn-primary flowcard-open" href="screens/{E(p["file"])}" target="_blank" rel="noopener">Open flow ↗</a>
         </div>''' for p in prototypes)
     else:
         cards = ('<p class="dim">No flows composed yet — a screen saved under screens/ '
                   '(AGENT.md Step 7) shows up here automatically.</p>')
 
-    # Sample cards: same markup shape as a real .flowcard (title, description, an Open-flow-
-    # styled button, an Edit affordance). The Open-flow button stays inert — there's no real
-    # file under screens/ behind these — and Edit only ever changes the status shown right here
-    # in the browser (PROTOTYPES_JS's mock branch skips the network call entirely); nothing
-    # about a sample card is ever persisted. Kept off the .flowcard class so that branch can't
-    # be mixed up with a real, network-saved card by a stray selector match.
     mock_cards = "".join(f'''
-        <div class="flowcard-mock" data-flow-status="{E(m["status"])}">
-          <div class="flowcard-view" data-view>
-            <div class="flowcard-head">
-              <h3 class="flowcard-title">{E(m["title"])}</h3>
-              <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
-            </div>
-            <p class="flowcard-desc">{E(m["description"])}</p>
-            <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
+        <div class="flowcard-mock" data-flow-title="{E(m["title"])}"
+             data-flow-description="{E(m["description"])}" data-flow-status="{E(m["status"])}">
+          <div class="flowcard-head">
+            <h3 class="flowcard-title">{E(m["title"])}</h3>
+            <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
           </div>
-          <div class="flowcard-form" data-form hidden>
-            <label class="flowcard-label">Status</label>
-            {status_select(m["status"])}
-            <div class="flowcard-ctas">
-              <button type="button" class="btn" data-cancel>Cancel</button>
-              <button type="button" class="btn btn-primary" data-save>Save</button>
-            </div>
-            <span class="flowcard-status dim" data-status></span>
-          </div>
+          <p class="flowcard-desc">{E(m["description"])}</p>
+          <button type="button" class="btn btn-primary flowcard-open">Open flow ↗</button>
         </div>''' for m in MOCK_PROTOTYPES)
 
     body = f"""
@@ -1460,6 +1445,23 @@ def prototypes_page():
     repo and the dashboard rebuilds itself; allow up to a minute, then refresh.</p>
     <div class="statuslegend">{legend}</div>
     <div class="flowgrid">{cards}{mock_cards}</div>
+
+    <div class="modal-overlay" id="flow-edit-modal" hidden>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="flow-edit-heading">
+        <h3 id="flow-edit-heading">Edit flow</h3>
+        <label class="flowcard-label">Title</label>
+        <input type="text" class="flowcard-input" id="flow-edit-title-input" maxlength="120">
+        <label class="flowcard-label">Description</label>
+        <textarea class="flowcard-textarea" id="flow-edit-desc-input" rows="3" maxlength="1000"></textarea>
+        <label class="flowcard-label">Status</label>
+        <select class="flowcard-input" id="flow-edit-status-input">{status_options}</select>
+        <span class="flowcard-status dim" id="flow-edit-msg"></span>
+        <div class="modal-ctas">
+          <button type="button" class="btn" id="flow-edit-cancel">Cancel</button>
+          <button type="button" class="btn btn-primary" id="flow-edit-save">Save</button>
+        </div>
+      </div>
+    </div>
 
     <script>{PROTOTYPES_JS}</script>
     """
@@ -1965,31 +1967,36 @@ textarea#gap-text{width:100%;background:var(--surface-2);border:1px solid var(--
   resize:vertical;box-sizing:border-box}
 textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 
-/* prototypes.html — directory of composed flows under screens/ */
+/* prototypes.html — directory of composed flows under screens/. Cards in the same row are
+   already equal height (CSS Grid's default align-items:stretch); each card is then a flex
+   column internally with its description set to flex-grow, so its Open-flow button always
+   lands a fixed 14px under it at the same bottom edge on every card in the row, rather than
+   sitting wherever the text happens to end. */
 .flowgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
 .flowcard,.flowcard-mock{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-md);
-  padding:16px;border-right-width:3px}
+  padding:16px;border-right-width:3px;display:flex;flex-direction:column}
 /* A single accent edge, not a full coloured frame: this dashboard already carries taxonomy
    with small colour dots rather than loud outlines (see .navdot) — the status stroke follows
    that same restraint. data-flow-status, not data-status — that bare attribute already marks
-   the save-feedback span inside a card's edit form, found via card.querySelector('[data-status]'). */
+   the save-feedback span inside the shared edit modal, found via document.getElementById. */
 .flowcard[data-flow-status="ready-for-dev"],.flowcard-mock[data-flow-status="ready-for-dev"]{border-right-color:var(--good-ink)}
 .flowcard[data-flow-status="ready-for-review"],.flowcard-mock[data-flow-status="ready-for-review"]{border-right-color:var(--warn-ink)}
 .flowcard[data-flow-status="in-progress"],.flowcard-mock[data-flow-status="in-progress"]{border-right-color:var(--info-ink)}
 .flowcard[data-flow-status="depleted"],.flowcard-mock[data-flow-status="depleted"]{border-right-color:var(--bad-ink)}
 .flowcard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 .flowcard-title{font-size:14.5px;font-weight:600;color:var(--ink);margin:0}
-.flowcard-desc{font-size:13px;color:var(--ink2);margin:8px 0 14px;line-height:1.5}
-.flowcard-open{display:inline-flex;width:100%;justify-content:center;box-sizing:border-box}
+/* flex:1 1 auto is what pins the button below to the same bottom edge on every card in the
+   row: this grows to soak up whatever space the row's tallest card leaves over, so the button
+   always sits a fixed 14px under it, whatever the description's actual length is */
+.flowcard-desc{font-size:13px;color:var(--ink2);margin:8px 0 0;line-height:1.5;flex:1 1 auto}
+.flowcard-open{display:inline-flex;width:100%;justify-content:center;box-sizing:border-box;margin-top:14px}
 .flowcard-label{display:block;font-size:11.5px;color:var(--ink3);margin:10px 0 4px}
 .flowcard-label:first-child{margin-top:0}
 .flowcard-input,.flowcard-textarea{width:100%;background:var(--surface);border:1px solid var(--line);
   border-radius:var(--r-sm);padding:8px 10px;font:inherit;font-size:13px;color:var(--ink);
   box-sizing:border-box;resize:vertical}
-select.flowcard-input{appearance:auto}
 .flowcard-input:focus,.flowcard-textarea:focus{outline:none;border-color:var(--accent)}
-.flowcard-ctas{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
-.flowcard-status{display:block;font-size:12px;margin-top:8px;min-height:15px}
+.flowcard-status{display:block;font-size:12px;margin-top:10px;min-height:15px}
 
 /* Status legend — a plain neutral tag (same look as .pill elsewhere) with a small colour dot
    doing the identifying work, the same convention as .navdot in the sidebar. */
@@ -2002,14 +2009,6 @@ select.flowcard-input{appearance:auto}
 .statustag.s-ready-for-review{--tag-color:var(--warn-ink)}
 .statustag.s-in-progress{--tag-color:var(--info-ink)}
 .statustag.s-depleted{--tag-color:var(--bad-ink)}
-
-/* Sample cards — same structure/markup as a real .flowcard (title, description, an Open-flow-
-   styled button, an Edit affordance) so they read as "this is what a prototype card looks
-   like." The Open-flow button stays inert — no real file under screens/ behind these — and
-   Edit only ever changes the status shown right here in the browser (PROTOTYPES_JS's mock
-   branch skips the network call entirely). Kept off the .flowcard class so that branch can't
-   be mixed up with a real, network-saved card by a stray selector match. */
-.flowcard-mock .flowcard-open{opacity:.45;cursor:not-allowed}
 
 .pills{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
 .pill{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);
