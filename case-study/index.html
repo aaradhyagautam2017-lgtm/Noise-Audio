@@ -375,6 +375,20 @@
   .walkthrough-body { min-height: 220px; display: flex; align-items: center; justify-content: center; }
   .walkthrough-body img { width: 100%; height: auto; display: block; }
 
+  /* ---------- Diving Deeper: small paired screenshot + caption cards ---------- */
+  .mini-grid {
+    margin-top: 20px; max-width: 900px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px;
+  }
+  .mini-card {
+    border: 1px solid var(--border); border-radius: var(--r-md); background: var(--bg-surface); overflow: hidden;
+  }
+  .mini-card img { width: 100%; height: auto; display: block; background: var(--bg-base); }
+  .mini-card-cap { padding: 12px 14px; font-size: 13px; line-height: 1.55; color: var(--ink-2); }
+  .mini-card-cap b { color: var(--ink); font-weight: 600; }
+  .entry-shot { display: inline-block; margin-top: 14px; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--bg-surface); padding: 10px; }
+  .entry-shot img { display: block; }
+
   /* ---------- Stage 2: roadmap / what's-next note ---------- */
   .roadmap-note {
     margin-top: 28px; max-width: 680px; border: 1px solid var(--border); border-radius: var(--r-md);
@@ -434,6 +448,11 @@
           <button class="structure-item structure-item--sub" type="button" data-phase="stage4">Stage 4</button>
           <button class="structure-item" type="button" data-phase="deepdive">05 / Diving Deeper</button>
           <button class="structure-item structure-item--sub" type="button" data-phase="deepdive-overview">Overview</button>
+          <button class="structure-item structure-item--sub" type="button" data-phase="deepdive-fillgaps">Fill the Gaps</button>
+          <button class="structure-item structure-item--sub" type="button" data-phase="deepdive-learnings">Agent Learnings</button>
+          <button class="structure-item structure-item--sub" type="button" data-phase="deepdive-foundations">Foundations</button>
+          <button class="structure-item structure-item--sub" type="button" data-phase="deepdive-component">Component Detail</button>
+          <button class="structure-item structure-item--sub" type="button" data-phase="deepdive-prototypes">Prototypes</button>
         </nav>
       </div>
 
@@ -1416,6 +1435,294 @@
           agent — one confirmed and now treated as a real rule, one turned down, one still sitting
           there waiting on a decision.
         </p>
+      </div>
+
+      <div class="research-panel" data-phase="deepdive-fillgaps">
+        <div class="rc-eyebrow">05 / Diving Deeper</div>
+        <h2 class="rc-title">Fill the Gaps</h2>
+        <p class="overview-paragraph" style="margin-top: 16px;">
+          This is where an "Incomplete" row from Overview turns into actual writing. It's a
+          permanent item in the left sidebar of every page, not something buried behind a menu.
+        </p>
+        <div class="entry-shot">
+          <img src="assets/deepdive-fillgaps-entry.png" alt="The Fill the gaps entry in the dashboard's left sidebar, highlighted to show it's the active page.">
+        </div>
+        <p class="overview-paragraph" style="margin-top: 22px;">
+          Open it and the gaps are sorted into tabs, one per documentation field, each one showing
+          how many components are still missing it.
+        </p>
+        <div class="walkthrough-frame">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">noise-audio-dashboard.vercel.app/fill-gaps.html</span>
+          </div>
+          <div class="walkthrough-body" style="min-height:auto;">
+            <img src="assets/deepdive-fillgaps-tabs.png" alt="Fill the gaps tabs: Purpose 11, Usage 0, Design intent 1, Anti-patterns 1, Rules 0.">
+          </div>
+        </div>
+        <p class="overview-paragraph" style="margin-top: 22px;">
+          Click a tab and it lists the components still missing that field — a few of the eleven
+          still missing a <b>Purpose</b>, below.
+        </p>
+        <div class="walkthrough-frame">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">noise-audio-dashboard.vercel.app/fill-gaps.html — Purpose</span>
+          </div>
+          <div class="walkthrough-body">
+            <img src="assets/deepdive-fillgaps-panel.png" alt="List of components missing a Purpose — Actionables, Chevron, Checkbox, Radio Button — each row linking to its own fill-in page.">
+          </div>
+        </div>
+        <p class="overview-paragraph" style="margin-top: 22px;">
+          Each row opens a small page of its own: the component's real rendered preview next to a
+          text box. There's no backend behind it — writing an answer doesn't edit a component's
+          file directly. It logs a proposed entry into the same learnings ledger the next section
+          covers, where it sits until a person confirms it.
+        </p>
+      </div>
+
+      <div class="research-panel" data-phase="deepdive-learnings">
+        <div class="rc-eyebrow">05 / Diving Deeper</div>
+        <h2 class="rc-title">Agent Learnings</h2>
+        <p class="overview-paragraph" style="margin-top: 16px;">
+          Also a permanent sidebar item. This is the queue for everything that isn't allowed to
+          become a rule just because it was said once.
+        </p>
+        <div class="entry-shot">
+          <img src="assets/deepdive-learnings-entry.png" alt="The Agent Learnings entry in the dashboard's left sidebar.">
+        </div>
+        <p class="overview-paragraph" style="margin-top: 22px;">
+          Two kinds of entries land here: corrections given mid-conversation, and the
+          field-contributions written on Fill the Gaps. Neither is trusted automatically.
+        </p>
+        <div class="walkthrough-frame">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">noise-audio-dashboard.vercel.app/learnings.html</span>
+          </div>
+          <div class="walkthrough-body" style="min-height:auto;">
+            <img src="assets/deepdive-learnings-tabs.png" alt="Agent Learnings tabs: Pending review 1, Confirmed 1, Rejected 1.">
+          </div>
+        </div>
+        <p class="overview-paragraph" style="margin-top: 22px;">
+          A <b>Pending</b> entry gets a straight Approve or Deny. Approve moves it to
+          <b>Confirmed</b>, and from then on the agent reasons from it exactly like a rule written
+          in Figma. Deny moves it to <b>Rejected</b> — not deleted, so the same suggestion doesn't
+          get proposed and re-litigated again later. Either decision can be revoked afterward, if
+          it turns out to be wrong.
+        </p>
+      </div>
+
+      <div class="research-panel" data-phase="deepdive-foundations">
+        <div class="rc-eyebrow">05 / Diving Deeper</div>
+        <h2 class="rc-title">Foundations</h2>
+        <p class="overview-paragraph" style="margin-top: 16px;">
+          Three pages, grouped under one sidebar section, one per kind of token the whole library
+          is built from.
+        </p>
+        <div class="walkthrough-frame">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">noise-audio-dashboard.vercel.app/colors.html</span>
+          </div>
+          <div class="walkthrough-body">
+            <img src="assets/deepdive-foundations-colors.png" alt="Colors and tokens page: a table of color tokens, each with a plain-English usage note and a swatch plus value for light mode and dark mode.">
+          </div>
+        </div>
+        <p class="overview-paragraph" style="margin-top: 22px;">
+          <b>Colors & tokens</b> — every color, as a token name and a plain-English usage note
+          (what it's actually for), next to its literal value in both light and dark mode, swatch
+          included. Click a value and it copies, so using a color is pasting a token name, never
+          eyeballing a hex code.
+        </p>
+        <div class="walkthrough-frame" style="margin-top:28px;">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">noise-audio-dashboard.vercel.app/typography.html</span>
+          </div>
+          <div class="walkthrough-body">
+            <img src="assets/deepdive-foundations-typography.png" alt="Typography page: text styles rendered live at their real size, next to a copyable style-key hash.">
+          </div>
+        </div>
+        <p class="overview-paragraph" style="margin-top: 22px;">
+          <b>Typography</b> — the same idea, for text. 12 real styles, each shown live at actual
+          size instead of just described in numbers, next to a copyable key for matching it in
+          code.
+        </p>
+        <div class="walkthrough-frame" style="margin-top:28px;">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">noise-audio-dashboard.vercel.app/spacing.html</span>
+          </div>
+          <div class="walkthrough-body">
+            <img src="assets/deepdive-foundations-spacing.png" alt="Spacing and radius page: the base numeral scale from 4px to 32px, each value with a small bar showing its size.">
+          </div>
+        </div>
+        <p class="overview-paragraph" style="margin-top: 22px;">
+          <b>Spacing & radius</b> — the numbers everything else measures against: a base scale
+          from 4px up to 32px, with every gap, padding, and corner radius token in the library
+          defined against it, each shown with a small bar or rounded-corner preview instead of a
+          bare number.
+        </p>
+      </div>
+
+      <div class="research-panel" data-phase="deepdive-component">
+        <div class="rc-eyebrow">05 / Diving Deeper</div>
+        <h2 class="rc-title">Component Detail</h2>
+        <p class="overview-paragraph" style="margin-top: 16px;">
+          Every one of the 26 components has a page like this one. Here's the <b>Primary CTA
+          button</b>, as an example.
+        </p>
+        <div class="entry-shot">
+          <img src="assets/deepdive-component-head.png" alt="Primary cta page header: name, an Atom badge, and 'used by 4'.">
+        </div>
+        <p class="overview-paragraph" style="margin-top: 22px;">
+          The badge says what kind of component it is (Atom — the smallest, indivisible kind),
+          and "used by 4" says how many other components in the library are actually built from
+          this one.
+        </p>
+        <div class="walkthrough-frame">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">noise-audio-dashboard.vercel.app/components/primary-cta-button.html</span>
+          </div>
+          <div class="walkthrough-body">
+            <img src="assets/deepdive-component-preview.png" alt="Live rendered preview of the Primary CTA button's variants, each labelled with its state, usage, and Figma node id.">
+          </div>
+        </div>
+        <p class="overview-paragraph" style="margin-top: 22px;">
+          This preview isn't a pasted-in picture — it's rendered live from the exact size, radius,
+          padding, and color values pulled from Figma, so it changes the moment those values do.
+          Every real variant is listed above its own label — here, "Enabled" and "pressed" — with
+          the exact Figma node it came from.
+        </p>
+
+        <div class="mini-card" style="margin-top:22px; max-width:340px;">
+          <img src="assets/deepdive-component-variant-axes.png" alt="Variant axes card: State (Enabled, pressed, Disabled), Usage (L1 L2 screens, Bottomsheet), 6 variants.">
+          <div class="mini-card-cap">
+            <b>Variant axes</b> — the dimensions this component actually varies along, State and
+            Usage, and every value each one can take. Six real combinations exist in Figma; this
+            is the full list of them.
+          </div>
+        </div>
+
+        <p class="overview-paragraph" style="margin-top: 28px;">
+          Next to it sits <b>Identifiers</b> — three short facts that matter for very different
+          reasons, so each gets its own small screenshot instead of one card and a wall of text
+          underneath it.
+        </p>
+        <div class="mini-grid">
+          <div class="mini-card">
+            <img src="assets/deepdive-component-id-nodeid.png" alt="Node id: 248:4940.">
+            <div class="mini-card-cap">
+              <b>Node id</b> — the exact address of this variant inside the Figma file. It's how
+              the repo points back at the original design, precisely, instead of "the button that
+              looks like this."
+            </div>
+          </div>
+          <div class="mini-card">
+            <img src="assets/deepdive-component-id-fingerprint.png" alt="Fingerprint: a long hash string.">
+            <div class="mini-card-cap">
+              <b>Fingerprint</b> — a stable hash that stays the same even if the component gets
+              renamed or moved inside Figma. Node ids can shift; this is the identity that
+              survives that.
+            </div>
+          </div>
+          <div class="mini-card">
+            <img src="assets/deepdive-component-id-source.png" alt="Source: components/atoms/primary-cta-button.yaml.">
+            <div class="mini-card-cap">
+              <b>Source</b> — the exact repo file all of this came from. Nothing on this page is
+              invented; everything traces back to one real file, and this is the link to it.
+            </div>
+          </div>
+        </div>
+
+        <p class="overview-paragraph" style="margin-top: 28px;">
+          Underneath, the authored metadata — Purpose, Usage, Design intent, Anti-patterns, and
+          the rest — the same fields Overview measures. Already explained there, so here's just
+          what they look like on this component.
+        </p>
+        <div class="mini-card" style="margin-top:16px;">
+          <img src="assets/deepdive-component-meta-purpose.png" alt="Purpose card: Primary call-to-action button that triggers the main action on a screen.">
+          <div class="mini-card-cap">What it's for, in one line.</div>
+        </div>
+        <div class="mini-card" style="margin-top:12px;">
+          <img src="assets/deepdive-component-meta-usage.png" alt="Usage card: use for the single most important action in a given context.">
+          <div class="mini-card-cap">When to reach for it.</div>
+        </div>
+        <div class="mini-card" style="margin-top:12px;">
+          <img src="assets/deepdive-component-meta-design-intent.png" alt="Design intent card: give users one clear, high-emphasis action target.">
+          <div class="mini-card-cap">Why it looks the way it does.</div>
+        </div>
+        <div class="mini-card" style="margin-top:12px;">
+          <img src="assets/deepdive-component-meta-anti-patterns.png" alt="Anti-patterns card: two rules — don't use more than one enabled Primary CTA per view, don't use it for secondary actions.">
+          <div class="mini-card-cap">The specific ways not to use it — each one tagged with a short id the agent can cite directly.</div>
+        </div>
+      </div>
+
+      <div class="research-panel" data-phase="deepdive-prototypes">
+        <div class="rc-eyebrow">05 / Diving Deeper</div>
+        <h2 class="rc-title">Prototypes</h2>
+        <p class="overview-paragraph" style="margin-top: 16px;">
+          Every flow the agent has composed, saved for real under <code>screens/</code>, one card
+          per flow — the same page introduced back in the Approach section, now in full.
+        </p>
+        <div class="walkthrough-frame">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">noise-audio-dashboard.vercel.app/prototypes.html</span>
+          </div>
+          <div class="walkthrough-body">
+            <img src="assets/deepdive-prototypes-full.png" alt="The Prototypes page: a status legend and a grid of flow cards, each with a colored left-edge stripe, a description, and Open flow / Edit buttons.">
+          </div>
+        </div>
+        <p class="overview-paragraph" style="margin-top: 22px;">
+          The colored stripe down the left edge of every card is its status, set from a small
+          legend at the top of the page.
+        </p>
+        <div class="mini-card" style="margin-top:14px; max-width:520px;">
+          <img src="assets/deepdive-prototypes-legend.png" alt="Status legend: Ready for dev (green), Ready for review (yellow), In progress (blue), Depleted (red).">
+          <div class="mini-card-cap">Same four colors, same order, on every card's stripe — so a flow's status reads at a glance, without opening it.</div>
+        </div>
+        <p class="overview-paragraph" style="margin-top: 24px;">
+          Every card also carries a small speech-bubble tag in its corner. Tap it and it hands you
+          a ready-made prompt for picking that exact flow back up in a brand-new chat, without
+          replaying the whole original conversation.
+        </p>
+        <div class="mini-card" style="margin-top:14px; max-width:560px;">
+          <img src="assets/deepdive-prototypes-resume-modal.png" alt="Resume prompt modal: pre-filled text describing the flow to resume, with a Copy prompt button.">
+          <div class="mini-card-cap">The text is generated from that card's own title, file, description, and status — copy it, paste it as the first message of a new session, and it already knows what it's resuming.</div>
+        </div>
+        <p class="overview-paragraph" style="margin-top: 24px;">
+          Two buttons sit at the bottom of every card. <b>Open flow</b> launches the real,
+          composed HTML file in a new tab — the actual screens, not a description of them.
+          <b>Edit</b> opens a small form for renaming the title, updating its description or
+          status, or deleting it outright.
+        </p>
+        <div class="mini-card" style="margin-top:14px; max-width:380px;">
+          <img src="assets/deepdive-prototypes-edit-modal.png" alt="Edit flow modal: Title, Description, and Status fields, with Delete, Cancel, and Save buttons.">
+          <div class="mini-card-cap">Renaming here saves straight back to the repo. Delete asks for confirmation first — it isn't a one-tap action.</div>
+        </div>
+        <p class="overview-paragraph" style="margin-top: 24px;">
+          Two more things aren't specific to this page — they're reachable from anywhere in the
+          dashboard, but worth showing here.
+        </p>
+        <div class="mini-grid" style="margin-top:14px;">
+          <div class="mini-card">
+            <img src="assets/deepdive-search.png" alt="Search dropdown: typing 'card' shows matching components — Card heading, Modal card, Master card, Checkbox card, Action card.">
+            <div class="mini-card-cap">
+              <b>Search</b> — press ⌘K (or Ctrl K) from any page and jump straight to any
+              component or page by name, without clicking back through the sidebar.
+            </div>
+          </div>
+          <div class="mini-card">
+            <img src="assets/deepdive-login-gate.png" alt="Login screen: Noise Audio dashboard title, a password field, and a Sign in button.">
+            <div class="mini-card-cap">
+              <b>The password gate</b> — before any of this loads, the whole dashboard sits behind
+              a password. It isn't just publicly reachable to anyone with the link.
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
