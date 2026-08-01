@@ -6,13 +6,16 @@ const FILE_PATH = "screens/index.json";
 const FILE_RE = /^[a-z0-9][a-z0-9-]*\.html$/;
 const MAX_TITLE = 120;
 const MAX_DESC = 1000;
+// Mirrors STATUS_LABELS' keys in scripts/build_dashboard.py — kept in sync by hand since this
+// endpoint is a separate Node runtime with no import path back to that Python module.
+const VALID_STATUSES = new Set(["", "ready-for-dev", "ready-for-review", "in-progress", "depleted"]);
 
 // Node.js runtime, not Edge — needs Buffer (for base64 <-> utf-8) and a plain outbound
 // fetch to the GitHub REST API, both only available here. Mirrors api/decide.js, but the
-// ledger here is a small JSON object (filename -> {title, description, ...}) rather than a
+// ledger here is a small JSON object (filename -> {title, description, status}) rather than a
 // line-delimited log, since this is a human-editable overlay, not an append-only record. This
-// endpoint only ever writes title/description, but merges into whatever's already there so it
-// never clobbers other overlay fields (e.g. "status") set directly in the JSON file.
+// endpoint merges into whatever's already there for that file so an unrelated overlay field
+// never gets silently dropped just because a designer resaved one of the others.
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).json({ ok: false, error: "method not allowed" });
@@ -26,11 +29,12 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { file, title, description } = req.body || {};
+  const { file, title, description, status } = req.body || {};
   if (
     typeof file !== "string" || !FILE_RE.test(file) ||
     typeof title !== "string" || !title.trim() || title.length > MAX_TITLE ||
-    typeof description !== "string" || description.length > MAX_DESC
+    typeof description !== "string" || description.length > MAX_DESC ||
+    (status !== undefined && (typeof status !== "string" || !VALID_STATUSES.has(status)))
   ) {
     res.status(400).json({ ok: false, error: "invalid request" });
     return;
@@ -70,16 +74,19 @@ export default async function handler(req, res) {
       // getRes.status === 404 means the file doesn't exist yet — sha stays undefined,
       // which tells the PUT below to create it fresh.
 
-      // Merge, not replace — a per-file entry can carry other overlay fields (e.g. "status",
-      // set directly in screens/index.json) that this endpoint doesn't know about and must
-      // not silently drop just because a designer renamed the card through the dashboard.
-      registry[file] = { ...(registry[file] || {}), title: title.trim(), description: description.trim() };
+      // Merge, not replace — an unrelated overlay field must survive a save that doesn't touch it.
+      registry[file] = {
+        ...(registry[file] || {}),
+        title: title.trim(),
+        description: description.trim(),
+        ...(status !== undefined ? { status } : {}),
+      };
 
       const putRes = await fetch(apiBase, {
         method: "PUT",
         headers: { ...ghHeaders, "content-type": "application/json" },
         body: JSON.stringify({
-          message: `screens: update title/description for ${file} via dashboard`,
+          message: `screens: update title/description/status for ${file} via dashboard`,
           content: Buffer.from(JSON.stringify(registry, null, 2) + "\n", "utf-8").toString("base64"),
           ...(sha ? { sha } : {}),
           branch,

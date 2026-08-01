@@ -6,7 +6,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=176ff9a370">
+<link rel="stylesheet" href="assets/style.css?v=b2d27ef09d">
 <link rel="stylesheet" href="../css/tokens.css">
 </head><body>
 <div class="layout">
@@ -64,6 +64,8 @@
             <input type="text" class="flowcard-input" data-title-input maxlength="120">
             <label class="flowcard-label">Description</label>
             <textarea class="flowcard-textarea" data-desc-input rows="3" maxlength="1000"></textarea>
+            <label class="flowcard-label">Status</label>
+            <select class="flowcard-input" data-status-input><option value="">— No status —</option><option value="ready-for-dev" selected>Ready for dev</option><option value="ready-for-review">Ready for review</option><option value="in-progress">In progress</option><option value="depleted">Depleted</option></select>
             <div class="flowcard-ctas">
               <button type="button" class="btn" data-cancel>Cancel</button>
               <button type="button" class="btn btn-primary" data-save>Save</button>
@@ -72,46 +74,105 @@
           </div>
         </div>
         <div class="flowcard-mock" data-flow-status="ready-for-dev">
-          <h3 class="flowcard-title">Battery Health Alert</h3>
-          <p class="flowcard-desc">Low-battery warning card + dismiss action for the home screen.</p>
-          <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
+          <div class="flowcard-view" data-view>
+            <div class="flowcard-head">
+              <h3 class="flowcard-title">Battery Health Alert</h3>
+              <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
+            </div>
+            <p class="flowcard-desc">Low-battery warning card + dismiss action for the home screen.</p>
+            <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
+          </div>
+          <div class="flowcard-form" data-form hidden>
+            <label class="flowcard-label">Status</label>
+            <select class="flowcard-input" data-status-input><option value="">— No status —</option><option value="ready-for-dev" selected>Ready for dev</option><option value="ready-for-review">Ready for review</option><option value="in-progress">In progress</option><option value="depleted">Depleted</option></select>
+            <div class="flowcard-ctas">
+              <button type="button" class="btn" data-cancel>Cancel</button>
+              <button type="button" class="btn btn-primary" data-save>Save</button>
+            </div>
+            <span class="flowcard-status dim" data-status></span>
+          </div>
         </div>
         <div class="flowcard-mock" data-flow-status="ready-for-review">
-          <h3 class="flowcard-title">Quick Pair Onboarding</h3>
-          <p class="flowcard-desc">First-time pairing walkthrough, three screens.</p>
-          <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
+          <div class="flowcard-view" data-view>
+            <div class="flowcard-head">
+              <h3 class="flowcard-title">Quick Pair Onboarding</h3>
+              <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
+            </div>
+            <p class="flowcard-desc">First-time pairing walkthrough, three screens.</p>
+            <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
+          </div>
+          <div class="flowcard-form" data-form hidden>
+            <label class="flowcard-label">Status</label>
+            <select class="flowcard-input" data-status-input><option value="">— No status —</option><option value="ready-for-dev">Ready for dev</option><option value="ready-for-review" selected>Ready for review</option><option value="in-progress">In progress</option><option value="depleted">Depleted</option></select>
+            <div class="flowcard-ctas">
+              <button type="button" class="btn" data-cancel>Cancel</button>
+              <button type="button" class="btn btn-primary" data-save>Save</button>
+            </div>
+            <span class="flowcard-status dim" data-status></span>
+          </div>
         </div>
         <div class="flowcard-mock" data-flow-status="in-progress">
-          <h3 class="flowcard-title">Firmware Update Flow</h3>
-          <p class="flowcard-desc">Download progress, install confirmation, restart prompt.</p>
-          <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
+          <div class="flowcard-view" data-view>
+            <div class="flowcard-head">
+              <h3 class="flowcard-title">Firmware Update Flow</h3>
+              <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
+            </div>
+            <p class="flowcard-desc">Download progress, install confirmation, restart prompt.</p>
+            <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
+          </div>
+          <div class="flowcard-form" data-form hidden>
+            <label class="flowcard-label">Status</label>
+            <select class="flowcard-input" data-status-input><option value="">— No status —</option><option value="ready-for-dev">Ready for dev</option><option value="ready-for-review">Ready for review</option><option value="in-progress" selected>In progress</option><option value="depleted">Depleted</option></select>
+            <div class="flowcard-ctas">
+              <button type="button" class="btn" data-cancel>Cancel</button>
+              <button type="button" class="btn btn-primary" data-save>Save</button>
+            </div>
+            <span class="flowcard-status dim" data-status></span>
+          </div>
         </div>
         <div class="flowcard-mock" data-flow-status="depleted">
-          <h3 class="flowcard-title">Legacy Device Sync</h3>
-          <p class="flowcard-desc">Bluetooth Classic fallback pairing.</p>
-          <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
+          <div class="flowcard-view" data-view>
+            <div class="flowcard-head">
+              <h3 class="flowcard-title">Legacy Device Sync</h3>
+              <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
+            </div>
+            <p class="flowcard-desc">Bluetooth Classic fallback pairing.</p>
+            <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
+          </div>
+          <div class="flowcard-form" data-form hidden>
+            <label class="flowcard-label">Status</label>
+            <select class="flowcard-input" data-status-input><option value="">— No status —</option><option value="ready-for-dev">Ready for dev</option><option value="ready-for-review">Ready for review</option><option value="in-progress">In progress</option><option value="depleted" selected>Depleted</option></select>
+            <div class="flowcard-ctas">
+              <button type="button" class="btn" data-cancel>Cancel</button>
+              <button type="button" class="btn btn-primary" data-save>Save</button>
+            </div>
+            <span class="flowcard-status dim" data-status></span>
+          </div>
         </div></div>
 
     <script>
 (function () {
-  document.querySelectorAll('.flowcard').forEach(function (card) {
+  function wireCard(card) {
+    var isReal = card.classList.contains('flowcard'); // vs .flowcard-mock — a sample card
     var file = card.getAttribute('data-flow-file');
     var view = card.querySelector('[data-view]');
     var form = card.querySelector('[data-form]');
-    var titleInput = card.querySelector('[data-title-input]');
-    var descInput = card.querySelector('[data-desc-input]');
-    var status = card.querySelector('[data-status]');
+    var titleInput = card.querySelector('[data-title-input]');   // absent on a sample card
+    var descInput = card.querySelector('[data-desc-input]');     // absent on a sample card
+    var statusInput = card.querySelector('[data-status-input]');
+    var statusMsg = card.querySelector('[data-status]');
     var editBtn = card.querySelector('[data-edit]');
     var cancelBtn = card.querySelector('[data-cancel]');
     var saveBtn = card.querySelector('[data-save]');
 
     editBtn.addEventListener('click', function () {
-      titleInput.value = card.getAttribute('data-flow-title') || '';
-      descInput.value = card.getAttribute('data-flow-description') || '';
-      status.textContent = '';
+      if (titleInput) titleInput.value = card.getAttribute('data-flow-title') || '';
+      if (descInput) descInput.value = card.getAttribute('data-flow-description') || '';
+      statusInput.value = card.getAttribute('data-flow-status') || '';
+      statusMsg.textContent = '';
       view.hidden = true;
       form.hidden = false;
-      titleInput.focus();
+      (titleInput || statusInput).focus();
     });
 
     cancelBtn.addEventListener('click', function () {
@@ -120,15 +181,25 @@
     });
 
     saveBtn.addEventListener('click', function () {
+      var newStatus = statusInput.value;
+
+      if (!isReal) {
+        // Sample card — nothing here is backed by a real file, so there is nothing to save to.
+        // Just reflect the chosen status on the card itself, in this browser, right now.
+        card.setAttribute('data-flow-status', newStatus);
+        statusMsg.textContent = 'Preview only — this is a sample card, nothing was saved.';
+        return;
+      }
+
       var title = titleInput.value.trim();
       var description = descInput.value.trim();
-      if (!title) { status.textContent = 'Title cannot be empty.'; return; }
+      if (!title) { statusMsg.textContent = 'Title cannot be empty.'; return; }
       saveBtn.disabled = true;
-      status.textContent = 'Saving…';
+      statusMsg.textContent = 'Saving…';
       fetch('/api/update-flow', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ file: file, title: title, description: description })
+        body: JSON.stringify({ file: file, title: title, description: description, status: newStatus })
       }).then(function (res) {
         if (res.ok) return true;
         return res.json().catch(function () { return {}; }).then(function (body) {
@@ -136,13 +207,16 @@
         });
       }).then(function () {
         saveBtn.disabled = false;
-        status.textContent = 'Saved — the dashboard is rebuilding; refresh in about a minute to see it here.';
+        card.setAttribute('data-flow-status', newStatus); // reflect immediately; title/description need the rebuild
+        statusMsg.textContent = 'Saved — the dashboard is rebuilding; refresh in about a minute to see it here.';
       }).catch(function (err) {
         saveBtn.disabled = false;
-        status.textContent = 'Could not save (' + err.message + '). Try again.';
+        statusMsg.textContent = 'Could not save (' + err.message + '). Try again.';
       });
     });
-  });
+  }
+
+  document.querySelectorAll('.flowcard, .flowcard-mock').forEach(wireCard);
 })();
 </script>
     

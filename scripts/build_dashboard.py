@@ -1183,24 +1183,27 @@ LEARNINGS_JS = r"""
 
 PROTOTYPES_JS = r"""
 (function () {
-  document.querySelectorAll('.flowcard').forEach(function (card) {
+  function wireCard(card) {
+    var isReal = card.classList.contains('flowcard'); // vs .flowcard-mock — a sample card
     var file = card.getAttribute('data-flow-file');
     var view = card.querySelector('[data-view]');
     var form = card.querySelector('[data-form]');
-    var titleInput = card.querySelector('[data-title-input]');
-    var descInput = card.querySelector('[data-desc-input]');
-    var status = card.querySelector('[data-status]');
+    var titleInput = card.querySelector('[data-title-input]');   // absent on a sample card
+    var descInput = card.querySelector('[data-desc-input]');     // absent on a sample card
+    var statusInput = card.querySelector('[data-status-input]');
+    var statusMsg = card.querySelector('[data-status]');
     var editBtn = card.querySelector('[data-edit]');
     var cancelBtn = card.querySelector('[data-cancel]');
     var saveBtn = card.querySelector('[data-save]');
 
     editBtn.addEventListener('click', function () {
-      titleInput.value = card.getAttribute('data-flow-title') || '';
-      descInput.value = card.getAttribute('data-flow-description') || '';
-      status.textContent = '';
+      if (titleInput) titleInput.value = card.getAttribute('data-flow-title') || '';
+      if (descInput) descInput.value = card.getAttribute('data-flow-description') || '';
+      statusInput.value = card.getAttribute('data-flow-status') || '';
+      statusMsg.textContent = '';
       view.hidden = true;
       form.hidden = false;
-      titleInput.focus();
+      (titleInput || statusInput).focus();
     });
 
     cancelBtn.addEventListener('click', function () {
@@ -1209,15 +1212,25 @@ PROTOTYPES_JS = r"""
     });
 
     saveBtn.addEventListener('click', function () {
+      var newStatus = statusInput.value;
+
+      if (!isReal) {
+        // Sample card — nothing here is backed by a real file, so there is nothing to save to.
+        // Just reflect the chosen status on the card itself, in this browser, right now.
+        card.setAttribute('data-flow-status', newStatus);
+        statusMsg.textContent = 'Preview only — this is a sample card, nothing was saved.';
+        return;
+      }
+
       var title = titleInput.value.trim();
       var description = descInput.value.trim();
-      if (!title) { status.textContent = 'Title cannot be empty.'; return; }
+      if (!title) { statusMsg.textContent = 'Title cannot be empty.'; return; }
       saveBtn.disabled = true;
-      status.textContent = 'Saving…';
+      statusMsg.textContent = 'Saving…';
       fetch('/api/update-flow', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ file: file, title: title, description: description })
+        body: JSON.stringify({ file: file, title: title, description: description, status: newStatus })
       }).then(function (res) {
         if (res.ok) return true;
         return res.json().catch(function () { return {}; }).then(function (body) {
@@ -1225,13 +1238,16 @@ PROTOTYPES_JS = r"""
         });
       }).then(function () {
         saveBtn.disabled = false;
-        status.textContent = 'Saved — the dashboard is rebuilding; refresh in about a minute to see it here.';
+        card.setAttribute('data-flow-status', newStatus); // reflect immediately; title/description need the rebuild
+        statusMsg.textContent = 'Saved — the dashboard is rebuilding; refresh in about a minute to see it here.';
       }).catch(function (err) {
         saveBtn.disabled = false;
-        status.textContent = 'Could not save (' + err.message + '). Try again.';
+        statusMsg.textContent = 'Could not save (' + err.message + '). Try again.';
       });
     });
-  });
+  }
+
+  document.querySelectorAll('.flowcard, .flowcard-mock').forEach(wireCard);
 })();
 """
 
@@ -1374,10 +1390,16 @@ def prototypes_page():
     legend = "".join(f'<span class="statustag s-{E(key)}">{E(label)}</span>'
                       for key, label in STATUS_LABELS.items())
 
+    def status_select(current):
+        opts = ['<option value="">— No status —</option>']
+        opts += [f'<option value="{E(k)}"{" selected" if k == current else ""}>{E(l)}</option>'
+                 for k, l in STATUS_LABELS.items()]
+        return f'<select class="flowcard-input" data-status-input>{"".join(opts)}</select>'
+
     if prototypes:
         cards = "".join(f'''
         <div class="flowcard" data-flow-file="{E(p["file"])}" data-flow-title="{E(p["title"])}"
-             data-flow-description="{E(p["description"])}"{f' data-flow-status="{E(p["status"])}"' if p["status"] else ''}>
+             data-flow-description="{E(p["description"])}" data-flow-status="{E(p["status"])}">
           <div class="flowcard-view" data-view>
             <div class="flowcard-head">
               <h3 class="flowcard-title">{E(p["title"])}</h3>
@@ -1391,6 +1413,8 @@ def prototypes_page():
             <input type="text" class="flowcard-input" data-title-input maxlength="120">
             <label class="flowcard-label">Description</label>
             <textarea class="flowcard-textarea" data-desc-input rows="3" maxlength="1000"></textarea>
+            <label class="flowcard-label">Status</label>
+            {status_select(p["status"])}
             <div class="flowcard-ctas">
               <button type="button" class="btn" data-cancel>Cancel</button>
               <button type="button" class="btn btn-primary" data-save>Save</button>
@@ -1402,14 +1426,31 @@ def prototypes_page():
         cards = ('<p class="dim">No flows composed yet — a screen saved under screens/ '
                   '(AGENT.md Step 7) shows up here automatically.</p>')
 
-    # Sample cards: same markup shape as a real .flowcard's view state (title, description,
-    # an Open-flow-styled button) minus Edit and minus a working link — see the .flowcard-mock
-    # CSS comment for why these stay off the .flowcard class.
+    # Sample cards: same markup shape as a real .flowcard (title, description, an Open-flow-
+    # styled button, an Edit affordance). The Open-flow button stays inert — there's no real
+    # file under screens/ behind these — and Edit only ever changes the status shown right here
+    # in the browser (PROTOTYPES_JS's mock branch skips the network call entirely); nothing
+    # about a sample card is ever persisted. Kept off the .flowcard class so that branch can't
+    # be mixed up with a real, network-saved card by a stray selector match.
     mock_cards = "".join(f'''
         <div class="flowcard-mock" data-flow-status="{E(m["status"])}">
-          <h3 class="flowcard-title">{E(m["title"])}</h3>
-          <p class="flowcard-desc">{E(m["description"])}</p>
-          <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
+          <div class="flowcard-view" data-view>
+            <div class="flowcard-head">
+              <h3 class="flowcard-title">{E(m["title"])}</h3>
+              <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
+            </div>
+            <p class="flowcard-desc">{E(m["description"])}</p>
+            <button type="button" class="btn btn-primary flowcard-open" disabled>Open flow ↗</button>
+          </div>
+          <div class="flowcard-form" data-form hidden>
+            <label class="flowcard-label">Status</label>
+            {status_select(m["status"])}
+            <div class="flowcard-ctas">
+              <button type="button" class="btn" data-cancel>Cancel</button>
+              <button type="button" class="btn btn-primary" data-save>Save</button>
+            </div>
+            <span class="flowcard-status dim" data-status></span>
+          </div>
         </div>''' for m in MOCK_PROTOTYPES)
 
     body = f"""
@@ -1926,14 +1967,16 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 
 /* prototypes.html — directory of composed flows under screens/ */
 .flowgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-.flowcard,.flowcard-mock{background:var(--surface-2);border:2px solid var(--line);border-radius:var(--r-md);
-  padding:16px}
-/* data-flow-status (not data-status — that bare attribute already marks the save-feedback
-   span inside a real card's edit form, found via card.querySelector('[data-status]')) */
-.flowcard[data-flow-status="ready-for-dev"],.flowcard-mock[data-flow-status="ready-for-dev"]{border-color:var(--good-ink)}
-.flowcard[data-flow-status="ready-for-review"],.flowcard-mock[data-flow-status="ready-for-review"]{border-color:var(--warn-ink)}
-.flowcard[data-flow-status="in-progress"],.flowcard-mock[data-flow-status="in-progress"]{border-color:var(--info-ink)}
-.flowcard[data-flow-status="depleted"],.flowcard-mock[data-flow-status="depleted"]{border-color:var(--bad-ink)}
+.flowcard,.flowcard-mock{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:16px;border-right-width:3px}
+/* A single accent edge, not a full coloured frame: this dashboard already carries taxonomy
+   with small colour dots rather than loud outlines (see .navdot) — the status stroke follows
+   that same restraint. data-flow-status, not data-status — that bare attribute already marks
+   the save-feedback span inside a card's edit form, found via card.querySelector('[data-status]'). */
+.flowcard[data-flow-status="ready-for-dev"],.flowcard-mock[data-flow-status="ready-for-dev"]{border-right-color:var(--good-ink)}
+.flowcard[data-flow-status="ready-for-review"],.flowcard-mock[data-flow-status="ready-for-review"]{border-right-color:var(--warn-ink)}
+.flowcard[data-flow-status="in-progress"],.flowcard-mock[data-flow-status="in-progress"]{border-right-color:var(--info-ink)}
+.flowcard[data-flow-status="depleted"],.flowcard-mock[data-flow-status="depleted"]{border-right-color:var(--bad-ink)}
 .flowcard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 .flowcard-title{font-size:14.5px;font-weight:600;color:var(--ink);margin:0}
 .flowcard-desc{font-size:13px;color:var(--ink2);margin:8px 0 14px;line-height:1.5}
@@ -1943,26 +1986,29 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .flowcard-input,.flowcard-textarea{width:100%;background:var(--surface);border:1px solid var(--line);
   border-radius:var(--r-sm);padding:8px 10px;font:inherit;font-size:13px;color:var(--ink);
   box-sizing:border-box;resize:vertical}
+select.flowcard-input{appearance:auto}
 .flowcard-input:focus,.flowcard-textarea:focus{outline:none;border-color:var(--accent)}
 .flowcard-ctas{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
 .flowcard-status{display:block;font-size:12px;margin-top:8px;min-height:15px}
 
-/* Status legend — the tag row at the top of prototypes.html explaining what each border
-   colour means. Same four colours as the cards below it, nothing else. */
+/* Status legend — a plain neutral tag (same look as .pill elsewhere) with a small colour dot
+   doing the identifying work, the same convention as .navdot in the sidebar. */
 .statuslegend{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 22px}
-.statustag{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:500;
-  padding:5px 12px;border-radius:var(--r-pill);border:1.5px solid var(--line);color:var(--ink2)}
-.statustag::before{content:"";width:9px;height:9px;border-radius:50%;flex:none;background:var(--tag-color)}
-.statustag.s-ready-for-dev{--tag-color:var(--good-ink);border-color:var(--good-ink)}
-.statustag.s-ready-for-review{--tag-color:var(--warn-ink);border-color:var(--warn-ink)}
-.statustag.s-in-progress{--tag-color:var(--info-ink);border-color:var(--info-ink)}
-.statustag.s-depleted{--tag-color:var(--bad-ink);border-color:var(--bad-ink)}
+.statustag{display:inline-flex;align-items:center;gap:7px;font-size:12px;
+  padding:5px 12px;border-radius:var(--r-pill);border:1px solid var(--line);
+  background:var(--surface-2);color:var(--ink2)}
+.statustag::before{content:"";width:6px;height:6px;border-radius:50%;flex:none;background:var(--tag-color)}
+.statustag.s-ready-for-dev{--tag-color:var(--good-ink)}
+.statustag.s-ready-for-review{--tag-color:var(--warn-ink)}
+.statustag.s-in-progress{--tag-color:var(--info-ink)}
+.statustag.s-depleted{--tag-color:var(--bad-ink)}
 
 /* Sample cards — same structure/markup as a real .flowcard (title, description, an Open-flow-
-   styled button) so they read as "this is what a prototype card looks like," just not wired to
-   anything: no Edit control, and the button is inert (disabled, no href). Deliberately kept off
-   the .flowcard class so PROTOTYPES_JS's querySelectorAll('.flowcard').forEach(...), which
-   assumes every match has edit/save controls, never touches them. */
+   styled button, an Edit affordance) so they read as "this is what a prototype card looks
+   like." The Open-flow button stays inert — no real file under screens/ behind these — and
+   Edit only ever changes the status shown right here in the browser (PROTOTYPES_JS's mock
+   branch skips the network call entirely). Kept off the .flowcard class so that branch can't
+   be mixed up with a real, network-saved card by a stray selector match. */
 .flowcard-mock .flowcard-open{opacity:.45;cursor:not-allowed}
 
 .pills{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
