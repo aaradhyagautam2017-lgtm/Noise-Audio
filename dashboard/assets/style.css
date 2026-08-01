@@ -13,6 +13,7 @@
   --warn-bg:#26200f; --warn-line:#5c4a1c; --warn-ink:#e0b341;
   --good-bg:#122a1c; --good-line:#1f5c39; --good-ink:#4ade80;
   --bad-bg:#2a1614; --bad-line:#5c2620; --bad-ink:#f0685a;
+  --info-bg:#0f2230; --info-line:#1f4f6e; --info-ink:#4ab8f0;
   --font:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
   --font-mono:'Roboto Mono',ui-monospace,'SF Mono',monospace;
   --r-xs:6px; --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-pill:9999px;
@@ -27,6 +28,7 @@ html[data-theme=light]{
   --warn-bg:#fff9ec; --warn-line:#e3cb96; --warn-ink:#8a6414;
   --good-bg:#eafbf1; --good-line:#a8dfc0; --good-ink:#1c7a45;
   --bad-bg:#fdecea; --bad-line:#f0b8b0; --bad-ink:#b3261e;
+  --info-bg:#eaf4fd; --info-line:#a9d3ef; --info-ink:#1d6fa5;
 }
 *{box-sizing:border-box}
 html{background:var(--canvas)}
@@ -232,6 +234,24 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .flowcard-input:focus,.flowcard-textarea:focus{outline:none;border-color:var(--accent)}
 .flowcard-ctas{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
 .flowcard-status{display:block;font-size:12px;margin-top:8px;min-height:15px}
+
+/* Sample/status-stroke cards — illustrative only, deliberately not sharing .flowcard's class
+   (kept off document.querySelectorAll('.flowcard') in PROTOTYPES_JS, which assumes every
+   .flowcard has edit/save controls these don't have) even though they share its look. */
+.flowcard-mock{background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--line-2);
+  border-radius:var(--r-md);padding:16px}
+.flowcard-mock[data-status="ready-for-dev"]{border-left-color:var(--good-ink)}
+.flowcard-mock[data-status="ready-for-review"]{border-left-color:var(--warn-ink)}
+.flowcard-mock[data-status="in-progress"]{border-left-color:var(--info-ink)}
+.flowcard-mock[data-status="depleted"]{border-left-color:var(--bad-ink)}
+.flowcard-statuspill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;
+  padding:3px 10px 3px 8px;border-radius:var(--r-pill);margin-bottom:10px}
+.flowcard-statuspill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.flowcard-statuspill.s-ready-for-dev{background:var(--good-bg);color:var(--good-ink)}
+.flowcard-statuspill.s-ready-for-review{background:var(--warn-bg);color:var(--warn-ink)}
+.flowcard-statuspill.s-in-progress{background:var(--info-bg);color:var(--info-ink)}
+.flowcard-statuspill.s-depleted{background:var(--bad-bg);color:var(--bad-ink)}
+.flowcard-mocknote{font-size:12px;margin:10px 0 0}
 
 .pills{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
 .pill{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);

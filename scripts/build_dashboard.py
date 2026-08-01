@@ -155,6 +155,27 @@ if os.path.isdir(screens_dir):
             "description": meta.get("description") or "",
         })
 
+# Sample cards for prototypes.html illustrating a proposed status-stroke convention for
+# handoff between designer / PM / senior-designer review — not real flows, not backed by any
+# file under screens/, not wired to Approve/Deny or any persistence. Placeholder only, pending
+# a decision on whether/how to make this a real feature.
+MOCK_PROTOTYPE_STATUSES = {
+    "ready-for-dev":    {"label": "Ready for dev",    "note": "Signed off — handed to engineering."},
+    "ready-for-review": {"label": "Ready for review", "note": "Waiting on a senior designer's pass."},
+    "in-progress":      {"label": "In progress",      "note": "Still being worked on."},
+    "depleted":         {"label": "Depleted",         "note": "Shelved — not moving forward."},
+}
+MOCK_PROTOTYPES = [
+    {"title": "Battery Health Alert", "status": "ready-for-dev",
+     "description": "Low-battery warning card + dismiss action for the home screen."},
+    {"title": "Quick Pair Onboarding", "status": "ready-for-review",
+     "description": "First-time pairing walkthrough, three screens."},
+    {"title": "Firmware Update Flow", "status": "in-progress",
+     "description": "Download progress, install confirmation, restart prompt."},
+    {"title": "Legacy Device Sync", "status": "depleted",
+     "description": "Bluetooth Classic fallback pairing — shelved, not moving forward."},
+]
+
 E = lambda s: html.escape(str(s), quote=True)
 
 # ----------------------------------------------------------------- library-health stats
@@ -1375,12 +1396,26 @@ def prototypes_page():
         cards = ('<p class="dim">No flows composed yet — a screen saved under screens/ '
                   '(AGENT.md Step 7) shows up here automatically.</p>')
 
+    mock_cards = "".join(f'''
+        <div class="flowcard-mock" data-status="{E(m["status"])}">
+          <span class="flowcard-statuspill s-{E(m["status"])}">{E(MOCK_PROTOTYPE_STATUSES[m["status"]]["label"])}</span>
+          <h3 class="flowcard-title">{E(m["title"])}</h3>
+          <p class="flowcard-desc">{E(m["description"])}</p>
+          <p class="flowcard-mocknote dim">{E(MOCK_PROTOTYPE_STATUSES[m["status"]]["note"])}</p>
+        </div>''' for m in MOCK_PROTOTYPES)
+
     body = f"""
     <header class="pagehead"><h1>Prototypes</h1></header>
     <p class="dim">Every flow the agent has composed and saved to <code>screens/</code>, in one place —
     open any of them, or rename the title and add a description. Renaming saves straight back to the
     repo and the dashboard rebuilds itself; allow up to a minute, then refresh.</p>
     <div class="flowgrid">{cards}</div>
+
+    <div class="subhead">Status samples <span class="dim">— a proposed handoff-status stroke, not wired to anything yet</span></div>
+    <p class="dim">Illustrative only: these four are not real flows and aren't backed by a file under
+    <code>screens/</code> — nothing here is saved, opened, or persisted.</p>
+    <div class="flowgrid">{mock_cards}</div>
+
     <script>{PROTOTYPES_JS}</script>
     """
     return page("Prototypes", "prototypes", body)
@@ -1680,6 +1715,7 @@ STYLE = """
   --warn-bg:#26200f; --warn-line:#5c4a1c; --warn-ink:#e0b341;
   --good-bg:#122a1c; --good-line:#1f5c39; --good-ink:#4ade80;
   --bad-bg:#2a1614; --bad-line:#5c2620; --bad-ink:#f0685a;
+  --info-bg:#0f2230; --info-line:#1f4f6e; --info-ink:#4ab8f0;
   --font:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
   --font-mono:'Roboto Mono',ui-monospace,'SF Mono',monospace;
   --r-xs:6px; --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-pill:9999px;
@@ -1694,6 +1730,7 @@ html[data-theme=light]{
   --warn-bg:#fff9ec; --warn-line:#e3cb96; --warn-ink:#8a6414;
   --good-bg:#eafbf1; --good-line:#a8dfc0; --good-ink:#1c7a45;
   --bad-bg:#fdecea; --bad-line:#f0b8b0; --bad-ink:#b3261e;
+  --info-bg:#eaf4fd; --info-line:#a9d3ef; --info-ink:#1d6fa5;
 }
 *{box-sizing:border-box}
 html{background:var(--canvas)}
@@ -1899,6 +1936,24 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .flowcard-input:focus,.flowcard-textarea:focus{outline:none;border-color:var(--accent)}
 .flowcard-ctas{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
 .flowcard-status{display:block;font-size:12px;margin-top:8px;min-height:15px}
+
+/* Sample/status-stroke cards — illustrative only, deliberately not sharing .flowcard's class
+   (kept off document.querySelectorAll('.flowcard') in PROTOTYPES_JS, which assumes every
+   .flowcard has edit/save controls these don't have) even though they share its look. */
+.flowcard-mock{background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--line-2);
+  border-radius:var(--r-md);padding:16px}
+.flowcard-mock[data-status="ready-for-dev"]{border-left-color:var(--good-ink)}
+.flowcard-mock[data-status="ready-for-review"]{border-left-color:var(--warn-ink)}
+.flowcard-mock[data-status="in-progress"]{border-left-color:var(--info-ink)}
+.flowcard-mock[data-status="depleted"]{border-left-color:var(--bad-ink)}
+.flowcard-statuspill{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;
+  padding:3px 10px 3px 8px;border-radius:var(--r-pill);margin-bottom:10px}
+.flowcard-statuspill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.flowcard-statuspill.s-ready-for-dev{background:var(--good-bg);color:var(--good-ink)}
+.flowcard-statuspill.s-ready-for-review{background:var(--warn-bg);color:var(--warn-ink)}
+.flowcard-statuspill.s-in-progress{background:var(--info-bg);color:var(--info-ink)}
+.flowcard-statuspill.s-depleted{background:var(--bad-bg);color:var(--bad-ink)}
+.flowcard-mocknote{font-size:12px;margin:10px 0 0}
 
 .pills{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
 .pill{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);
