@@ -63,6 +63,7 @@ SEARCH_ENTRIES = [
     {"n": "Component graph", "h": "graph.html", "g": "Nav"},
     {"n": "Fill the gaps", "h": "fill-gaps.html", "g": "Nav"},
     {"n": "Agent Learnings", "h": "learnings.html", "g": "Nav"},
+    {"n": "Prototypes", "h": "prototypes.html", "g": "Nav"},
     {"n": "Colors & tokens", "h": "foundations-colors.html", "g": "Foundations"},
     {"n": "Typography", "h": "foundations-typography.html", "g": "Foundations"},
     {"n": "Spacing & radius", "h": "foundations-spacing.html", "g": "Foundations"},
@@ -121,6 +122,38 @@ for entry in learnings:
     for cid in entry.get("components") or []:
         if cid in learnings_by_component:
             learnings_by_component[cid][bucket].append(entry)
+
+# Composed flows (see AGENT.md Step 7 / CONTROL_PANEL.md) — real, standalone HTML screens
+# a designer composed and saved under screens/, listed here so any flow is reachable from
+# the dashboard instead of needing the raw file path. Which files exist is read straight
+# off disk, same single-source-of-truth principle as everything else here; screens/index.json
+# holds only the human-editable overlay (title, description) a designer can rename anytime
+# from prototypes.html.
+screens_dir = os.path.join(ROOT, "screens")
+screens_index_path = os.path.join(screens_dir, "index.json")
+screens_meta = {}
+if os.path.exists(screens_index_path):
+    with open(screens_index_path) as f:
+        try:
+            screens_meta = json.load(f)
+        except json.JSONDecodeError as e:
+            print(f"warning: screens/index.json is not valid JSON, ignored ({e})", file=sys.stderr)
+
+def _default_flow_title(filename):
+    stem = filename.rsplit(".", 1)[0]
+    return " ".join(w.capitalize() for w in stem.replace("_", " ").replace("-", " ").split())
+
+prototypes = []
+if os.path.isdir(screens_dir):
+    for fn in sorted(os.listdir(screens_dir)):
+        if not fn.endswith(".html"):
+            continue
+        meta = screens_meta.get(fn) or {}
+        prototypes.append({
+            "file": fn,
+            "title": meta.get("title") or _default_flow_title(fn),
+            "description": meta.get("description") or "",
+        })
 
 E = lambda s: html.escape(str(s), quote=True)
 
@@ -207,6 +240,8 @@ NAV_ICONS = {
     "search": _navsvg('<circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/>'),
     "chevron": _navsvg('<path d="m5 8.5 7 6.5 7-6.5"/>'),
     "learnings": _navsvg('<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.45.9 1.15.9 1.9V16h5.4v-.3c0-.75.3-1.45.9-1.9A6 6 0 0 0 12 3z"/>'),
+    "prototypes": _navsvg('<rect x="3.5" y="3.5" width="12" height="17" rx="2"/>'
+                          '<path d="M15.5 8.5h5v11a2 2 0 0 1-2 2h-9"/>'),
 }
 
 def sidebar(prefix, active):
@@ -273,6 +308,11 @@ def sidebar(prefix, active):
                                  warn=dangling, dot=reg_by_id[cid]["type"]))
         parts.append(section(gname.lower(), gname, group_icon[gname], entries))
     parts.append('</div>')  # /navscroll
+    parts.append(f'''
+      <nav class="navbottom">
+        {item("prototypes.html", "Prototypes", "prototypes", icon=NAV_ICONS["prototypes"])}
+      </nav>
+    ''')
     search_entries = [{**e, "h": prefix + e["h"]} for e in SEARCH_ENTRIES]
     parts.append(f'''
       <div class="navsearch">
@@ -1117,6 +1157,60 @@ LEARNINGS_JS = r"""
 })();
 """
 
+PROTOTYPES_JS = r"""
+(function () {
+  document.querySelectorAll('.flowcard').forEach(function (card) {
+    var file = card.getAttribute('data-flow-file');
+    var view = card.querySelector('[data-view]');
+    var form = card.querySelector('[data-form]');
+    var titleInput = card.querySelector('[data-title-input]');
+    var descInput = card.querySelector('[data-desc-input]');
+    var status = card.querySelector('[data-status]');
+    var editBtn = card.querySelector('[data-edit]');
+    var cancelBtn = card.querySelector('[data-cancel]');
+    var saveBtn = card.querySelector('[data-save]');
+
+    editBtn.addEventListener('click', function () {
+      titleInput.value = card.getAttribute('data-flow-title') || '';
+      descInput.value = card.getAttribute('data-flow-description') || '';
+      status.textContent = '';
+      view.hidden = true;
+      form.hidden = false;
+      titleInput.focus();
+    });
+
+    cancelBtn.addEventListener('click', function () {
+      form.hidden = true;
+      view.hidden = false;
+    });
+
+    saveBtn.addEventListener('click', function () {
+      var title = titleInput.value.trim();
+      var description = descInput.value.trim();
+      if (!title) { status.textContent = 'Title cannot be empty.'; return; }
+      saveBtn.disabled = true;
+      status.textContent = 'Saving…';
+      fetch('/api/update-flow', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ file: file, title: title, description: description })
+      }).then(function (res) {
+        if (res.ok) return true;
+        return res.json().catch(function () { return {}; }).then(function (body) {
+          throw new Error(body.error || ('HTTP ' + res.status));
+        });
+      }).then(function () {
+        saveBtn.disabled = false;
+        status.textContent = 'Saved — the dashboard is rebuilding; refresh in about a minute to see it here.';
+      }).catch(function (err) {
+        saveBtn.disabled = false;
+        status.textContent = 'Could not save (' + err.message + '). Try again.';
+      });
+    });
+  });
+})();
+"""
+
 def fill_gap_page(cid, key, label):
     """One dedicated page per (component, missing field) gap — the actual entry point, showing
     the component's real rendered preview above the text field so the gap is filled with the
@@ -1246,6 +1340,50 @@ def learnings_page():
     <script>{LEARNINGS_JS}</script>
     """
     return page("Agent Learnings", "learnings", body)
+
+def prototypes_page():
+    """Directory of composed flows saved under screens/ (AGENT.md Step 7) — so a screen the
+    agent composed is reachable from the dashboard by anyone, not just whoever knows the raw
+    file path. Which flows exist is read straight off disk on every build; title and
+    description are the one thing here a designer can rename/edit anytime, stored in
+    screens/index.json as a human-editable overlay, never as the source of which files exist."""
+    if prototypes:
+        cards = "".join(f'''
+        <div class="flowcard" data-flow-file="{E(p["file"])}" data-flow-title="{E(p["title"])}"
+             data-flow-description="{E(p["description"])}">
+          <div class="flowcard-view" data-view>
+            <div class="flowcard-head">
+              <h3 class="flowcard-title">{E(p["title"])}</h3>
+              <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
+            </div>
+            <p class="flowcard-desc">{E(p["description"]) or '<span class="dim">No description yet.</span>'}</p>
+            <a class="btn btn-primary flowcard-open" href="screens/{E(p["file"])}" target="_blank" rel="noopener">Open flow ↗</a>
+          </div>
+          <div class="flowcard-form" data-form hidden>
+            <label class="flowcard-label">Title</label>
+            <input type="text" class="flowcard-input" data-title-input maxlength="120">
+            <label class="flowcard-label">Description</label>
+            <textarea class="flowcard-textarea" data-desc-input rows="3" maxlength="1000"></textarea>
+            <div class="flowcard-ctas">
+              <button type="button" class="btn" data-cancel>Cancel</button>
+              <button type="button" class="btn btn-primary" data-save>Save</button>
+            </div>
+            <span class="flowcard-status dim" data-status></span>
+          </div>
+        </div>''' for p in prototypes)
+    else:
+        cards = ('<p class="dim">No flows composed yet — a screen saved under screens/ '
+                  '(AGENT.md Step 7) shows up here automatically.</p>')
+
+    body = f"""
+    <header class="pagehead"><h1>Prototypes</h1></header>
+    <p class="dim">Every flow the agent has composed and saved to <code>screens/</code>, in one place —
+    open any of them, or rename the title and add a description. Renaming saves straight back to the
+    repo and the dashboard rebuilds itself; allow up to a minute, then refresh.</p>
+    <div class="flowgrid">{cards}</div>
+    <script>{PROTOTYPES_JS}</script>
+    """
+    return page("Prototypes", "prototypes", body)
 
 def render_prose(text):
     """Designer-authored prose -> HTML.
@@ -1587,6 +1725,8 @@ code{font-family:var(--font-mono);font-size:.92em}
 .themetoggle:hover{color:var(--ink);border-color:var(--line-2)}
 .themetoggle svg{width:15px;height:15px}
 .navtop{display:flex;flex-direction:column;gap:2px;flex:none;margin-bottom:14px}
+.navbottom{display:flex;flex-direction:column;gap:2px;flex:none;margin-top:2px;
+  padding-top:10px;border-top:1px solid var(--line)}
 /* ---- collapsible sections (Foundations / Atoms / Molecules / Organisms) ---- */
 .navscroll{flex:1;min-height:0;overflow-y:auto;padding-bottom:12px}
 .navsection{margin-bottom:2px}
@@ -1742,6 +1882,24 @@ textarea#gap-text{width:100%;background:var(--surface-2);border:1px solid var(--
   border-radius:var(--r-sm);padding:11px 13px;font:inherit;font-size:13.5px;color:var(--ink);
   resize:vertical;box-sizing:border-box}
 textarea#gap-text:focus{outline:none;border-color:var(--accent)}
+
+/* prototypes.html — directory of composed flows under screens/ */
+.flowgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.flowcard{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:16px}
+.flowcard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.flowcard-title{font-size:14.5px;font-weight:600;color:var(--ink);margin:0}
+.flowcard-desc{font-size:13px;color:var(--ink2);margin:8px 0 14px;line-height:1.5}
+.flowcard-open{display:inline-flex;width:100%;justify-content:center;box-sizing:border-box}
+.flowcard-label{display:block;font-size:11.5px;color:var(--ink3);margin:10px 0 4px}
+.flowcard-label:first-child{margin-top:0}
+.flowcard-input,.flowcard-textarea{width:100%;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:8px 10px;font:inherit;font-size:13px;color:var(--ink);
+  box-sizing:border-box;resize:vertical}
+.flowcard-input:focus,.flowcard-textarea:focus{outline:none;border-color:var(--accent)}
+.flowcard-ctas{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.flowcard-status{display:block;font-size:12px;margin-top:8px;min-height:15px}
+
 .pills{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 0}
 .pill{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-pill);
   padding:4px 11px;font-size:12px;color:var(--ink2)}
@@ -2173,14 +2331,20 @@ def main():
     os.makedirs(os.path.join(OUT, "components"))
     os.makedirs(os.path.join(OUT, "assets"))
     os.makedirs(os.path.join(OUT, "fill-gaps"), exist_ok=True)
+    os.makedirs(os.path.join(OUT, "screens"), exist_ok=True)
     with open(os.path.join(OUT, "assets", "style.css"), "w") as f:
         f.write(STYLE)
     with open(os.path.join(OUT, "assets", "app.js"), "w") as f:
         f.write(APPJS)
+    # Composed flows live in screens/ at the repo root, outside OUT — copy the real files in
+    # so prototypes.html's links actually resolve on the deployed site, not just locally.
+    for p in prototypes:
+        shutil.copy2(os.path.join(screens_dir, p["file"]), os.path.join(OUT, "screens", p["file"]))
     pages = {
         "index.html": overview_page(),
         "fill-gaps.html": fill_gaps_page(),
         "learnings.html": learnings_page(),
+        "prototypes.html": prototypes_page(),
         "foundations-colors.html": colors_page(),
         "foundations-typography.html": typography_page(),
         "foundations-spacing.html": spacing_page(),
