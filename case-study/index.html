@@ -1374,6 +1374,48 @@
           — atoms, molecules, organisms, and complex organisms — with a colored bar underneath so the
           split reads in one glance instead of four separate numbers.
         </p>
+
+        <p class="overview-paragraph" style="margin-top: 28px;">
+          Scroll past those three cards and the page gets more granular — the actual health of the
+          documentation and the graph, in four parts.
+        </p>
+
+        <div class="walkthrough-frame" style="margin-top:16px;">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">noise-audio-dashboard.vercel.app/index.html — System understanding</span>
+          </div>
+          <div class="walkthrough-body">
+            <img src="assets/deepdive-overview-system-understanding.png" alt="The System understanding card: five documentation-field rows (Usage, Rules, Design intent, Anti-patterns, Purpose) each with a Complete or Incomplete status and an Edit link, Reference integrity counts, Relationship density with a structural/behavioral split bar, and Agent learnings counts.">
+          </div>
+        </div>
+
+        <p class="overview-paragraph" style="margin-top: 22px;">
+          The five rows at the top — Purpose, Usage, Design intent, Anti-patterns, Rules — are the
+          things every component is supposed to have written down about it. The fraction is how many
+          of the 26 components actually have that field filled in. <b>Complete</b> means all 26 do.
+          <b>Incomplete</b> means at least one doesn't — and only then does an <b>Edit</b> button
+          show up, which takes you straight to the exact missing piece on the Fill the Gaps page,
+          ready to write.
+        </p>
+        <p class="overview-paragraph" style="margin-top: 14px;">
+          <b>Reference integrity</b> checks something more structural: every time one component
+          references another, does that reference actually land on something real? 25 do. 15 more
+          were checked by hand and confirmed they're not real dependencies at all — just leftover
+          Figma clutter. Zero are left dangling — nothing points at a component that doesn't exist
+          and hasn't been explained.
+        </p>
+        <p class="overview-paragraph" style="margin-top: 14px;">
+          <b>Relationship density</b> is just how wired the library actually is — 48 connections
+          across 26 components, splitting close to evenly between structural ("built from") and
+          behavioral ("acts like, without being built from") relationships. The button underneath
+          opens the same graph, live.
+        </p>
+        <p class="overview-paragraph" style="margin-top: 14px;">
+          <b>Agent learnings</b>, last, is the running tally of corrections a human has given the
+          agent — one confirmed and now treated as a real rule, one turned down, one still sitting
+          there waiting on a decision.
+        </p>
       </div>
 
     </div>
