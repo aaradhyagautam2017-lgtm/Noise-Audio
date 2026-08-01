@@ -23,18 +23,20 @@ Step 3 — Respect hierarchy and placement. Assemble in order: Status bar (L0) -
 Step 4 — Enforce every rule on every placed component (content, layout, variant-selection, interaction/scroll, and component-scoped exceptions). Check anti-patterns against your composition; if about to trigger one, stop (Law 3).
 Step 5 — Resolve children through the graph, not by re-describing them. The parent references; each child governs itself.
 Step 6 — Resolve all visual values from the token layer. If a required value isn't resolvable from the repository, halt and report (Law 6). Never substitute a guessed value.
-Step 7 — Compose the interactive HTML output that renders the real components with real values and behaviors (including animated transitions the metadata defines).
+Step 7 — Compose the interactive HTML output using each component's real code. Copy the selected variant's markup/CSS from its components/<tier>/<id>.snippet.html — do not re-derive it from visual_values by hand. Re-deriving from a text description is what let a past composition violate rules (wrong variant side, full-width instead of inset separator) even though the correct rule text had been read and quoted. Where a relationship between several components has no single component's snippet to copy (e.g. how repeated rows group with a separator, where a screen-level CTA sits), copy it from the matching file in patterns/ instead of inventing the behavior. Render with real values and behaviors (including animated transitions the metadata defines).
 Step 8 — Emit the reasoning trail: the requirement checklist; each component placed with id, node_id, figma_fingerprint; the variant/state chosen; and the rule(s)/metadata that justified each choice. List any conflicts surfaced and any gaps that halted a path.
  
 4. THE OUTPUT CONTRACT
 A composition is complete only when all of the following hold:
 - Every component used exists in the repository and is identified by id, node_id, and figma_fingerprint.
+- Every component's markup/CSS is copied from its own components/<tier>/<id>.snippet.html (or a patterns/*.pattern.html for a cross-component relationship) — never re-derived from visual_values from scratch.
 - Every rule, anti-pattern, and constraint on every placed component is satisfied.
 - Every visual value is resolved from the repository, none invented.
 - Hierarchy and placement follow the structural order and the components' placement rules.
 - Any request-vs-rule conflict is surfaced, not silently resolved.
 - Any gap or broken edge is reported, not healed.
-- The output is always an interactive HTML file. No other format is a valid deliverable.
+- The output is always an interactive HTML file. No other format is a valid deliverable — this includes an in-chat "artifact" preview with no corresponding file: deliver a real, standalone HTML file the designer can open, save, and hand to a developer.
+- The reasoning trail (Step 8) is delivered separately from the composed screen (as accompanying text or its own file) — never rendered as a visual panel inside the composed screen's own HTML. The composed file contains only the real screen being composed, nothing else.
 - The screen always renders inside the appropriate device frame for the target app (e.g. an iPhone frame for a phone app). The mockup is never a bare full-bleed page; the frame is part of the deliverable.
 - No scrollbar is ever visible. Scrolling behavior (including metadata-defined scroll interactions) must work, but the scrollbar itself is hidden. A visible scrollbar is a defect.
 - All screen content stays within the device screen bounds; nothing renders outside the viewport.
@@ -43,7 +45,7 @@ A composition is complete only when all of the following hold:
 If any of these fail and cannot be satisfied from the repository, the correct output is a clear report of why — not a best-effort guess.
  
 5. THE ONE-LINE TEST, BEFORE YOU EMIT ANYTHING
-Ask: "Can I point to the exact place in this repository that justifies every component, every value, and every rule in this output — and can I show that I broke none of them; and is the output an interactive HTML file, rendered inside the device frame, with no visible scrollbar and nothing spilling outside the screen?"
+Ask: "Can I point to the exact place in this repository that justifies every component, every value, and every rule in this output — and can I show that I broke none of them; is every component's code copied from its snippet/pattern file rather than re-derived; is the output a real, standalone interactive HTML file (not only an in-chat artifact) with its reasoning trail kept separate, rendered inside the device frame, with no visible scrollbar and nothing spilling outside the screen?"
 If yes, emit. If no, stop and report the gap. A truthful "I can't build this from the library as it stands" protects the system. A confident guess corrupts it.
 
 6. LEARNING FROM CORRECTIONS — learnings.jsonl
