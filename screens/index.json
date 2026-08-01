@@ -1,5 +1,7 @@
 {
   "manage-my-earbuds-flow.html": {
-    "status": "ready-for-dev"
+    "status": "ready-for-review",
+    "title": "Manage My Earbuds Flow",
+    "description": ""
   }
 }
