@@ -1127,50 +1127,78 @@ def fill_gap_page(cid, key, label):
     return page(f"{name} — {label}", "fill-gaps", body, prefix="../")
 
 def fill_gaps_page():
-    sections = []
-    total_gaps = 0
+    """Mirrors learnings_page()'s segmented-control layout: one tab per documentation field,
+    so a library with gaps scattered across all five fields never makes you scroll past
+    Purpose and Usage just to reach the Rules gaps you actually came to fill."""
+    total_gaps = sum(len(missing_by_field[key]) for key, _ in CORE_DOC_FIELDS)
+
+    tabs = []
     for key, label in CORE_DOC_FIELDS:
         missing = missing_by_field[key]
-        if not missing:
-            continue
-        total_gaps += len(missing)
         rows = "".join(
             f'<a class="gaprow gaprow-link" href="fill-gaps/{cid}--{E(key)}.html">'
             f'<span class="gaprow-name">{E(components[cid]["name"].strip())}</span>'
             f'<span class="dim">{E(cid)}</span><span class="gaprow-arrow">→</span></a>'
-            for cid in missing)
-        sections.append(f'''
-        <section class="metasection" id="gap-{E(key)}">
-          <h3>{E(label)} <span class="count">{len(missing)} missing</span></h3>
-          {rows}
-        </section>''')
+            for cid in missing) or '<p class="entrylist-empty">No gaps — every component has this field authored.</p>'
+        tabs.append((key, label, len(missing), rows))
+
+    segtabs_html = "".join(
+        f'<button type="button" class="segtab" data-seg-key="{key}">{E(label)}'
+        f'<span class="segtab-count">{count}</span></button>'
+        for key, label, count, _ in tabs)
+    segpanels_html = "".join(
+        f'<div class="metasection" data-segpanel-group="fillgaps" data-seg-key="{key}">{rows}</div>'
+        for key, _, _, rows in tabs)
 
     body = f"""
     <header class="pagehead"><h1>Fill the gaps</h1></header>
     <p class="dim">{total_gaps} missing documentation field(s) across the library. Each one is its own page,
     with the component's real preview shown above the text field. This is a static site with no backend —
     nothing saves automatically anywhere in here; see any gap's own page for how to actually contribute it.</p>
-    {''.join(sections) if sections else '<p class="dim">No missing fields — every component has all five documentation fields authored.</p>'}
+
+    <div class="segtabs" data-seg-group="fillgaps">{segtabs_html}</div>
+    {segpanels_html}
     """
     return page("Fill the gaps", "fill-gaps", body)
+
+SEG_ICONS = {
+    "pending": _navsvg('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'),
+    "confirmed": _navsvg('<circle cx="12" cy="12" r="8.5"/><path d="M8.3 12.3l2.5 2.5 5-5.2"/>'),
+    "rejected": _navsvg('<circle cx="12" cy="12" r="8.5"/><path d="M9 9l6 6M15 9l-6 6"/>'),
+}
 
 def learnings_page():
     """The dedicated destination the overview's three learnings tiles link into (see
     AGENT.md §6). Pending entries are actionable (Approve/Deny); confirmed and rejected
-    ones are the closed record of past decisions. Kept off the overview page itself so
-    logging another correction never makes that page a paragraph longer."""
+    ones are the closed record of past decisions. A segmented control shows exactly one
+    category at a time -- with dozens of entries logged over time, stacking all three
+    on one page would mean scrolling past everything confirmed just to reach what's
+    rejected, which is the opposite of what this page is for."""
     ledger_raw = ""
     if os.path.exists(learnings_path):
         with open(learnings_path) as f:
             ledger_raw = f.read()
     js = LEARNINGS_JS.replace("__CURRENT_LEDGER_JSON__", json.dumps(ledger_raw))
 
-    pending_html = "".join(learning_row_html(e, actionable=True) for e in learnings_pending) or \
-        '<p class="entrylist-empty">Nothing awaiting review.</p>'
-    confirmed_html = "".join(learning_row_html(e) for e in learnings_confirmed) or \
-        '<p class="entrylist-empty">No learnings confirmed yet.</p>'
-    rejected_html = "".join(learning_row_html(e) for e in learnings_rejected) or \
-        '<p class="entrylist-empty">Nothing rejected yet.</p>'
+    tabs = [
+        ("pending", "Pending review", len(learnings_pending),
+         "".join(learning_row_html(e, actionable=True) for e in learnings_pending) or
+         '<p class="entrylist-empty">Nothing awaiting review.</p>'),
+        ("confirmed", "Confirmed", len(learnings_confirmed),
+         "".join(learning_row_html(e) for e in learnings_confirmed) or
+         '<p class="entrylist-empty">No learnings confirmed yet.</p>'),
+        ("rejected", "Rejected", len(learnings_rejected),
+         "".join(learning_row_html(e) for e in learnings_rejected) or
+         '<p class="entrylist-empty">Nothing rejected yet.</p>'),
+    ]
+    segtabs_html = "".join(
+        f'<button type="button" class="segtab" data-seg-key="{key}">'
+        f'<span class="segtab-icon">{SEG_ICONS[key]}</span>{E(label)}'
+        f'<span class="segtab-count">{count}</span></button>'
+        for key, label, count, _ in tabs)
+    segpanels_html = "".join(
+        f'<div class="metasection" data-segpanel-group="learnings" data-seg-key="{key}">{rows}</div>'
+        for key, _, _, rows in tabs)
 
     body = f"""
     <header class="pagehead"><h1>Agent Learnings</h1></header>
@@ -1179,20 +1207,8 @@ def learnings_page():
     your decision here in the browser only. Download the updated <code>learnings.jsonl</code> at the bottom
     once you're done, replace the repo's copy, and commit — nothing here saves by itself.</p>
 
-    <section class="metasection" id="pending">
-      <h3>Pending review <span class="count">{len(learnings_pending)}</span></h3>
-      {pending_html}
-    </section>
-
-    <section class="metasection" id="confirmed">
-      <h3>Confirmed <span class="count">{len(learnings_confirmed)}</span></h3>
-      {confirmed_html}
-    </section>
-
-    <section class="metasection" id="rejected">
-      <h3>Rejected <span class="count">{len(learnings_rejected)}</span></h3>
-      {rejected_html}
-    </section>
+    <div class="segtabs" data-seg-group="learnings">{segtabs_html}</div>
+    {segpanels_html}
 
     <div class="learnings-download-bar">
       <button type="button" id="download-learnings" class="btn btn-primary" disabled>Download updated learnings.jsonl</button>
@@ -1350,7 +1366,7 @@ def overview_page():
         gap = missing_by_field[key]
         if gap:
             status = f'<span class="fieldstatus fieldstatus-incomplete">Incomplete {WARN_ICON}</span>'
-            action = f'<a class="fieldedit" href="fill-gaps.html#gap-{E(key)}">Edit {PENCIL_ICON}</a>'
+            action = f'<a class="fieldedit" href="fill-gaps.html#{E(key)}">Edit {PENCIL_ICON}</a>'
         else:
             status = f'<span class="fieldstatus fieldstatus-complete">Complete {CHECK_ICON}</span>'
             action = '<span class="fielddash">—</span>'
@@ -1736,6 +1752,26 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
   background:var(--surface);border-top:1px solid var(--line);
   display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 
+/* Segmented control: switches which category panel shows, so a page with several
+   categories (learnings.html's Pending/Confirmed/Rejected, fill-gaps.html's five
+   fields) never makes you scroll past ones you don't care about right now to reach
+   the one you do. See the shared handler in app.js. */
+.segtabs{display:flex;gap:4px;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:var(--r-pill);padding:4px;margin:20px 0}
+.segtab{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 14px;border-radius:var(--r-pill);cursor:pointer;font-size:13px;
+  color:var(--ink2);border:none;background:none;font-family:inherit;white-space:nowrap;
+  transition:background .15s,color .15s}
+.segtab:hover{color:var(--ink)}
+.segtab.active{background:var(--accent-soft);color:var(--ink)}
+.segtab-icon{width:15px;height:15px;flex:none}
+.segtab-count{background:var(--surface-3);border-radius:var(--r-pill);padding:1px 9px;
+  font-size:11.5px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.segtab.active .segtab-count{background:var(--accent);color:#fff}
+@media (max-width:760px){.segtabs{flex-direction:column}.segtab{justify-content:flex-start}}
+[data-segpanel-group]{display:none}
+[data-segpanel-group].active{display:block}
+
 /* ---------------------------------------------------------------- taxonomy */
 .typebadge{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-pill);
   padding:3px 10px 3px 8px;font-size:11.5px;color:var(--ink2);background:var(--surface-2);
@@ -2042,6 +2078,36 @@ document.querySelectorAll('.navsection').forEach(function (sec) {
     }
   });
 })();
+
+// Generic segmented control: any page with a `.segtabs[data-seg-group="X"]` of
+// `.segtab[data-seg-key]` buttons plus matching `[data-segpanel-group="X"][data-seg-key]`
+// panels gets tab-switching for free, so a review/gap list shows one category panel at a
+// time instead of every category stacked on the same page (learnings.html, fill-gaps.html).
+// The URL hash (e.g. "#pending") both opens a page straight into that tab and keeps the
+// existing tile links elsewhere in the dashboard (e.g. the overview's KPI tiles) working.
+document.querySelectorAll('.segtabs').forEach(function (tabs) {
+  var group = tabs.dataset.segGroup;
+  var buttons = tabs.querySelectorAll('.segtab');
+  var panels = document.querySelectorAll('[data-segpanel-group="' + group + '"]');
+  function activate(key) {
+    var found = false;
+    buttons.forEach(function (b) {
+      var match = b.dataset.segKey === key;
+      b.classList.toggle('active', match);
+      if (match) found = true;
+    });
+    if (!found && buttons.length) { key = buttons[0].dataset.segKey; buttons[0].classList.add('active'); }
+    panels.forEach(function (p) { p.classList.toggle('active', p.dataset.segKey === key); });
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      activate(b.dataset.segKey);
+      history.replaceState(null, '', '#' + b.dataset.segKey);
+    });
+  });
+  var initial = (location.hash || '').slice(1);
+  activate(initial && tabs.querySelector('[data-seg-key="' + initial + '"]') ? initial : buttons[0].dataset.segKey);
+});
 """
 
 # Cache-busting for the static asset files. style.css/app.js are fixed filenames --

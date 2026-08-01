@@ -96,3 +96,33 @@ document.querySelectorAll('.navsection').forEach(function (sec) {
     }
   });
 })();
+
+// Generic segmented control: any page with a `.segtabs[data-seg-group="X"]` of
+// `.segtab[data-seg-key]` buttons plus matching `[data-segpanel-group="X"][data-seg-key]`
+// panels gets tab-switching for free, so a review/gap list shows one category panel at a
+// time instead of every category stacked on the same page (learnings.html, fill-gaps.html).
+// The URL hash (e.g. "#pending") both opens a page straight into that tab and keeps the
+// existing tile links elsewhere in the dashboard (e.g. the overview's KPI tiles) working.
+document.querySelectorAll('.segtabs').forEach(function (tabs) {
+  var group = tabs.dataset.segGroup;
+  var buttons = tabs.querySelectorAll('.segtab');
+  var panels = document.querySelectorAll('[data-segpanel-group="' + group + '"]');
+  function activate(key) {
+    var found = false;
+    buttons.forEach(function (b) {
+      var match = b.dataset.segKey === key;
+      b.classList.toggle('active', match);
+      if (match) found = true;
+    });
+    if (!found && buttons.length) { key = buttons[0].dataset.segKey; buttons[0].classList.add('active'); }
+    panels.forEach(function (p) { p.classList.toggle('active', p.dataset.segKey === key); });
+  }
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      activate(b.dataset.segKey);
+      history.replaceState(null, '', '#' + b.dataset.segKey);
+    });
+  });
+  var initial = (location.hash || '').slice(1);
+  activate(initial && tabs.querySelector('[data-seg-key="' + initial + '"]') ? initial : buttons[0].dataset.segKey);
+});
