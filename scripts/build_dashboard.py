@@ -2332,10 +2332,23 @@ def main():
     os.makedirs(os.path.join(OUT, "assets"))
     os.makedirs(os.path.join(OUT, "fill-gaps"), exist_ok=True)
     os.makedirs(os.path.join(OUT, "screens"), exist_ok=True)
+    os.makedirs(os.path.join(OUT, "css"), exist_ok=True)
+    os.makedirs(os.path.join(OUT, "assets", "fonts"), exist_ok=True)
     with open(os.path.join(OUT, "assets", "style.css"), "w") as f:
         f.write(STYLE)
     with open(os.path.join(OUT, "assets", "app.js"), "w") as f:
         f.write(APPJS)
+    # vercel.json's outputDirectory is "dashboard" — Vercel deploys ONLY this directory's
+    # contents, so anything a page reaches via a "../" link (css/tokens.css, AGENT.md, the
+    # real font files tokens.css itself references) has to actually live inside OUT too, or
+    # it 404s in production even though it resolves fine when testing locally by serving the
+    # whole repo root. None of these are a second copy to maintain by hand: every one is
+    # overwritten from its real source on each regeneration.
+    shutil.copy2(os.path.join(ROOT, "css", "tokens.css"), os.path.join(OUT, "css", "tokens.css"))
+    shutil.copy2(os.path.join(ROOT, "AGENT.md"), os.path.join(OUT, "AGENT.md"))
+    for fn in os.listdir(os.path.join(ROOT, "assets", "fonts")):
+        if fn.endswith(".woff2"):
+            shutil.copy2(os.path.join(ROOT, "assets", "fonts", fn), os.path.join(OUT, "assets", "fonts", fn))
     # Composed flows live in screens/ at the repo root, outside OUT — copy the real files in
     # so prototypes.html's links actually resolve on the deployed site, not just locally.
     for p in prototypes:

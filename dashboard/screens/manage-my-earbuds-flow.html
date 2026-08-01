@@ -41,6 +41,14 @@
 }
 /* Typography — synced from Figma local text styles */
 :root { --font-heading: 'Saira'; --font-content: 'Geist'; }
+@font-face {
+  font-family: 'Saira'; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url('../assets/fonts/Saira-Variable.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Geist'; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url('../assets/fonts/Geist-Variable.woff2') format('woff2');
+}
 .text-headings-medium { font-family: var(--font-heading); font-size: 34px; font-weight: 600; line-height: 110%; }
 .text-headings-small { font-family: var(--font-heading); font-size: 24px; font-weight: 600; line-height: 110%; }
 .text-sub-headings-card-headings { font-family: var(--font-heading); font-size: 16px; font-weight: 500; line-height: 110%; }
@@ -54,7 +62,7 @@
    Layout scaffold — presentational chrome only (device bezel,
    flow shell). Not a library component; no token claims made
    on it beyond the screen canvas size, which mirrors the 390x844
-   canvas baked into action-sheet / modal-sheet's own authored trees.
+   canvas baked into every organism's own authored tree.
    ============================================================ */
 * { box-sizing: border-box; }
 html, body { margin:0; padding:0; }
@@ -94,19 +102,23 @@ body {
 
 /* ============================================================
    status-bar (atom, 2007:775) — L0. Always first, above L1 nav
-   and page content, fixed at top.
+   and page content. Real values from components/atoms/status-bar.snippet.html:
+   effective side inset is 16px (Time frame's own left padding /
+   Levels frame's own right padding), not a guessed 22px. Icon
+   SVGs are the real, MIT-licensed Bootstrap Icons glyphs this
+   library installed (assets/icons/) — not flat placeholder shapes.
    ============================================================ */
 .status-bar {
   height:59px; width:100%; flex:0 0 auto;
   display:flex; align-items:center; justify-content:space-between;
-  padding: 0 16px 0 22px;
   position: relative; z-index: 60;
   transition: background-color .25s ease;
 }
-.status-bar .time { font-family:'SF Pro Semibold', var(--font-content); font-size:17px; color: var(--default-status-bar); }
-.status-bar .levels { display:flex; align-items:center; gap:7px; }
-.status-bar .glyph { background: var(--default-status-bar); border-radius:2px; }
-.status-bar.on-overlay { --default-status-bar: #ffffff; } /* dedicated contrasting token per action-sheet/modal-sheet rule */
+.status-bar .time-wrap { padding: 0 6px 0 16px; }
+.status-bar .time { font-family:'SF Pro', var(--font-content); font-size:17px; font-weight:600; line-height:22px; color: var(--default-status-bar); }
+.status-bar .island-spacer { width:124px; height:10px; flex:none; }
+.status-bar .levels { display:flex; align-items:center; gap:7px; padding: 0 16px 0 6px; }
+.status-bar.on-overlay { --default-status-bar: #ffffff; }
 
 /* ============================================================
    l1-home-page-navigation (organism, 243:6378) — L1, home only.
@@ -118,15 +130,18 @@ body {
 }
 .l1-home-nav .devices { display:flex; align-items:center; gap:12px; }
 .device-avatar { width:32px; height:32px; border-radius:16px; background: var(--border-separator-line); }
-.device-adder { width:24px; height:24px; border-radius:12px; background: var(--border-separator-line); display:flex; align-items:center; justify-content:center; color:var(--text-secondary); font-size:14px; }
+.device-adder { width:24px; height:24px; border-radius:12px; background: var(--border-separator-line); } /* asset: missing in Figma — rendered as the same flat grey placeholder used elsewhere, no invented glyph */
 .l1-home-nav .quick-actions { display:flex; align-items:center; gap:12px; }
 .icon-chip { width:24px; height:24px; border-radius:12px; background: var(--border-separator-line); }
 
 /* ============================================================
    l1-inner-page-navigation (organism, 2007:1007) — variant
-   state=Clean-Only Chevron. Sticky under status bar; gains the
-   authored scroll state (canvas fill + downward shadow + promoted
-   centered title) once page content scrolls past the first fold.
+   state=Clean-Only Chevron, used on every screen that isn't Home
+   (confirmed correction learn-2026-08-01-001: a normal navigated
+   page, never a modal-sheet/modal-card, even for a "skippable"
+   confirmation step). Sticky under status bar; gains the authored
+   scroll state (canvas fill + downward shadow + promoted centered
+   title) once page content scrolls past the first fold.
    ============================================================ */
 .l1-inner-nav {
   height:56px; flex:0 0 auto;
@@ -150,7 +165,9 @@ body {
 /* ============================================================
    l2-inner-pages-heading (molecule, 244:133) — flush directly
    under the L1 inner nav; scrolls with content; collapses/hands
-   its text to the L1 nav's promoted-title slot on scroll.
+   its text to the L1 nav's promoted-title slot on scroll. Real
+   captured text ("ABOUT YOUR DEVICE") is upper-case, so this
+   flow's headings follow the same convention.
    ============================================================ */
 .l2-heading {
   padding: 8px 16px; min-height:56px; box-sizing:border-box;
@@ -159,7 +176,14 @@ body {
 }
 .l2-heading span { font-family: var(--font-heading); font-size:34px; font-weight:600; line-height:1.1; color: var(--text-primary); }
 
-.screen-scroll { flex:1 1 auto; overflow-y:auto; overflow-x:hidden; }
+/* ============================================================
+   patterns/screen-footer-cta.pattern.html — designer's own words:
+   "pinned to the bottom with a 38px padding if everything fits in
+   first fold if not then it scrolls down to where the content ends".
+   ============================================================ */
+.nds-screen-scroll { height:100%; overflow-y:auto; }
+.nds-screen-inner { min-height:100%; display:flex; flex-direction:column; box-sizing:border-box; }
+.nds-screen-footer { margin-top:auto; padding:0 var(--l) 38px; display:flex; flex-direction:column; gap:8px; }
 
 /* ============================================================
    card-heading (atom, 340:11254) — labels a group of cards.
@@ -171,35 +195,27 @@ body {
 .card-heading .label { font-family: var(--font-content); font-weight:600; font-size:12px; color: var(--text-tertiary); }
 
 /* ============================================================
-   Grouped-list container — construction shared by master-card
-   and checkbox-card per checkbox-card's own authored rule
-   ("Follow Master Card construction principles"): surface token
-   fill, radius.card corner radius, 12px top/bottom padding on
-   the parent frame, zero internal spacing between rows, radius
-   applied at container level only (no-dual-corner-radius).
+   patterns/grouped-list.pattern.html — container/separator
+   construction shared by master-card and checkbox-card (neither
+   component's own visual_values can capture what N stacked rows
+   look like). 16px inset used throughout this flow since none of
+   its rows carry a leading icon (the 64px icon-based inset only
+   applies to rows that do).
    ============================================================ */
-.grouped-list {
-  margin: 0 16px;
-  background: var(--background-surface);
-  border-radius: var(--radius-card);
-  padding: 12px 0;
-}
+.grouped-list { margin: 0 16px; background: var(--background-surface); border-radius: var(--radius-card); padding: 12px 0; }
+.grouped-list .row--no-icon + .separator { margin-left: 16px; }
+.separator { height:1px; background: var(--border-separator-line); }
 
-/* ---- master-card (organism, 396:728) row ---- */
-.master-card-row {
-  display:flex; align-items:center; gap:12px;
-  padding: 16px;
-}
-.master-card-row + .master-card-row { border-top: 1px solid var(--border-separator-line); } /* separator-inset */
+/* ---- master-card (organism, 396:728) row — Leading Icon and Description are both optional per its own content_structure; omitted here since the PRD calls for neither ---- */
+.master-card-row { display:flex; align-items:center; gap:12px; padding: 16px; }
 .heading-content { flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:4px; }
 .heading-content .heading { font-family: var(--font-heading); font-size:16px; font-weight:500; line-height:1.1; color: var(--text-primary); }
-.heading-content .supporting { font-family: var(--font-content); font-size:12px; color: var(--text-secondary); line-height:1.3; }
 
 /* ---- actionables (molecule, 2031:1132) — trailing slot, one per row ---- */
 .actionable { width:36px; height:36px; flex:0 0 auto; display:flex; align-items:center; justify-content:center; }
 .actionable button { all:unset; display:flex; align-items:center; justify-content:center; width:100%; height:100%; cursor:pointer; }
 
-/* toggle atom (2031:1190) */
+/* toggle atom (2031:1190) — exact real track/thumb values */
 .toggle-track { width:36px; height:19px; border-radius:40px; background: var(--button-toggle-track-inactive); position:relative; transition: background-color .15s ease; }
 .toggle-track.on { background: var(--button-toggle-track-active); }
 .toggle-thumb { position:absolute; top:1px; left:1px; width:17px; height:17px; border-radius:40px; background: var(--button-toggle-thumb); transition: transform .15s ease; }
@@ -208,75 +224,51 @@ body {
 /* chevron atom (2031:1154) */
 .chevron-icon { width:7px; height:14px; }
 
-/* checkbox atom (2031:1168) */
-.checkbox-box { width:24px; height:24px; border-radius:4.5px; border:1.5px solid var(--button-checkbox-unchecked); display:flex; align-items:center; justify-content:center; transition: border-color .15s ease, background-color .15s ease; }
-.checkbox-box.checked { border-color: var(--button-checkbox-checked); background: var(--button-checkbox-checked); }
-.checkbox-box svg { opacity:0; transition: opacity .1s ease; }
-.checkbox-box.checked svg { opacity:1; }
-
-/* ---- checkbox-card (organism, 2032:1265) row — variant checkbox-right ---- */
+/* ---- checkbox-card (organism, 2032:1265) row — variant checkbox-Right:
+       "Use when item selection is the only required action" (this flow's
+       Screen 2 selects, then removes via one separate button — not
+       independent per-row removal, which is what checkbox-Left/trailing-
+       cross is for). No leading icon, no cross — heading-content + a
+       single trailing checkbox. ---- */
 .checkbox-card-row { display:flex; align-items:center; gap:8px; padding: 8px 16px; cursor:pointer; }
+.checkbox-card-row .heading-content { gap:0; }
+
+/* checkbox atom (2031:1168) — real states */
+.checkbox-box { width:24px; height:24px; border-radius:4.5px; border:1.5px solid var(--button-checkbox-unchecked); }
+.checkbox-box.checked { border:none; }
 
 /* ============================================================
-   description (atom, 445:8616) — two placements: under a card
-   (grouped-list) as its description, or a disclaimer above a CTA.
+   description (atom, 445:8616) — real captured side padding is
+   12px (not the 16px an unconfirmed, still-"proposed" learnings.jsonl
+   entry suggests; that entry hasn't been confirmed by a designer yet,
+   so per AGENT.md §6 it is not applied here).
    ============================================================ */
-.description-text { padding: 12px 16px 0; font-family: var(--font-content); font-size:12px; line-height:1.3; color: var(--text-secondary); }
+.description-text { padding: 0 12px; font-family: var(--font-content); font-size:12px; line-height:1.3; color: var(--text-secondary); text-align:center; }
+.description-text.left { text-align:left; padding: 12px 16px 0; }
 
 /* ============================================================
    primary-cta-button / secondary-cta-button (atoms) — usage=L1 L2 screens
    ============================================================ */
-.cta-primary, .cta-secondary { all:unset; box-sizing:border-box; display:flex; align-items:center; justify-content:center; height:56px; border-radius:50px; font-family: var(--font-content); font-weight:600; font-size:14px; cursor:pointer; text-align:center; }
+.cta-primary, .cta-secondary { all:unset; box-sizing:border-box; width:358px; display:flex; align-items:center; justify-content:center; height:56px; border-radius:50px; font-family: var(--font-content); font-weight:600; font-size:14px; cursor:pointer; text-align:center; }
 .cta-primary { background: var(--button-primary-background); color: var(--text-inverted); }
 .cta-primary[disabled] { background: var(--button-primary-disabled); color: var(--text-disabled); cursor:not-allowed; }
 .cta-secondary { background: var(--button-secondary-background); color: var(--text-cta); }
-.cta-block { margin: 24px 16px 24px; }
-.cta-block.bottomsheet-width { margin: 0 16px; } /* 334px usage inside a 366px sheet; handled by sheet padding */
 
 /* ============================================================
    privacy-policy-tab (atom, 450:8770) — fixed 3-part footer.
    ============================================================ */
 .privacy-tab { display:flex; flex-direction:column; gap:16px; padding: 16px 16px 28px; margin-top:auto; }
-.privacy-tab .links { display:flex; justify-content:space-between; padding:0 16px; }
+.privacy-tab .links { display:flex; justify-content:space-between; padding:0 32px; }
 .privacy-tab .links span { font-family: var(--font-content); font-size:12px; color: var(--text-primary); }
 .privacy-tab .version { text-align:center; font-family: var(--font-content); font-size:12px; color: var(--text-secondary); }
 
 /* ============================================================
-   app-screen shells — Home / Manage. Screen-to-screen navigation
-   is an instant swap: no motion is authored anywhere in the
-   registry for L1<->L1-inner page transitions, so none is invented.
+   app-screen shells — Home / Manage / Confirm. Screen-to-screen
+   navigation is an instant swap: no motion is authored anywhere in
+   the registry for L1<->L1-inner page transitions, so none is invented.
    ============================================================ */
 .app-screen { position:absolute; inset:0; display:none; flex-direction:column; background: var(--background-canvas); }
 .app-screen.active { display:flex; }
-
-/* ============================================================
-   action-sheet / modal-sheet family — complex-organism. Only
-   this family has authored motion: enters/exits by sliding, with
-   the overlay fading. "Smooth animation" per authored rule.
-   ============================================================ */
-.modal-sheet-overlay {
-  position:absolute; inset:0; z-index:100;
-  background: rgba(0,0,0,0.6);
-  display:flex; flex-direction:column; justify-content:flex-end;
-  opacity:0; pointer-events:none;
-  transition: opacity .3s ease;
-}
-.modal-sheet-overlay.open { opacity:1; pointer-events:auto; }
-.modal-sheet-overlay .status-bar { flex:0 0 auto; }
-.modal-card {
-  background: var(--background-canvas);
-  border-radius: var(--radius-bottomsheet);
-  padding: 24px 0 16px;
-  display:flex; flex-direction:column; gap:24px;
-  transform: translateY(100%);
-  transition: transform .32s cubic-bezier(.32,.72,0,1);
-}
-.modal-sheet-overlay.open .modal-card { transform: translateY(0); }
-.modal-card .headblk { display:flex; flex-direction:column; gap:8px; padding:0 16px; text-align:center; }
-.modal-card .headblk .title { font-family: var(--font-heading); font-size:24px; font-weight:600; line-height:1.1; color: var(--text-primary); }
-.modal-card .headblk .content { font-family: var(--font-content); font-size:14px; color: var(--text-secondary); line-height:1.4; }
-.modal-card .ctas { display:flex; flex-direction:column; gap:8px; padding: 0 16px; }
-.modal-card .ctas .cta-primary, .modal-card .ctas .cta-secondary { width:100%; }
 
 .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; }
 </style>
@@ -292,13 +284,14 @@ body {
            status-bar -> l1-home-page-navigation -> page content
            ============================================================ -->
       <section class="app-screen active" id="screen-home" aria-label="Home">
-        <div class="screen-scroll scroll-hide">
+        <div class="screen-scroll scroll-hide" style="flex:1 1 auto; overflow-y:auto; overflow-x:hidden; display:flex; flex-direction:column;">
           <div class="status-bar">
-            <span class="time">9:41</span>
+            <div class="time-wrap"><span class="time">9:41</span></div>
+            <div class="island-spacer"></div>
             <div class="levels">
-              <div class="glyph" style="width:19.2px;height:12.2px;"></div>
-              <div class="glyph" style="width:17.1px;height:12.3px;"></div>
-              <div class="glyph" style="width:27.3px;height:13px;"></div>
+              <span aria-hidden="true"><svg viewBox="0 0 16 16" width="19.2" height="12.2" fill="#000000"><path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5z"/></svg></span>
+              <span aria-hidden="true"><svg viewBox="0 0 16 16" width="17.1" height="12.3" fill="#000000"><path d="M15.384 6.115a.485.485 0 0 0-.047-.736A12.44 12.44 0 0 0 8 3C5.259 3 2.723 3.882.663 5.379a.485.485 0 0 0-.048.736.52.52 0 0 0 .668.05A11.45 11.45 0 0 1 8 4c2.507 0 4.827.802 6.716 2.164.205.148.49.13.668-.049"/><path d="M13.229 8.271a.482.482 0 0 0-.063-.745A9.46 9.46 0 0 0 8 6c-1.905 0-3.68.56-5.166 1.526a.48.48 0 0 0-.063.745.525.525 0 0 0 .652.065A8.46 8.46 0 0 1 8 7a8.46 8.46 0 0 1 4.576 1.336c.206.132.48.108.653-.065m-2.183 2.183c.226-.226.185-.605-.1-.75A6.5 6.5 0 0 0 8 9c-1.06 0-2.062.254-2.946.704-.285.145-.326.524-.1.75l.015.015c.16.16.407.19.611.09A5.5 5.5 0 0 1 8 10c.868 0 1.69.201 2.42.56.203.1.45.07.61-.091zM9.06 12.44c.196-.196.198-.52-.04-.66A2 2 0 0 0 8 11.5a2 2 0 0 0-1.02.28c-.238.14-.236.464-.04.66l.706.706a.5.5 0 0 0 .707 0l.707-.707z"/></svg></span>
+              <span aria-hidden="true"><svg viewBox="0 0 16 16" width="27.3" height="13" fill="#000000"><path d="M2 6h10v4H2z"/><path d="M2 4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm10 1a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm4 3a1.5 1.5 0 0 1-1.5 1.5v-3A1.5 1.5 0 0 1 16 8"/></svg></span>
             </div>
           </div>
 
@@ -306,7 +299,7 @@ body {
             <div class="devices">
               <div class="device-avatar"></div>
               <div class="device-avatar"></div>
-              <div class="device-adder">+</div>
+              <div class="device-adder"></div>
             </div>
             <div class="quick-actions">
               <div class="icon-chip" title="Downloads"></div>
@@ -314,38 +307,30 @@ body {
             </div>
           </div>
 
-          <div class="card-heading">
-            <span class="label">YOUR EARBUDS</span>
-          </div>
+          <div class="card-heading"><span class="label">YOUR EARBUDS</span></div>
 
           <div class="grouped-list">
-            <div class="master-card-row">
-              <div class="heading-content">
-                <span class="heading">Sidetone</span>
-              </div>
+            <div class="master-card-row row--no-icon">
+              <div class="heading-content"><span class="heading">Sidetone</span></div>
               <div class="actionable">
                 <button id="sidetoneToggle" role="switch" aria-checked="false" aria-label="Sidetone">
                   <div class="toggle-track" id="sidetoneTrack"><div class="toggle-thumb"></div></div>
                 </button>
               </div>
             </div>
-            <div class="master-card-row" id="manageDevicesRow" style="cursor:pointer;" role="button" tabindex="0" aria-label="Manage saved devices">
-              <div class="heading-content">
-                <span class="heading">Manage saved devices</span>
-              </div>
+            <div class="separator"></div>
+            <div class="master-card-row row--no-icon" id="manageDevicesRow" style="cursor:pointer;" role="button" tabindex="0" aria-label="Manage saved devices">
+              <div class="heading-content"><span class="heading">Manage saved devices</span></div>
               <div class="actionable">
-                <svg class="chevron-icon" viewBox="0 0 7 14" fill="none"><path d="M1 1L6 7L1 13" stroke="#919191" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg class="chevron-icon" viewBox="0 0 7 14" fill="none"><path d="M1.3 9.2L5.7 7.0L1.3 4.8" stroke="#919191" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </div>
             </div>
           </div>
 
-          <p class="description-text">Sidetone only works while your earbuds are connected.</p>
+          <p class="description-text left">Sidetone only works while your earbuds are connected.</p>
 
           <div class="privacy-tab">
-            <div class="links">
-              <span>Privacy Policy</span>
-              <span>Terms &amp; Conditions</span>
-            </div>
+            <div class="links"><span>Privacy Policy</span><span>Terms &amp; Conditions</span></div>
             <div class="version">App Version 1.02</div>
           </div>
         </div>
@@ -354,64 +339,77 @@ body {
       <!-- ============================================================
            SCREEN 2 — Manage saved devices
            status-bar -> l1-inner-page-navigation (Clean-Only Chevron)
-           -> l2-inner-pages-heading -> page content
+           -> l2-inner-pages-heading -> page content -> screen-footer-cta
            ============================================================ -->
       <section class="app-screen" id="screen-manage" aria-label="Manage saved devices">
-        <div class="status-bar" style="flex:0 0 auto;">
-          <span class="time">9:41</span>
+        <div class="status-bar">
+          <div class="time-wrap"><span class="time">9:41</span></div>
+          <div class="island-spacer"></div>
           <div class="levels">
-            <div class="glyph" style="width:19.2px;height:12.2px;"></div>
-            <div class="glyph" style="width:17.1px;height:12.3px;"></div>
-            <div class="glyph" style="width:27.3px;height:13px;"></div>
+            <span aria-hidden="true"><svg viewBox="0 0 16 16" width="19.2" height="12.2" fill="#000000"><path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5z"/></svg></span>
+            <span aria-hidden="true"><svg viewBox="0 0 16 16" width="17.1" height="12.3" fill="#000000"><path d="M15.384 6.115a.485.485 0 0 0-.047-.736A12.44 12.44 0 0 0 8 3C5.259 3 2.723 3.882.663 5.379a.485.485 0 0 0-.048.736.52.52 0 0 0 .668.05A11.45 11.45 0 0 1 8 4c2.507 0 4.827.802 6.716 2.164.205.148.49.13.668-.049"/><path d="M13.229 8.271a.482.482 0 0 0-.063-.745A9.46 9.46 0 0 0 8 6c-1.905 0-3.68.56-5.166 1.526a.48.48 0 0 0-.063.745.525.525 0 0 0 .652.065A8.46 8.46 0 0 1 8 7a8.46 8.46 0 0 1 4.576 1.336c.206.132.48.108.653-.065m-2.183 2.183c.226-.226.185-.605-.1-.75A6.5 6.5 0 0 0 8 9c-1.06 0-2.062.254-2.946.704-.285.145-.326.524-.1.75l.015.015c.16.16.407.19.611.09A5.5 5.5 0 0 1 8 10c.868 0 1.69.201 2.42.56.203.1.45.07.61-.091zM9.06 12.44c.196-.196.198-.52-.04-.66A2 2 0 0 0 8 11.5a2 2 0 0 0-1.02.28c-.238.14-.236.464-.04.66l.706.706a.5.5 0 0 0 .707 0l.707-.707z"/></svg></span>
+            <span aria-hidden="true"><svg viewBox="0 0 16 16" width="27.3" height="13" fill="#000000"><path d="M2 6h10v4H2z"/><path d="M2 4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm10 1a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm4 3a1.5 1.5 0 0 1-1.5 1.5v-3A1.5 1.5 0 0 1 16 8"/></svg></span>
           </div>
         </div>
-        <div class="screen-scroll scroll-hide" id="manageScroll">
-          <div class="l1-inner-nav" id="manageL1Nav">
-            <button class="back-btn" id="backToHome" aria-label="Back to Home">
-              <svg class="chevron-icon" viewBox="0 0 7 14" fill="none"><path d="M6 1L1 7L6 13" stroke="#454545" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <span class="promoted-title" id="promotedTitle">Manage saved devices</span>
-            <span class="spacer"></span>
-          </div>
+        <div class="nds-screen-scroll scroll-hide" id="manageScroll">
+          <div class="nds-screen-inner">
+            <div class="l1-inner-nav" id="manageL1Nav">
+              <button class="back-btn" id="backToHome" aria-label="Back to Home">
+                <svg class="chevron-icon" viewBox="0 0 7 14" fill="none"><path d="M5.7 4.8L1.3 7.0L5.7 9.2" stroke="#454545" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <span class="promoted-title" id="manageTitle">MANAGE SAVED DEVICES</span>
+              <span class="spacer"></span>
+            </div>
+            <div class="l2-heading" id="manageL2"><span>MANAGE SAVED DEVICES</span></div>
 
-          <div class="l2-heading" id="l2Heading"><span>Manage saved devices</span></div>
+            <div class="grouped-list" id="deviceList"><!-- checkbox-card (checkbox-Right) rows injected by JS --></div>
+            <p class="description-text left">Any device removed here will need to be paired again before it can be used.</p>
 
-          <div class="grouped-list" id="deviceList"><!-- checkbox-card rows injected by JS --></div>
-
-          <p class="description-text">Any device removed here will need to be paired again before it can be used.</p>
-
-          <div class="cta-block">
-            <button class="cta-primary" id="removeSelectedBtn" disabled>Remove Selected</button>
+            <div class="nds-screen-footer">
+              <button class="cta-primary" id="removeSelectedBtn" disabled>Remove Selected</button>
+            </div>
           </div>
         </div>
       </section>
 
       <!-- ============================================================
            SCREEN 3 — Remove device confirmation
-           modal-sheet (Type=App Modal) containing modal-card
-           (Type=Default modal): heading + content + 2 CTAs, no
-           dismissal affordance other than the CTAs themselves.
+           Corrected per confirmed learnings.jsonl entry learn-2026-08-01-001:
+           a real navigated page (status-bar -> l1-inner-page-navigation
+           (Clean-Only Chevron) -> l2-inner-pages-heading -> page content
+           -> screen-footer-cta), never a modal-sheet/modal-card — even
+           though the PRD frames this as a "skippable check-in."
            ============================================================ -->
-      <div class="modal-sheet-overlay" id="confirmModal" aria-hidden="true">
-        <div class="status-bar on-overlay">
-          <span class="time">9:41</span>
+      <section class="app-screen" id="screen-confirm" aria-label="Remove device confirmation">
+        <div class="status-bar">
+          <div class="time-wrap"><span class="time">9:41</span></div>
+          <div class="island-spacer"></div>
           <div class="levels">
-            <div class="glyph" style="width:19.2px;height:12.2px;"></div>
-            <div class="glyph" style="width:17.1px;height:12.3px;"></div>
-            <div class="glyph" style="width:27.3px;height:13px;"></div>
+            <span aria-hidden="true"><svg viewBox="0 0 16 16" width="19.2" height="12.2" fill="#000000"><path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5z"/></svg></span>
+            <span aria-hidden="true"><svg viewBox="0 0 16 16" width="17.1" height="12.3" fill="#000000"><path d="M15.384 6.115a.485.485 0 0 0-.047-.736A12.44 12.44 0 0 0 8 3C5.259 3 2.723 3.882.663 5.379a.485.485 0 0 0-.048.736.52.52 0 0 0 .668.05A11.45 11.45 0 0 1 8 4c2.507 0 4.827.802 6.716 2.164.205.148.49.13.668-.049"/><path d="M13.229 8.271a.482.482 0 0 0-.063-.745A9.46 9.46 0 0 0 8 6c-1.905 0-3.68.56-5.166 1.526a.48.48 0 0 0-.063.745.525.525 0 0 0 .652.065A8.46 8.46 0 0 1 8 7a8.46 8.46 0 0 1 4.576 1.336c.206.132.48.108.653-.065m-2.183 2.183c.226-.226.185-.605-.1-.75A6.5 6.5 0 0 0 8 9c-1.06 0-2.062.254-2.946.704-.285.145-.326.524-.1.75l.015.015c.16.16.407.19.611.09A5.5 5.5 0 0 1 8 10c.868 0 1.69.201 2.42.56.203.1.45.07.61-.091zM9.06 12.44c.196-.196.198-.52-.04-.66A2 2 0 0 0 8 11.5a2 2 0 0 0-1.02.28c-.238.14-.236.464-.04.66l.706.706a.5.5 0 0 0 .707 0l.707-.707z"/></svg></span>
+            <span aria-hidden="true"><svg viewBox="0 0 16 16" width="27.3" height="13" fill="#000000"><path d="M2 6h10v4H2z"/><path d="M2 4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm10 1a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm4 3a1.5 1.5 0 0 1-1.5 1.5v-3A1.5 1.5 0 0 1 16 8"/></svg></span>
           </div>
         </div>
-        <div class="modal-card" role="alertdialog" aria-modal="true" aria-labelledby="modalTitle">
-          <div class="headblk">
-            <span class="title" id="modalTitle">Remove selected devices?</span>
-            <span class="content" id="modalContent">This device will be removed and will need to be paired again to use.</span>
-          </div>
-          <div class="ctas">
-            <button class="cta-primary" id="confirmRemoveBtn">Remove</button>
-            <button class="cta-secondary" id="cancelRemoveBtn">Cancel</button>
+        <div class="nds-screen-scroll scroll-hide" id="confirmScroll">
+          <div class="nds-screen-inner">
+            <div class="l1-inner-nav" id="confirmL1Nav">
+              <button class="back-btn" id="backToManage" aria-label="Back to Manage saved devices">
+                <svg class="chevron-icon" viewBox="0 0 7 14" fill="none"><path d="M5.7 4.8L1.3 7.0L5.7 9.2" stroke="#454545" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <span class="promoted-title" id="confirmTitle">REMOVE SELECTED DEVICES</span>
+              <span class="spacer"></span>
+            </div>
+            <div class="l2-heading" id="confirmL2"><span>REMOVE SELECTED DEVICES</span></div>
+
+            <p class="description-text left" id="confirmDetail"></p>
+
+            <div class="nds-screen-footer">
+              <button class="cta-primary" id="confirmRemoveBtn">Remove</button>
+              <button class="cta-secondary" id="cancelRemoveBtn">Cancel</button>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
     </div>
   </div>
@@ -428,24 +426,30 @@ body {
 
   var deviceListEl = document.getElementById('deviceList');
   var removeBtn = document.getElementById('removeSelectedBtn');
-  var checkSvg = '<svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5L5 9L13 1" stroke="#f7f7f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  // real checked-checkbox svg, copied from components/organisms/checkbox-card.snippet.html (variant checkbox-Right)
+  var checkedSvg = '<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="4.5" fill="#171717"/><path d="M6.48 12.48l3.36 3.36 6.96-7.68" fill="none" stroke="#f7f7f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   function renderDevices() {
     deviceListEl.innerHTML = '';
-    devices.forEach(function (d) {
+    devices.forEach(function (d, i) {
       var row = document.createElement('div');
-      row.className = 'checkbox-card-row';
+      row.className = 'checkbox-card-row row--no-icon';
       row.setAttribute('role', 'checkbox');
       row.setAttribute('aria-checked', String(d.selected));
       row.setAttribute('tabindex', '0');
       row.innerHTML =
-        '<div class="actionable"><div class="checkbox-box' + (d.selected ? ' checked' : '') + '">' + checkSvg + '</div></div>' +
-        '<div class="heading-content"><span class="heading">' + d.name + '</span></div>';
+        '<div class="heading-content"><span class="heading">' + d.name + '</span></div>' +
+        '<div class="actionable">' + (d.selected ? checkedSvg : '<div class="checkbox-box"></div>') + '</div>';
       row.addEventListener('click', function () { toggleDevice(d.id); });
       row.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleDevice(d.id); }
       });
       deviceListEl.appendChild(row);
+      if (i < devices.length - 1) {
+        var sep = document.createElement('div');
+        sep.className = 'separator';
+        deviceListEl.appendChild(sep);
+      }
     });
     updateRemoveButton();
   }
@@ -463,20 +467,22 @@ body {
 
   renderDevices();
 
-  // ---- Screen navigation (Home <-> Manage saved devices) ----
-  var screenHome = document.getElementById('screen-home');
-  var screenManage = document.getElementById('screen-manage');
+  // ---- Screen navigation (Home <-> Manage <-> Confirm) — instant swap, no invented motion ----
+  var screens = {
+    home: document.getElementById('screen-home'),
+    manage: document.getElementById('screen-manage'),
+    confirm: document.getElementById('screen-confirm')
+  };
+  function goTo(name) {
+    Object.keys(screens).forEach(function (k) { screens[k].classList.toggle('active', k === name); });
+  }
 
   document.getElementById('manageDevicesRow').addEventListener('click', function () { goTo('manage'); });
   document.getElementById('manageDevicesRow').addEventListener('keydown', function (e) {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goTo('manage'); }
   });
   document.getElementById('backToHome').addEventListener('click', function () { goTo('home'); });
-
-  function goTo(screen) {
-    screenHome.classList.toggle('active', screen === 'home');
-    screenManage.classList.toggle('active', screen === 'manage');
-  }
+  document.getElementById('backToManage').addEventListener('click', function () { goTo('manage'); }); // backs out, nothing changed
 
   // ---- Sidetone toggle (Home) — immediate, no navigation ----
   var sidetoneBtn = document.getElementById('sidetoneToggle');
@@ -488,45 +494,36 @@ body {
     sidetoneBtn.setAttribute('aria-checked', String(sidetoneOn));
   });
 
-  // ---- l1-inner-page-navigation scroll-linked heading promotion ----
-  var manageScroll = document.getElementById('manageScroll');
-  var manageL1Nav = document.getElementById('manageL1Nav');
-  var l2Heading = document.getElementById('l2Heading');
-  manageScroll.addEventListener('scroll', function () {
-    var scrolled = manageScroll.scrollTop > 4;
-    manageL1Nav.classList.toggle('scrolled', scrolled);
-    manageL1Nav.classList.toggle('shadow-on', scrolled);
-    l2Heading.style.opacity = scrolled ? '0' : '1';
-  });
+  // ---- l1-inner-page-navigation scroll-linked heading promotion — wired identically on
+  // both Screen 2 and Screen 3, per l1-inner-page-navigation.yaml's own scroll_behavior rule ----
+  function wireScrollPromotion(scrollEl, navEl, headingEl) {
+    scrollEl.addEventListener('scroll', function () {
+      var scrolled = scrollEl.scrollTop > 4;
+      navEl.classList.toggle('scrolled', scrolled);
+      navEl.classList.toggle('shadow-on', scrolled);
+      headingEl.style.opacity = scrolled ? '0' : '1';
+    });
+  }
+  wireScrollPromotion(document.getElementById('manageScroll'), document.getElementById('manageL1Nav'), document.getElementById('manageL2'));
+  wireScrollPromotion(document.getElementById('confirmScroll'), document.getElementById('confirmL1Nav'), document.getElementById('confirmL2'));
 
-  // ---- Screen 3 — modal-sheet / modal-card confirmation ----
-  var modal = document.getElementById('confirmModal');
-  var modalContent = document.getElementById('modalContent');
-
+  // ---- Screen 3 — real page, not a modal ----
+  var confirmDetail = document.getElementById('confirmDetail');
   removeBtn.addEventListener('click', function () {
     var selected = devices.filter(function (d) { return d.selected; }).map(function (d) { return d.name; });
     if (selected.length === 0) return;
     var list = selected.length === 1 ? selected[0]
       : selected.slice(0, -1).join(', ') + ' and ' + selected[selected.length - 1];
-    modalContent.textContent = (selected.length > 1 ? 'These devices' : 'This device') +
+    confirmDetail.textContent = (selected.length > 1 ? 'These devices' : 'This device') +
       ' (' + list + ') will be removed and will need to be paired again to use.';
-    openModal();
+    goTo('confirm');
   });
 
-  function openModal() {
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden', 'false');
-  }
-  function closeModal() {
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden', 'true');
-  }
-
-  document.getElementById('cancelRemoveBtn').addEventListener('click', closeModal); // back out — nothing changed
+  document.getElementById('cancelRemoveBtn').addEventListener('click', function () { goTo('manage'); }); // backs out — nothing changed
   document.getElementById('confirmRemoveBtn').addEventListener('click', function () {
     devices = devices.filter(function (d) { return !d.selected; });
     renderDevices();
-    closeModal();
+    goTo('manage');
   });
 })();
 </script>
