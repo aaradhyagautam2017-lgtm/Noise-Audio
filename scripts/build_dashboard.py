@@ -268,6 +268,10 @@ NAV_ICONS = {
                           '<path d="M10 8.7v6.6l5.7-3.3z" fill="currentColor" stroke="none"/>'),
 }
 
+# prototypes.html's per-card "copy a resume prompt" tag — a small speech-bubble, same hand-drawn
+# stroke style as NAV_ICONS, sized/coloured via .flowcard-resume rather than baked in here.
+RESUME_ICON = _navsvg('<path d="M6 4h12c1.1 0 2 .9 2 2v8c0 1.1-.9 2-2 2H9l-4 3.5V16H6c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>')
+
 def sidebar(prefix, active):
     def item(href, label, key, count=None, warn=0, dot=None, icon=None):
         # NB: "pill" is deliberately not added as a class here even for dot items --
@@ -1183,6 +1187,8 @@ LEARNINGS_JS = r"""
 
 PROTOTYPES_JS = r"""
 (function () {
+  var STATUS_LABELS = __STATUS_LABELS_JSON__;
+
   var modal = document.getElementById('flow-edit-modal');
   var titleInput = document.getElementById('flow-edit-title-input');
   var descInput = document.getElementById('flow-edit-desc-input');
@@ -1262,6 +1268,48 @@ PROTOTYPES_JS = r"""
       statusMsg.textContent = 'Could not save (' + err.message + '). Try again.';
     });
   });
+
+  // Resume-work prompt — real cards only (a sample card has no real file under screens/ to
+  // point a fresh session at). Built entirely from this card's own data-flow-* attributes, so
+  // there's no separate copy of title/description/status to drift out of sync with the card.
+  var resumeModal = document.getElementById('flow-resume-modal');
+  var resumeTextarea = document.getElementById('flow-resume-textarea');
+  var resumeCopyBtn = document.getElementById('flow-resume-copy');
+  var resumeCloseBtn = document.getElementById('flow-resume-close');
+
+  function buildResumePrompt(card) {
+    var title = card.getAttribute('data-flow-title') || '';
+    var file = card.getAttribute('data-flow-file') || '';
+    var description = card.getAttribute('data-flow-description') || '';
+    var statusLabel = STATUS_LABELS[card.getAttribute('data-flow-status') || ''] || '';
+    var lines = [
+      'I’m resuming work on an existing flow: “' + title + '” (screens/' + file + ').',
+      '',
+      'This flow already exists in the repo. Before changing anything, read the current file at ' +
+        'screens/' + file + ' to see its current state, and follow this repo’s AGENT.md — ' +
+        'especially the Step 7 composition process, the confirmed entries in learnings.jsonl, and the ' +
+        'real component snippets under components/** — so changes stay consistent with how it and ' +
+        'the rest of the library were built. Don’t rebuild it from scratch or re-derive values ' +
+        'already sitting in the registry.'
+    ];
+    if (description) lines.push('', 'Current description: ' + description);
+    if (statusLabel) lines.push('', 'Current status: ' + statusLabel);
+    lines.push('', 'Here’s what I want you to work on next:', '<describe the change here>');
+    return lines.join('\n');
+  }
+
+  document.querySelectorAll('.flowcard [data-resume]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var prompt = buildResumePrompt(btn.closest('.flowcard'));
+      resumeTextarea.value = prompt;
+      resumeCopyBtn.dataset.copy = prompt; // read by the page-wide .copybtn handler in app.js
+      resumeModal.hidden = false;
+    });
+  });
+
+  function closeResumeModal() { resumeModal.hidden = true; }
+  resumeCloseBtn.addEventListener('click', closeResumeModal);
+  resumeModal.addEventListener('click', function (ev) { if (ev.target === resumeModal) closeResumeModal(); });
 })();
 """
 
@@ -1418,7 +1466,10 @@ def prototypes_page():
              data-flow-description="{E(p["description"])}" data-flow-status="{E(p["status"])}">
           <div class="flowcard-head">
             <h3 class="flowcard-title">{E(p["title"])}</h3>
-            <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
+            <div class="flowcard-head-actions">
+              <button type="button" class="flowcard-resume" data-resume title="Copy a resume-work prompt for this flow" aria-label="Copy a resume-work prompt for this flow">{RESUME_ICON}</button>
+              <button type="button" class="btn flowcard-edit" data-edit>Edit</button>
+            </div>
           </div>
           <p class="flowcard-desc">{E(p["description"]) or '<span class="dim">No description yet.</span>'}</p>
           <a class="btn btn-primary flowcard-open" href="screens/{E(p["file"])}" target="_blank" rel="noopener">Open flow ↗</a>
@@ -1463,7 +1514,20 @@ def prototypes_page():
       </div>
     </div>
 
-    <script>{PROTOTYPES_JS}</script>
+    <div class="modal-overlay" id="flow-resume-modal" hidden>
+      <div class="modal-card modal-card-wide" role="dialog" aria-modal="true" aria-labelledby="flow-resume-heading">
+        <h3 id="flow-resume-heading">Resume prompt</h3>
+        <p class="dim">Paste this into a new chat connected to this repo to pick up work on this flow,
+        without replaying the whole old conversation.</p>
+        <textarea class="flowcard-textarea" id="flow-resume-textarea" rows="11" readonly></textarea>
+        <div class="modal-ctas">
+          <button type="button" class="btn" id="flow-resume-close">Close</button>
+          <button type="button" class="copybtn" id="flow-resume-copy" data-copy="">⧉ Copy prompt</button>
+        </div>
+      </div>
+    </div>
+
+    <script>{PROTOTYPES_JS.replace('__STATUS_LABELS_JSON__', json.dumps(STATUS_LABELS))}</script>
     """
     return page("Prototypes", "prototypes", body)
 
@@ -1984,6 +2048,14 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .flowcard[data-flow-status="in-progress"],.flowcard-mock[data-flow-status="in-progress"]{border-right-color:var(--info-ink)}
 .flowcard[data-flow-status="depleted"],.flowcard-mock[data-flow-status="depleted"]{border-right-color:var(--bad-ink)}
 .flowcard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.flowcard-head-actions{display:flex;align-items:center;gap:6px;flex:none}
+/* Same small-icon-button look as .themetoggle in the sidebar — one convention for "a compact
+   icon-only affordance next to something," not a second one invented just for this. */
+.flowcard-resume{width:30px;height:30px;flex:none;border-radius:var(--r-sm);border:1px solid var(--line);
+  background:var(--surface-2);color:var(--ink2);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;padding:0;transition:color .15s,border-color .15s}
+.flowcard-resume:hover{color:var(--ink);border-color:var(--line-2)}
+.flowcard-resume svg{width:15px;height:15px}
 .flowcard-title{font-size:14.5px;font-weight:600;color:var(--ink);margin:0}
 /* flex:1 1 auto is what pins the button below to the same bottom edge on every card in the
    row: this grows to soak up whatever space the row's tallest card leaves over, so the button
@@ -2063,8 +2135,11 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .modal-overlay[hidden]{display:none}
 .modal-card{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-lg);
   padding:24px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.modal-card-wide{max-width:560px}
 .modal-card h3{margin:0 0 8px;font-size:15px}
 .modal-card p{margin:0}
+.modal-card-wide p{margin:0 0 12px}
+.modal-card-wide #flow-resume-textarea{margin-top:4px;font-family:var(--font-mono);font-size:12.5px}
 .modal-ctas{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
 
 /* Segmented control: switches which category panel shows, so a page with several

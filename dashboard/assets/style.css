@@ -235,6 +235,14 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .flowcard[data-flow-status="in-progress"],.flowcard-mock[data-flow-status="in-progress"]{border-right-color:var(--info-ink)}
 .flowcard[data-flow-status="depleted"],.flowcard-mock[data-flow-status="depleted"]{border-right-color:var(--bad-ink)}
 .flowcard-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.flowcard-head-actions{display:flex;align-items:center;gap:6px;flex:none}
+/* Same small-icon-button look as .themetoggle in the sidebar — one convention for "a compact
+   icon-only affordance next to something," not a second one invented just for this. */
+.flowcard-resume{width:30px;height:30px;flex:none;border-radius:var(--r-sm);border:1px solid var(--line);
+  background:var(--surface-2);color:var(--ink2);cursor:pointer;display:flex;align-items:center;
+  justify-content:center;padding:0;transition:color .15s,border-color .15s}
+.flowcard-resume:hover{color:var(--ink);border-color:var(--line-2)}
+.flowcard-resume svg{width:15px;height:15px}
 .flowcard-title{font-size:14.5px;font-weight:600;color:var(--ink);margin:0}
 /* flex:1 1 auto is what pins the button below to the same bottom edge on every card in the
    row: this grows to soak up whatever space the row's tallest card leaves over, so the button
@@ -314,8 +322,11 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .modal-overlay[hidden]{display:none}
 .modal-card{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-lg);
   padding:24px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.modal-card-wide{max-width:560px}
 .modal-card h3{margin:0 0 8px;font-size:15px}
 .modal-card p{margin:0}
+.modal-card-wide p{margin:0 0 12px}
+.modal-card-wide #flow-resume-textarea{margin-top:4px;font-family:var(--font-mono);font-size:12.5px}
 .modal-ctas{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
 
 /* Segmented control: switches which category panel shows, so a page with several
