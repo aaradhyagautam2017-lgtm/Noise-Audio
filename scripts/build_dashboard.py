@@ -62,6 +62,7 @@ SEARCH_ENTRIES = [
     {"n": "Overview", "h": "index.html", "g": "Nav"},
     {"n": "Component graph", "h": "graph.html", "g": "Nav"},
     {"n": "Fill the gaps", "h": "fill-gaps.html", "g": "Nav"},
+    {"n": "Agent Learnings", "h": "learnings.html", "g": "Nav"},
     {"n": "Colors & tokens", "h": "foundations-colors.html", "g": "Foundations"},
     {"n": "Typography", "h": "foundations-typography.html", "g": "Foundations"},
     {"n": "Spacing & radius", "h": "foundations-spacing.html", "g": "Foundations"},
@@ -205,6 +206,7 @@ NAV_ICONS = {
     "cube": _navsvg('<path d="M12 3.5 20 8v8l-8 4.5-8-4.5V8z"/><path d="M4 8l8 4.5L20 8M12 12.5V21"/>'),
     "search": _navsvg('<circle cx="10.5" cy="10.5" r="6"/><path d="m15 15 5 5"/>'),
     "chevron": _navsvg('<path d="m5 8.5 7 6.5 7-6.5"/>'),
+    "learnings": _navsvg('<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.6.45.9 1.15.9 1.9V16h5.4v-.3c0-.75.3-1.45.9-1.9A6 6 0 0 0 12 3z"/>'),
 }
 
 def sidebar(prefix, active):
@@ -253,6 +255,7 @@ def sidebar(prefix, active):
         {item("index.html", "Overview", "overview", icon=NAV_ICONS["home"])}
         {item("graph.html", "Component graph", "graph", icon=NAV_ICONS["graph"])}
         {item("fill-gaps.html", "Fill the gaps", "fill-gaps", icon=NAV_ICONS["puzzle"])}
+        {item("learnings.html", "Agent Learnings", "learnings", icon=NAV_ICONS["learnings"])}
       </nav>
       <div class="navscroll">
     ''']
@@ -1014,6 +1017,78 @@ FILL_GAP_JS = r"""
 })();
 """
 
+# Same reasoning as FILL_GAP_JS above: raw string, one marker token spliced in via .replace().
+# Approve/Deny only ever edit an in-memory copy of the ledger text -- nothing here writes to
+# the real learnings.jsonl on disk. The download at the bottom is what makes a decision real;
+# per AGENT.md §6 the actual repo update (replace the file, commit, push) is the agent's job,
+# not something a static page can do for itself.
+LEARNINGS_JS = r"""
+(function () {
+  var CURRENT_LEDGER = __CURRENT_LEDGER_JSON__;
+  var lines = CURRENT_LEDGER ? CURRENT_LEDGER.split('\n').filter(function (l) { return l.trim().length; }) : [];
+  var decisions = {}; // id -> modified line text, only for entries reviewed this session
+
+  function findLineIndex(id) {
+    for (var i = 0; i < lines.length; i++) {
+      try { if (JSON.parse(lines[i]).id === id) return i; } catch (e) {}
+    }
+    return -1;
+  }
+
+  function decide(row, id, newStatus) {
+    var idx = findLineIndex(id);
+    if (idx === -1) return;
+    var entry;
+    try { entry = JSON.parse(lines[idx]); } catch (e) { return; }
+    entry.status = newStatus;
+    entry.reviewed_at = new Date().toISOString();
+    decisions[id] = JSON.stringify(entry);
+
+    row.classList.add('is-decided');
+    var ctas = row.querySelector('[data-ctas]');
+    ctas.querySelector('[data-approve]').hidden = true;
+    ctas.querySelector('[data-deny]').hidden = true;
+    var note = ctas.querySelector('[data-decided-note]');
+    note.hidden = false;
+    note.textContent = newStatus === 'confirmed'
+      ? 'Marked approved — download below to save.'
+      : 'Marked denied — download below to save.';
+    note.classList.add(newStatus === 'confirmed' ? 'is-approved' : 'is-denied');
+
+    var dlBtn = document.getElementById('download-learnings');
+    dlBtn.disabled = false;
+    document.getElementById('learnings-download-status').textContent =
+      Object.keys(decisions).length + ' decision(s) made this session, not yet saved.';
+  }
+
+  document.querySelectorAll('.learning-row[data-learning-id]').forEach(function (row) {
+    var id = row.getAttribute('data-learning-id');
+    var approveBtn = row.querySelector('[data-approve]');
+    var denyBtn = row.querySelector('[data-deny]');
+    if (approveBtn) approveBtn.addEventListener('click', function (ev) { ev.preventDefault(); decide(row, id, 'confirmed'); });
+    if (denyBtn) denyBtn.addEventListener('click', function (ev) { ev.preventDefault(); decide(row, id, 'rejected'); });
+  });
+
+  document.getElementById('download-learnings').addEventListener('click', function () {
+    var out = lines.map(function (line, i) {
+      try {
+        var id = JSON.parse(line).id;
+        if (decisions[id]) return decisions[id];
+      } catch (e) {}
+      return line;
+    });
+    var blob = new Blob([out.join('\n') + '\n'], { type: 'application/x-ndjson' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = 'learnings.jsonl';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    document.getElementById('learnings-download-status').textContent =
+      'Downloaded with ' + Object.keys(decisions).length + ' decision(s) applied. Replace learnings.jsonl in the repo with this file, then follow AGENT.md §6: regenerate the dashboard and commit both together.';
+  });
+})();
+"""
+
 def fill_gap_page(cid, key, label):
     """One dedicated page per (component, missing field) gap — the actual entry point, showing
     the component's real rendered preview above the text field so the gap is filled with the
@@ -1079,6 +1154,54 @@ def fill_gaps_page():
     """
     return page("Fill the gaps", "fill-gaps", body)
 
+def learnings_page():
+    """The dedicated destination the overview's three learnings tiles link into (see
+    AGENT.md §6). Pending entries are actionable (Approve/Deny); confirmed and rejected
+    ones are the closed record of past decisions. Kept off the overview page itself so
+    logging another correction never makes that page a paragraph longer."""
+    ledger_raw = ""
+    if os.path.exists(learnings_path):
+        with open(learnings_path) as f:
+            ledger_raw = f.read()
+    js = LEARNINGS_JS.replace("__CURRENT_LEDGER_JSON__", json.dumps(ledger_raw))
+
+    pending_html = "".join(learning_row_html(e, actionable=True) for e in learnings_pending) or \
+        '<p class="entrylist-empty">Nothing awaiting review.</p>'
+    confirmed_html = "".join(learning_row_html(e) for e in learnings_confirmed) or \
+        '<p class="entrylist-empty">No learnings confirmed yet.</p>'
+    rejected_html = "".join(learning_row_html(e) for e in learnings_rejected) or \
+        '<p class="entrylist-empty">Nothing rejected yet.</p>'
+
+    body = f"""
+    <header class="pagehead"><h1>Agent Learnings</h1></header>
+    <p class="dim">Corrections the agent has absorbed, and what's still waiting on a human decision — see
+    <a href="../AGENT.md">AGENT.md §6</a>. This is a static site with no backend: clicking Approve/Deny marks
+    your decision here in the browser only. Download the updated <code>learnings.jsonl</code> at the bottom
+    once you're done, replace the repo's copy, and commit — nothing here saves by itself.</p>
+
+    <section class="metasection" id="pending">
+      <h3>Pending review <span class="count">{len(learnings_pending)}</span></h3>
+      {pending_html}
+    </section>
+
+    <section class="metasection" id="confirmed">
+      <h3>Confirmed <span class="count">{len(learnings_confirmed)}</span></h3>
+      {confirmed_html}
+    </section>
+
+    <section class="metasection" id="rejected">
+      <h3>Rejected <span class="count">{len(learnings_rejected)}</span></h3>
+      {rejected_html}
+    </section>
+
+    <div class="learnings-download-bar">
+      <button type="button" id="download-learnings" class="btn btn-primary" disabled>Download updated learnings.jsonl</button>
+      <span id="learnings-download-status" class="dim">Approve or deny an entry above to enable this.</span>
+    </div>
+    <script>{js}</script>
+    """
+    return page("Agent Learnings", "learnings", body)
+
 def render_prose(text):
     """Designer-authored prose -> HTML.
 
@@ -1136,6 +1259,43 @@ def learning_entry(entry, cid=None):
         return {"title": f'{field_label} — contributed', "detail": entry.get("contributed_text") or "", "chips": chips}
     return {"title": entry.get("proposed_rule") or entry.get("user_correction") or "(no rule text logged)",
             "detail": entry.get("user_correction") or "", "chips": chips}
+
+def learning_row_html(entry, actionable=False):
+    """One collapsible row for learnings.html. Collapsed, only the proposed rule (or field
+    label) and a chevron show — the component chips and the full what-happened/what-you-said
+    detail are inside the <details> body, so a reader sees what a review is about before
+    deciding whether to open it. `actionable` adds the Approve/Deny controls; only a still-
+    pending entry gets those — a confirmed or rejected one is a closed, read-only record."""
+    chips = "".join(render_chip({"label": components.get(c, {}).get("name", c).strip() if c in components else c,
+                                  "href": f"components/{c}.html"})
+                     for c in (entry.get("components") or []))
+    eid = entry.get("id", "")
+    if entry.get("kind") == "field_contribution":
+        field_label = FIELD_LABEL.get(entry.get("field"), entry.get("field", "a field"))
+        summary_text = f"{field_label} — contributed"
+        fields_html = (f'<div class="learning-field"><div class="learning-field-label">Contributed text</div>'
+                        f'<div class="learning-field-value">{E(entry.get("contributed_text") or "")}</div></div>')
+    else:
+        summary_text = entry.get("proposed_rule") or entry.get("user_correction") or "(no rule text logged)"
+        fields_html = (
+            f'<div class="learning-field"><div class="learning-field-label">What the agent did</div>'
+            f'<div class="learning-field-value">{E(entry.get("agent_action") or "")}</div></div>'
+            f'<div class="learning-field"><div class="learning-field-label">What you said</div>'
+            f'<div class="learning-field-value">{E(entry.get("user_correction") or "")}</div></div>'
+        )
+
+    ctas = ""
+    if actionable:
+        ctas = ('<div class="learning-ctas" data-ctas>'
+                '<button type="button" class="btn btn-approve" data-approve>Approve</button>'
+                '<button type="button" class="btn btn-deny" data-deny>Deny</button>'
+                '<span class="learning-decided-note" data-decided-note hidden></span></div>')
+
+    return (f'<details class="learning-row" data-learning-id="{E(eid)}">'
+            f'<summary><span class="learning-summary-text">{E(summary_text)}</span>'
+            f'<span class="ovchev" aria-hidden="true"></span></summary>'
+            f'<div class="learning-body"><div class="learning-chips">{chips}</div>'
+            f'{fields_html}{ctas}</div></details>')
 
 # ----------------------------------------------------------------- overview + graph
 def overview_page():
@@ -1231,21 +1391,26 @@ def overview_page():
                     f'<div class="ovcard-body">{ov_sections}</div></details>')
 
     # Agent learnings — see AGENT.md §6. Confirmed entries are guidance the agent now applies;
-    # pending ones are unvalidated corrections a designer hasn't reviewed yet. Both are shown —
-    # this section is the audit trail for what the agent has actually learned, not a score.
+    # pending ones are unvalidated corrections a designer hasn't reviewed yet. The overview only
+    # gives the counts (each one a link into learnings.html): the full entries — proposed rule,
+    # what happened, what was said, the Approve/Deny review — live on that dedicated page, so this
+    # page doesn't grow a paragraph taller every time a correction gets logged.
     n_confirmed, n_pending, n_rejected = len(learnings_confirmed), len(learnings_pending), len(learnings_rejected)
     pending_tile_cls = "kpi kpi-warn" if n_pending else "kpi"
+
+    def learnings_tile(count, label, anchor, cls):
+        return (f'<a class="{cls}" href="learnings.html#{anchor}">'
+                f'<div class="kpi-value">{count}</div>'
+                f'<div class="kpi-linkrow"><span class="kpi-label">{E(label)}</span>'
+                f'<span class="kpi-arrow">→</span></div></a>')
+
     learnings_section = f'''
       <h4 class="subhead">Agent learnings <span class="dim">— corrections the agent has absorbed, and what is still pending review</span></h4>
       <div class="kpirow">
-        <div class="kpi"><div class="kpi-value">{n_confirmed}</div><div class="kpi-label">Confirmed — applied as guidance</div></div>
-        <div class="kpi"><div class="kpi-value">{n_rejected}</div><div class="kpi-label">Reviewed and rejected</div></div>
-        <div class="{pending_tile_cls}"><div class="kpi-value">{n_pending}</div><div class="kpi-label">Pending review</div></div>
+        {learnings_tile(n_confirmed, "Confirmed — applied as guidance", "confirmed", "kpi")}
+        {learnings_tile(n_rejected, "Reviewed and rejected", "rejected", "kpi")}
+        {learnings_tile(n_pending, "Pending review", "pending", pending_tile_cls)}
       </div>
-      <div class="subhead" style="margin:22px 0 10px">Confirmed</div>
-      {render_entry_list([learning_entry(e) for e in learnings_confirmed], "No learnings confirmed yet.", "entry-learned")}
-      <div class="subhead" style="margin:22px 0 10px">Pending review</div>
-      {render_entry_list([learning_entry(e) for e in learnings_pending], "Nothing awaiting review.", "entry-pending")}
     '''
 
     n_issues = len(issues)
@@ -1324,6 +1489,7 @@ STYLE = """
   --atom:#35c97f; --molecule:#d6a23c; --organism:#e0604c; --complex:#a8443a; --plum:#a78bfa;
   --warn-bg:#26200f; --warn-line:#5c4a1c; --warn-ink:#e0b341;
   --good-bg:#122a1c; --good-line:#1f5c39; --good-ink:#4ade80;
+  --bad-bg:#2a1614; --bad-line:#5c2620; --bad-ink:#f0685a;
   --font:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
   --font-mono:'Roboto Mono',ui-monospace,'SF Mono',monospace;
   --r-xs:6px; --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-pill:9999px;
@@ -1337,6 +1503,7 @@ html[data-theme=light]{
   --atom:#1c7a45; --molecule:#9c6a1f; --organism:#b3261e; --complex:#6b1414; --plum:#6d4aff;
   --warn-bg:#fff9ec; --warn-line:#e3cb96; --warn-ink:#8a6414;
   --good-bg:#eafbf1; --good-line:#a8dfc0; --good-ink:#1c7a45;
+  --bad-bg:#fdecea; --bad-line:#f0b8b0; --bad-ink:#b3261e;
 }
 *{box-sizing:border-box}
 html{background:var(--canvas)}
@@ -1534,6 +1701,41 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .copybtn.copied,.gapcopybtn.copied{background:var(--accent);color:#fff;border-color:var(--accent)}
 .copybtn.small,.gapcopybtn.small{padding:2px 6px}
 
+/* ---------------------------------------------------------------- learnings.html */
+/* One entry, collapsed to just its proposed rule + a chevron by default -- the chips,
+   the "what happened"/"what you said" detail, and (for pending ones) the review CTAs
+   only appear once opened, so a page with a dozen corrections logged still reads as a
+   dozen headings, not a wall of tags and paragraphs. */
+.learning-row{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-md);
+  margin:0 0 10px;overflow:hidden;transition:border-color .15s}
+.learning-row:last-child{margin-bottom:0}
+.learning-row[open]{border-color:var(--line-2)}
+.learning-row summary{list-style:none;cursor:pointer;padding:14px 16px;
+  display:flex;align-items:flex-start;gap:12px}
+.learning-row summary::-webkit-details-marker{display:none}
+.learning-summary-text{font-size:13.5px;font-weight:500;color:var(--ink);line-height:1.5;flex:1}
+.learning-row .ovchev{margin-top:5px}
+.learning-row[open] .ovchev{transform:rotate(90deg)}
+.learning-body{padding:2px 16px 16px;border-top:1px solid var(--line-soft)}
+.learning-chips{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+.learning-field{margin-bottom:14px}
+.learning-field:last-child{margin-bottom:0}
+.learning-field-label{font-size:10.5px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink3);margin-bottom:4px}
+.learning-field-value{font-size:13px;color:var(--ink2);line-height:1.55}
+.learning-ctas{display:flex;align-items:center;gap:8px;margin-top:16px}
+.btn-approve{border-color:var(--good-line);color:var(--good-ink)}
+.btn-approve:hover{background:var(--good-ink);color:var(--canvas);border-color:var(--good-ink)}
+.btn-deny{border-color:var(--bad-line);color:var(--bad-ink)}
+.btn-deny:hover{background:var(--bad-ink);color:var(--canvas);border-color:var(--bad-ink)}
+.learning-row.is-decided{opacity:.6}
+.learning-decided-note{font-size:12.5px;font-weight:500}
+.learning-decided-note.is-approved{color:var(--good-ink)}
+.learning-decided-note.is-denied{color:var(--bad-ink)}
+.learnings-download-bar{position:sticky;bottom:0;margin:24px -22px -20px;padding:16px 22px;
+  background:var(--surface);border-top:1px solid var(--line);
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+
 /* ---------------------------------------------------------------- taxonomy */
 .typebadge{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-pill);
   padding:3px 10px 3px 8px;font-size:11.5px;color:var(--ink2);background:var(--surface-2);
@@ -1573,6 +1775,14 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .kpi-label{color:var(--ink3);font-size:11.5px;margin-top:4px;line-height:1.4}
 .kpi-warn{background:var(--warn-bg);border-color:var(--warn-line)}
 .kpi-warn .kpi-value{color:var(--warn-ink)}
+/* KPI tiles that are really links through to learnings.html — same tile, but with a
+   hover state and a trailing arrow so it reads as "there's more, one layer in" rather
+   than a plain stat. */
+a.kpi{text-decoration:none;display:block;cursor:pointer;transition:border-color .15s,background .15s}
+a.kpi:hover{border-color:var(--accent);background:var(--surface-3)}
+a.kpi:hover .kpi-arrow{transform:translateX(2px)}
+.kpi-linkrow{display:flex;align-items:baseline;gap:6px}
+.kpi-arrow{color:var(--accent);font-size:12px;transition:transform .15s}
 .propbar{display:flex;gap:2px;height:8px;border-radius:var(--r-pill);overflow:hidden;
   background:var(--surface-3);margin:18px 0 12px}
 .propbar-seg{min-width:3px}
@@ -1857,6 +2067,7 @@ def main():
     pages = {
         "index.html": overview_page(),
         "fill-gaps.html": fill_gaps_page(),
+        "learnings.html": learnings_page(),
         "foundations-colors.html": colors_page(),
         "foundations-typography.html": typography_page(),
         "foundations-spacing.html": spacing_page(),
