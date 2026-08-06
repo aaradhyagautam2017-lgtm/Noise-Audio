@@ -309,7 +309,7 @@ def sidebar(prefix, active):
     parts = [f'''
     <aside class="sidebar">
       <div class="brand">
-        <span class="applogo">N</span>
+        <span class="applogo">{E(registry["app"][0].upper())}</span>
         <span class="brandname">{E(registry["app"])}</span>
         <button class="themetoggle" type="button" id="themetoggle" title="Toggle light / dark"
                 aria-label="Toggle light or dark theme">{THEME_ICON}</button>
@@ -383,7 +383,7 @@ def page(title, active, body, prefix=""):
     return f"""<!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{E(title)} — {E(registry["app"])} DLS</title>
+<title>{E(title)} — {E(registry["app"])}</title>
 <script>(function(){{try{{var t=localStorage.getItem('na-theme');if(t)document.documentElement.setAttribute('data-theme',t);}}catch(e){{}}}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -978,7 +978,7 @@ def typography_page():
             <span class="dim">{E(fam)} {E(s["font_style"])} · {s["font_size"]}px · line-height {E(lh)} · letter-spacing {E(s["letter_spacing"])}</span>
             <div class="idrow"><code class="idvalue">{E(s["key"])}</code><button class="copybtn small" data-copy="{E(s["key"])}">⧉</button></div>
             {note}</div>
-          <div class="typo-sample" style="font-family:'{E(fam)}',sans-serif;font-weight:{wt};font-size:{sample_size}px;line-height:{'normal' if lh=='auto' else E(lh)}">Noise Audio {s["font_size"]}px{'<span class=dim> (shown at 40px)</span>' if sample_size!=s["font_size"] else ''}</div>
+          <div class="typo-sample" style="font-family:'{E(fam)}',sans-serif;font-weight:{wt};font-size:{sample_size}px;line-height:{'normal' if lh=='auto' else E(lh)}">{E(registry["app"])} {s["font_size"]}px{'<span class=dim> (shown at 40px)</span>' if sample_size!=s["font_size"] else ''}</div>
         </div>''')
     eff = ""
     for e in tokens_typo.get("effect_styles", []) or []:
@@ -1912,7 +1912,7 @@ def overview_page():
 
 # ----------------------------------------------------------------- assets
 STYLE = """
-/* Noise Audio DLS dashboard — dark-first, minimal, hairline-bordered.
+/* Test DLS dashboard — dark-first, minimal, hairline-bordered.
    Near-black canvas with recessed surfaces, a single restrained violet accent for
    interactive state, and taxonomy carried by small colour dots rather than loud
    badges. Light theme is a full override on [data-theme=light], not an inversion. */

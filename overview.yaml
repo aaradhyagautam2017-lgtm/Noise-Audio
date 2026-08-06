@@ -18,7 +18,7 @@ overview:
   sections:
     - heading: How it works
       body: >
-        This is a single, governed source of truth for how Noise Audio looks and behaves —
+        This is a single, governed source of truth for how the app looks and behaves —
         authored in Figma, mirrored here as machine-readable files that both designers and
         AI agents read from. Everything on this dashboard is generated from those files, so
         what you see is what the system actually contains.

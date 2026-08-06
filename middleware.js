@@ -5,7 +5,7 @@ import { verifySession, parseCookie, SESSION_COOKIE } from "./lib/dash-auth.js";
 // endpoint (api/decide.js) is safe to expose: without it, anyone with the dashboard's
 // URL could call that endpoint and commit to the repo.
 const LOGIN_HTML = `<!doctype html>
-<html><head><meta charset="utf-8"><title>Noise Audio dashboard — sign in</title>
+<html><head><meta charset="utf-8"><title>Test DLS dashboard — sign in</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   :root{color-scheme:dark light}
@@ -24,7 +24,7 @@ const LOGIN_HTML = `<!doctype html>
 </style></head>
 <body>
   <form id="f">
-    <h1>Noise Audio dashboard</h1>
+    <h1>Test DLS dashboard</h1>
     <input type="password" id="pw" placeholder="Password" autofocus required autocomplete="current-password">
     <button type="submit">Sign in</button>
     <p id="err"></p>
