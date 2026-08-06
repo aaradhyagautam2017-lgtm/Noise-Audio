@@ -71,7 +71,7 @@ What it is: an append-only, line-delimited JSON ledger at the repository root. O
 }
 ```
 
-`kind: "field_contribution"` — a human supplies text for a documentation field a component doesn't have yet (produced by the dashboard's "Fill the gaps" page):
+`kind: "field_contribution"` — a human supplies text for a documentation field a component doesn't have yet (produced by the dashboard's "Missing Data" page):
 ```
 {
   "id": "learn-<date>-<seq>",

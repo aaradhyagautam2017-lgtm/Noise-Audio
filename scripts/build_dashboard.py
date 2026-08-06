@@ -61,7 +61,7 @@ SECTION_OF_ACTIVE = {"colors": "foundations", "typography": "foundations", "spac
 SEARCH_ENTRIES = [
     {"n": "Overview", "h": "index.html", "g": "Nav"},
     {"n": "Component graph", "h": "graph.html", "g": "Nav"},
-    {"n": "Fill the gaps", "h": "fill-gaps.html", "g": "Nav"},
+    {"n": "Missing Data", "h": "fill-gaps.html", "g": "Nav"},
     {"n": "Agent Learnings", "h": "learnings.html", "g": "Nav"},
     {"n": "Prototypes", "h": "prototypes.html", "g": "Nav"},
     {"n": "Colors & tokens", "h": "foundations-colors.html", "g": "Foundations"},
@@ -317,7 +317,7 @@ def sidebar(prefix, active):
       <nav class="navtop">
         {item("index.html", "Overview", "overview", icon=NAV_ICONS["home"])}
         {item("graph.html", "Component graph", "graph", icon=NAV_ICONS["graph"])}
-        {item("fill-gaps.html", "Fill the gaps", "fill-gaps", icon=NAV_ICONS["puzzle"])}
+        {item("fill-gaps.html", "Missing Data", "fill-gaps", icon=NAV_ICONS["puzzle"])}
         {item("learnings.html", "Agent Learnings", "learnings", icon=NAV_ICONS["learnings"])}
       </nav>
       <div class="navscroll">
@@ -1409,7 +1409,7 @@ def fill_gap_page(cid, key, label):
                      .replace("__CID_JSON__", json.dumps(cid))
                      .replace("__FIELD_JSON__", json.dumps(key)))
     body = f"""
-    <div class="crumb"><a href="../fill-gaps.html">Fill the gaps</a> / {E(label)}</div>
+    <div class="crumb"><a href="../fill-gaps.html">Missing Data</a> / {E(label)}</div>
     <header class="pagehead"><h1>{E(name)}</h1><span class="dim">{E(label)} is missing</span></header>
     <p class="dim">This is a static site with no backend: nothing typed below saves by itself. Write the
     {E(label.lower())}, then copy the entry or download an updated <code>learnings.jsonl</code> — replace the
@@ -1444,7 +1444,7 @@ def fill_gaps_page():
             f'<a class="gaprow gaprow-link" href="fill-gaps/{cid}--{E(key)}.html">'
             f'<span class="gaprow-name">{E(components[cid]["name"].strip())}</span>'
             f'<span class="dim">{E(cid)}</span><span class="gaprow-arrow">→</span></a>'
-            for cid in missing) or '<p class="entrylist-empty">No gaps — every component has this field authored.</p>'
+            for cid in missing) or '<p class="entrylist-empty">Nothing missing — every component has this field authored.</p>'
         tabs.append((key, label, len(missing), rows))
 
     segtabs_html = "".join(
@@ -1456,15 +1456,15 @@ def fill_gaps_page():
         for key, _, _, rows in tabs)
 
     body = f"""
-    <header class="pagehead"><h1>Fill the gaps</h1></header>
+    <header class="pagehead"><h1>Missing Data</h1></header>
     <p class="dim">{total_gaps} missing documentation field(s) across the library. Each one is its own page,
     with the component's real preview shown above the text field. This is a static site with no backend —
-    nothing saves automatically anywhere in here; see any gap's own page for how to actually contribute it.</p>
+    nothing saves automatically anywhere in here; see any entry's own page for how to actually contribute it.</p>
 
     <div class="segtabs" data-seg-group="fillgaps">{segtabs_html}</div>
     {segpanels_html}
     """
-    return page("Fill the gaps", "fill-gaps", body)
+    return page("Missing Data", "fill-gaps", body)
 
 SEG_ICONS = {
     "pending": _navsvg('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>'),
