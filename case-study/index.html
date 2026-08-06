@@ -386,8 +386,6 @@
   .mini-card img { width: 100%; height: auto; display: block; background: var(--bg-base); }
   .mini-card-cap { padding: 12px 14px; font-size: 13px; line-height: 1.55; color: var(--ink-2); }
   .mini-card-cap b { color: var(--ink); font-weight: 600; }
-  .entry-shot { display: inline-block; margin-top: 14px; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--bg-surface); padding: 10px; }
-  .entry-shot img { display: block; }
 
   /* ---------- Stage 2: roadmap / what's-next note ---------- */
   .roadmap-note {
@@ -1444,8 +1442,14 @@
           This is where an "Incomplete" row from Overview turns into actual writing. It's a
           permanent item in the left sidebar of every page, not something buried behind a menu.
         </p>
-        <div class="entry-shot">
-          <img src="assets/deepdive-fillgaps-entry.png" alt="The Fill the gaps entry in the dashboard's left sidebar, highlighted to show it's the active page.">
+        <div class="walkthrough-frame">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">test-dls-dashboard.vercel.app/index.html</span>
+          </div>
+          <div class="walkthrough-body" style="min-height:auto;">
+            <img src="assets/deepdive-fillgaps-entry.png" alt="The dashboard's left sidebar with Fill the gaps circled in red — the third item in the top nav, below Overview and Component graph.">
+          </div>
         </div>
         <p class="overview-paragraph" style="margin-top: 22px;">
           Open it and the gaps are sorted into tabs, one per documentation field, each one showing
@@ -1488,8 +1492,14 @@
           Also a permanent sidebar item. This is the queue for everything that isn't allowed to
           become a rule just because it was said once.
         </p>
-        <div class="entry-shot">
-          <img src="assets/deepdive-learnings-entry.png" alt="The Agent Learnings entry in the dashboard's left sidebar.">
+        <div class="walkthrough-frame">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">test-dls-dashboard.vercel.app/index.html</span>
+          </div>
+          <div class="walkthrough-body" style="min-height:auto;">
+            <img src="assets/deepdive-learnings-entry.png" alt="The dashboard's left sidebar with Agent Learnings circled in red — the fourth item in the top nav.">
+          </div>
         </div>
         <p class="overview-paragraph" style="margin-top: 22px;">
           Two kinds of entries land here: corrections given mid-conversation, and the
@@ -1573,8 +1583,14 @@
           Every one of the 26 components has a page like this one. Here's the <b>Primary CTA
           button</b>, as an example.
         </p>
-        <div class="entry-shot">
-          <img src="assets/deepdive-component-head.png" alt="Primary cta page header: name, an Atom badge, and 'used by 4'.">
+        <div class="walkthrough-frame">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">test-dls-dashboard.vercel.app/components/primary-cta-button.html</span>
+          </div>
+          <div class="walkthrough-body" style="min-height:auto;">
+            <img src="assets/deepdive-component-head.png" alt="The sidebar with Atoms expanded and Primary cta highlighted as the active page, next to the page header circled in red: name, an Atom badge, and 'used by 4'.">
+          </div>
         </div>
         <p class="overview-paragraph" style="margin-top: 22px;">
           The badge says what kind of component it is (Atom — the smallest, indivisible kind),
@@ -1707,20 +1723,26 @@
           Two more things aren't specific to this page — they're reachable from anywhere in the
           dashboard, but worth showing here.
         </p>
-        <div class="mini-grid" style="margin-top:14px;">
-          <div class="mini-card">
-            <img src="assets/deepdive-search.png" alt="Search dropdown: typing 'card' shows matching components — Card heading, Modal card, Master card, Checkbox card, Action card.">
-            <div class="mini-card-cap">
-              <b>Search</b> — press ⌘K (or Ctrl K) from any page and jump straight to any
-              component or page by name, without clicking back through the sidebar.
-            </div>
+        <p class="overview-paragraph" style="margin-top: 18px;">
+          <b>Search</b> — press ⌘K (or Ctrl K) from any page, or just click the search box circled
+          in red at the bottom of the sidebar, and jump straight to any component or page by name
+          without clicking back through the nav tree.
+        </p>
+        <div class="walkthrough-frame">
+          <div class="browser-chrome">
+            <span class="browser-dot"></span><span class="browser-dot"></span><span class="browser-dot"></span>
+            <span class="browser-url">test-dls-dashboard.vercel.app/index.html</span>
           </div>
-          <div class="mini-card">
-            <img src="assets/deepdive-login-gate.png" alt="Login screen: Test DLS dashboard title, a password field, and a Sign in button.">
-            <div class="mini-card-cap">
-              <b>The password gate</b> — before any of this loads, the whole dashboard sits behind
-              a password. It isn't just publicly reachable to anyone with the link.
-            </div>
+          <div class="walkthrough-body" style="min-height:auto;">
+            <img src="assets/deepdive-search.png" alt="The dashboard's left sidebar with the search box at the bottom circled in red, mid-search for 'card', showing a dropdown of matching components above it.">
+          </div>
+        </div>
+
+        <div class="mini-card" style="margin-top:22px; max-width:380px;">
+          <img src="assets/deepdive-login-gate.png" alt="Login screen: Test DLS dashboard title, a password field, and a Sign in button.">
+          <div class="mini-card-cap">
+            <b>The password gate</b> — before any of this loads, the whole dashboard sits behind
+            a password. It isn't just publicly reachable to anyone with the link.
           </div>
         </div>
       </div>
