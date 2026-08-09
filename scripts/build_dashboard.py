@@ -31,12 +31,12 @@ tokens_colors = load_yaml("tokens/colors.yaml")
 tokens_typo = load_yaml("tokens/typography.yaml")
 tokens_spacing = load_yaml("tokens/spacing.yaml")
 
-# Overview copy is designer-authored and lives outside this script, so it can be edited
-# without touching Python. Absent file degrades to an empty overview rather than failing.
+# README copy is designer-authored and lives outside this script, so it can be edited
+# without touching Python. Absent file degrades to an empty README rather than failing.
 try:
-    overview_copy = load_yaml("overview.yaml")["overview"]
+    readme_copy = load_yaml("readme.yaml")["readme"]
 except (FileNotFoundError, KeyError, TypeError):
-    overview_copy = {}
+    readme_copy = {}
 
 components = {}          # id -> parsed component file
 for entry in registry["components"]:
@@ -59,6 +59,7 @@ group_defs = [
 # find its section collapsed. Root-relative hrefs here; sidebar() prefixes them per page.
 SECTION_OF_ACTIVE = {"colors": "foundations", "typography": "foundations", "spacing": "foundations"}
 SEARCH_ENTRIES = [
+    {"n": "README", "h": "readme.html", "g": "Nav"},
     {"n": "Overview", "h": "index.html", "g": "Nav"},
     {"n": "Component graph", "h": "graph.html", "g": "Nav"},
     {"n": "Missing Data", "h": "fill-gaps.html", "g": "Nav"},
@@ -249,6 +250,8 @@ def _navsvg(inner, vb=24):
 # headers -- monochrome, sized/coloured entirely via CSS so they follow the same
 # hover/active states as the text next to them.
 NAV_ICONS = {
+    "book": _navsvg('<path d="M4 5.5c2.2-1 5-1 8 .8 3-1.8 5.8-1.8 8-.8v13c-2.2-1-5-1-8 .8-3-1.8-5.8-1.8-8-.8z"/>'
+                     '<path d="M12 6.3v13"/>'),
     "home": _navsvg('<path d="M4 10.5 12 4l8 6.5"/><path d="M6 9v9.5a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1V9"/>'),
     "graph": _navsvg('<circle cx="6" cy="6" r="2.3"/><circle cx="18" cy="6" r="2.3"/><circle cx="12" cy="18" r="2.3"/>'
                       '<path d="M8 7.3 10.6 15.5M16 7.3 13.4 15.5M8.3 6h7.4"/>'),
@@ -315,6 +318,7 @@ def sidebar(prefix, active):
                 aria-label="Toggle light or dark theme">{THEME_ICON}</button>
       </div>
       <nav class="navtop">
+        {item("readme.html", "README", "readme", icon=NAV_ICONS["book"])}
         {item("index.html", "Overview", "overview", icon=NAV_ICONS["home"])}
         {item("graph.html", "Component graph", "graph", icon=NAV_ICONS["graph"])}
         {item("fill-gaps.html", "Missing Data", "fill-gaps", icon=NAV_ICONS["puzzle"])}
@@ -1733,6 +1737,63 @@ def learning_row_html(entry):
             f'<div class="learning-body"><div class="learning-chips">{chips}</div>'
             f'{fields_html}{ctas}</div></details>')
 
+def readme_page():
+    """The dashboard's own front door. This used to be a collapsible card folded into the
+    Overview page ("How this system works"); it's a full page now, first in the sidebar, so
+    a first-time visitor reads it once instead of it competing for space with the library's
+    live health metrics every time they open Overview."""
+    intro_html = render_prose(readme_copy.get("intro"))
+    sections_html = "".join(
+        f'<section class="ovsec"><h3>{E(s.get("heading", ""))}</h3>{render_prose(s.get("body"))}</section>'
+        for s in (readme_copy.get("sections") or []) if s.get("heading") or s.get("body"))
+
+    flow_steps = [
+        ("Figma", "Where the library is drawn and maintained"),
+        ("Ingestion", "Reads the library, writes what it finds into this repo"),
+        ("This repository", "registry.yaml, plus one file per component"),
+        ("This dashboard", "Generated fresh from the repo, every build"),
+        ("AI agent", "Reads the repo, composes real screens — see Prototypes"),
+    ]
+    flow_html = "".join(
+        ('<div class="readmeflow-arrow" aria-hidden="true">→</div>' if i else "") +
+        f'<div class="readmeflow-node"><b>{E(name)}</b><span>{E(desc)}</span></div>'
+        for i, (name, desc) in enumerate(flow_steps))
+
+    map_entries = [
+        ("index.html", NAV_ICONS["home"], "Overview",
+         "Library health at a glance — documentation coverage, reference integrity, agent learnings."),
+        ("graph.html", NAV_ICONS["graph"], "Component graph",
+         "The canonical wiring of every component in the library, laid out live."),
+        ("fill-gaps.html", NAV_ICONS["puzzle"], "Missing Data",
+         "Every documentation field a component doesn't have yet, one page per gap."),
+        ("learnings.html", NAV_ICONS["learnings"], "Agent Learnings",
+         "Corrections given to the agent, reviewed before they're trusted as guidance."),
+        ("foundations-colors.html", NAV_ICONS["grid"], "Foundations",
+         "Colors, typography, and spacing — the tokens everything else is built from."),
+        ("prototypes.html", NAV_ICONS["prototypes"], "Prototypes",
+         "Real, composed screens the agent has built from this library."),
+    ]
+    map_html = "".join(
+        f'<a class="card" href="{href}"><span class="cardname"><span class="cardicon">{icon}</span>'
+        f'<span>{E(label)}</span></span>'
+        f'<span class="carddesc">{E(desc)}</span>'
+        f'<span class="cardarrow">→</span></a>'
+        for href, icon, label, desc in map_entries)
+
+    body = f"""
+    <header class="pagehead"><h1>README</h1><span class="dim">Read this once — everything else here assumes you have</span></header>
+    <div class="readme-intro">{intro_html}</div>
+
+    <h4 class="subhead">The workflow, start to finish</h4>
+    <div class="readmeflow">{flow_html}</div>
+
+    <h4 class="subhead">What's on this dashboard</h4>
+    <div class="cardgrid">{map_html}</div>
+
+    {sections_html}
+    """
+    return page("README", "readme", body)
+
 # ----------------------------------------------------------------- overview + graph
 def overview_page():
     # Every open problem in the library, each carrying the place it lives so the card can
@@ -1812,20 +1873,6 @@ def overview_page():
                       f'<div class="ov-legend"><span><span class="ov-sw" style="background:var(--ink3)"></span>Structural (built from) <b>{total_structural}</b></span>'
                       f'<span><span class="ov-sw" style="background:var(--plum)"></span>Behavioral <b>{total_behavioral}</b></span></div>')
 
-    # Two peer cards sitting side by side. Both are plain <details>, so they open with no JS;
-    # an open card takes the whole row (grid-column:1/-1) so its contents get the full width.
-    ov_sections = "".join(
-        f'<section class="ovsec"><h3>{E(s.get("heading", ""))}</h3>{render_prose(s.get("body"))}</section>'
-        for s in (overview_copy.get("sections") or []) if s.get("heading") or s.get("body"))
-    doc_card = ""
-    if ov_sections:
-        label = overview_copy.get("expand_label") or "How this system works"
-        doc_card = (f'<details class="ovcard"><summary><span class="ovcard-head">'
-                    f'<span class="ovcard-title">{E(label)}</span>'
-                    f'<span class="ovcard-sub">Rules and usage for the library</span></span>'
-                    f'<span class="ovchev" aria-hidden="true"></span></summary>'
-                    f'<div class="ovcard-body">{ov_sections}</div></details>')
-
     # Agent learnings — see AGENT.md §6. Confirmed entries are guidance the agent now applies;
     # pending ones are unvalidated corrections a designer hasn't reviewed yet. The overview only
     # gives the counts (each one a link into learnings.html): the full entries — proposed rule,
@@ -1865,8 +1912,8 @@ def overview_page():
 
     body = f"""
     <header class="landing">
-      <h1>{E(overview_copy.get("title") or "Design System")}</h1>
-      <div class="ovcards">{doc_card}{issue_card}</div>
+      <h1>Design System</h1>
+      <div class="ovcards">{issue_card}</div>
     </header>
 
     <section class="metasection">
@@ -2036,12 +2083,9 @@ code{font-family:var(--font-mono);font-size:.92em}
 .pagehead h1{font-size:26px}
 .landing h1{font-size:40px;letter-spacing:-0.03em;line-height:1.1}
 .tagline{color:var(--ink2);max-width:620px;font-size:15px;margin:14px 0 0}
-/* Designer-authored front-page cards: two peers side by side, each the full width of a
-   column. Opening one gives it the whole row, and :has() collapses the grid to one column
-   so the sibling matches its width instead of being left as a stranded half-card. */
-.ovcards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:28px 0 0}
-.ovcards:has(.ovcard[open]){grid-template-columns:minmax(0,1fr)}
-@media (max-width:900px){.ovcards{grid-template-columns:minmax(0,1fr)}}
+/* The front page's one remaining card (the error/clean status) — full width, since the
+   documentation card that used to sit beside it moved to its own README page. */
+.ovcards{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin:28px 0 0}
 .ovcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
   transition:border-color .15s}
 .ovcard:hover,.ovcard[open]{border-color:var(--line-2)}
@@ -2297,11 +2341,27 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .card:hover{border-color:var(--line-2);background:var(--surface-2);transform:translateY(-2px)}
 .cardname{font-weight:600;font-size:14.5px;letter-spacing:-0.008em;display:flex;
   align-items:center;gap:8px;padding-right:18px}
+.cardicon{width:16px;height:16px;flex:none;display:flex;color:var(--ink3)}
+.cardicon svg{width:100%;height:100%}
+.carddesc{color:var(--ink2);font-size:12.5px;line-height:1.55;margin-top:6px;padding-right:18px}
 .cardid{color:var(--ink3);font-size:11.5px;font-family:var(--font-mono)}
 .cardmeta{margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .cardarrow{position:absolute;top:18px;right:18px;color:var(--ink3);opacity:0;
   transition:opacity .15s,transform .15s}
 .card:hover .cardarrow{opacity:1;transform:translateX(2px)}
+
+/* ---------------------------------------------------------------- README page */
+.readme-intro{color:var(--ink2);font-size:15px;line-height:1.7;max-width:720px;margin-top:4px}
+.readme-intro p{margin:0 0 12px}
+.readme-intro p:last-child{margin-bottom:0}
+.readmeflow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:0 0 8px}
+.readmeflow-node{flex:1;min-width:150px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-md);padding:14px 14px 16px;text-align:center}
+.readmeflow-node b{display:block;font-size:13px;font-weight:600;letter-spacing:-0.005em;margin-bottom:5px}
+.readmeflow-node span{display:block;color:var(--ink3);font-size:11px;line-height:1.45}
+.readmeflow-arrow{flex:none;width:32px;display:flex;align-items:center;justify-content:center;
+  color:var(--ink3);font-size:14px}
+@media (max-width:760px){.readmeflow{flex-direction:column}.readmeflow-arrow{width:auto;padding:2px 0;transform:rotate(90deg)}}
 
 /* ---------------------------------------------------------------- figures */
 .hero{margin:2px 0 22px}
@@ -2652,6 +2712,7 @@ def main():
     for p in prototypes:
         shutil.copy2(os.path.join(screens_dir, p["file"]), os.path.join(OUT, "screens", p["file"]))
     pages = {
+        "readme.html": readme_page(),
         "index.html": overview_page(),
         "fill-gaps.html": fill_gaps_page(),
         "learnings.html": learnings_page(),

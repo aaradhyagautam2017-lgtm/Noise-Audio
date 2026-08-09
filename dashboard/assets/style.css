@@ -123,12 +123,9 @@ code{font-family:var(--font-mono);font-size:.92em}
 .pagehead h1{font-size:26px}
 .landing h1{font-size:40px;letter-spacing:-0.03em;line-height:1.1}
 .tagline{color:var(--ink2);max-width:620px;font-size:15px;margin:14px 0 0}
-/* Designer-authored front-page cards: two peers side by side, each the full width of a
-   column. Opening one gives it the whole row, and :has() collapses the grid to one column
-   so the sibling matches its width instead of being left as a stranded half-card. */
-.ovcards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:28px 0 0}
-.ovcards:has(.ovcard[open]){grid-template-columns:minmax(0,1fr)}
-@media (max-width:900px){.ovcards{grid-template-columns:minmax(0,1fr)}}
+/* The front page's one remaining card (the error/clean status) — full width, since the
+   documentation card that used to sit beside it moved to its own README page. */
+.ovcards{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin:28px 0 0}
 .ovcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
   transition:border-color .15s}
 .ovcard:hover,.ovcard[open]{border-color:var(--line-2)}
@@ -384,11 +381,27 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .card:hover{border-color:var(--line-2);background:var(--surface-2);transform:translateY(-2px)}
 .cardname{font-weight:600;font-size:14.5px;letter-spacing:-0.008em;display:flex;
   align-items:center;gap:8px;padding-right:18px}
+.cardicon{width:16px;height:16px;flex:none;display:flex;color:var(--ink3)}
+.cardicon svg{width:100%;height:100%}
+.carddesc{color:var(--ink2);font-size:12.5px;line-height:1.55;margin-top:6px;padding-right:18px}
 .cardid{color:var(--ink3);font-size:11.5px;font-family:var(--font-mono)}
 .cardmeta{margin-top:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .cardarrow{position:absolute;top:18px;right:18px;color:var(--ink3);opacity:0;
   transition:opacity .15s,transform .15s}
 .card:hover .cardarrow{opacity:1;transform:translateX(2px)}
+
+/* ---------------------------------------------------------------- README page */
+.readme-intro{color:var(--ink2);font-size:15px;line-height:1.7;max-width:720px;margin-top:4px}
+.readme-intro p{margin:0 0 12px}
+.readme-intro p:last-child{margin-bottom:0}
+.readmeflow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;margin:0 0 8px}
+.readmeflow-node{flex:1;min-width:150px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-md);padding:14px 14px 16px;text-align:center}
+.readmeflow-node b{display:block;font-size:13px;font-weight:600;letter-spacing:-0.005em;margin-bottom:5px}
+.readmeflow-node span{display:block;color:var(--ink3);font-size:11px;line-height:1.45}
+.readmeflow-arrow{flex:none;width:32px;display:flex;align-items:center;justify-content:center;
+  color:var(--ink3);font-size:14px}
+@media (max-width:760px){.readmeflow{flex-direction:column}.readmeflow-arrow{width:auto;padding:2px 0;transform:rotate(90deg)}}
 
 /* ---------------------------------------------------------------- figures */
 .hero{margin:2px 0 22px}

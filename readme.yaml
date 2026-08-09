@@ -1,19 +1,23 @@
-# Overview page copy — authored by the designer, rendered on the dashboard's front page.
+# README page copy — authored by the designer, rendered on the dashboard's README page
+# (the first item in the sidebar, above Overview).
 #
 # This file is the ONLY place this copy lives. Edit it here and re-run
 # `python3 scripts/build_dashboard.py`; never edit the generated HTML.
 #
-# - `title` is the page heading.
-# - `expand_label` is the title shown on the collapsed card.
-# - `sections` sit inside the card, in the order given here. Add as many as you need —
-#   the card stays collapsed by default and grows to fit, so length is free.
+# - `intro` sits at the top of the page, above the section list — plain-language framing,
+#   no jargon required.
+# - `sections` follow it, in the order given here. Add as many as you need — the page has
+#   no card to collapse into, so length is free.
 # - Blank lines inside a `body` start a new paragraph. Wrap `code`, filenames and
 #   Figma terms in backticks to have them set in monospace, and **stars** for bold.
 
-overview:
-  title: Design System
-
-  expand_label: How this system works
+readme:
+  intro: >
+    This is Test DLS — a design system pulled out of Figma and turned into something both
+    people and AI coding agents can actually work from, not just look at. Every page on
+    this dashboard, from a single component's detail page to the relationship graph to the
+    prototypes list, is generated straight from files in this repository. Nothing here is
+    typed in by hand, and nothing here writes back to Figma.
 
   sections:
     - heading: How it works
