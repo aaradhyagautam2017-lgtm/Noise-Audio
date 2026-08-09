@@ -2076,7 +2076,23 @@ code{font-family:var(--font-mono);font-size:.92em}
 .navsearch-result:hover,.navsearch-result.sel{background:var(--surface-3);color:var(--ink)}
 .navsearch-result .grp{margin-left:auto;color:var(--ink3);font-size:10.5px}
 .navsearch-empty{padding:10px;color:var(--ink3);font-size:12.5px;text-align:center}
-.main{flex:1;min-width:0;padding:36px 44px 64px;max-width:1180px}
+/* Fluid, not a fixed reading column: this is grids and cards, not prose, and they reflow
+   cleanly at any width (see .cardgrid/.flowgrid/.ovcard-body/.swatchgrid, all auto-fill/
+   auto-fit, plus .kpi's own max-width). Capping main hard at ~1180px regardless of viewport
+   is what left a dead void growing on the right as screens get wider — a 27" monitor showed
+   the same content at the same size as a small laptop, with the difference dumped as unused
+   space. No max-width here: main always fills the space next to the sidebar, so that ratio
+   stays constant at any size instead of reintroducing the same dead zone further out. */
+.main{flex:1;min-width:0;padding:36px 44px 64px}
+/* Below this, a fixed-width sidebar next to a content column stops working: together they'd
+   either overflow or squeeze main too narrow to use. Stack instead — sidebar becomes a normal
+   block up top with its own capped-height scroll, main flows below it. */
+@media (max-width:860px){
+  .layout{flex-direction:column}
+  .sidebar{width:100%;height:auto;max-height:70vh;position:relative;top:auto;
+    border-right:none;border-bottom:1px solid var(--line)}
+  .main{max-width:none;padding:28px 20px 48px}
+}
 
 /* ---------------------------------------------------------------- headers */
 .pagehead{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;margin-bottom:6px}
@@ -2369,7 +2385,7 @@ textarea#gap-text:focus{outline:none;border-color:var(--accent)}
 .hero-label{color:var(--ink3);font-size:13px;margin-top:6px}
 .kpirow{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
 .kpi{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-md);
-  padding:14px 16px;flex:1;min-width:152px}
+  padding:14px 16px;flex:1;min-width:152px;max-width:280px}
 .kpi-value{font-size:24px;font-weight:600;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;line-height:1.2}
 .kpi-label{color:var(--ink3);font-size:11.5px;margin-top:4px;line-height:1.4}
 .kpi-warn{background:var(--warn-bg);border-color:var(--warn-line)}
