@@ -5,8 +5,9 @@ ingested from Figma (file `QjVyM5bRXgIOZn8PO1e0eK`, page **Test pilot run**, nod
 
 It is built for an AI composition agent. **Read `AGENT.md` first** — it is the reasoning
 rulebook that governs how anything in this repository may be used. `PLAYBOOK.md` holds the
-exact prompts used to start or resume a session; AGENT.md §7 explains how the agent is
-expected to tell the two apart.
+exact prompts and workflows used to operate this repo end to end — onboarding a design system,
+starting or resuming a flow, contributing missing metadata, and reviewing agent learnings;
+AGENT.md §7 explains how the agent is expected to tell the session-starting prompts apart.
 
 ## Sources of truth
 
@@ -21,7 +22,8 @@ expected to tell the two apart.
 
 ```
 AGENT.md                  READ FIRST — the reasoning rulebook (human-placed; not generated).
-PLAYBOOK.md               The prompts used to start a new flow or resume an existing one
+PLAYBOOK.md               The prompts and workflows used to operate this repo — onboarding,
+                          new/resume flows, missing-data and learnings review, regeneration
                           (human-placed; not generated) — see AGENT.md §7.
 CONTROL_PANEL.md          Screen state panel rules (human-placed; not generated).
 registry.yaml             The map: every component with ids, fingerprints, edges, usage counts.
