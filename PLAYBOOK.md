@@ -211,8 +211,8 @@ component snippets under components/** — so changes stay consistent with how i
 of the library were built. Don't rebuild it from scratch or re-derive values already sitting
 in the registry.
 
-Current description: <description, if any>
-Current status: <status label, if any>
+Current description: <description, if any — the line is omitted when there isn't one>
+Current status: <status label, if any — the line is omitted when there isn't one>
 
 Here's what I want you to work on next:
 <describe the change here>
