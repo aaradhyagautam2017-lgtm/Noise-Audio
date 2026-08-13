@@ -1,132 +1,205 @@
-# PLAYBOOK.md — Prompt Playbook
-### Noise Design System · How a session with the agent starts, and how the rest of the system is operated
+# PLAYBOOK.md — The Operating Playbook
+### Design system → AI agent · Every prompt, every workflow, start to finish
 
-This is the repo-tracked copy of the prompt templates used to start or resume a session with
-the composition agent on this repository, plus the non-chat workflows (dashboard review pages,
-regeneration commands) that the rest of the system runs on. It lives here, not only in personal
-notes, because it changes alongside the system it drives. AGENT.md §6–§7 explains how the agent
-itself is expected to recognize and act on each of the chat prompts below; this file is where
-their exact wording lives.
+This is the complete operating manual for this system: the exact prompts used to drive the
+agent, and the non-chat workflows (dashboard review pages, regeneration commands, deploy
+settings) that everything else runs on.
 
-Some entries are marked **final** — exact, live wording, sourced directly from this repo's own
-code or documented rules. Others are marked **draft/reconstruction** — this session has only
-ever seen the prompt's stated purpose, not a verbatim transcript of what you actually typed.
-Treat those as a solid starting template, not a transcription, and replace them with your real
-wording once you've confirmed it.
+It is written to be **handed to someone who has never seen this repo before**. Together with
+`AGENT.md` (the reasoning rulebook the agent obeys) and `scripts/build_dashboard.py` (the
+dashboard generator), it is everything a new designer or team needs to stand this workflow up
+against their own design system.
+
+**Status markers.** Entries marked **final** are exact, live wording sourced directly from this
+repo's code or its documented rules. Entries marked **template** are a working starting point
+assembled from the repo's own rules — solid to use as-is, but replace them with your own
+wording once you've run them a few times.
 
 ---
 
-## 1. Onboard a design system (Phase 1 — ingestion)
+## The setup kit — what to hand a new team
 
-**Status: draft — reconstructed from this repo's own documented ingestion rules (README.md
-"Sources of truth", INGESTION_REPORT.md), not a transcript of the original session.** Use this
-the first time you bring a design system into a repo like this one, or to re-sync after the
-Figma library has changed.
+| File | What it is | Generated? |
+|---|---|---|
+| `PLAYBOOK.md` | This file. Every prompt and workflow. | No — human-placed |
+| `AGENT.md` | The reasoning rulebook. The agent reads this before acting on anything. | No — human-placed |
+| `CONTROL_PANEL.md` | Rules for the optional screen-state panel. | No — human-placed |
+| `scripts/build_dashboard.py` | The entire dashboard: layout, theme, every page. Run it, get the dashboard. | No — it *is* the generator |
+| `scripts/build_component_library.py` | Generates the real component code snippets. See §0. | No |
+| `scripts/build_graph.py` | Generates the component graph. Called automatically by the dashboard build. | No |
 
-What it must establish, at minimum:
-- The exact Figma source: file key, page name, and node id — and that **only that page** is
-  the source of truth. A component referenced from any other page is out of scope, even if it
-  renders correctly, and must be recorded as such rather than quietly pulled in.
-- Every top-level component/component-set on that page gets its **top-level** description
-  mirrored verbatim into `authored_metadata` — never reworded, cleaned up, or filled in where
-  blank. Variant-level descriptions are never read.
-- Every exact visual value (size, padding, gap, radius, fill, stroke, typography) is extracted
-  from Figma, never guessed or invented.
-- Every component gets a recorded `node_id` and `figma_fingerprint`; the whole page is checked
-  for name, node-id, and fingerprint collisions before anything is trusted as unique.
-- Every internal instance reference is recorded and resolved only if it points at another
-  component on the same source page. An off-page reference is flagged unresolved and reported
-  — never silently rewired to a same-named component somewhere else.
-- `CONTROL_PANEL.md` is a designer-supplied file. If it isn't provided, the agent reports it
-  missing; it never authors one itself.
-- Output: `registry.yaml`, one file per component under `components/`, and an
-  `INGESTION_REPORT.md` summarizing counts, collisions, metadata coverage, and every
-  unresolved reference — the same shape as this repo's own.
+Everything else in the repo — `registry.yaml`, `components/`, `tokens/`, `css/`, `graph/`,
+`dashboard/` — is produced by running the prompts and scripts below against **your** Figma file.
 
-Suggested wording:
+---
+
+## §0. The one mistake that costs the most — read this first
+
+> **The repository must contain real, runnable component code — not just descriptions of it.**
+
+This is the single biggest failure this system has hit, and it is worth understanding before
+you run anything, because it is silent and it looks like success.
+
+**What went wrong.** The first build of this repo described every component thoroughly:
+`authored_metadata` (the rules) and `visual_values` (exact sizes, colors, padding, radii,
+typography, straight from Figma). It contained no actual component code — `css/` held only
+token values. So on every single request, the agent had to *re-derive* real HTML/CSS from that
+structured description.
+
+That drifts. In a live test the agent correctly read, quoted, and understood the rule — "the
+checkbox sits on the right", "the separator is inset, not full-width" — and then wrote code
+that did the opposite. Twice. The knowledge layer was fine. Re-deriving code from a description,
+fresh, every time, was not.
+
+**The fix.** Every component gets a real, self-contained `<id>.snippet.html` sitting next to its
+`<id>.yaml` — actual HTML and CSS, one block per real Figma variant, rendered directly from that
+component's own `visual_values`. The agent then **copies a known-correct block** instead of
+rewriting one from prose. That is what `scripts/build_component_library.py` produces, and it is
+why AGENT.md Step 7 forbids re-derivation outright.
+
+**What this means for you:** the ingestion prompt in §1 *must* ask for the component code
+library, and §2 must be run before anyone composes a single screen. Skipping it does not
+produce an obvious error — it produces screens that look right and quietly violate your rules.
+
+**The one gap it doesn't close.** Some things are true of a *group* of components and exist in
+no single component's visual tree — e.g. how several cards stack into a grouped list with an
+inset separator between them (a card's own `visual_values` is one card, not N cards plus a
+divider). Those live in `patterns/`, hand-authored directly from the rule text, and are labeled
+as such — never presented as Figma-extracted.
+
+---
+
+## §1. Onboard a design system (ingestion)
+
+**Status: template.** Use this the first time you bring a design system into a repo like this
+one. This is the longest prompt in the playbook, and deliberately so — almost everything that
+goes wrong later traces back to something skipped here.
+
 ```
 I want to onboard a design system into this repository from Figma.
 
-Source: Figma file <file key>, page "<page name>" (node <node id>). Treat only this page as
-the source of truth — a component referenced from any other page is out of scope, even if it
-renders correctly.
+SOURCE
+Figma file <file key>, page "<page name>" (node <node id>).
+Treat only this page as the source of truth. A component referenced from any other page is
+out of scope, even if it renders correctly — record it as an unresolved reference and report
+it. Never silently rewire it to a same-named component on a different page.
 
-Read every top-level component and component-set on that page via the Figma MCP. For each one,
-mirror its top-level authored description into authored_metadata verbatim — never reword it,
-clean it up, or invent a missing field — and never read variant-level descriptions. Extract
-exact visual values from Figma; never guess one. Record node_id and figma_fingerprint for every
-component and check the whole page for name / node-id / fingerprint collisions.
+METADATA — mirror, never author
+Read every top-level component and component-set on that page via the Figma MCP. Mirror each
+one's top-level description into `authored_metadata` VERBATIM. Do not reword it, clean it up,
+reformat it, or fill in a field that is blank. Never read variant-level descriptions. If a
+component has no authored metadata, record it as missing — that gap is real information.
 
-Record every internal instance reference. Mark it resolved only if it points at another
-component on this same page; otherwise mark it unresolved and report it — do not rewire it to
-a same-named component on a different page.
+VISUAL VALUES — extract, never guess
+Extract exact visual values from Figma for every component: sizes, padding, gaps, radii, fills
+(with their bound token names), strokes, effects, typography. Never guess or approximate a
+value. Sync the variable collections and text styles into tokens/ and css/ the same way.
 
-CONTROL_PANEL.md is a file I supply myself — if it isn't already in the repo, report that it's
-missing rather than writing one.
+IDENTITY
+Record `node_id` and `figma_fingerprint` for every component and every variant. Check the whole
+page for name, node-id, and fingerprint collisions before trusting anything as unique, and
+report the result explicitly.
 
-When you're done, write registry.yaml, one file per component under components/, and an
-INGESTION_REPORT.md summarizing counts, collisions, metadata coverage, and every unresolved
-reference.
+REFERENCES
+Record every internal instance reference. Mark it `resolved: true` only if it points at another
+component on this same page; otherwise mark it unresolved and report it. Do not repair, reroute,
+or drop a dangling reference — catalogue it.
+
+BUILD THE ACTUAL COMPONENT CODE — do not skip this
+Describing a component is not enough. For every component, generate a real, self-contained
+`<id>.snippet.html` next to its `<id>.yaml`: actual HTML and CSS, one block per real Figma
+variant, rendered directly from that component's own extracted visual_values, with the
+fingerprint and node id recorded in the file. Record the path in registry.yaml as `snippet:`.
+
+This is mandatory and it is the highest-risk step. A repo that only describes its components
+forces an agent to re-derive CSS from prose on every request, and that drifts silently — it
+will correctly quote a rule and then write code that breaks it. The snippets exist so the agent
+copies known-correct code instead of rewriting it. Nothing in a snippet may be invented: every
+element, value, and string must trace back to that component's own file.
+
+Where a relationship is true of SEVERAL components together and appears in no single
+component's visual tree (e.g. how repeated rows group with a separator between them, or where
+a screen-level CTA sits), author it as a file under patterns/ directly from the rule text, and
+label it in its own header as hand-authored — never as a Figma extraction.
+
+FILES I SUPPLY MYSELF
+AGENT.md, PLAYBOOK.md and CONTROL_PANEL.md are human-placed. If one is missing, report it —
+never write one yourself.
+
+OUTPUT
+- registry.yaml — the index: every component with ids, fingerprints, edges, usage counts,
+  and its `snippet:` pointer
+- components/<tier>/<id>.yaml + <id>.snippet.html — one pair per component
+- tokens/ and css/tokens.css — synced token values
+- patterns/ — any hand-authored multi-component patterns, labeled as such
+- INGESTION_REPORT.md — counts, collisions, metadata coverage, and every unresolved reference
+
+Then run scripts/build_dashboard.py and confirm the dashboard renders every component.
 ```
-
-After ingestion, build the component code library and the dashboard (§7 below) before anyone
-starts composing flows against the new repo.
 
 ---
 
-## 2. New flow
+## §2. Build / rebuild the component code library
 
-Used when starting a flow that doesn't exist yet under `screens/` — the first message of a
-session building something new from a PRD or a description of the screens.
+**Status: final — this is a command, not a prompt.**
 
-**Status: draft — replace with your exact working wording before treating this as final.**
+```
+python3 scripts/build_component_library.py
+```
 
-What it must establish, at minimum, for AGENT.md's procedure (§3, Steps 0–8) to have
-something to run on:
-- The screen(s)/flow being requested — normally a short PRD: what each screen shows, what a
-  person can do on it, how the screens connect, and explicitly out-of-scope items (see
-  the shape of a working example in this repo's own composition history — e.g. the PRD behind
-  `screens/manage-my-earbuds-flow.html`).
-- An explicit instruction to follow AGENT.md in full: the agent reasons only from this
-  repository's registry, snippets, and patterns (Law 1), and halts and reports rather than
-  inventing anything the repository doesn't have (Law 2, Law 6).
-- That the output is a real, standalone HTML file saved under `screens/` (AGENT.md §7),
-  reachable afterward from the dashboard's Prototypes page — not just a chat reply.
+Regenerates every `components/**/<id>.snippet.html` and every `snippet:` pointer in
+`registry.yaml`, using the same rendering logic that produces the dashboard's live previews.
 
-Suggested wording:
+**Run it:** after ingestion, and after any change to a component's `visual_values` (a new
+variant, a resize, a color change). If you're ever unsure whether it's stale, just run it — it's
+deterministic and cheap.
+
+---
+
+## §3. New flow
+
+**Status: template.** The first message of a session building a screen or flow that doesn't
+exist yet under `screens/`.
+
 ```
 I'm starting a new flow: "<flow title>".
 
-Here's the PRD: <what each screen shows, what a person can do on it, how the screens connect,
-and anything explicitly out of scope>.
+PRD:
+<What each screen shows. What a person can do on it. How the screens connect.
+Anything explicitly out of scope.>
 
-Follow AGENT.md in full: reason only from this repository's registry, snippets, and patterns
-(Law 1), and halt and report rather than inventing anything the repository doesn't have (Law 2,
-Law 6). Save the result as a real, standalone HTML file under screens/ — not just a chat reply.
+Follow AGENT.md in full. Specifically:
+- Reason only from this repository — its registry, its component snippets, its patterns
+  (Law 1). Nothing from your training data or general UI convention.
+- Copy each component's real markup from its components/<tier>/<id>.snippet.html. Do not
+  re-derive CSS from visual_values or from the rule text (Step 7).
+- Halt and report rather than inventing anything the repository doesn't have (Law 2, Law 6).
+- Surface any conflict between what I've asked for and a component's rules — don't quietly
+  resolve it either way (Law 5).
+
+Save the result as a real, standalone HTML file under screens/ — not just a chat reply, and
+not an in-chat artifact preview. Render it inside the correct device frame, with no visible
+scrollbar and nothing spilling outside the screen bounds.
+
+Give me the reasoning trail separately from the screen file — every component you placed, its
+id / node_id / fingerprint, the variant you chose, and the rule that justified it.
 ```
 
-Optional — if the flow has more than one meaningful state (online/offline, empty/populated,
-guest/logged-in…), add one line asking for a control panel; see §4.
+Then regenerate the dashboard (§10) so the flow appears on the Prototypes page.
 
 ---
 
-## 3. Resume an existing flow
+## §4. Resume an existing flow
 
-**Status: final — this is the exact, live text, not a draft.** Used to pick a specific,
-already-composed flow back up in a **new** session, without replaying the whole original
-conversation — expensive, and unnecessary, since the current file under `screens/` already
-*is* the ground truth for what exists.
+**Status: final — exact live text. Never hand-typed.**
 
-This prompt is **never hand-typed**. It's generated per-card on the dashboard's Prototypes
-page (`dashboard/prototypes.html`): every flow card — a real one or a sample — carries a
-small speech-bubble tag next to its title. Tapping it opens a "Resume prompt" popup with the
-text below already filled in from that card's own title, file, description, and status, plus
-a "Copy prompt" button. Paste the copied text as the first message of a fresh session
-connected to this repo, then replace the placeholder line with what you actually want done.
+Generated per-card on the dashboard's Prototypes page. Every flow card carries a small
+speech-bubble tag next to its title; tapping it opens a "Resume prompt" popup, pre-filled from
+that card's own title, file, description, and status, with a **Copy prompt** button. Paste it as
+the first message of a fresh session, then replace the last line with what you want done.
 
-Exact template (see `buildResumePrompt` inside `PROTOTYPES_JS` in
-`scripts/build_dashboard.py` — that function is the source of truth; everything below is a
-description of its output, not a second copy to keep in sync by hand):
+The source of truth is `buildResumePrompt` inside `PROTOTYPES_JS` in `scripts/build_dashboard.py`.
+What it produces:
 
 ```
 I'm resuming work on an existing flow: "<title>" (screens/<file>.html).
@@ -138,97 +211,202 @@ component snippets under components/** — so changes stay consistent with how i
 of the library were built. Don't rebuild it from scratch or re-derive values already sitting
 in the registry.
 
-Current description: <description, if any — omitted when there isn't one>
-Current status: <status label, if any — omitted when there isn't one>
+Current description: <description, if any>
+Current status: <status label, if any>
 
 Here's what I want you to work on next:
 <describe the change here>
 ```
 
-A sample card (no real file under `screens/` yet) gets different second-paragraph wording —
-it reads as a starting brief instead of "go read this file," since there's nothing to read.
-Same function, same file, for the exact text.
+A **sample** card (no real file under `screens/` yet) gets different second-paragraph wording —
+it reads as a starting brief rather than "go read this file," since there's nothing to read yet.
+
+**Why it's generated, not typed:** its pointers are correct by construction. A hand-typed
+resume prompt sends the agent looking for a file that may have been renamed, or worse, silently
+rebuilds a flow that was already reviewed and approved.
 
 ---
 
-## 4. Add a control panel (modifier, not a standalone prompt)
+## §5. Add a control panel (modifier — append to §3 or §4)
 
-Not its own session-starter — one line you append to a New Flow or Resume prompt. By default
-no panel is built (CONTROL_PANEL.md is read only when a request explicitly asks for one). Use
-this only when the flow genuinely has more than one state worth switching between.
+Not a standalone prompt. By default **no panel is built** — `CONTROL_PANEL.md` is read only when
+a request explicitly asks for one. Use it only when a flow genuinely has more than one state
+worth switching between.
 
-Suggested wording to append:
 ```
-This flow has more than one state: <list the states, e.g. "online / offline", "empty /
-populated", "guest / logged in">. Add a control panel per CONTROL_PANEL.md so I can switch
-between the composed states — it switches screen states only, never a component's variant or
-internals.
+This flow has more than one state: <e.g. "online / offline", "list empty / populated",
+"guest / logged in">. Add a control panel per CONTROL_PANEL.md so I can switch between the
+composed states.
+
+Compose each state as a complete, fully-reasoned screen in its own right. The panel switches
+screen states only — it must expose zero component-level controls, and it sits outside the
+device frame, never inside it.
 ```
 
 ---
 
-## 5. Contribute missing metadata (Missing Data page)
+## §6. Correcting the agent
 
-Not a chat prompt — a form flow on the dashboard itself, for filling in a documentation field
-Figma doesn't have yet (`fill-gaps.html`, one page per component+field gap).
+**Status: final — this is AGENT.md §6 behavior.** When the agent gets something wrong, correct
+it in plain language. No special format is needed — but here is what must happen next, and it's
+worth knowing so you can tell whether it did.
 
-Usage: open **Missing Data** in the sidebar → pick the tab for the missing field (Purpose,
-Usage, Design intent, Anti-patterns, Rules) → click into a listed component → its real
-rendered preview is shown above a text box — write the field against the thing in view, not
-from memory → **copy entry** or **Download learnings.jsonl**, replace the repo's copy, and
-commit.
+On being corrected, the agent must, **in the same turn**:
+1. Append one entry to `learnings.jsonl` with `status: "proposed"` — what it did, what you said,
+   and the rule it infers.
+2. **Never** edit the component's `authored_metadata`. That field is sourced from Figma; this
+   repo never writes back to it.
+3. Regenerate the dashboard (`python3 scripts/build_dashboard.py`) — this is the only thing that
+   rebuilds the Agent Learnings counts and each affected component's learnings section.
+4. Commit the ledger change **and** the regenerated `dashboard/` together, as one commit.
+5. Push.
 
-What this actually does: it appends a `field_contribution` entry to `learnings.jsonl` with
-`status: "proposed"` (AGENT.md §6). It is stopgap documentation, not authored metadata — it
-never touches the Overview page's Documentation coverage numbers, and it isn't binding until a
-designer either confirms it on the Agent Learnings page (§6) or folds it into Figma directly
-and re-ingests. This is a static site with no backend for this particular page, so nothing
-saves by itself — the copy/download step is required.
+You should never have to notice the dashboard went stale, or ask for it to be rebuilt, committed,
+or pushed. If you find yourself asking, that's a bug in the agent's behavior, not a step you own.
 
----
-
-## 6. Review an agent learning (Agent Learnings page)
-
-Not a chat prompt either — this is where a human turns a `proposed` correction or field
-contribution into something binding, or discards it.
-
-Usage: open **Agent Learnings** in the sidebar → **Pending review** tab → **Approve** (moves
-it to Confirmed, binding from then on per AGENT.md §6) or **Deny** (moves it to Rejected). A
-Confirmed or Rejected entry can be **Revoke**d back to Pending if it was decided in error.
-
-On the **live, deployed** dashboard this is real, not a mockup: Approve/Deny/Revoke call
-`/api/decide` (`api/decide.js`), which is authenticated (the whole dashboard sits behind a
-password) and writes the status change straight back to `learnings.jsonl` in the GitHub repo
-via the GitHub API. That push triggers a new Vercel deploy, whose build command re-runs
-`python3 scripts/build_dashboard.py` automatically (see `vercel.json`) — so the dashboard
-reflects the decision on its own within about a minute, with nothing further to commit or push
-by hand. Locally (no `/api/decide` to call), the same decision has to be made by hand: edit the
-entry's `status` in `learnings.jsonl`, then regenerate (§7).
-
-Either way, when *you* (the agent) are the one who received the correction in chat rather than
-via the dashboard, AGENT.md §6 still applies in full: append the `proposed` entry yourself,
-then regenerate, commit, and push in the same turn — never leave a learnings.jsonl change
-sitting alongside a stale `dashboard/`.
+A `proposed` entry is **not** binding. It only becomes binding when a human confirms it (§8) —
+which exists specifically so the agent can't reinforce its own uncorrected mistakes.
 
 ---
 
-## 7. Regenerate — commands reference
+## §7. Contribute missing metadata — the Missing Data page
 
-Run from the repo root. Not prompts — the commands the agent (or you) run after any change
-that should show up on the dashboard.
+Not a chat prompt. A form flow on the dashboard, for a documentation field Figma doesn't have
+filled in yet.
+
+**Sidebar → Missing Data** → pick the tab for the field (Purpose, Usage, Design intent,
+Anti-patterns, Rules) → click a listed component → its **real rendered preview** appears above
+the text box, so you write the field against the thing in view rather than from memory →
+**copy entry** or **Download learnings.jsonl** → replace the repo's copy and commit.
+
+**What it actually does:** appends a `field_contribution` entry with `status: "proposed"`. This
+is stopgap documentation, not authored metadata — it never moves the Overview page's
+Documentation coverage numbers (those measure the Figma-authored spec specifically), and it
+isn't binding until it's confirmed (§8) or folded back into Figma and re-ingested.
+
+**Note:** this page has no backend. Nothing saves by itself — the copy/download + commit step is
+required.
+
+---
+
+## §8. Review an agent learning — the Agent Learnings page
+
+Where a human turns a `proposed` entry into something binding, or throws it out.
+
+**Sidebar → Agent Learnings → Pending review** → **Approve** (→ Confirmed, binding from then on)
+or **Deny** (→ Rejected). A Confirmed or Rejected entry can be **Revoked** back to Pending if it
+was decided in error.
+
+**On the live deployed dashboard this is real, not a mockup.** Approve/Deny/Revoke call
+`/api/decide` (`api/decide.js`), which is authenticated — the whole dashboard sits behind a
+password gate in `middleware.js`, which is exactly why exposing a write-back endpoint is safe.
+It writes the status change straight into `learnings.jsonl` in the GitHub repo via the GitHub
+API. That push triggers a Vercel deploy, whose build command re-runs `build_dashboard.py`
+automatically. The dashboard catches up on its own in about a minute — nothing to commit by hand.
+
+**Locally** there's no `/api/decide` to call: edit the entry's `status` in `learnings.jsonl`
+directly, then regenerate (§10).
+
+---
+
+## §9. Re-sync after Figma changes
+
+**Status: template.** When the design system has moved on in Figma and the repo needs to catch up.
+
+```
+The Figma library has changed and this repo needs to re-sync.
+
+Re-run the ingestion against the same source page (file <file key>, page "<page name>",
+node <node id>) under the same rules as the original onboarding: only that page is the source
+of truth, metadata is mirrored verbatim, visual values are extracted and never guessed,
+dangling references are catalogued and never rewired.
+
+Match components by `figma_fingerprint`, not by name — fingerprints are stable across renames
+and moves, names are not. Report, before changing anything:
+- components added
+- components removed
+- components whose fingerprint matched but whose visual values or metadata changed
+- any authored_metadata that changed, quoted before and after
+
+Then rebuild the component snippets (scripts/build_component_library.py) and regenerate the
+dashboard, and tell me if any confirmed entry in learnings.jsonl is now superseded by a rule
+that has since been authored directly in Figma.
+```
+
+---
+
+## §10. Regeneration — command reference
+
+Run from the repo root.
 
 | Command | When |
 |---|---|
-| `python3 scripts/build_dashboard.py` | After **any** repo change that should be visible on the dashboard — new/edited component metadata, a `learnings.jsonl` change, a new flow saved under `screens/`, edits to `readme.yaml`. Also regenerates `graph/graph.json` + `dashboard/graph.html` automatically. This is the one command to reach for by default. |
-| `python3 scripts/build_component_library.py` | After a component's `visual_values` change (new/edited variant) — regenerates every `components/**/*.snippet.html` and registry `snippet:` pointers so the agent always copies real, current markup (AGENT.md Step 7) instead of re-deriving it. |
-| `python3 scripts/build_graph.py` | Only if you need to regenerate the graph in isolation — normally unnecessary since `build_dashboard.py` already calls this. |
-| `python3 -m http.server --directory dashboard` | Serve the generated dashboard locally to review before committing. |
+| `python3 scripts/build_dashboard.py` | After **any** change that should show on the dashboard — component metadata, `learnings.jsonl`, a new flow under `screens/`, edits to `readme.yaml`. Also regenerates the graph automatically. **This is the default one to reach for.** |
+| `python3 scripts/build_component_library.py` | After any change to a component's `visual_values` — new variant, resize, color change. See §0 and §2. |
+| `python3 scripts/build_graph.py` | Graph only. Rarely needed directly — the dashboard build already calls it. |
+| `python3 -m http.server --directory dashboard` | Serve the dashboard locally to review before committing. |
+
+**Rule of thumb:** never commit a `learnings.jsonl` or component change without the regenerated
+`dashboard/` in the same commit.
 
 ---
 
-## Other prompts
+## §11. Deploying the dashboard
 
-Nothing else from the working playbook has come up in this repo's history yet. If there's
-another prompt in regular use — for reviewing a flow, for a specific kind of correction,
-anything else — say so and it belongs here too, cross-referenced from AGENT.md the same way
-the entries above are.
+Deployed on Vercel as a static site with four small serverless endpoints.
+
+**`vercel.json`** — build command installs `pyyaml` and runs `python3 scripts/build_dashboard.py`;
+output directory is `dashboard`. So every push rebuilds the dashboard from repo state
+automatically. Nothing generated is ever committed by hand for the deploy's benefit.
+
+**`package.json`** exists only so Vercel treats `middleware.js` and `api/*.js` as ES modules. No
+app lives there.
+
+**Environment variables** (Vercel project settings):
+
+| Variable | Purpose |
+|---|---|
+| `DASHBOARD_PASSWORD_HASH` | The password gate in `middleware.js` |
+| `SESSION_SECRET` | Signs the session cookie |
+| `GITHUB_TOKEN` | Lets `api/decide.js` etc. write back to the repo |
+| `GITHUB_BRANCH` | Fallback when `VERCEL_GIT_COMMIT_REF` isn't set |
+
+**Endpoints:** `api/login.js` (sign in), `api/decide.js` (approve/deny/revoke a learning),
+`api/update-flow.js` and `api/delete-flow.js` (edit/remove a flow from the Prototypes page).
+
+---
+
+## Appendix — file map
+
+```
+AGENT.md                   READ FIRST — the reasoning rulebook. Human-placed.
+PLAYBOOK.md                This file. Human-placed.
+CONTROL_PANEL.md           Screen-state panel rules. Human-placed.
+readme.yaml                Copy for the dashboard's README page. Human-edited.
+registry.yaml              The index: every component, ids, fingerprints, edges, snippet pointers.
+learnings.jsonl            Append-only ledger of corrections + field contributions.
+INGESTION_REPORT.md        Gaps, drift, dangling references found during ingestion.
+components/<tier>/
+  <id>.yaml                Identity, variants, references, authored metadata, visual values.
+  <id>.snippet.html        REAL component code, per variant. See §0.
+patterns/                  Hand-authored multi-component patterns. Labeled as such.
+tokens/ · css/             Token catalogs synced from Figma.
+graph/graph.json           The component graph, queryable.
+screens/                   Composed flows + index.json (title/description/status overlay).
+dashboard/                 Generated. Never hand-edit — overwritten every build.
+scripts/                   The three generators. See §10.
+api/ · lib/ · middleware.js   Auth gate + write-back endpoints. See §11.
+```
+
+---
+
+## The short version
+
+1. Onboard from Figma — **and build the real component snippets** (§0, §1, §2).
+2. Compose flows with §3; resume them with the generated prompt in §4.
+3. Correct the agent in plain language; it logs, regenerates, commits, pushes (§6).
+4. Confirm or reject what it logged (§8). Fill real gaps (§7).
+5. Regenerate after every change (§10). Push; the deploy rebuilds itself (§11).
+
+The system's whole premise: **the repository is the agent's only universe.** Everything above
+exists to keep that universe accurate, complete, and honest about what it doesn't have.
