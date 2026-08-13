@@ -1,0 +1,187 @@
+# Phase 2 — Build the Designer Dashboard
+
+RECOMMENDED MODEL: A capable model (Opus or Sonnet) is fine here — this phase reads the repo and
+generates the site deterministically. Prefer Opus if the layout-translation logic is non-trivial.
+
+PREREQUISITE: Phase 1 complete. Repo has /components (atoms, molecules, organisms), /tokens, /css,
+/assets, registry.yaml, learnings.jsonl, readme.yaml, screens/index.json — each component carrying
+the FULL visual layout model (per-child FILL/HUG/FIXED sizing, in-flow vs absolute positioning,
+clipping, full text and typography, instance overrides). This phase reads that repo. It does NOT
+connect to Figma and does NOT compose screens.
+
+YOUR ROLE
+You are the documentation agent. Build an interactive, browsable dashboard generated entirely from
+the repository. The dashboard is a rendered VIEW of the repo: it must never contain information not
+already in the repo, and it regenerates whenever the repo changes. It is never a second source of
+truth.
+
+BUILD IT AS ONE GENERATOR, NOT AS HAND-WRITTEN PAGES
+Write a single script that regenerates the ENTIRE dashboard in one pass from current repo state
+(e.g. scripts/build_dashboard.py). Every page is emitted by that script. Never hand-write or
+hand-edit a generated HTML file — it is overwritten on the next build, so any manual fix is lost
+and, worse, appears to work until someone rebuilds. The script is the dashboard; the HTML is
+disposable output. It must also regenerate the graph (Phase 3) in the same pass, so one command
+brings everything back in sync and the two can never drift apart.
+
+SOURCE: everything comes from the repo (component files, token catalogs, registry.yaml,
+learnings.jsonl, readme.yaml, screens/, exported assets). Never invent copy, values, or components.
+If a field or asset is missing, show it as missing — never fabricate or substitute.
+
+FAITHFUL PREVIEW — THE CORE REQUIREMENT
+Each component's live preview must match its Figma appearance. Render it by TRANSLATING the
+captured layout model into the equivalent layout in the browser, then let the browser's own layout
+engine do the work — do NOT re-pin every element to a fixed pixel size. Specifically:
+- Map each child's sizing faithfully: FILL -> grows/shrinks to fill; HUG -> sizes to content
+  (fit-content); FIXED -> the exact size.
+- Honor positioning: an ABSOLUTELY positioned child renders out of flow, pinned by its captured
+  constraints — never as an in-flow item. This is what keeps a trailing count, badge, or toggle
+  thumb inside its box instead of bleeding out.
+- Honor clipping: a clipping frame hides overflow; a non-clipping one does not.
+- Render text with its full captured content and typography (font, size, line-height with unit,
+  alignment, per-range colors); let text wrap naturally — never force a fixed height that crops it.
+- Render every icon/image from its real exported asset. Where a node is "asset: missing", show a
+  placeholder clearly marked as missing — never a fabricated icon presented as real.
+- Render each INSTANCE with its as-placed overrides (the overridden text, chosen variant, swapped
+  child), so a composed organism shows its real content, not the child component's default sample.
+A preview that overflows, bleeds outside its box, crops text, shows the wrong text, or shows a
+fabricated icon is a defect.
+
+RESPONSIVE BY DEFAULT — DO NOT SHIP A FIXED-WIDTH LAYOUT
+The proportions must hold on a small laptop, a large laptop, and a 27-inch monitor alike. Do not
+cap the main content column at a fixed max-width: a hard cap means a large monitor shows the same
+content at the same size as a small laptop and dumps the entire difference as dead empty space on
+one side, which is exactly the bug it looks like. Let the content column fill the space beside the
+sidebar at every size.
+- Make every grid fluid (auto-fill / auto-fit with a sensible minimum), not a fixed column count.
+- Give small fixed-purpose tiles (stat tiles, KPI cards) their own max-width so they cap
+  individually rather than stretching into oversized rectangles on a wide screen. Cap the small
+  parts, not the whole page.
+- Below roughly 860px, stack: the sidebar becomes a normal block above the content instead of
+  squeezing a two-column layout that no longer fits.
+- Wide content (tables, code, diagrams) scrolls inside its own container; the page body must never
+  scroll horizontally at any width.
+- Verify at several widths before declaring done — no horizontal overflow anywhere.
+
+NO VISIBLE SCROLLBARS
+Scrolling works everywhere it should; the scrollbar itself is hidden throughout the app
+(scrollbar-width: none, -ms-overflow-style: none, and a ::-webkit-scrollbar rule). A visible
+scrollbar anywhere in the dashboard is a defect.
+
+WHAT TO BUILD
+
+1. Site shell
+   Sidebar, in this order: README -> Overview -> Component graph -> Missing Data -> Agent Learnings
+   -> Foundations (Colors & tokens, Typography, Spacing & radius) -> Components grouped by type
+   (Atoms, Molecules, Organisms) with per-group counts -> Prototypes pinned at the bottom.
+   A light/dark theme toggle that persists across pages and loads without a flash of the wrong
+   theme. A search box pinned at the bottom of the sidebar, opened by clicking or by pressing
+   Cmd/Ctrl-K from any page, matching every component and every page by name and routing straight
+   to it — so nobody has to walk the nav tree.
+
+2. README page (first item in the sidebar)
+   Plain-language orientation for someone opening this for the first time: what the system is, how
+   the workflow runs end to end, and how to use it well. Its copy comes from readme.yaml and
+   nowhere else — the designer edits that file and rebuilds; never hand-write this page's text into
+   the generator. Use real visuals, not walls of prose: a step-by-step diagram of the workflow, and
+   a map of every section of the dashboard explaining what each one is for.
+
+3. Overview page
+   - "Library at a glance": total component count, and a breakdown by type as stat tiles, plus a
+     proportion bar.
+   - "System understanding": what the library actually knows about itself right now, computed
+     fresh from the repo on every build — never a hand-set score. One row per documentation field
+     (Purpose, Usage, Design intent, Anti-patterns, Rules) with an N-of-M count and a
+     Complete/Incomplete status; an Edit link on any incomplete row jumping straight to the
+     Missing Data entry for it.
+     CRITICAL: these coverage numbers measure the FIGMA-AUTHORED spec only. A human contribution
+     recorded in learnings.jsonl must NEVER count toward them — otherwise the library appears to
+     document itself while Figma, the actual source of truth, stays empty. State this on the page.
+   - "Reference integrity": how many instance references resolved to a real in-page component, how
+     many were reviewed and confirmed not to be dependencies, and how many still dangle.
+   - "Relationship density": total relationships mapped and average connections per component.
+   - "Agent learnings": counts by status (Confirmed / Rejected / Pending), each linking through to
+     the Agent Learnings page.
+   - Any open problem (unparseable metadata, a missing rulebook file, a dangling reference) surfaced
+     at the top as an error card that expands to show each problem and which component it lives on.
+
+4. Foundations pages
+   Render the token catalogs as reference tables: colors with light and dark values and their token
+   names, typography with real rendered samples, spacing and radius shown as actual bars and
+   rounded-corner previews rather than bare numbers.
+
+5. Component pages (one per component), rendered straight from the repo file
+   - Live preview rendered faithfully from the captured layout model (per the section above), one
+     labeled block per real Figma variant.
+   - Type badge, and a "used by N" count.
+   - Identifiers block: name, node_id, and the Figma fingerprint — displayed prominently and
+     COPYABLE (copy button on each).
+   - Variant axes: each axis and its permitted values, plus the total variant count.
+   - Metadata rendered from the stored YAML: Purpose, Usage, Design intent, Anti-patterns, Rules,
+     Composition, Content structure — preserving any sub-grouping the author used.
+   - Composition & relationships: children (used_atoms / used_molecules / parts) and behavioral
+     relationships, each a clickable link; plus a "used by" list (the inverse edge) for upward
+     navigation.
+   - A "Learned" section listing any CONFIRMED learnings.jsonl entry naming this component, clearly
+     marked as ledger-sourced and not part of the Figma-authored spec.
+   - The raw authored YAML available verbatim in a collapsed block, so the mirror can be audited
+     against Figma at any time.
+
+6. Missing Data page (and one page per gap)
+   An index of every documentation field missing anywhere in the library, split into tabs by field,
+   each tab showing its count. Each entry links to its own dedicated page, and that page shows the
+   component's REAL rendered preview above the text box — so the gap is filled with the component
+   in view rather than from memory.
+   On submit, the page produces a "field_contribution" entry for learnings.jsonl with status
+   "proposed". Be explicit on the page that this is a static site with no backend for this action:
+   nothing saves by itself, so the entry must be copied or the updated ledger downloaded, then
+   committed. State plainly that a contribution is stopgap documentation, does not move the
+   coverage meters, and is not binding until confirmed or folded back into Figma and re-ingested.
+
+7. Agent Learnings page
+   Every entry in learnings.jsonl, in tabs by status: Pending review, Confirmed, Rejected, each with
+   a count. Each row expands to show what the agent did, what the human said, the rule inferred, and
+   which components it touches (as links).
+   Pending rows carry Approve and Deny; decided rows carry Revoke (back to pending) behind a
+   confirmation step, since revoking un-does a governance decision.
+   If deploying with a backend (see section 9), these buttons write the status change back to the
+   repository and the deploy rebuilds the dashboard automatically. If not, state on the page how to
+   make the change by hand.
+
+8. Prototypes page
+   Every composed flow saved under screens/, merged with the human-editable title / description /
+   status overlay in screens/index.json. A flow saved to screens/ and registered nowhere else must
+   still appear here automatically on the next build.
+   Each flow is a card with a status stripe and a legend, an Open action, an Edit action (title,
+   description, status; plus delete behind a confirmation), and — importantly — a "Resume prompt"
+   control that generates a ready-to-paste prompt for continuing that specific flow in a fresh
+   session. Build that prompt from the card's OWN current title, file, description and status, so
+   its pointers are correct by construction rather than retyped from memory, and give it a copy
+   button. A hand-typed resume prompt sends the agent looking for a file that may have been renamed,
+   or silently rebuilds a flow that was already approved.
+
+9. Deployment and write-back (optional but recommended)
+   If the dashboard is deployed rather than run locally: put the whole site behind a password gate,
+   and only then expose write-back endpoints (approve/deny/revoke a learning; edit/delete a flow).
+   The gate is precisely what makes the endpoints safe — never expose a repo-writing endpoint on an
+   open URL. Configure the host to run the generator as its build command so every push rebuilds the
+   dashboard from repo state; never commit generated output to make a deploy work.
+
+HARD CONSTRAINTS
+- Read only from the repo. Do not connect to Figma, re-extract values, or compose screens.
+- Do not author or edit metadata — render the stored YAML as-is. The dashboard never writes to a
+  component's authored metadata, and never writes back to Figma.
+- The preview must honor the captured layout model (sizing, positioning, clipping, overrides, real
+  assets). Never re-pin fill/hug elements to fixed sizes, never crop text, never fabricate an icon.
+- Every identifier shown must match the repo exactly; the fingerprint must be copyable on every
+  component page.
+- Coverage meters measure the Figma-authored spec only. Ledger contributions never count toward them.
+- No information may exist that isn't traceable to the repo.
+- One generator, one pass, fully regenerable. Never hand-edit generated HTML.
+- Responsive at every width, with no horizontal page overflow and no visible scrollbars.
+
+DONE WHEN: one command regenerates a complete, browsable, responsive site — README, Overview with
+live computed system-understanding metrics, Foundations, a detail page per component with a faithful
+preview and copyable fingerprint, Missing Data with a page per gap, Agent Learnings with review
+actions, Prototypes with per-flow resume prompts, and global search — with every repo gap (missing
+metadata, missing asset, broken edge) visibly flagged, nothing hand-authored, and the graph
+regenerated in the same pass.

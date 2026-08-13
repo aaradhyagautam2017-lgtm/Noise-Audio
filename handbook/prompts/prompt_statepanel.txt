@@ -1,0 +1,8 @@
+For the flow I describe, build the screen state panel alongside the composed screens.
+ 
+Read CONTROL_PANEL.md at the repository root and follow it exactly. In short:
+- Identify the distinct screen STATES this flow has from my description (e.g. online/offline, typing/not typing, empty/populated).
+- Compose a complete, rule-complete screen for EACH state, reasoning every component and variant choice yourself, fully governed by AGENT.md. The viewer does not choose variants — you do.
+- Build the panel beside the phone frame to switch between these agent-composed states. The panel switches which state is shown; it exposes NO component-level controls (no variant, theme, or property switches).
+- Every state must independently keep the output contract: inside the phone frame, no visible scrollbar, nothing outside the device viewport.
+Then return the states with the panel, and note which states you composed.

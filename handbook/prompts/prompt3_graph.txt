@@ -1,0 +1,88 @@
+# Phase 3 — Build the Component Graph & Reasoning Map
+
+PREREQUISITE: Phases 1 and 2 complete. Repo has a validated registry.yaml with, per component: id,
+name, type, node_id, figma_fingerprint, structural edges, behavioral edges, usage counts. This phase
+reads that registry. It does NOT connect to Figma and does NOT re-derive relationships.
+
+YOUR ROLE
+You are the visualization agent. Generate the canonical wiring of the library in two forms from one
+source: a machine-queryable graph the agent reasons over, and an interactive visual map a designer
+navigates. Both are a VIEW of registry.yaml. They render only edges that already exist and are
+validated there, and they never invent a connection.
+
+THE TWO OUTPUTS ARE EQUALLY IMPORTANT
+The picture is the half people notice; the queryable data is the half the system actually runs on.
+Emit both from the same pass, from the same source, so they can never disagree:
+1. A queryable data file (e.g. graph/graph.json) — the agent's reasoning map.
+2. An interactive rendered page — the designer's navigation map.
+
+BUILD IT INTO THE SAME REGENERATION PASS
+Write this as a script that regenerates both outputs from registry.yaml (e.g.
+scripts/build_graph.py), and have the dashboard's own build call it automatically. One command must
+bring the repo, the dashboard, and the graph back in sync. A graph that regenerates only when
+someone remembers to run it separately will silently drift out of date, and a stale wiring map is
+worse than none — the agent will reason confidently over connections that no longer exist.
+
+SOURCE (from registry.yaml):
+- Nodes = components (id, name, type, node_id, figma_fingerprint, usage count).
+- Solid edges = structural "is built from" links.
+- Dashed edges = behavioral relationships.
+- Node size = usage count.
+Never add a node or edge not in the registry. If the registry flags a broken edge, render it visibly
+as broken — do not drop it, do not repair it, and do not quietly resolve it against anything.
+
+WHAT TO BUILD — THE QUERYABLE MAP (for the agent)
+1. Nodes with typed, directional edges, in a form an agent can traverse directly without parsing the
+   rendered page. Every node exposes id, node_id, and figma_fingerprint, so any traversal result maps
+   back to the exact repo file AND the exact Figma component.
+2. Document the traversal conventions INSIDE the file itself — top-down (organism -> molecule ->
+   atom, following structural edges), lateral (following behavioral edges between related
+   components), and upward (used-by, the inverse of structural). The agent should not have to infer
+   how to read the graph from the shape of the data, and a convention documented somewhere else will
+   drift away from the file that depends on it.
+3. Dangling references are present in the data, explicitly marked as unresolved, with whatever the
+   registry knows about the intended target. The agent must be able to see that a path is broken
+   rather than find a gap where an edge should have been — a silent absence reads as "no
+   relationship", which is a different and wrong conclusion.
+
+WHAT TO BUILD — THE VISUAL MAP (for the designer)
+1. Layout: a live force-directed simulation, not fixed positions — Atoms seed near the center;
+   Molecules and Organisms grow outward in concentric bands as they compose from what's inside them
+   (the same used_atoms/used_molecules wiring, laid out radially rather than in columns). Node
+   position settles from mutual repulsion plus spring-like structural/behavioral edges, with a
+   per-tier radial pull that keeps atoms/molecules/organisms visually distinct as rings while
+   connectivity still drives organic clustering and angular placement. Include a caption stating it
+   is generated from registry.yaml, plus a legend (color by type, solid = "is built from", dashed =
+   "behavioral relationship", size = usage).
+2. Nodes: color by type; size by usage count; labeled with name.
+3. Edges: solid for structural (child -> parent); dashed for behavioral; broken edges drawn in an
+   error color, running out to clearly-marked ghost markers on their own outer ring — shown as
+   unresolved, never repaired, never hidden.
+4. Interactivity: the canvas pans (drag empty space) and zooms (scroll, or on-screen +/-/reset
+   controls), so a growing library stays navigable by zooming into a cluster rather than scrolling an
+   ever-taller page. Nodes are draggable to reposition, with a movement threshold that distinguishes
+   a drag from a click so dragging never fires navigation. A genuine click on a node routes to its
+   dashboard page. Hover spotlights everything a component is wired to — children, parents/used-by,
+   and behavioral relationships — dimming the rest. Labels are hidden when fully zoomed out, fade and
+   grow in as the viewer zooms, and hold a fixed legible size past a certain zoom level instead of
+   growing without bound.
+5. Render client-side from the same data the agent queries — embedded in or loaded by the page — so
+   the two views are provably the same graph rather than two parallel derivations.
+
+HARD CONSTRAINTS
+- Read only from registry.yaml (and the repo it indexes). Do not connect to Figma, re-derive
+  relationships, or compose screens.
+- Render only nodes and edges that exist in the registry. Never invent a connection.
+- Node size reflects usage count; edge style reflects edge type.
+- Broken edges are shown in both outputs, never hidden and never auto-fixed.
+- Both outputs regenerate from the registry in one pass, and the dashboard build triggers it.
+- The graph is never an independent source of truth, and never edited by hand.
+
+DONE WHEN: one pass emits both a queryable graph file — carrying every node's id / node_id /
+fingerprint, typed directional edges, explicitly-marked unresolved references, and its traversal
+conventions documented inside the file — and an interactive force-directed page rendered from that
+same data: atoms clustered centrally with molecules and organisms in outward bands, pannable,
+zoomable, draggable nodes, color by type, size by usage, solid vs dashed edges, broken edges drawn to
+marked ghost nodes, hover spotlighting a component's neighborhood, labels that fade in and cap in
+size, and a genuine click routing to the component's dashboard page. Running the dashboard build
+regenerates it automatically, and it never diverges from the registry.

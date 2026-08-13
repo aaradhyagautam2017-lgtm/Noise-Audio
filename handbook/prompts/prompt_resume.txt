@@ -1,0 +1,14 @@
+I'm resuming work on an existing flow: "<title>" (screens/<file>.html).
+
+This flow already exists in the repo. Before changing anything, read the current file at
+screens/<file>.html to see its current state, and follow this repo's AGENT.md — especially
+the Step 7 composition process, the confirmed entries in learnings.jsonl, and the real
+component snippets under components/** — so changes stay consistent with how it and the rest
+of the library were built. Don't rebuild it from scratch or re-derive values already sitting
+in the registry.
+
+Current description: <description, if any — the line is omitted when there isn't one>
+Current status: <status label, if any — the line is omitted when there isn't one>
+
+Here's what I want you to work on next:
+<describe the change here>

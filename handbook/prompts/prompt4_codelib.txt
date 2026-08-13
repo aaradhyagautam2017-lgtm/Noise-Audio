@@ -1,0 +1,24 @@
+# Phase 4 — Build the Component Code Library
+ 
+PREREQUISITE: Phases 1-3 complete. Repo has a validated registry.yaml and every component's visual_values (the full captured layout model) under components/atoms, components/molecules, components/organisms. This phase reads that repo. It does NOT connect to Figma and does NOT compose screens.
+ 
+YOUR ROLE
+You are the code-generation agent. Your job is to turn each component's captured visual_values into real, ready-to-use HTML/CSS — so a future composition agent copies already-correct code instead of re-deriving markup from a text description on every request. Re-deriving from scratch is what let a past composition violate a written rule (wrong variant side, a full-width instead of inset separator) even though the correct rule text had already been read and quoted — the knowledge layer worked; re-deriving code from it, every time, did not.
+ 
+SOURCE: only this repo (component files, registry.yaml). Never connect to Figma, never invent a value, never guess a color or dimension that isn't already captured in visual_values.
+ 
+WHAT TO BUILD
+1. For every component, and for every real Figma variant it has (a COMPONENT_SET's children, resolved the same way an instance's variant is resolved elsewhere in this system), render one self-contained HTML/CSS block directly from its captured visual_values: real captured colors, real spacing/padding/gap, real per-child fill/hug/fixed sizing, real absolute positioning, real text content. Nothing re-guessed.
+2. Save each component's rendered snippet(s) as a sibling file next to its own YAML: components/<tier>/<id>.snippet.html. Record that path in registry.yaml as a new snippet: field on the component's entry.
+3. Where Figma exported only a flattened shape with no real icon data (a system glyph like a signal/wifi/battery indicator), do not leave a flat placeholder block uncommented — substitute a real, properly-licensed icon (e.g. from an open icon set such as Bootstrap Icons), store it under assets/icons/ with its license and source documented, and flag in the component's own comment that this is a substituted real asset, not a Figma extraction.
+4. Some things are true of SEVERAL components placed together and cannot be captured by any single component's own visual_values (e.g. how repeated rows in a list are grouped with a separator, or where a screen-level primary action sits vertically on a scrolling screen). Never guess these. Where a written rule already states the behavior, translate that exact rule into a small reusable pattern file under patterns/, quoting the rule verbatim in its header. Where no rule exists yet, stop and ask the designer directly for the decision, then record their answer verbatim in the pattern file's header before implementing it — never invent the behavior yourself.
+5. Fonts: any font a token names (e.g. a heading/body font) must be a real, installed font file in this repo (assets/fonts/), with its license/source documented and a matching @font-face rule — never a font name left with nothing backing it.
+6. Regeneration: this phase must be re-runnable after any repo change (a new component, an edited YAML) without hand-editing its output. Re-running replaces every snippet file and refreshes registry.yaml's snippet: pointers without duplicating them.
+ 
+HARD CONSTRAINTS
+- Read only from this repo. Do not connect to Figma, do not compose screens, do not touch AGENT.md or CONTROL_PANEL.md.
+- Every snippet's markup/CSS must be traceable to a real, captured value in that component's own visual_values — never a value invented to “look right.”
+- A pattern file is hand-authored only from an exact rule already written down, or from a decision the designer gave you directly and you recorded verbatim — never a guess dressed up as a pattern.
+- Re-running this phase is idempotent: it replaces prior output; it never duplicates a snippet: pointer or a generated file.
+ 
+DONE WHEN: every component has a real, self-contained HTML/CSS snippet for each of its real variants, registry.yaml points to each one, every system-glyph placeholder has been replaced with a real licensed icon, every font a token names is actually installed and wired up, and the handful of true cross-component patterns are captured in patterns/ — each one quoting the exact rule or designer decision it implements.

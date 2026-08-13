@@ -1,0 +1,27 @@
+The Figma library has changed and this repo needs to re-sync.
+
+Re-run the Phase 1 ingestion against the same source page (file {{FIGMA_FILE_KEY}}, page
+"{{PAGE_NAME}}", node {{NODE_ID}}) under exactly the same rules as the original onboarding: only
+that page is the source of truth, metadata is mirrored verbatim with transport escaping reversed
+and the mirror verified, visual values are extracted and never guessed, and dangling references are
+catalogued and flagged for me — never rewired on your own.
+
+Match components by figma_fingerprint, not by name. Fingerprints survive renames and moves; names
+do not, and matching on names will read a rename as "one component deleted, one added" and quietly
+throw away its history.
+
+Before changing anything, report:
+- components added
+- components removed
+- components whose fingerprint matched but whose visual values changed
+- components whose authored metadata changed, quoted before and after
+- any new collision, dangling reference, or probable mis-wire
+
+Then wait for my go-ahead. Once I confirm:
+1. Apply the ingestion.
+2. Re-run the component code library build (Phase 4) so every snippet matches the new visual values
+   — a stale snippet is worse than none, because it looks correct and is not.
+3. Regenerate the dashboard and graph.
+4. Tell me if any CONFIRMED entry in learnings.jsonl is now superseded — i.e. the rule it encodes
+   has since been authored directly into Figma. Do not change its status yourself; list it and let
+   me decide, exactly as AGENT.md section 6 requires.

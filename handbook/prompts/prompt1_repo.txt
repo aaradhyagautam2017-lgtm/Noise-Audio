@@ -1,0 +1,198 @@
+# Phase 1 — Ingest Figma & Build the Component Library Repository
+
+INPUTS (fill before running):
+- App name: {{APP_NAME}}
+- Figma page URL (where all components live): {{FIGMA_PAGE_URL}}
+- GitHub target repo: {{REPO_NAME}}
+
+RECOMMENDED MODEL: Run this phase with the most capable model available (Opus). Ingestion
+fidelity is the foundation of the whole system; a faster/smaller model is far more likely to
+summarize, truncate, or approximate, and any loss here corrupts every screen built later. Do
+not optimize this phase for speed.
+
+YOUR ROLE
+You are the ingestion agent. Your only job this phase is to read the components from the
+connected Figma page and mirror them into a clean, machine-navigable GitHub repository —
+capturing, for each component, both its authored metadata and a COMPLETE, faithful description
+of how Figma lays it out. Do NOT compose screens or build any UI in this phase.
+
+THE GOLDEN RULE OF THE VISUAL LAYER
+You are not writing down a screenshot as numbers. You are capturing the LAYOUT MODEL — the
+rules Figma uses to generate the component — so it can be reproduced pixel-faithfully by a
+different layout engine (CSS) and can re-flow correctly when its text content changes. A raw
+width/height snapshot is NOT enough; the sizing and positioning BEHAVIOR that produced those
+pixels is mandatory. If you record only final dimensions, the component breaks the moment it is
+rendered or its content changes. Capture the generative rules, never just the resulting numbers.
+
+THIS REPOSITORY IS NOT FINISHED UNTIL IT CONTAINS REAL COMPONENT CODE
+Describing a component is not the same as having it. A repo that holds only metadata and
+visual_values forces every future agent to re-derive HTML/CSS from a text description on every
+single request — and that drifts silently. In a live run of this exact system, the agent read,
+quoted, and correctly understood a rule ("the checkbox sits on the right", "the separator is
+inset, not full-width") and then wrote code that did the opposite. Twice. It threw no error. It
+produced screens that looked right and quietly broke the rules.
+Phase 4 is what closes this, by generating a real per-variant HTML/CSS snippet for every
+component. Phase 4 is MANDATORY, not optional polish. Do not report this repository as complete,
+and do not let anyone compose a screen from it, until Phase 4 has run. If you finish Phase 1 and
+Phase 4 has not been scheduled, say so explicitly in your final report.
+
+SOURCES OF TRUTH
+1. Figma (via MCP) = the exact visual truth: layout behavior, dimensions, spacing, radius,
+   strokes, fills, effects, typography, and real icon/image assets. Figma is the master; the repo
+   mirrors it exactly.
+2. Component YAML metadata (authored in each component's Figma description) = semantics + rules.
+   Mirror it verbatim; never reword.
+   TRANSPORT ESCAPING — a real trap: the Figma MCP transport HTML-escapes description text.
+   A YAML folded scalar ">" arrives as "&gt;", "&" arrives as "&amp;", quotes arrive as entities.
+   Reverse this escaping before writing the file, then VERIFY the mirror: re-escape your stored
+   copy and compare it to what the transport returned (length plus head/tail equality on a sample
+   of components). Storing the escaped form silently corrupts every metadata block that uses a
+   folded scalar — which is most of them — and the corruption is invisible until an agent tries
+   to parse it.
+   Never invent metadata. If a component has no YAML, record it as "metadata: missing" and list
+   it in the report.
+3. The Figma page given in FIGMA_PAGE_URL is the entire universe for this ingestion — the only
+   page that exists. Never read from, resolve against, or otherwise use any other page in the
+   Figma file, even to fill a gap or resolve a same-named instance.
+
+STEPS
+1. Connect to Figma via MCP and confirm access. Enumerate every component and component set on
+   the page.
+   - Capture for every component three identifiers: name, node id (in-file locator), and Figma
+     fingerprint (the stable/permanent component key that survives duplication, renaming, and
+     file changes).
+   - Enforce uniqueness: no two components may share a name, node id, or fingerprint. On any
+     collision, STOP and report — do not proceed with duplicates.
+
+2. Extract the METADATA layer: read the YAML from the TOP-LEVEL component (or component set)
+   description — never from an individual variant. If the top-level description has no YAML,
+   record "metadata: missing"; do not descend into variants hoping to find it, and do not
+   fabricate it. Mirror it byte-for-byte after reversing transport escaping; do not reword,
+   reformat, or "clean up".
+
+3. Extract the VISUAL layer — the full layout model. For EVERY node in the component's tree (to
+   full depth, never depth-limited or summarized), capture:
+   a. Auto-layout containers: layout direction (horizontal / vertical / wrap), padding (all four
+      sides), item spacing (gap), primary-axis and counter-axis alignment, and space distribution
+      (packed vs space-between/around).
+   b. Per-child sizing on BOTH axes — the single most important field: whether each child is FILL
+      (grows/shrinks to fill the parent), HUG (shrink-wraps to its content), or FIXED (a set
+      size), plus layout-grow where set. This is what makes auto-layout fit; without it, children
+      overflow and bleed out of their container.
+   c. Positioning: whether each child is IN-FLOW or ABSOLUTELY POSITIONED (taken out of the
+      auto-layout flow and pinned). For absolute children capture the pin/constraints (which
+      edges: left/right/top/bottom/center/scale) and the offset. A trailing counter, badge, toggle
+      thumb, or overlay is typically absolute — it must NOT be recorded as a normal in-flow child.
+   d. Per-child alignment overrides, and min/max width and height where set.
+   e. Clipping: whether each frame clips its content (overflow hidden) or lets it spill.
+   f. Geometry & paint: per-corner radius; strokes (weight, color/token, alignment
+      inside/outside/center, dashes); all fills (solid/gradient/image, opacity, blend mode,
+      stacking order); and all effects (every shadow / inner-shadow / blur).
+   g. TEXT nodes: the FULL text content, verbatim and complete — NEVER truncate, abbreviate, or
+      replace any characters with an ellipsis. Also capture font family, weight, size, line-height
+      (with its unit), letter-spacing, horizontal and vertical alignment, decoration, text
+      auto-resize mode (auto-width / auto-height / fixed), and any per-range styling (e.g. two
+      colors within one string).
+   h. INSTANCE nodes (a component used inside another): capture the referenced component (id +
+      fingerprint), the selected variant, AND every OVERRIDE applied at this instance as placed —
+      overridden text, swapped nested instances, color/visibility overrides, and which component
+      properties (toggles/booleans) are on or off. Record the instance's ACTUAL as-placed content,
+      because the parent's real appearance depends on it. The "each child governs itself"
+      ownership rule applies ONLY to the metadata/semantic layer; in the VISUAL layer a parent's
+      overrides are part of the parent and MUST be captured on it. Never store an instance as an
+      opaque reference.
+   i. Store every value tagged with its node id.
+   Never truncate, summarize, depth-limit, or approximate anything in this step. If the tree is
+   large, capture all of it anyway.
+
+4. Real assets: for every vector / icon / image, export the real asset from Figma and store it in
+   the repo (e.g. an SVG/PNG under an assets directory), referenced by the node. NEVER reduce an
+   icon to a bounding box + flat color, and never substitute a hand-drawn placeholder. If an asset
+   genuinely cannot be exported, record "asset: missing" on that node and list it in the report —
+   flag the gap, never fake it.
+
+5. Extract the token layers referenced by components: colors, typography, spacing/radius. Store
+   under a tokens directory, with the concrete values under css/. Any font a token NAMES must end
+   up as a real font file under assets/fonts/ with its license and source documented and a
+   matching @font-face rule — a font name with nothing backing it is a broken token.
+
+6. Instance references — resolve strictly, and flag probable mis-wires instead of fixing them.
+   A reference resolves ONLY if its target is a component on FIGMA_PAGE_URL. If an instance points
+   at a component on any other page:
+   - Mark it resolved: false. Never rewire it. Never resolve it against the off-page component.
+   - THEN check whether a component with the same name exists ON this page, and if one does,
+     record the pair in the report under "probable mis-wire — needs designer confirmation":
+     the referencing component, the off-page node it currently points at, and the in-page
+     candidate.
+   Why this matters: the first run of this system silently wired instances to off-page copies on
+   other pages. 32 references dangled; 17 of them had an exact in-page twin and were simply
+   pointing at the wrong copy. Every one had to be found and corrected by hand afterwards. Your
+   job is to surface that list on day one — not to repair it, and not to hide it. Rewiring is a
+   designer decision made after ingestion, with their confirmation, and every rewired edge must
+   then carry provenance (what it was rewired from) so the change is auditable.
+
+7. Build the repository structure:
+   /                      (repo root)
+     AGENT.md             READ FIRST. The reasoning rulebook (human-placed; never generate or edit).
+     CONTROL_PANEL.md     The screen state panel rules (human-placed; never generate or edit).
+     PLAYBOOK.md          The prompt playbook (human-placed; never generate or edit).
+     README.md            Human orientation.
+     readme.yaml          Designer-editable copy for the dashboard's README page (create with a
+                          commented starter template; the designer fills it in).
+     registry.yaml        The map: canonical wiring the agent traverses.
+     learnings.jsonl      Append-only ledger of agent corrections and human field contributions.
+                          Create it empty. See AGENT.md section 6 for its two entry schemas
+                          ("correction" and "field_contribution") and its status lifecycle
+                          (proposed -> confirmed / rejected / superseded).
+     INGESTION_REPORT.md  The report from step 8.
+     components/atoms, components/molecules, components/organisms
+     tokens/colors.yaml, tokens/typography.yaml, tokens/spacing.yaml
+     css/                 concrete token values synced from Figma
+     assets/              real exported icon/image assets, plus assets/fonts/
+     patterns/            empty in this phase; filled in Phase 4
+     screens/             empty in this phase, plus screens/index.json — a human-editable
+                          title/description/status overlay for composed flows (create it as an
+                          empty structure).
+   Each component file carries at minimum: id, name, type, node_id, figma_fingerprint, the full
+   authored metadata (unchanged), and the complete visual layout model described in step 3.
+   Note: AGENT.md, CONTROL_PANEL.md and PLAYBOOK.md are provided by the designer and placed at
+   root; do not author or alter their contents. If one is missing, report it and continue — never
+   write one yourself. The agent is not permitted to author the rules it obeys.
+
+8. Build registry.yaml (the index the whole system depends on). For every component record: id,
+   name, type, node_id, figma_fingerprint; structural edges (used_atoms / used_molecules / parts,
+   resolved to target ids = "is built from"); behavioral edges (relationships, resolved to target
+   ids); usage count; and a snippet: field left empty for Phase 4 to fill. Validate: flag any
+   reference that doesn't resolve on-page (broken edge) and any referenced-but-missing component.
+
+9. Ingestion report (INGESTION_REPORT.md): counts by type; any "metadata: missing"; any
+   "asset: missing"; any broken/dangling references; the "probable mis-wire" list from step 6; any
+   name/node-id/fingerprint collisions (must be zero); any component missing a fingerprint; any
+   component whose Figma variant axes don't match its YAML (design/metadata drift); and an
+   explicit statement of whether Phase 4 has run yet.
+
+HARD CONSTRAINTS
+- Do not compose screens or generate any HTML/dashboard.
+- Do not modify, reword, or clean up the authored YAML — mirror it exactly, after reversing
+  transport escaping, and verify the mirror.
+- Read authored YAML only from the top-level component/component set, never from a single variant.
+- Every component must have a unique name, node id, and Figma fingerprint. Collisions are a hard
+  failure.
+- Capture the layout MODEL, not just final dimensions: per-child FILL/HUG/FIXED sizing, in-flow vs
+  absolute positioning, clipping, and instance overrides are mandatory, not optional.
+- Never truncate or summarize text or content; never depth-limit the tree; never approximate a
+  value. Full fidelity, or a flagged gap — never a guess.
+- Export real icon/image assets; never fake an icon with a placeholder. A missing asset is
+  recorded as "asset: missing" in the report.
+- Every extracted visual value must come from Figma; never invent one.
+- Never read, traverse, or resolve anything from a Figma page other than FIGMA_PAGE_URL, for any
+  reason — including to resolve a dangling instance.
+- Never silently rewire a dangling reference. Flag it for designer confirmation instead.
+- Do not author or modify AGENT.md, CONTROL_PANEL.md, or PLAYBOOK.md.
+
+DONE WHEN: the repo exists with all components (authored metadata mirrored verbatim and verified,
+plus the complete visual layout model from step 3), real assets and real font files exported, token
+catalogs, a validated registry.yaml, an empty learnings.jsonl and screens/index.json, the three
+human-placed rulebook files at root, and INGESTION_REPORT.md listing every gap, drift, collision,
+and probable mis-wire. No screen, dashboard, or graph built yet — and the report states plainly
+that the repository is not usable for composition until Phase 4 has generated the component code.
